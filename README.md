@@ -27,7 +27,8 @@ phone's browser with the map, spoken and written directions, stops and partner o
 | Add or remove a route | `config/routes.json`, plus the route's Ride with GPS privacy code in the `ROUTE_SECRETS` secret |
 | Partner offers | `config/offers.json` (set `validUntil` and it hides itself after that date) |
 | When turns are announced, close-together turns, off-route sensitivity, stop pop-ups, screen defaults | The Ride Guide Settings page (https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18). Saving it starts the "Ride Guide settings apply" scheduled task, which writes `config/settings.json` here. Every value is range-checked and falls back to its default. |
-| Brand colours, phone numbers | `config/brands.json` |
+| Which brand each map uses (By Earth and Ocean or Bike On) | The Ride Guide Settings page; the task writes `brand` in `config/routes.json`. The map then shows that brand's logo and colours. |
+| Brand colours, logos, phone numbers | `config/brands.json` and `site/assets/` (use the normal By Earth and Ocean header logo, not the reversed one) |
 | Translations | `config/i18n/<lang>.json`. New or changed English text is listed in `i18n-missing.json` after a build and in `health.json`; the weekly drift check fills the gaps. Brief: `config/TRANSLATION_BRIEF.md` |
 | A route's QR code needs replacing | Bump its `rev` in `config/routes.json`. The old code stops working. |
 
