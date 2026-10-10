@@ -89,6 +89,8 @@ body.view-loading #v-loading,body.view-home #v-home,body.view-route #v-route,bod
 .btn.small{min-height:44px;font-size:14px;padding:0 14px}
 .btn.accent{background:var(--accent);color:var(--primary)}
 .btn.full{width:100%}
+a.btn{text-decoration:none;box-sizing:border-box}
+.sheet .btn.full + .set-group{margin-top:22px}
 .round{width:52px;height:52px;border-radius:26px;border:none;background:var(--surface);box-shadow:0 4px 12px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;color:var(--ink)}
 .round.ghost{width:44px;height:44px;background:transparent;box-shadow:none;border:1.5px solid rgba(255,255,255,.35);color:#fff}
 .round.on{background:var(--primary);color:#fff}

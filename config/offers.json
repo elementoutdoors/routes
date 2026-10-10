@@ -1,5 +1,5 @@
 {
-  "_about": "Partner offers. An offer shows on every active route that passes within its radius (metres), or on every route if allRoutes is true. A Ride with GPS stop whose name matches matchPoi is replaced by the offer. Set validUntil (YYYY-MM-DD) to have it hide itself after that date. logo is a file in site/ (shown on the card in place of the partner name). conditions can be one line or a list of lines. about is a short description under the headline; phone adds a Call button.",
+  "_about": "Partner offers. An offer shows on every active route that passes within its radius (metres), or on every route if allRoutes is true. A Ride with GPS stop whose name matches matchPoi is replaced by the offer. Set validUntil (YYYY-MM-DD) to have it hide itself after that date. hideOn lists route slugs to leave it off. lat and lng are worked out from where (an address or a Google Maps link). Managed on the Ride Guide Settings page. logo is a file in site/ (shown on the card in place of the partner name). conditions can be one line or a list of lines. about is a short description under the headline; phone adds a Call button.",
   "offers": [
     {
       "id": "land-and-sea",
@@ -20,7 +20,9 @@
       "lng": 153.043367,
       "radius": 500,
       "matchPoi": "Land and Sea Brewery",
-      "validUntil": null
+      "validUntil": null,
+      "where": "19 Venture Drive, Noosaville",
+      "hideOn": []
     },
     {
       "id": "land-and-sea-burger",
@@ -41,7 +43,9 @@
       "lng": 153.043367,
       "radius": 500,
       "matchPoi": "Land and Sea Brewery",
-      "validUntil": null
+      "validUntil": null,
+      "where": "19 Venture Drive, Noosaville",
+      "hideOn": []
     },
     {
       "id": "fliteschool-noosa",
@@ -58,7 +62,9 @@
       "lng": 153.059965,
       "radius": 500,
       "matchPoi": "Flightschool Noosa",
-      "validUntil": null
+      "validUntil": null,
+      "where": "172 Gympie Terrace, Noosaville",
+      "hideOn": []
     }
   ]
 }

@@ -927,6 +927,12 @@
         demo.addEventListener('click', function () { closeSheet(); startSim(); });
         b.appendChild(demo);
       }
+      if (R && R.gpx) {
+        var gg = group(tu('Bike computer'));
+        var dl = el('a', { class: 'btn outline full', href: R.gpx, download: R.slug + '.gpx', text: tu('Download this ride as a GPX file') });
+        gg.appendChild(dl);
+        gg.appendChild(el('p', { class: 'note', text: tu('For Garmin, Wahoo and other bike computers. The file holds the route line only.') }));
+      }
       b.appendChild(el('div', { class: 'ver', text: 'Ride Guide ' + BUILD + (R ? ' · ' + R.version : '') }));
     });
   }

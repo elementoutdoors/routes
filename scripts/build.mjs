@@ -71,6 +71,16 @@ async function frameable(url) {
   frameCache.set(url, ok);
   return ok;
 }
+export function gpxKey(slug, rev) {
+  return crypto.createHmac('sha256', secrets.keySalt).update(`gpx:${slug}:${rev || 1}`).digest('base64url').slice(0, 22);
+}
+// GPX for bike computers: the route line only (no stops, offers or tour text).
+function gpxFile(route) {
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const T = route.track, pts = [];
+  for (let i = 0; i < T.lat.length; i++) pts.push(`<trkpt lat="${T.lat[i]}" lon="${T.lng[i]}"><ele>${T.ele[i]}</ele></trkpt>`);
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Ride Guide (${esc(route.brand.name)})" xmlns="http://www.topografix.com/GPX/1/1">\n<metadata><name>${esc(route.name)}</name></metadata>\n<trk><name>${esc(route.name)}</name><trkseg>\n${pts.join('\n')}\n</trkseg></trk>\n</gpx>\n`;
+}
 export function routeKey(slug, rev) {
   return crypto.createHmac('sha256', secrets.keySalt).update(`${slug}:${rev || 1}`).digest('base64url').slice(0, 22);
 }
@@ -108,10 +118,12 @@ function passes(T, lat, lng, maxDist) {
 
 // Offers for a route: every active, in-date offer the route passes within its radius, plus any set to allRoutes.
 // d is how far along the route it is passed (null for an allRoutes offer the route never goes near).
-function offersFor(T) {
+function offersFor(T, slug) {
   const out = [];
   for (const o of offersCfg.offers) {
     if (!o.active || (o.validUntil && new Date(o.validUntil + 'T23:59:59+10:00') < new Date())) continue;
+    if ((o.hideOn || []).includes(slug)) continue;
+    if (typeof o.lat !== 'number' || typeof o.lng !== 'number') continue;   // location not worked out yet (flagged in health)
     const { runs } = passes(T, o.lat, o.lng, o.radius || 400);
     if (!runs.length && !o.allRoutes) continue;
     const cond = [].concat(o.conditions || []).filter(Boolean);
@@ -177,7 +189,7 @@ function transform(entry, r) {
   }
   stops.sort((a, b) => a.d - b.d);
 
-  const offers = offersFor(T);
+  const offers = offersFor(T, entry.slug);
 
   const brandId = brands[entry.brand] ? entry.brand : 'beo';
   const brand = Object.assign({ id: brandId }, brands[brandId]);
@@ -276,6 +288,7 @@ async function main() {
   health.settings = settings;
   const links = {}, codes = {};
   fs.mkdirSync(path.join(dist, 'c'), { recursive: true });
+  fs.mkdirSync(path.join(dist, 'g'), { recursive: true });
   for (const entry of cfg.routes.filter(r => r.active)) {
     const key = routeKey(entry.slug, entry.rev);
     links[entry.slug] = `${SITE_BASE}#${key}`;
@@ -300,7 +313,7 @@ async function main() {
     if (!route) { h.ok = false; health.problems.push(`${entry.slug}: no route data`); health.routes.push(h); continue; }
 
     // offers always come from config/offers.json, even when the route itself is the last good copy
-    route.offers = offersFor(route.track);
+    route.offers = offersFor(route.track, entry.slug);
 
     // translations for this route
     const strings = routeStrings(route);
@@ -311,9 +324,15 @@ async function main() {
     }
     route.code = code;
     route.settings = settings;
+    route.gpx = null;
+    if (entry.gpx) {
+      const gname = `g/${gpxKey(entry.slug, entry.rev)}.gpx`;
+      fs.writeFileSync(path.join(dist, gname), gpxFile(route));
+      route.gpx = gname;
+    }
     for (const x of [...route.stops, ...route.offers]) x.frame = await frameable(x.url);
     fs.writeFileSync(path.join(dist, 'r', `${key}.json`), JSON.stringify(route));
-    Object.assign(h, { ok: true, name: route.name, version: route.version, distance: route.distance, cues: route.cues.length,
+    Object.assign(h, { ok: true, name: route.name, version: route.version, distance: route.distance, gpx: !!route.gpx, cues: route.cues.length,
       stops: route.stops.length, offers: route.offers.map(o => o.id),
       links: [...new Set(route.stops.map(s => s.url).filter(Boolean).concat(route.offers.map(o => o.url).filter(Boolean)))],
       photos: [...new Set(route.stops.flatMap(s => s.photos))],
@@ -323,7 +342,8 @@ async function main() {
   }
   for (const o of offersCfg.offers) {
     const expired = o.validUntil && new Date(o.validUntil + 'T23:59:59+10:00') < now;
-    health.offers.push({ id: o.id, active: o.active && !expired, expired: !!expired,
+    if (o.active && (typeof o.lat !== 'number' || typeof o.lng !== 'number')) health.problems.push(`offer ${o.id} has no location yet`);
+    health.offers.push({ id: o.id, partner: o.partner, active: o.active && !expired, expired: !!expired, lat: o.lat, lng: o.lng, radius: o.radius || 400,
       onRoutes: health.routes.filter(r => (r.offers || []).includes(o.id)).map(r => r.slug) });
     if (o.active && !expired && !health.routes.some(r => (r.offers || []).includes(o.id))) health.problems.push(`offer ${o.id} is not near any route`);
     if (o.logo && !fs.existsSync(path.join(ROOT, 'site', o.logo))) health.problems.push(`offer ${o.id}: logo ${o.logo} is missing, card shows the name instead`);
