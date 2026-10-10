@@ -259,7 +259,9 @@ async function main() {
   fs.writeFileSync(path.join(dist, 'health.json'), JSON.stringify(health, null, 1));
 
   // for the translation step and QR codes (not published)
-  fs.writeFileSync(path.join(ROOT, 'i18n-missing.json'), JSON.stringify(Object.fromEntries(LANGS.map(l => [l, [...missing[l]].sort()])), null, 1));
+  const missingOut = JSON.stringify(Object.fromEntries(LANGS.map(l => [l, [...missing[l]].sort()])), null, 1);
+  fs.writeFileSync(path.join(ROOT, 'i18n-missing.json'), missingOut);
+  fs.writeFileSync(path.join(dist, 'i18n-missing.json'), missingOut);   // published so the weekly check can translate without the secrets
   fs.mkdirSync(path.join(ROOT, 'qr'), { recursive: true });
   fs.writeFileSync(path.join(ROOT, 'qr', 'links.json'), JSON.stringify(links, null, 1));
 
