@@ -18,6 +18,15 @@ phone's browser with the map, spoken and written directions, stops and partner o
   and "Save to my phone" shows the code and adds the route to the home screen.
 - "More about this place" pages that allow it open inside the app with a Back to my ride bar, so the ride keeps running.
   The build checks every link each night to decide.
+- A stop that links to a place on the ride story blogs (Bike On and By Earth and Ocean) has a "Hear the full story" button:
+  about a minute on that place, written to be heard (`config/stories.json`), in the natural voice. Directions and the next
+  stop cut in over it. The nightly build fingerprints each blog section and reports any story that is out of step in
+  `health.json` ("stories"); the weekly check rewrites it. Brief: `config/STORY_BRIEF.md`.
+- How written text is said aloud (abbreviations such as St, Rd and Mt, units, and respellings for names the voice gets
+  wrong) is in `config/speech.json`, used by the natural voice and the phone voice. `listen.html` on the site plays every
+  place name so names can be checked by ear.
+- An offer can be set to "finish" (`showAt`): it is not shown at the start, comes up in the last 1.5 km and sits on the
+  finish card. Used for Land and Sea Brewery, over the road from the shop.
 
 ## Changing things
 
@@ -25,7 +34,9 @@ phone's browser with the map, spoken and written directions, stops and partner o
 | --- | --- |
 | Cue wording, stops, the route line | Ride with GPS. Live by the next morning, or run the workflow by hand. |
 | Add or remove a route | `config/routes.json`, plus the route's Ride with GPS privacy code in the `ROUTE_SECRETS` secret |
-| Partner offers | `config/offers.json` (set `validUntil` and it hides itself after that date) |
+| Partner offers | The Ride Guide Settings page (`config/offers.json` underneath; `validUntil` hides it after that date, `showAt` "finish" keeps it for the end of the ride) |
+| Full stories | `config/stories.json` (one per blog place, see `config/STORY_BRIEF.md`) |
+| How a word or name is said aloud | `config/speech.json` |
 | When turns are announced, close-together turns, off-route sensitivity, stop pop-ups, screen defaults | The Ride Guide Settings page (https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18). Saving it starts the "Ride Guide settings apply" scheduled task, which writes `config/settings.json` here. Every value is range-checked and falls back to its default. |
 | Which brand each map uses (By Earth and Ocean or Bike On) | The Ride Guide Settings page; the task writes `brand` in `config/routes.json`. The map then shows that brand's logo and colours. |
 | Brand colours, logos, phone numbers | `config/brands.json` and `site/assets/` (use the normal By Earth and Ocean header logo, not the reversed one) |

@@ -1074,5 +1074,10 @@
  "continue through the round about": "회전교차로를 직진해서 통과하세요",
  "ride onto the path on the left of McKinnon Drive": "McKinnon Drive 왼쪽의 길로 올라가세요",
  "Natural voice": "자연스러운 음성",
- "Clearer recorded voice. Turn off to use your phone's own voice.": "더 또렷한 녹음 음성입니다. 끄면 휴대폰 기본 음성을 사용합니다."
+ "Clearer recorded voice. Turn off to use your phone's own voice.": "더 또렷한 녹음 음성입니다. 끄면 휴대폰 기본 음성을 사용합니다.",
+ "Hear the full story": "전체 이야기 듣기",
+ "Stop the story": "이야기 멈추기",
+ "Rider offer when you get back: {name}": "돌아오면 받을 수 있는 라이더 혜택: {name}",
+ "Before you go": "떠나기 전에",
+ "When you get back": "돌아온 후"
 }

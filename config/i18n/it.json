@@ -1074,5 +1074,10 @@
  "continue through the round about": "Prosegui dritto alla rotonda",
  "ride onto the path on the left of McKinnon Drive": "Prendi il sentiero a sinistra di McKinnon Drive",
  "Natural voice": "Voce naturale",
- "Clearer recorded voice. Turn off to use your phone's own voice.": "Voce registrata più chiara. Disattiva per usare la voce del telefono."
+ "Clearer recorded voice. Turn off to use your phone's own voice.": "Voce registrata più chiara. Disattiva per usare la voce del telefono.",
+ "Hear the full story": "Ascolta tutta la storia",
+ "Stop the story": "Ferma la storia",
+ "Rider offer when you get back: {name}": "Offerta per i ciclisti al tuo ritorno: {name}",
+ "Before you go": "Prima di andare",
+ "When you get back": "Al tuo ritorno"
 }

@@ -1074,5 +1074,10 @@
  "continue through the round about": "ラウンドアバウトを直進してください",
  "ride onto the path on the left of McKinnon Drive": "McKinnon Drive の左側の道に入ってください",
  "Natural voice": "自然な音声",
- "Clearer recorded voice. Turn off to use your phone's own voice.": "より聞き取りやすい録音音声です。オフにするとスマートフォンの音声を使います。"
+ "Clearer recorded voice. Turn off to use your phone's own voice.": "より聞き取りやすい録音音声です。オフにするとスマートフォンの音声を使います。",
+ "Hear the full story": "物語をすべて聞く",
+ "Stop the story": "物語を止める",
+ "Rider offer when you get back: {name}": "戻ってからのライダー特典：{name}",
+ "Before you go": "お帰りの前に",
+ "When you get back": "戻ってから"
 }

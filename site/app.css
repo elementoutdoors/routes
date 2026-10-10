@@ -86,6 +86,9 @@ body.view-loading #v-loading,body.view-home #v-home,body.view-route #v-route,bod
 .btn.primary{background:var(--primary);color:#fff}
 .btn.big{height:58px;font-size:18px;width:100%}
 .btn.outline{background:var(--surface);border:2px solid rgba(0,0,0,.14);color:var(--ink)}
+.btn.story-btn{display:flex;align-items:center;justify-content:center;gap:8px}
+.btn.story-btn svg{width:20px;height:20px}
+.btn.story-btn.playing{border-color:var(--primary);color:var(--primary)}
 .btn.small{min-height:44px;font-size:14px;padding:0 14px}
 .btn.accent{background:var(--accent);color:var(--primary)}
 .btn.full{width:100%}

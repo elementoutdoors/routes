@@ -2,6 +2,7 @@
 // Reads the live health.json, then checks that the site was rebuilt recently, every route opens,
 // every stop and offer link still works, every photo loads, and nothing is untranslated.
 // Prints a JSON report. Exit code 0 = all good, 1 = something needs attention.
+// Version 5 (11/10/2026): also checks the full stories (every linked place has one, none out of step with its blog section, the blogs can be read) and listen.html.
 // Version 4 (10/10/2026): also checks the natural voice (recording running, inside the monthly cap, recordings load). v3: every typed route code. v2: real browser user agent, redirects to another page count as broken, 403 noted not failed.
 // Usage: node scripts/check.mjs [siteBase]   (route links are read from qr/links.json when present)
 import fs from 'node:fs';
@@ -48,6 +49,18 @@ else {
     }
   } catch (e) { issues.push('natural voice: voice.json not reachable'); }
 }
+
+// full stories: every stop linked to a blog place has a story, and each story still matches its blog section
+const st = h.stories;
+if (!st) issues.push('full stories: no stories report in health.json');
+else {
+  (st.missing || []).forEach(k => issues.push(`full stories: no story for ${k} (write one, see config/STORY_BRIEF.md)`));
+  (st.stale || []).forEach(k => issues.push(`full stories: blog section ${k} has changed, rewrite its story (config/STORY_BRIEF.md)`));
+  (st.unchecked || []).forEach(k => issues.push(`full stories: ${k} has no blog fingerprint yet (config/STORY_BRIEF.md)`));
+  (st.noSection || []).forEach(k => issues.push(`full stories: a stop links to ${k} but the blog has no such section`));
+  (st.unread || []).forEach(k => notes.push(`full stories: could not read blog (${k})`));
+}
+{ const s = await status(BASE + 'listen.html', 'GET'); if (s.code !== 200) issues.push(`voice check page listen.html not loading (${s.code})`); }
 
 const links = new Set(), photos = new Set();
 h.routes.forEach(r => { (r.links || []).forEach(u => links.add(u)); (r.photos || []).forEach(u => photos.add(u)); });

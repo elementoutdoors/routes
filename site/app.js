@@ -292,6 +292,7 @@
       markers.push(new maplibregl.Marker({ element: b }).setLngLat([s.lng, s.lat]).addTo(map));
     });
     offerPlaces().forEach(function (g) {
+      if (g[0].fin && !(ride.active && ride.shown.finOffers)) return;   // an offer for the end of the ride only shows near the end
       var b = el('button', { class: 'mk offer', type: 'button', 'aria-label': g[0].partner }, svg('offer'));
       b.addEventListener('click', function (e) { e.stopPropagation(); openOffers(g); });
       markers.push(new maplibregl.Marker({ element: b }).setLngLat([g[0].lng, g[0].lat]).addTo(map));
@@ -389,9 +390,17 @@
     return ('0000000' + (a >>> 0).toString(16)).slice(-8) + ('0000000' + (b >>> 0).toString(16)).slice(-8);
   }
   var VOICE = {};   // { lang: { tag, h: Set, pre: [] } }
+  var SAY = { rules: [], names: {} };   // how written text is said aloud (config/speech.json), for the phone voice
   function setVoiceManifest(m) {
     VOICE = {};
-    Object.keys(m || {}).forEach(function (l) { VOICE[l] = { tag: m[l].tag, h: new Set(m[l].h || []), pre: m[l].pre || [] }; });
+    Object.keys(m || {}).forEach(function (l) { if (l.charAt(0) !== '_') VOICE[l] = { tag: m[l].tag, h: new Set(m[l].h || []), pre: m[l].pre || [] }; });
+    if (m && m._say) SAY = m._say;
+  }
+  function speakable(lang, text) {
+    var t = String(text || '');
+    (SAY.rules || []).forEach(function (r) { if (r.langs && r.langs.indexOf(lang) < 0) return; try { t = t.replace(new RegExp(r.find, 'g'), r.say); } catch (e) {} });
+    Object.keys(SAY.names || {}).forEach(function (n) { t = t.replace(new RegExp('\\b' + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'g'), SAY.names[n]); });
+    return t.trim();
   }
   var routeClips = {};
   function setRouteClips() { routeClips = {}; var v = (R && R.voice) || {}; Object.keys(v).forEach(function (l) { routeClips[l] = new Set(v[l]); }); }
@@ -400,7 +409,7 @@
     var h = voiceHash(lang + '|' + String(text).trim());
     return (vm.h.has(h) || (routeClips[lang] && routeClips[lang].has(h))) ? 'v/' + vm.tag + '/' + h + '.mp3' : null;
   }
-  var aud = null, queue = [], speaking = false, phoneTimer = null;
+  var aud = null, queue = [], speaking = false, phoneTimer = null, curItem = null, storyFor = null;
   function audioEl() {
     if (!aud) {
       aud = new Audio(); aud.preload = 'auto';
@@ -410,7 +419,8 @@
     return aud;
   }
   function stopSpeech() {
-    queue = []; speaking = false; clearTimeout(phoneTimer);
+    queue = []; speaking = false; clearTimeout(phoneTimer); curItem = null;
+    if (storyFor) { storyFor = null; updateStoryBtn(); }
     try { if (aud) { aud._item = null; aud.pause(); } } catch (e) {}
     try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) {}
   }
@@ -419,7 +429,7 @@
     var finished = false;
     function fin() { if (finished) return; finished = true; clearTimeout(phoneTimer); nextLine(); }
     try {
-      var u = new SpeechSynthesisUtterance(it.text), v = pickVoice(it.lang);
+      var u = new SpeechSynthesisUtterance(speakable(it.lang, it.text)), v = pickVoice(it.lang);
       u.lang = SPEECH_LANG[it.lang] || 'en-AU'; if (v) u.voice = v; u.rate = 1; u.pitch = 1;
       u.onend = fin; u.onerror = fin;
       speechSynthesis.speak(u);
@@ -428,7 +438,8 @@
   }
   function nextLine() {
     var it = queue.shift();
-    if (!it) { speaking = false; return; }
+    curItem = it || null;
+    if (!it) { speaking = false; if (storyFor) { storyFor = null; updateStoryBtn(); } return; }
     speaking = true;
     if (it.url) {
       var a = audioEl(); a._item = it; a.src = it.url;
@@ -437,7 +448,9 @@
     } else phoneLine(it);
   }
   function enqueue(items, interrupt) {
-    if (interrupt) stopSpeech();
+    // a full story gives way to anything else (a direction, a caution, the next stop): the rider can tap it again
+    var storyOn = (curItem && curItem.story) || queue.some(function (q) { return q.story; });
+    if (interrupt || (storyOn && !(items[0] && items[0].story))) stopSpeech();
     items.forEach(function (it) { queue.push(it); });
     if (!speaking) nextLine();
   }
@@ -451,13 +464,13 @@
     lastSaid = parts.map(function (p) { return p.text; }).join(' ');
     var urls = S.natural ? parts.map(function (p) { return clipFor(p.lang, p.text); }) : [];
     var items;
-    if (S.natural && urls.every(Boolean)) items = parts.map(function (p, i) { return { text: p.text, lang: p.lang, url: urls[i] }; });
+    if (S.natural && urls.every(Boolean)) items = parts.map(function (p, i) { return { text: p.text, lang: p.lang, url: urls[i], story: !!opts.story }; });
     else {
       items = [];
       parts.forEach(function (p) {
         var last = items[items.length - 1];
         if (last && last.lang === p.lang) last.text += (/^(zh|ja)$/.test(p.lang) ? '' : ' ') + p.text;
-        else items.push({ text: p.text, lang: p.lang, url: null });
+        else items.push({ text: p.text, lang: p.lang, url: null, story: !!opts.story });
       });
     }
     enqueue(items, opts.interrupt);
@@ -468,11 +481,26 @@
     speakParts([{ text: text, lang: opts.lang || S.lang }], opts);
   }
   // A cue or story that has not been translated yet is spoken in English with an English voice.
-  function sayContent(english, prefix) {
+  function sayContent(english, prefix, opts) {
     var m = R.i18n && R.i18n[S.lang], tr = S.lang === 'en' ? english : (m && m[english]);
     var parts = [].concat(prefix == null ? [] : prefix).map(function (p) { return { text: p, lang: S.lang }; });
     parts.push(tr ? { text: tr, lang: S.lang } : { text: english, lang: 'en' });
-    speakParts(parts);
+    speakParts(parts, opts);
+  }
+  // The full story of a place (written to be heard), played on a tap. Directions and other stops cut in over it.
+  function playStory(s) {
+    if (storyFor === s.id) { stopSpeech(); return; }
+    stopSpeech();
+    var was = S.voice; S.voice = true;
+    s.story.forEach(function (p) { sayContent(p, null, { story: true }); });
+    S.voice = was;
+    storyFor = s.id; updateStoryBtn();
+  }
+  function updateStoryBtn() {
+    var b = document.getElementById('story-btn'); if (!b) return;
+    var on = storyFor && storyFor === b.dataset.stop;
+    b.querySelector('span').textContent = tu(on ? 'Stop the story' : 'Hear the full story');
+    b.classList.toggle('playing', !!on);
   }
   // Save this route's recordings and the common lines to the phone so the voice works with no signal.
   function precacheVoice() {
@@ -484,7 +512,8 @@
     if (l !== 'en' && VOICE.en && R.voice && R.voice.en) {
       // English recordings for lines not yet translated
       var m = (R.i18n && R.i18n[l]) || {};
-      var texts = R.cues.map(function (c) { return c.n; }).concat(R.stops.map(function (x) { return x.name; }), R.stops.map(function (x) { return x.text; }));
+      var texts = R.cues.map(function (c) { return c.n; }).concat(R.stops.map(function (x) { return x.name; }), R.stops.map(function (x) { return x.text; }),
+        [].concat.apply([], R.stops.map(function (x) { return x.story || []; })));
       texts.forEach(function (t) { if (t && !m[t]) { var u = clipFor('en', t); if (u) urls.push(u); } });
     }
     var stamp = 'rg.vsave.' + R.key + '.' + R.version + '.' + l + '.' + urls.length + '.' + vm.tag;
@@ -677,6 +706,14 @@
     if (!ride.fix) return;
     offerPlaces().forEach(function (g) {
       var o = g[0], id = 'offer-' + o.id;
+      if (o.fin) {
+        // for the end of the ride: brought up in the last 1.5 km, never at the start
+        if (ride.shown[id] || R.distance - ride.d > 1500 || ride.d < R.distance * 0.5) return;
+        ride.shown[id] = 1; ride.shown.finOffers = 1; addMarkers();
+        banner(fmt(tu('Rider offer when you get back: {name}'), { name: o.partner }), 'offer', 15000, function () { openOffers(g); });
+        say(fmt(tu('Rider offer when you get back: {name}'), { name: o.partner }));
+        return;
+      }
       if (ride.shown[id] || o.d == null || o.d < 300) return;
       if (hav(ride.fix.lat, ride.fix.lng, o.lat, o.lng) < 150) {
         ride.shown[id] = 1;
@@ -854,6 +891,13 @@
         listen.addEventListener('click', function () { stopSpeech(); var was = S.voice; S.voice = true; sayContent(s.name); if (s.text) sayContent(s.text); S.voice = was; });
         acts.appendChild(listen);
       }
+      if (s.story && s.story.length) {
+        var sb = el('button', { class: 'btn outline full story-btn', type: 'button', id: 'story-btn' }, svg('vol') + '<span></span>');
+        sb.dataset.stop = s.id;
+        sb.addEventListener('click', function () { playStory(s); });
+        acts.appendChild(sb);
+        setTimeout(updateStoryBtn, 0);
+      }
       var u = safeUrl(s.url);
       if (u) acts.appendChild(linkRow(u, /review|g\.page/i.test(u) ? tu('Leave us a review') : /surfline|tide/i.test(u) ? tu('Check the tide times') : tu('More about this place'), /review|g\.page/i.test(u) ? 'star' : 'ext', s.frame));
       var back = el('button', { class: 'btn outline full', type: 'button', text: ride.active ? tu('Back to my ride') : tu('Close') });
@@ -916,6 +960,11 @@
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('You made it. Thanks for riding with us.') }));
       if (f && f.name) b.appendChild(el('p', { text: tc(f.name) }));
       var acts = el('div', { class: 'sheet-actions' });
+      var fo = R.offers.filter(function (o) { return o.fin; });
+      if (fo.length) {
+        b.appendChild(el('div', { class: 'kicker', text: tu('Before you go') }));
+        fo.forEach(function (o) { b.appendChild(offerStrip(o)); });
+      }
       var u = f && safeUrl(f.url);
       if (u) acts.appendChild(linkRow(u, tu('Leave us a review'), 'star'));
       var end = el('button', { class: 'btn primary full', type: 'button', text: tu('End ride') });
@@ -961,6 +1010,17 @@
     R.offers.forEach(function (o) { var k = o.partner + '|' + o.lat.toFixed(4) + '|' + o.lng.toFixed(4); (g[k] = g[k] || []).push(o); });
     return Object.keys(g).map(function (k) { return g[k]; });
   }
+  function offerStrip(o) {
+    var b = el('button', { class: 'offer-strip', type: 'button' });
+    b.appendChild(el('div', { class: 'os-icon' }, svg('offer')));
+    var m = el('div');
+    m.appendChild(el('div', { class: 'os-k', text: tu('Rider offer') }));
+    m.appendChild(el('div', { class: 'os-t', text: o.partner + ': ' + tc(o.headline) }));
+    m.appendChild(el('div', { class: 'os-s', text: tu('Tap to see how to claim it') }));
+    b.appendChild(m);
+    b.addEventListener('click', function () { openOffer(o); });
+    return b;
+  }
   function openOffers(list) {
     var offers = Array.isArray(list) ? list : R.offers;
     if (offers.length === 1) return openOffer(offers[0]);
@@ -972,7 +1032,7 @@
         var it = el('button', { class: 'list-item', type: 'button' });
         it.appendChild(o.logo ? el('img', { class: 'li-logo', src: o.logo, alt: '' }) : el('div', { class: 'li-icon' }, svg('offer')));
         var m = el('div', { class: 'li-main' }); m.appendChild(el('div', { class: 'li-title', text: tc(o.headline) }));
-        m.appendChild(el('div', { class: 'li-sub', text: o.partner })); it.appendChild(m);
+        m.appendChild(el('div', { class: 'li-sub', text: o.fin ? o.partner + '  \u00b7  ' + tu('When you get back') : o.partner })); it.appendChild(m);
         it.addEventListener('click', function () { openOffer(o); });
         list.appendChild(it);
       });
@@ -1070,17 +1130,7 @@
     $('route-desc-wrap').hidden = !desc;
     $('route-desc-more').hidden = desc.length < 220;
     var ow = $('route-offers'); ow.innerHTML = '';
-    R.offers.forEach(function (o) {
-      var b = el('button', { class: 'offer-strip', type: 'button' });
-      b.appendChild(el('div', { class: 'os-icon' }, svg('offer')));
-      var m = el('div');
-      m.appendChild(el('div', { class: 'os-k', text: tu('Rider offer') }));
-      m.appendChild(el('div', { class: 'os-t', text: o.partner + ': ' + tc(o.headline) }));
-      m.appendChild(el('div', { class: 'os-s', text: tu('Tap to see how to claim it') }));
-      b.appendChild(m);
-      b.addEventListener('click', function () { openOffer(o); });
-      ow.appendChild(b);
-    });
+    R.offers.filter(function (o) { return !o.fin; }).forEach(function (o) { ow.appendChild(offerStrip(o)); });   // end-of-ride offers come up near the end
     $('b-offers-label').textContent = R.offers.length ? fmt(tu('Offers {n}'), { n: R.offers.length }) : tu('Offers');
     $('route-lang').textContent = S.lang.toUpperCase();
     $('route-units').textContent = S.units === 'imperial' ? 'mi' : 'km';

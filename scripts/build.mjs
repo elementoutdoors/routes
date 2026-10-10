@@ -21,6 +21,7 @@ const secrets = process.env.ROUTE_SECRETS ? JSON.parse(process.env.ROUTE_SECRETS
 const cfg = readJson('config/routes.json');
 const brands = readJson('config/brands.json');
 const offersCfg = readJson('config/offers.json');
+const storiesCfg = readJson('config/stories.json', { blogs: {}, stories: {} });
 const i18n = Object.fromEntries(LANGS.map(l => [l, readJson(`config/i18n/${l}.json`, {})]));
 
 // Behaviour settings: every value checked against a safe range; anything wrong falls back to the default.
@@ -129,10 +130,68 @@ function offersFor(T, slug) {
     if (!runs.length && !o.allRoutes) continue;
     const cond = [].concat(o.conditions || []).filter(Boolean);
     out.push({ id: o.id, partner: o.partner, logo: o.logo || null, headline: o.headline, alt: o.alt || null, about: o.about || null, how: o.how || null, phone: o.phone || null,
+      fin: o.showAt === 'finish',
       conditions: cond.length ? cond : null, address: o.address || null, url: o.url || null, lat: o.lat, lng: o.lng,
       d: runs.length ? Math.round(runs[0].d) : null, validUntil: o.validUntil || null });
   }
   return out;
+}
+
+// ---------- full stories ----------
+// A stop whose link points at a place on one of the ride story blogs gets that place's full story (written to be heard,
+// config/stories.json), played when the rider taps Hear the full story.
+const normUrl = u => { try { const x = new URL(u); return (x.host.replace(/^www\./, '') + x.pathname.replace(/\/+$/, '')).toLowerCase(); } catch (e) { return ''; } };
+const BLOGS = Object.entries(storiesCfg.blogs || {}).map(([brand, url]) => ({ brand, url, n: normUrl(url) }));
+function storyKey(url) {
+  if (!url || !url.includes('#')) return null;
+  const b = BLOGS.find(x => x.n === normUrl(url.split('#')[0]));
+  return b ? { brand: b.brand, key: url.split('#')[1] } : null;
+}
+function attachStories(route, report) {
+  for (const s of route.stops) {
+    delete s.story;
+    const k = storyKey(s.url); if (!k) continue;
+    report.linked.add(k.brand + '#' + k.key);
+    const st = (storiesCfg.stories || {})[k.key];
+    if (st && Array.isArray(st.paras) && st.paras.length) s.story = st.paras.map(p => String(p).trim()).filter(Boolean);
+    else report.missing.add(k.brand + '#' + k.key);
+  }
+}
+// Each blog section as plain text: the paragraphs between a place's heading and the next heading.
+const decode = t => t.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+  .replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+const plain = t => decode(t.replace(/<[^>]+>/g, '')).replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"').replace(/\s+/g, ' ').trim();
+export function blogSections(html) {
+  const out = {};
+  const heads = [...html.matchAll(/<h([23])\b[^>]*>/gi)].map(m => ({ at: m.index, end: m.index + m[0].length, tag: m[0], level: m[1] }));
+  heads.forEach((h, i) => {
+    const id = (h.tag.match(/\bid=["']([^"']+)["']/) || [])[1];
+    if (!id || h.level !== '3') return;
+    const chunk = html.slice(h.end, i + 1 < heads.length ? heads[i + 1].at : html.length);
+    const paras = [...chunk.matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/gi)].filter(m => !/bo-eb/.test(m[1])).map(m => plain(m[2])).filter(Boolean);
+    out[id] = paras.join('\n');
+  });
+  return out;
+}
+async function watchBlogs(report) {
+  for (const b of BLOGS) {
+    try {
+      const r = await fetch(b.url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/141.0 Safari/537.36' } });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const secs = blogSections(await r.text());
+      report.sections[b.brand] = Object.keys(secs).length;
+      for (const [key, text] of Object.entries(secs)) {
+        const h = sha(text).slice(0, 12);
+        report.current[b.brand + '#' + key] = h;
+        const st = (storiesCfg.stories || {})[key];
+        if (!st) continue;
+        const was = (st.src || {})[b.brand];
+        if (!was) report.unchecked.push(b.brand + '#' + key);
+        else if (was !== h) report.stale.push(b.brand + '#' + key);
+      }
+      for (const lk of report.linked) if (lk.startsWith(b.brand + '#') && !secs[lk.split('#')[1]]) report.noSection.push(lk);
+    } catch (e) { report.unread.push(`${b.brand}: ${e.message || e}`); }
+  }
 }
 
 // ---------- transform ----------
@@ -208,7 +267,7 @@ function transform(entry, r) {
 function routeStrings(route) {
   const s = new Set([route.name, route.description]);
   route.cues.forEach(c => s.add(c.n));
-  route.stops.forEach(p => { s.add(p.name); s.add(p.text); });
+  route.stops.forEach(p => { s.add(p.name); s.add(p.text); (p.story || []).forEach(x => s.add(x)); });
   route.offers.forEach(o => { s.add(o.headline); s.add(o.alt); s.add(o.about); s.add(o.how); [].concat(o.conditions || []).forEach(c => s.add(c)); });
   s.delete(''); s.delete(null); s.delete(undefined);
   return [...s];
@@ -288,6 +347,7 @@ async function main() {
   const settings = loadSettings(health.problems);
   health.settings = settings;
   const links = {}, codes = {};
+  const storyReport = { stories: Object.keys(storiesCfg.stories || {}).length, linked: new Set(), missing: new Set(), stale: [], unchecked: [], noSection: [], unread: [], sections: {}, current: {} };
   fs.mkdirSync(path.join(dist, 'c'), { recursive: true });
   fs.mkdirSync(path.join(dist, 'g'), { recursive: true });
   const built = [];
@@ -316,6 +376,8 @@ async function main() {
 
     // offers always come from config/offers.json, even when the route itself is the last good copy
     route.offers = offersFor(route.track, entry.slug);
+
+    attachStories(route, storyReport);
 
     // translations for this route
     const strings = routeStrings(route);
@@ -349,10 +411,13 @@ async function main() {
   } catch (e) { health.problems.push('voice step failed: ' + (e.message || e)); fs.writeFileSync(path.join(dist, 'voice.json'), '{}'); }
   for (const b of built) fs.writeFileSync(path.join(dist, 'r', `${b.key}.json`), JSON.stringify(b.route));
 
+  await watchBlogs(storyReport);
+  health.stories = Object.assign({}, storyReport, { linked: [...storyReport.linked].sort(), missing: [...storyReport.missing].sort() });
+
   for (const o of offersCfg.offers) {
     const expired = o.validUntil && new Date(o.validUntil + 'T23:59:59+10:00') < now;
     if (o.active && (typeof o.lat !== 'number' || typeof o.lng !== 'number')) health.problems.push(`offer ${o.id} has no location yet`);
-    health.offers.push({ id: o.id, partner: o.partner, active: o.active && !expired, expired: !!expired, lat: o.lat, lng: o.lng, radius: o.radius || 400,
+    health.offers.push({ id: o.id, partner: o.partner, active: o.active && !expired, expired: !!expired, lat: o.lat, lng: o.lng, radius: o.radius || 400, showAt: o.showAt === 'finish' ? 'finish' : 'anywhere',
       onRoutes: health.routes.filter(r => (r.offers || []).includes(o.id)).map(r => r.slug) });
     if (o.active && !expired && !health.routes.some(r => (r.offers || []).includes(o.id))) health.problems.push(`offer ${o.id} is not near any route`);
     if (o.logo && !fs.existsSync(path.join(ROOT, 'site', o.logo))) health.problems.push(`offer ${o.id}: logo ${o.logo} is missing, card shows the name instead`);

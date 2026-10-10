@@ -15,6 +15,22 @@ export const VOICE_LANGS = { en: 'en-AU', de: 'de-DE', fr: 'fr-FR', es: 'es-ES',
 const ORDER = ['en', 'de', 'fr', 'es', 'it', 'nl', 'zh', 'ja', 'ko'];
 const MAX_BYTES = 4800;   // Google's limit is 5000 bytes of text per request
 
+// How written text is said aloud (config/speech.json): abbreviations, units and symbols, plus respellings for names
+// the voice gets wrong. The screen keeps the written text. The app applies the same rules to the phone voice.
+let SPEECH = { rules: [], names: {} };
+export function loadSpeech(root) {
+  try { SPEECH = JSON.parse(fs.readFileSync(path.join(root, 'config', 'speech.json'), 'utf8')); } catch (e) { SPEECH = { rules: [], names: {} }; }
+  SPEECH.rules = (SPEECH.rules || []).filter(r => { try { new RegExp(r.find, 'g'); return true; } catch (e) { return false; } });
+  SPEECH.names = SPEECH.names || {};
+  return SPEECH;
+}
+export function speakable(lang, text) {
+  let t = String(text || '');
+  for (const r of SPEECH.rules) if (!r.langs || r.langs.includes(lang)) t = t.replace(new RegExp(r.find, 'g'), r.say);
+  for (const [n, say] of Object.entries(SPEECH.names)) t = t.replace(new RegExp('\\b' + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'g'), say);
+  return t.trim();
+}
+
 // Spoken lines that are not route content. Every say(...) line in site/app.js must be here or in TEMPLATES;
 // the build checks this and reports any gap in health.json.
 export const PHRASES = [
@@ -38,7 +54,7 @@ export const TEMPLATES = [
   { t: "You're still off the route. The route line is {dist} away.", range: 'near' },
   { t: 'The start of the route is {dist} away. Head to the green marker.', range: 'near' }
 ];
-export const NAME_TEMPLATES = ['Rider offer nearby: {name}'];
+export const NAME_TEMPLATES = ['Rider offer nearby: {name}', 'Rider offer when you get back: {name}'];
 export const UNIT_STRINGS = ['{n} metres', '{n} kilometre', '{n} kilometres', '{n} feet', '{n} mile', '{n} miles'];
 
 // Same hash as the app (site/app.js voiceHash): two FNV-1a 32-bit passes over the UTF-16 code units.
@@ -78,7 +94,7 @@ function distancePhrases(tr, range) {
 export function wantedLines({ routes, i18n, langs }) {
   const tr = l => s => (l === 'en' ? s : (i18n[l] && i18n[l][s]) || s);
   const has = (l, s) => l === 'en' || !!(i18n[l] && i18n[l][s]);
-  const groups = { phrases: [], common: [], cues: [], names: [], templates: [], stories: [] };
+  const groups = { phrases: [], common: [], cues: [], names: [], templates: [], stories: [], full: [] };
   const all = ['en', ...langs];
   for (const l of all) {
     for (const p of PHRASES) if (has(l, p)) groups.phrases.push({ lang: l, text: tr(l)(p) });
@@ -98,11 +114,12 @@ export function wantedLines({ routes, i18n, langs }) {
     for (const l of all) {
       const say = s => { if (!s) return null; return has(l, s) || l === 'en' ? { lang: l, text: tr(l)(s) } : null; };
       r.cues.forEach(c => { const x = say(c.n); if (x) groups.cues.push(x); });
-      r.stops.forEach(s => { const x = say(s.name); if (x) groups.names.push(x); const y = say(s.text); if (y) groups.stories.push(y); });
+      r.stops.forEach(s => { const x = say(s.name); if (x) groups.names.push(x); const y = say(s.text); if (y) groups.stories.push(y);
+        (s.story || []).forEach(p => { const z = say(p); if (z) groups.full.push(z); }); });
     }
   }
   const out = [], seen = new Set();
-  for (const g of ['phrases', 'common', 'cues', 'names', 'templates', 'stories']) {
+  for (const g of ['phrases', 'common', 'cues', 'names', 'templates', 'stories', 'full']) {
     const list = groups[g].slice().sort((a, b) => ORDER.indexOf(a.lang) - ORDER.indexOf(b.lang));
     for (const x of list) {
       const text = (x.text || '').trim(); if (!text) continue;
@@ -142,7 +159,29 @@ async function pickVoices(key, want, notes) {
   return out;
 }
 
+// One recording. Google refuses very long sentences in some languages; those are recorded a sentence (or clause) at a time
+// and the pieces joined, which MP3 allows.
+async function synth(text, vc, key, depth = 0) {
+  try {
+    const res = await api('https://texttospeech.googleapis.com/v1/text:synthesize',
+      { input: { text }, voice: { languageCode: vc.code, name: vc.name }, audioConfig: { audioEncoding: 'MP3' } }, key);
+    return Buffer.from(res.audioContent, 'base64');
+  } catch (e) {
+    if (!(e.status === 400 && /too long/i.test(e.message)) || depth > 2) throw e;
+    const re = depth === 0 ? /[^.!?\u3002\uff01\uff1f]+[.!?\u3002\uff01\uff1f]*/g : /[^,;:\uff0c\u3001\uff1b\uff1a]+[,;:\uff0c\u3001\uff1b\uff1a]*/g;
+    const parts = (text.match(re) || [text]).map(x => x.trim()).filter(Boolean);
+    if (parts.length < 2) {   // no punctuation to split on: cut in half at a space or in the middle
+      const mid = Math.floor(text.length / 2), sp = text.lastIndexOf(' ', mid);
+      const at = sp > 10 ? sp : mid; parts.splice(0, parts.length, text.slice(0, at).trim(), text.slice(at).trim());
+    }
+    const bufs = [];
+    for (const p of parts) bufs.push(await synth(p, vc, key, depth + 1));
+    return Buffer.concat(bufs);
+  }
+}
+
 export async function buildVoice({ routes, i18n, langs, dist, appSource, health, allRoutesOk }) {
+  loadSpeech(path.dirname(dist));
   const cfg = (() => { try { return JSON.parse(fs.readFileSync(path.join(path.dirname(dist), 'config', 'voice.json'), 'utf8')); } catch (e) { return {}; } })();
   const want = cfg.voice || 'Aoede';
   const cap = Math.min(Number(cfg.monthlyCharacterCap) || 900000, 980000);
@@ -179,7 +218,8 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   for (const l of Object.keys(VOICE_LANGS)) if (!voices[l] && known[l]) voices[l] = known[l];
   ledger.voices = Object.assign({}, known, voices);
 
-  const fileFor = (l, text) => path.join(cacheDir, voices[l].name, crypto.createHash('sha1').update(text).digest('hex') + '.mp3');
+  // recordings are keyed by what is actually said, so changing a speech rule re-records only the lines it changes
+  const fileFor = (l, text) => path.join(cacheDir, voices[l].name, crypto.createHash('sha1').update(speakable(l, text)).digest('hex') + '.mp3');
   const todo = lines.filter(x => voices[x.lang] && !fs.existsSync(fileFor(x.lang, x.text)));
   const started = Date.now();
   let stop = !key || !Object.keys(voices).length;
@@ -187,18 +227,18 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   async function worker() {
     while (!stop && i < todo.length) {
       const x = todo[i++];
-      const bytes = Buffer.byteLength(x.text);
+      const spoken = speakable(x.lang, x.text);
+      const bytes = Buffer.byteLength(spoken);
       if (bytes > MAX_BYTES) { v.notes.push(`too long to record (${x.lang}): ${x.text.slice(0, 60)}...`); continue; }
-      if (ledger.months[month] + x.text.length > cap) { stop = true; break; }
+      if (ledger.months[month] + spoken.length > cap) { stop = true; break; }
       if (Date.now() - started > runMinutes * 60000) { stop = true; break; }
-      ledger.months[month] += x.text.length;   // counted before the call so a crash never undercounts
+      ledger.months[month] += spoken.length;   // counted before the call so a crash never undercounts
       try {
-        const res = await api('https://texttospeech.googleapis.com/v1/text:synthesize',
-          { input: { text: x.text }, voice: { languageCode: voices[x.lang].code, name: voices[x.lang].name }, audioConfig: { audioEncoding: 'MP3' } }, key);
+        const audio = await synth(spoken, voices[x.lang], key);
         const f = fileFor(x.lang, x.text);
         fs.mkdirSync(path.dirname(f), { recursive: true });
-        fs.writeFileSync(f, Buffer.from(res.audioContent, 'base64'));
-        v.recorded++; v.recordedChars += x.text.length;
+        fs.writeFileSync(f, audio);
+        v.recorded++; v.recordedChars += spoken.length;
       } catch (e) {
         v.failed++;
         if (e.status === 400 && /API key|PERMISSION|billing/i.test(e.message)) { stop = true; health.problems.push(`voice: ${e.message}`); }
@@ -237,11 +277,13 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
     general[l].pre = [...new Set(general[l].pre)];
     general[l].h = [...new Set(general[l].h)];
   }
+  general._say = { rules: SPEECH.rules.map(r => ({ find: r.find, say: r.say, langs: r.langs })), names: SPEECH.names };   // for the phone voice
   fs.writeFileSync(path.join(dist, 'voice.json'), JSON.stringify(general));
+  listenPage({ routes, dist, voices, have });
   // per route: recordings for its own cues, stop names and stories
   for (const r of routes) {
     r.voice = {};
-    const texts = new Set([...r.cues.map(c => c.n), ...r.stops.flatMap(s => [s.name, s.text])].filter(Boolean));
+    const texts = new Set([...r.cues.map(c => c.n), ...r.stops.flatMap(s => [s.name, s.text, ...(s.story || [])])].filter(Boolean));
     for (const [l, set] of have) {
       const hs = [];
       for (const s of texts) {
@@ -263,4 +305,25 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   v.pruned = pruned;
   if (v.waiting && key) v.notes.push(`${v.waiting} lines still to record; the phone voice covers them until then (monthly cap ${cap} characters)`);
   return v;
+}
+
+// listen.html: every place name and the start of every full story in English, with its recording, so Ben can check how
+// names are said. Fixes go in config/speech.json "names". Not linked from the app and not indexed.
+function listenPage({ routes, dist, voices, have }) {
+  const en = voices.en, set = have.get('en') || new Set();
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const clip = t => { if (!en || !t) return null; const h = voiceHash('en|' + t.trim()); return set.has(h) ? `v/${en.tag}/${h}.mp3` : null; };
+  const rows = new Map();
+  for (const r of routes) for (const s of r.stops) {
+    if (s.kind === 'caution' || s.kind === 'finish' || rows.has(s.name)) continue;
+    rows.set(s.name, { name: s.name, story: (s.story || [])[0] || null });
+  }
+  const list = [...rows.values()].sort((a, b) => a.name.localeCompare(b.name));
+  const audio = u => (u ? `<audio controls preload="none" src="${u}"></audio>` : '<span class="w">not recorded yet</span>');
+  const body = list.map(x => `<li><b>${esc(x.name)}</b>${audio(clip(x.name))}${x.story ? `<p>${esc(x.story)}</p>${audio(clip(x.story))}` : ''}</li>`).join('\n');
+  fs.writeFileSync(path.join(dist, 'listen.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Ride Guide voice check</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;margin:0 auto;max-width:760px;padding:16px;color:#1d2430;background:#fff}li{margin:0 0 20px}audio{display:block;width:100%;max-width:420px;margin:6px 0}p{margin:6px 0 0;color:#4a5363}.w{display:block;color:#9a5b00;font-size:14px}</style></head><body>
+<h1>Ride Guide voice check</h1><p>How the natural voice says each place name, and the start of each full story. Tell Claude any name that sounds wrong and how it should sound.</p><ol>
+${body}
+</ol></body></html>`);
 }

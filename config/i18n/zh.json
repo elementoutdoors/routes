@@ -1074,5 +1074,10 @@
  "continue through the round about": "在环岛处直行通过",
  "ride onto the path on the left of McKinnon Drive": "骑上 McKinnon Drive 左侧的小路",
  "Natural voice": "自然语音",
- "Clearer recorded voice. Turn off to use your phone's own voice.": "更清晰的录制语音。关闭后使用手机自带的语音。"
+ "Clearer recorded voice. Turn off to use your phone's own voice.": "更清晰的录制语音。关闭后使用手机自带的语音。",
+ "Hear the full story": "收听完整故事",
+ "Stop the story": "停止播放故事",
+ "Rider offer when you get back: {name}": "回来后的骑行者优惠：{name}",
+ "Before you go": "离开之前",
+ "When you get back": "回来之后"
 }
