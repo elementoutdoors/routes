@@ -439,5 +439,12 @@
  "Loading the page": "正在加载页面",
  "Free beer with any burger": "任意汉堡送一杯啤酒",
  "18+ only. Responsible service of alcohol applies.": "仅限18岁及以上。须遵守酒精负责任供应规定。",
- "Trading hours vary.": "营业时间不定。"
+ "Trading hours vary.": "营业时间不定。",
+ "Pause": "暂停",
+ "Ride paused": "骑行已暂停",
+ "Ride resumed.": "骑行已继续。",
+ "Resume": "继续",
+ "Ride paused. Directions are off until you tap Resume.": "骑行已暂停。点击“继续”之前不会播报路线指引。",
+ "Your ride is paused. Tap Resume when you are ready to keep going.": "你的骑行已暂停。准备好继续时，请点击“继续”。",
+ "Directions and off route warnings are off. Tap Resume when you are ready to keep going.": "路线指引和偏离路线提醒已关闭。准备好继续时，请点击“继续”。"
 }

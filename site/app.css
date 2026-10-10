@@ -105,6 +105,11 @@ body.view-loading #v-loading,body.view-home #v-home,body.view-route #v-route,bod
 .cue-next{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid rgba(255,255,255,.18);margin-top:10px;padding-top:8px;font-size:13px;font-weight:500;color:rgba(255,255,255,.85)}
 .cue-card.off{background:#9A3412}
 .cue-card.done{background:#2F5D3A}
+.cue-card.paused{background:#4B5563}
+.ride-ctl{display:flex;gap:8px;flex:none}
+.ride-ctl .btn.small{padding:0 12px;gap:6px}
+.ride-ctl .btn.small svg{width:18px;height:18px}
+.btn.small.resume{background:var(--primary);color:#fff;border-color:var(--primary)}
 .banner{position:absolute;left:10px;right:10px;top:calc(var(--safe-top) + 170px);background:#FFF4E5;color:#6B3200;border-radius:14px;padding:12px 14px;font-weight:700;font-size:15px;line-height:1.35;box-shadow:0 6px 18px rgba(0,0,0,.18);display:flex;gap:10px;align-items:flex-start;text-align:left;border:none;width:auto}
 .banner svg{color:#B45309;margin-top:1px}
 .banner.offer{background:var(--accent);color:var(--primary)}
@@ -113,7 +118,8 @@ body.view-loading #v-loading,body.view-home #v-home,body.view-route #v-route,bod
 .bottom-sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:22px 22px 0 0;padding:8px 16px calc(16px + var(--safe-bot));display:flex;flex-direction:column;gap:12px;box-shadow:0 -6px 20px rgba(0,0,0,.12)}
 .grab{width:40px;height:5px;border-radius:3px;background:#D5DAE0;align-self:center}
 .remain-row{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
-.remain{font-size:24px;font-weight:900}
+.remain-row>div:first-child{min-width:0;flex:1}
+.remain{font-size:24px;font-weight:900;white-space:nowrap}
 .remain-sub{font-size:13px;font-weight:600;color:var(--muted)}
 .progress{height:8px;border-radius:4px;background:var(--sand);overflow:hidden}
 .progress-bar{height:8px;width:0;background:var(--line);transition:width .6s}

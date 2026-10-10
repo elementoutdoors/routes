@@ -439,5 +439,12 @@
  "Loading the page": "Pagina wordt geladen",
  "Free beer with any burger": "Gratis biertje bij elke burger",
  "18+ only. Responsible service of alcohol applies.": "Alleen 18+. De regels voor verantwoord alcoholgebruik zijn van toepassing.",
- "Trading hours vary.": "Openingstijden variëren."
+ "Trading hours vary.": "Openingstijden variëren.",
+ "Pause": "Pauze",
+ "Ride paused": "Rit gepauzeerd",
+ "Ride resumed.": "Rit hervat.",
+ "Resume": "Verder",
+ "Ride paused. Directions are off until you tap Resume.": "Rit gepauzeerd. De aanwijzingen staan uit tot je op Verder tikt.",
+ "Your ride is paused. Tap Resume when you are ready to keep going.": "Je rit is gepauzeerd. Tik op Verder als je klaar bent om door te gaan.",
+ "Directions and off route warnings are off. Tap Resume when you are ready to keep going.": "Aanwijzingen en waarschuwingen buiten de route staan uit. Tik op Verder als je klaar bent om door te gaan."
 }

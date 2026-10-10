@@ -439,5 +439,12 @@
  "Loading the page": "ページを読み込んでいます",
  "Free beer with any burger": "バーガーご注文でビール1杯無料",
  "18+ only. Responsible service of alcohol applies.": "18歳以上限定。アルコールの責任ある提供に関する規則が適用されます。",
- "Trading hours vary.": "営業時間は変動します。"
+ "Trading hours vary.": "営業時間は変動します。",
+ "Pause": "一時停止",
+ "Ride paused": "ライドを一時停止中",
+ "Ride resumed.": "ライドを再開しました。",
+ "Resume": "再開",
+ "Ride paused. Directions are off until you tap Resume.": "ライドを一時停止しました。「再開」をタップするまで案内は止まります。",
+ "Your ride is paused. Tap Resume when you are ready to keep going.": "ライドは一時停止中です。続ける準備ができたら「再開」をタップしてください。",
+ "Directions and off route warnings are off. Tap Resume when you are ready to keep going.": "案内とルート外れの警告はオフです。続ける準備ができたら「再開」をタップしてください。"
 }

@@ -439,5 +439,12 @@
  "Loading the page": "페이지를 불러오는 중",
  "Free beer with any burger": "버거 주문 시 맥주 한 잔 무료",
  "18+ only. Responsible service of alcohol applies.": "18세 이상만 가능합니다. 책임 있는 주류 제공 규정이 적용됩니다.",
- "Trading hours vary.": "영업시간은 달라질 수 있습니다."
+ "Trading hours vary.": "영업시간은 달라질 수 있습니다.",
+ "Pause": "일시정지",
+ "Ride paused": "라이딩 일시정지됨",
+ "Ride resumed.": "라이딩을 다시 시작합니다.",
+ "Resume": "다시 시작",
+ "Ride paused. Directions are off until you tap Resume.": "라이딩이 일시정지되었습니다. 다시 시작을 누를 때까지 안내가 꺼집니다.",
+ "Your ride is paused. Tap Resume when you are ready to keep going.": "라이딩이 일시정지 상태입니다. 계속할 준비가 되면 다시 시작을 누르세요.",
+ "Directions and off route warnings are off. Tap Resume when you are ready to keep going.": "길 안내와 경로 이탈 경고가 꺼져 있습니다. 계속할 준비가 되면 다시 시작을 누르세요."
 }

@@ -140,6 +140,7 @@
     danger: '<path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5v.5"/>',
     generic: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
     finish: '<path d="M5 21V4"/><path d="M5 4h12l-2 4 2 4H5"/>',
+    pause: '<path d="M9 5v14M15 5v14"/>',
     pin: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
     info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
     view: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
@@ -399,7 +400,7 @@
 
   // ---------- wake lock ----------
   var wakeLock = null;
-  function wantWake() { return ride.active && S.wake; }
+  function wantWake() { return ride.active && !ride.paused && S.wake; }
   function requestWake() {
     if (!wantWake() || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
     navigator.wakeLock.request('screen').then(function (l) { wakeLock = l; l.addEventListener('release', function () { wakeLock = null; }); }).catch(function () {});
@@ -409,21 +410,23 @@
 
   // ---------- riding engine ----------
   var ride = { active: false, zoom: 16, d: 0, locked: false, off: false, offCount: 0, onCount: 0, lastOffSay: 0, follow: true,
-    cueState: {}, shown: {}, watch: null, fix: null, backCount: 0, lastTouch: Date.now(), sim: null, finished: false };
+    paused: false, cueState: {}, shown: {}, watch: null, fix: null, backCount: 0, lastTouch: Date.now(), sim: null, finished: false };
 
   function progressKey() { return 'rg.progress.' + R.key; }
-  function saveProgress() { lsSet(progressKey(), { d: ride.d, ts: Date.now(), shown: ride.shown, cueState: ride.cueState, version: R.version }); }
+  function saveProgress() { lsSet(progressKey(), { d: ride.d, ts: Date.now(), shown: ride.shown, cueState: ride.cueState, version: R.version, paused: ride.paused }); }
 
   function startRide(resume) {
     ride.active = true; ride.finished = false; ride.follow = true; ride.off = false; ride.offCount = 0; ride.onCount = 0; ride.backCount = 0;
     var p = resume ? lsGet(progressKey(), null) : null;
-    ride.prevD = null; ride.saidStart = false;
-    if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; }
+    ride.prevD = null; ride.saidStart = false; ride.paused = false;
+    if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; ride.paused = !!p.paused; }
     else { ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.locked = false; }
     show('ride');
     updateFollowBtn(); updateVoiceBtn();
     // Speaking once inside the tap unlocks speech on iPhone.
-    say(tu(resume ? 'Welcome back. Picking up where you left off.' : "Let's ride. Follow the line on the map and listen for directions."), { interrupt: true });
+    say(ride.paused ? tu('Your ride is paused. Tap Resume when you are ready to keep going.')
+      : tu(resume ? 'Welcome back. Picking up where you left off.' : "Let's ride. Follow the line on the map and listen for directions."), { interrupt: true });
+    updatePauseBtn();
     requestWake();
     startGps();
     renderRide();
@@ -432,11 +435,34 @@
     if (map) setTimeout(function () { map.jumpTo({ center: ride.fix ? [ride.fix.lng, ride.fix.lat] : pointAt(ride.d), zoom: 16 }); }, 80);
   }
   function endRide() {
-    ride.active = false; stopGps(); stopSim(); releaseWake(); hideSaver();
+    ride.active = false; ride.paused = false; stopGps(); stopSim(); releaseWake(); hideSaver(); updatePauseBtn();
     try { speechSynthesis.cancel(); } catch (e) {}
     lsDel(progressKey());
     ride.d = 0; updateDone();
     openRoute();
+  }
+  // Pause: the rider is taking a break or leaving the route on purpose. Position still shows on the map,
+  // but directions, off route warnings, stops, offers and the finish are all held, and the screen may sleep.
+  function pauseRide() {
+    if (!ride.active || ride.paused) return;
+    ride.paused = true; ride.off = false; ride.offCount = 0; ride.onCount = 0;
+    try { speechSynthesis.cancel(); } catch (e) {}
+    say(tu('Ride paused. Directions are off until you tap Resume.'), { interrupt: true });
+    releaseWake(); hideSaver(); updatePauseBtn(); renderRide(); saveProgress();
+  }
+  function resumeRide() {
+    if (!ride.active || !ride.paused) return;
+    ride.paused = false; ride.off = false; ride.offCount = 0; ride.onCount = 0; ride.backCount = 0; ride.lastTouch = Date.now();
+    say(tu('Ride resumed.'), { interrupt: true });
+    requestWake(); updatePauseBtn(); renderRide(); saveProgress();
+    ride.follow = true; updateFollowBtn();
+    if (map && ride.fix) map.easeTo({ center: [ride.fix.lng, ride.fix.lat], zoom: ride.zoom, duration: 600 });
+  }
+  function updatePauseBtn() {
+    var b = $('pause-btn'); if (!b) return;
+    b.classList.toggle('resume', !!ride.paused);
+    $('pause-label').textContent = ride.paused ? tu('Resume') : tu('Pause');
+    $('pause-ico').innerHTML = ride.paused ? '<path d="M7 4l12 8-12 8z"/>' : '<path d="M9 5v14M15 5v14"/>';
   }
   function startGps() {
     stopGps();
@@ -452,6 +478,7 @@
     var c = pos.coords, acc = c.accuracy || 30;
     ride.fix = { lat: c.latitude, lng: c.longitude, acc: acc, heading: c.heading, speed: c.speed, t: Date.now() };
     updateMe();
+    if (ride.paused) { if (ride.follow && map) map.easeTo({ center: [c.longitude, c.latitude], zoom: ride.zoom, duration: 800 }); return; }
     if (acc > 80) return;   // too vague to use
     var tol = Math.max(CFG.offRoute.metres * 0.7, Math.min(CFG.offRoute.metres, acc + 15));
     var cand = candidates(c.latitude, c.longitude, tol);
@@ -585,7 +612,14 @@
     $('progress-bar').style.width = Math.min(100, ride.d / R.distance * 100).toFixed(1) + '%';
     card.classList.remove('off', 'done');
     var i = nextCueIndex();
-    if (ride.off) {
+    card.classList.remove('paused');
+    if (ride.paused) {
+      card.classList.add('paused');
+      $('cue-icon').innerHTML = svg('pause');
+      $('cue-dist').textContent = tu('Ride paused');
+      $('cue-text').textContent = tu('Directions and off route warnings are off. Tap Resume when you are ready to keep going.');
+      $('cue-next-text').textContent = '';
+    } else if (ride.off) {
       card.classList.add('off');
       $('cue-icon').innerHTML = svg('danger');
       $('cue-dist').textContent = tu('Off route');
@@ -653,7 +687,7 @@
 
   // ---------- battery saver ----------
   function saverTick() {
-    if (!S.saver || !ride.active) { hideSaver(); return; }
+    if (!S.saver || !ride.active || ride.paused) { hideSaver(); return; }
     var i = nextCueIndex(), dist = i >= 0 ? R.cues[i].d - ride.d : 9999;
     if (dist < CFG.screen.wakeBeforeTurnMetres || ride.off || sheetOpen() || !$('viewer').hidden || Date.now() - ride.lastTouch < CFG.screen.blackoutAfterSeconds * 1000) hideSaver();
     else $('saver').hidden = false;
@@ -1050,6 +1084,7 @@
   function wire() {
     $('start-btn').addEventListener('click', function () { startRide(!!this.dataset.resume); });
     $('end-btn').addEventListener('click', endRide);
+    $('pause-btn').addEventListener('click', function () { if (ride.paused) resumeRide(); else pauseRide(); });
     $('route-stops-btn').addEventListener('click', openStops);
     $('route-cues-btn').addEventListener('click', openCues);
     $('b-cues').addEventListener('click', openCues);
@@ -1067,6 +1102,7 @@
     $('btn-voice').addEventListener('click', function () { S.voice = !S.voice; saveSettings('voice'); updateVoiceBtn(); if (!S.voice) { try { speechSynthesis.cancel(); } catch (e) {} } else say(tu('Voice on.')); });
     $('btn-follow').addEventListener('click', function () { ride.follow = true; updateFollowBtn(); if (map && ride.fix) map.easeTo({ center: [ride.fix.lng, ride.fix.lat], zoom: Math.max(map.getZoom(), 15.5) }); });
     $('cue-repeat').addEventListener('click', function () {
+      if (ride.paused) { try { speechSynthesis.cancel(); } catch (e) {} var w = S.voice; S.voice = true; say(tu('Ride paused. Directions are off until you tap Resume.')); S.voice = w; return; }
       var i = nextCueIndex(); if (i < 0) return;
       try { speechSynthesis.cancel(); } catch (e) {}
       var was = S.voice; S.voice = true;

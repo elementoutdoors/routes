@@ -123,7 +123,10 @@
         <div class="remain" id="remain"></div>
         <div class="remain-sub" id="remain-sub"></div>
       </div>
-      <button type="button" class="btn outline small" id="end-btn" data-t="End ride">End ride</button>
+      <div class="ride-ctl">
+        <button type="button" class="btn outline small" id="pause-btn"><svg id="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5v14M15 5v14"/></svg><span id="pause-label" data-t="Pause">Pause</span></button>
+        <button type="button" class="btn outline small" id="end-btn" data-t="End ride">End ride</button>
+      </div>
     </div>
     <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
     <div class="bottom-btns">

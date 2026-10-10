@@ -439,5 +439,12 @@
  "Loading the page": "Caricamento della pagina",
  "Free beer with any burger": "Birra in omaggio con ogni hamburger",
  "18+ only. Responsible service of alcohol applies.": "Solo per maggiori di 18 anni. Si applicano le norme sulla somministrazione responsabile di alcolici.",
- "Trading hours vary.": "Gli orari di apertura variano."
+ "Trading hours vary.": "Gli orari di apertura variano.",
+ "Pause": "Pausa",
+ "Ride paused": "Giro in pausa",
+ "Ride resumed.": "Giro ripreso.",
+ "Resume": "Riprendi",
+ "Ride paused. Directions are off until you tap Resume.": "Giro in pausa. Le indicazioni sono disattivate finché non tocchi Riprendi.",
+ "Your ride is paused. Tap Resume when you are ready to keep going.": "Il tuo giro è in pausa. Tocca Riprendi quando sei pronto a ripartire.",
+ "Directions and off route warnings are off. Tap Resume when you are ready to keep going.": "Indicazioni e avvisi di fuori percorso sono disattivati. Tocca Riprendi quando sei pronto a ripartire."
 }
