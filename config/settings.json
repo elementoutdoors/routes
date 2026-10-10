@@ -1,0 +1,42 @@
+{
+  "_help": "Ride Guide behaviour for every route. Change a number, then Commit changes: the live site updates in about two minutes. A value that is missing or out of range falls back to the default shown in its _help line, so a typo cannot break the app.",
+
+  "announce": {
+    "_help": "Spoken directions. firstWarningMetres: say 'In 150 metres, ...' this far before a turn (default 160, 60 to 400). turnMetres: say the turn itself this far before it (default 35, 10 to 80). cautionWarningMetres: first warning for a caution cue (default 120, 60 to 400). skipFirstWarningIfCuesCloserThanMetres: when two cues are this close, skip the early warning for the second (default 110, 0 to 300). mergeNextCueWithinMetres: when the next cue is this close, add 'Then ...' to the current one (default 90, 0 to 250).",
+    "firstWarningMetres": 160,
+    "turnMetres": 35,
+    "cautionWarningMetres": 120,
+    "skipFirstWarningIfCuesCloserThanMetres": 110,
+    "mergeNextCueWithinMetres": 90
+  },
+
+  "offRoute": {
+    "_help": "metres: further than this from the line counts as off route (default 50, 25 to 150). readings: how many GPS readings in a row before warning (default 3, 1 to 10). repeatSeconds: repeat the warning this often while off route (default 60, 20 to 600).",
+    "metres": 50,
+    "readings": 3,
+    "repeatSeconds": 60
+  },
+
+  "stops": {
+    "_help": "triggerMetres: open a stop when the rider is this close (default 60, 20 to 200). cautionWarningMetres: warn of a caution stop this far ahead (default 90, 30 to 300).",
+    "triggerMetres": 60,
+    "cautionWarningMetres": 90
+  },
+
+  "screen": {
+    "_help": "Starting settings for riders who have not changed them. keepScreenOn (default true), batterySaver (default false), readStoriesAloud (default true). wakeBeforeTurnMetres: battery saver lights the screen this far before a turn (default 250, 80 to 1000). blackoutAfterSeconds: battery saver blacks out after this long with no taps (default 20, 5 to 120).",
+    "keepScreenOn": true,
+    "batterySaver": false,
+    "readStoriesAloud": true,
+    "wakeBeforeTurnMetres": 250,
+    "blackoutAfterSeconds": 20
+  },
+
+  "speeds": {
+    "_help": "Average km/h used for riding time estimates (defaults: ebike 15, bike 13, walk 4.5, kayak 5).",
+    "ebike": 15,
+    "bike": 13,
+    "walk": 4.5,
+    "kayak": 5
+  }
+}

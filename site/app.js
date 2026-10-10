@@ -23,9 +23,29 @@
     return SPEECH_LANG[l] ? l : 'en';
   }
   function defaultUnits() { return /^en-(US|GB|LR|MM)/i.test(navigator.language || '') ? 'imperial' : 'metric'; }
-  var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, stories: true, wake: true, saver: false, sat: false },
-    lsGet('rg.settings', {}));
-  function saveSettings() { lsSet('rg.settings', S); }
+  // Only the settings a rider changed are stored; everything else follows the business defaults in each route.
+  var touched = lsGet('rg.touched', null);
+  var savedS = lsGet('rg.settings', {});
+  if (!touched) touched = Object.keys(savedS);
+  var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, stories: true, wake: true, saver: false, sat: false }, savedS);
+  function saveSettings(key) {
+    if (key && touched.indexOf(key) < 0) touched.push(key);
+    var out = {}; touched.forEach(function (k) { out[k] = S[k]; });
+    lsSet('rg.settings', out); lsSet('rg.touched', touched);
+  }
+  // business settings (config/settings.json), with the same defaults the build uses
+  var CFG = { announce: { firstWarningMetres: 160, turnMetres: 35, cautionWarningMetres: 120, skipFirstWarningIfCuesCloserThanMetres: 110, mergeNextCueWithinMetres: 90 },
+    offRoute: { metres: 50, readings: 3, repeatSeconds: 60 }, stops: { triggerMetres: 60, cautionWarningMetres: 90 },
+    screen: { wakeBeforeTurnMetres: 250, blackoutAfterSeconds: 20 } };
+  function applyRouteSettings() {
+    var rs = R.settings || {};
+    ['announce', 'offRoute', 'stops', 'screen'].forEach(function (g) { if (rs[g]) Object.keys(CFG[g]).forEach(function (k) { if (typeof rs[g][k] === 'number') CFG[g][k] = rs[g][k]; }); });
+    if (rs.speeds) Object.keys(rs.speeds).forEach(function (k) { SPEED[k] = rs.speeds[k] / 3.6; });
+    var sc = rs.screen || {};
+    [['wake', 'keepScreenOn'], ['saver', 'batterySaver'], ['stories', 'readStoriesAloud']].forEach(function (p) {
+      if (touched.indexOf(p[0]) < 0 && typeof sc[p[1]] === 'boolean') S[p[0]] = sc[p[1]];
+    });
+  }
 
   // ---------- translation ----------
   var UI = {};        // { lang: { english: translated } }
@@ -275,7 +295,7 @@
     });
   }
   function setSatellite(on) {
-    S.sat = on; saveSettings();
+    S.sat = on; saveSettings('sat');
     if (map) map.setStyle(on ? satStyle() : STYLE);
   }
 
@@ -396,7 +416,7 @@
   function startRide(resume) {
     ride.active = true; ride.finished = false; ride.follow = true; ride.off = false; ride.offCount = 0; ride.onCount = 0; ride.backCount = 0;
     var p = resume ? lsGet(progressKey(), null) : null;
-    ride.prevD = null;
+    ride.prevD = null; ride.saidStart = false;
     if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; }
     else { ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.locked = false; }
     show('ride');
@@ -432,7 +452,7 @@
     ride.fix = { lat: c.latitude, lng: c.longitude, acc: acc, heading: c.heading, speed: c.speed, t: Date.now() };
     updateMe();
     if (acc > 80) return;   // too vague to use
-    var tol = Math.max(35, Math.min(60, acc + 15));
+    var tol = Math.max(CFG.offRoute.metres * 0.7, Math.min(CFG.offRoute.metres, acc + 15));
     var cand = candidates(c.latitude, c.longitude, tol);
     var pick = null;
     if (cand.list.length) {
@@ -450,14 +470,22 @@
       ride.offCount = 0;
       if (ride.off) { ride.onCount++; if (ride.onCount >= 2) { ride.off = false; ride.onCount = 0; say(tu('Back on route.'), { interrupt: true }); } }
       if (ride.backCount === 3) say(tu('You may be riding the route backwards. Check the arrows on the line.'));
+    } else if (!ride.locked) {
+      // not on the route yet: guide to the start instead of calling it "off route"
+      var toStart = hav(c.latitude, c.longitude, R.track.lat[0], R.track.lng[0]);
+      if (!ride.saidStart) {
+        ride.saidStart = true;
+        say(fmt(tu('The start of the route is {dist} away. Head to the green marker.'), { dist: distParts(toStart).say }));
+        if (toStart > 3000 && !ride.sim) banner(tu('You are a long way from this route. To see how it works from here, use Test drive in Settings.'), 'caution', 12000);
+      }
     } else {
       ride.onCount = 0;
       ride.offCount++;
       var away = cand.nearest ? cand.nearest.dist : 0;
-      if (!ride.off && ride.offCount >= 3) {
+      if (!ride.off && ride.offCount >= CFG.offRoute.readings) {
         ride.off = true; ride.lastOffSay = Date.now();
         say(fmt(tu("You're off the route. The route line is {dist} away."), { dist: distParts(away).say }), { interrupt: true });
-      } else if (ride.off && Date.now() - ride.lastOffSay > 60000) {
+      } else if (ride.off && Date.now() - ride.lastOffSay > CFG.offRoute.repeatSeconds * 1000) {
         ride.lastOffSay = Date.now();
         say(fmt(tu('The route line is {dist} away.'), { dist: distParts(away).say }));
       }
@@ -475,7 +503,7 @@
     return -1;
   }
   function checkCues() {
-    if (ride.off) return;
+    if (ride.off || !ride.locked) return;
     // a cue passed between two fixes (fast riding or a slow GPS) is still announced if it was only just passed
     var prev = ride.prevD == null ? ride.d : ride.prevD;
     ride.prevD = ride.d;
@@ -488,16 +516,16 @@
     var c = R.cues[i], dist = c.d - ride.d, st = ride.cueState[i] || 0;
     var prevD = i > 0 ? R.cues[i - 1].d : -1000;
     var danger = c.t === 'danger';
-    var prepAt = danger ? 120 : 160;
-    if (st < 1 && dist <= prepAt && dist > 60 && (c.d - prevD) > 110) {
+    var A = CFG.announce, prepAt = danger ? A.cautionWarningMetres : A.firstWarningMetres;
+    if (st < 1 && dist <= prepAt && dist > A.turnMetres + 25 && (c.d - prevD) > A.skipFirstWarningIfCuesCloserThanMetres) {
       ride.cueState[i] = 1;
       var pre = fmt(tu('In {dist},'), { dist: distParts(Math.max(dist, 20)).say });
       sayContent(c.n, (danger ? tu('Caution.') + ' ' : '') + pre);
-    } else if (st < 2 && dist <= 35) {
+    } else if (st < 2 && dist <= A.turnMetres) {
       ride.cueState[i] = 2;
       sayContent(c.n, danger ? tu('Caution.') : null);
       var nx = R.cues[i + 1];
-      if (nx && nx.d - c.d < 90) { ride.cueState[i + 1] = 1; sayContent(nx.n, tu('Then')); }
+      if (nx && nx.d - c.d < A.mergeNextCueWithinMetres) { ride.cueState[i + 1] = 1; sayContent(nx.n, tu('Then')); }
     }
   }
   function checkStops() {
@@ -506,9 +534,10 @@
       if (ride.shown[s.id] || s.kind === 'toilet' || s.kind === 'food' || s.kind === 'finish') return;
       var near = hav(ride.fix.lat, ride.fix.lng, s.lat, s.lng);
       var along = Math.abs(s.d - ride.d);
-      var trigger = s.kind === 'caution' ? (s.d - ride.d < 90 && s.d - ride.d > -30 && near < 140)
+      var cw = CFG.stops.cautionWarningMetres, tr = CFG.stops.triggerMetres;
+      var trigger = s.kind === 'caution' ? (s.d - ride.d < cw && s.d - ride.d > -30 && near < cw + 50)
         : s.off ? (along < 40 && s.off < 1000)      // a stop off the route: show it as the rider passes the nearest point
-        : (near < 60 && along < 120);
+        : (near < tr && along < tr * 2);
       if (!trigger) return;
       ride.shown[s.id] = 1;
       if (s.kind === 'caution') {
@@ -588,6 +617,7 @@
     }
     updateDone();
     updateSaverText();
+    updateViewerCue();
   }
   var doneTimer = 0;
   function updateDone() {
@@ -624,7 +654,7 @@
   function saverTick() {
     if (!S.saver || !ride.active) { hideSaver(); return; }
     var i = nextCueIndex(), dist = i >= 0 ? R.cues[i].d - ride.d : 9999;
-    if (dist < 250 || ride.off || sheetOpen() || Date.now() - ride.lastTouch < 20000) hideSaver();
+    if (dist < CFG.screen.wakeBeforeTurnMetres || ride.off || sheetOpen() || !$('viewer').hidden || Date.now() - ride.lastTouch < CFG.screen.blackoutAfterSeconds * 1000) hideSaver();
     else $('saver').hidden = false;
   }
   function updateSaverText() {
@@ -645,10 +675,14 @@
     hideSaver();
     setTimeout(function () { $('sheet-close').focus(); }, 50);
   }
-  function closeSheet() { $('sheet').hidden = true; $('scrim').hidden = true; }
+  function closeSheet() { $('sheet').hidden = true; $('scrim').hidden = true; if (ride.keepOpen) { ride.keepOpen = false; scrubUrl(); } }
 
-  function linkRow(href, label, icon) {
+  function linkRow(href, label, icon, frame) {
     var a = el('a', { class: 'linkrow', href: href, target: '_blank', rel: 'noopener' });
+    if (frame) a.addEventListener('click', function (e) {
+      if (!navigator.onLine) return;   // let the browser show its own offline page in a new tab
+      e.preventDefault(); openViewer(href);
+    });
     a.appendChild(el('span', { text: label })); a.insertAdjacentHTML('beforeend', svg(icon || 'ext'));
     return a;
   }
@@ -670,7 +704,7 @@
         acts.appendChild(listen);
       }
       var u = safeUrl(s.url);
-      if (u) acts.appendChild(linkRow(u, /review|g\.page/i.test(u) ? tu('Leave us a review') : /surfline|tide/i.test(u) ? tu('Check the tide times') : tu('More about this place'), /review|g\.page/i.test(u) ? 'star' : 'ext'));
+      if (u) acts.appendChild(linkRow(u, /review|g\.page/i.test(u) ? tu('Leave us a review') : /surfline|tide/i.test(u) ? tu('Check the tide times') : tu('More about this place'), /review|g\.page/i.test(u) ? 'star' : 'ext', s.frame));
       var back = el('button', { class: 'btn outline full', type: 'button', text: ride.active ? tu('Back to my ride') : tu('Close') });
       back.addEventListener('click', closeSheet);
       acts.appendChild(back);
@@ -705,7 +739,7 @@
       showMap.querySelector('span').textContent = tu('Show on the map');
       showMap.addEventListener('click', function () { closeSheet(); if (map) { ride.follow = false; updateFollowBtn(); map.easeTo({ center: [o.lng, o.lat], zoom: 16 }); } });
       acts.appendChild(showMap);
-      var u = safeUrl(o.url); if (u) acts.appendChild(linkRow(u, fmt(tu('Visit {name}'), { name: o.partner })));
+      var u = safeUrl(o.url); if (u) acts.appendChild(linkRow(u, fmt(tu('Visit {name}'), { name: o.partner }), 'ext', o.frame));
       b.appendChild(acts);
     });
   }
@@ -784,11 +818,11 @@
         });
         g.appendChild(s);
       }
-      seg(group(tu('Units')), [['metric', tu('Metric (km)')], ['imperial', tu('Imperial (miles)')]], S.units, function (v) { S.units = v; saveSettings(); refreshAll(); });
+      seg(group(tu('Units')), [['metric', tu('Metric (km)')], ['imperial', tu('Imperial (miles)')]], S.units, function (v) { S.units = v; saveSettings('units'); refreshAll(); });
       var lg = group(tu('Language')), grid = el('div', { class: 'lang-grid' });
       LANGS.forEach(function (l) {
         var bt = el('button', { type: 'button', 'aria-pressed': String(l[0] === S.lang), lang: l[0], text: l[1] });
-        bt.addEventListener('click', function () { S.lang = l[0]; saveSettings(); refreshAll(); openSettings(); });
+        bt.addEventListener('click', function () { S.lang = l[0]; saveSettings('lang'); refreshAll(); openSettings(); });
         grid.appendChild(bt);
       });
       lg.appendChild(grid);
@@ -798,7 +832,7 @@
         var row = el('div', { class: 'toggle-row' }), t = el('div');
         t.appendChild(el('div', { class: 'tr-t', text: title })); if (sub) t.appendChild(el('div', { class: 'tr-s', text: sub }));
         var sw = el('button', { class: 'switch', type: 'button', 'aria-pressed': String(!!S[key]), 'aria-label': title });
-        sw.addEventListener('click', function () { S[key] = !S[key]; saveSettings(); sw.setAttribute('aria-pressed', String(S[key])); if (after) after(); });
+        sw.addEventListener('click', function () { S[key] = !S[key]; saveSettings(key); sw.setAttribute('aria-pressed', String(S[key])); if (after) after(); });
         row.appendChild(t); row.appendChild(sw); cl.appendChild(row);
       }
       toggle(tu('Spoken directions'), null, 'voice', updateVoiceBtn);
@@ -887,12 +921,85 @@
   }
   function useRoute(key, data) {
     R = data; R.key = key;
+    applyRouteSettings();
     applyBrand();
     applyStaticText();
     if (!map) initMap(); else { addRouteLayers(); fitRoute(); }
     addMarkers();
     openRoute();
     saveOffline();
+  }
+
+  // ---------- in-app page viewer (the ride keeps running underneath) ----------
+  function openViewer(url) {
+    closeSheet();
+    $('viewer-frame').src = url;
+    $('viewer-ext').href = url;
+    $('viewer-back-label').textContent = tu(ride.active ? 'Back to my ride' : 'Back to the route');
+    $('viewer').hidden = false;
+    updateViewerCue();
+    try { history.pushState({ rgViewer: 1 }, ''); } catch (e) {}
+  }
+  function closeViewer(fromPop) {
+    if ($('viewer').hidden) return;
+    $('viewer').hidden = true;
+    $('viewer-frame').src = 'about:blank';
+    if (!fromPop) { try { if (history.state && history.state.rgViewer) history.back(); } catch (e) {} }
+  }
+  function updateViewerCue() {
+    var v = $('viewer-cue');
+    if (!v || $('viewer').hidden) return;
+    v.textContent = ride.active && ride.fix ? ($('cue-dist').textContent ? $('cue-dist').textContent + ': ' : '') + $('cue-text').textContent : '';
+  }
+
+  // ---------- getting back to a route ----------
+  var installEvt = null;
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); installEvt = e; });
+  function isStandalone() { return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
+  function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+  function siteAddress() { return location.origin + location.pathname.replace(/index\.html$/, ''); }
+  function openKeep() {
+    // While this sheet is open the address carries the route, so "Add to Home Screen" opens this route.
+    try { history.replaceState(null, '', location.pathname + '#' + R.key); } catch (e) {}
+    openSheet(function (b) {
+      b.appendChild(el('div', { class: 'kicker', text: tu('Save to my phone') }));
+      b.appendChild(el('h2', { id: 'sheet-title', text: tu('Getting back to this route') }));
+      b.appendChild(el('p', { text: tu('This route is saved on this phone. If you close the page, open the same web address again, or type this route code at the address below.') }));
+      if (R.code) b.appendChild(el('div', { class: 'code-big', text: R.code, 'aria-label': tu('Route code') + ' ' + R.code.split('').join(' ') }));
+      var ad = el('p'); ad.appendChild(el('span', { class: 'addr', text: siteAddress() })); b.appendChild(ad);
+      var acts = el('div', { class: 'sheet-actions' });
+      if (!isStandalone()) {
+        if (installEvt) {
+          var ins = el('button', { class: 'btn primary full', type: 'button' }, svg('pin') + '<span></span>');
+          ins.querySelector('span').textContent = tu('Add to my home screen');
+          ins.addEventListener('click', function () { installEvt.prompt(); installEvt = null; });
+          acts.appendChild(ins);
+        } else {
+          b.appendChild(el('div', { class: 'set-label', text: tu('Add it to your home screen') }));
+          var ol = el('ol', { class: 'steps' });
+          (isIOS() ? [tu('Tap the Share button in Safari.'), tu('Choose Add to Home Screen.'), tu('Tap Add. The route opens from the new icon.')]
+                   : [tu('Open your browser menu.'), tu('Choose Add to Home screen or Install app.'), tu('The route opens from the new icon.')])
+            .forEach(function (t) { ol.appendChild(el('li', { text: t })); });
+          b.appendChild(ol);
+        }
+      }
+      var done = el('button', { class: 'btn outline full', type: 'button', text: tu('Done') });
+      done.addEventListener('click', closeSheet);
+      acts.appendChild(done);
+      b.appendChild(acts);
+    });
+    ride.keepOpen = true;
+  }
+  function openCode(raw) {
+    var err = $('code-error');
+    var k = (raw || '').match(/#([A-Za-z0-9_-]{8,64})/);
+    if (k) { err.hidden = true; return openKey(k[1]); }   // a whole link pasted in
+    var code = (raw || '').toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/O/g, '0').replace(/[IL]/g, '1');
+    if (code.length !== 6) { err.textContent = tu('Route codes have 6 letters and numbers.'); err.hidden = false; return; }
+    fetchJson('c/' + code + '.json').then(function (j) { err.hidden = true; openKey(j.k); }, function () {
+      err.textContent = navigator.onLine ? tu("That code doesn't match a route. Check it with our team.") : tu('Opening a new route needs signal. Try again when you have reception.');
+      err.hidden = false;
+    });
   }
 
   // ---------- home ----------
@@ -935,12 +1042,12 @@
     $('home-settings').addEventListener('click', openSettings);
     $('btn-ride-settings').addEventListener('click', openSettings);
     $('route-lang').addEventListener('click', openSettings);
-    $('route-units').addEventListener('click', function () { S.units = S.units === 'imperial' ? 'metric' : 'imperial'; saveSettings(); refreshAll(); });
+    $('route-units').addEventListener('click', function () { S.units = S.units === 'imperial' ? 'metric' : 'imperial'; saveSettings('units'); refreshAll(); });
     $('route-back').addEventListener('click', openHome);
     $('route-desc-more').addEventListener('click', function () { $('route-desc').classList.remove('clamp'); this.hidden = true; });
     $('sheet-close').addEventListener('click', closeSheet);
     $('scrim').addEventListener('click', closeSheet);
-    $('btn-voice').addEventListener('click', function () { S.voice = !S.voice; saveSettings(); updateVoiceBtn(); if (!S.voice) { try { speechSynthesis.cancel(); } catch (e) {} } else say(tu('Voice on.')); });
+    $('btn-voice').addEventListener('click', function () { S.voice = !S.voice; saveSettings('voice'); updateVoiceBtn(); if (!S.voice) { try { speechSynthesis.cancel(); } catch (e) {} } else say(tu('Voice on.')); });
     $('btn-follow').addEventListener('click', function () { ride.follow = true; updateFollowBtn(); if (map && ride.fix) map.easeTo({ center: [ride.fix.lng, ride.fix.lat], zoom: Math.max(map.getZoom(), 15.5) }); });
     $('cue-repeat').addEventListener('click', function () {
       var i = nextCueIndex(); if (i < 0) return;
@@ -952,7 +1059,11 @@
     $('saver').addEventListener('click', wakeSaver);
     ['touchstart', 'mousedown'].forEach(function (ev) { document.addEventListener(ev, function () { ride.lastTouch = Date.now(); }, { passive: true }); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheetOpen()) closeSheet(); });
-    window.addEventListener('hashchange', function () { var k = keyFromUrl(); if (k) { scrubUrl(); openKey(k); } });
+    window.addEventListener('hashchange', function () { if (ride.keepOpen) return; var k = keyFromUrl(); if (k) { scrubUrl(); openKey(k); } });
+    $('keep-btn').addEventListener('click', openKeep);
+    $('viewer-back').addEventListener('click', function () { closeViewer(false); });
+    window.addEventListener('popstate', function () { closeViewer(true); });
+    $('code-form').addEventListener('submit', function (e) { e.preventDefault(); openCode($('code-input').value); });
   }
 
   function boot() {

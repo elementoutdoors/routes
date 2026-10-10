@@ -14,6 +14,10 @@ phone's browser with the map, spoken and written directions, stops and partner o
 - Each route lives at a secret address. The QR code carries the key; the app removes it from the address bar,
   so a copied link does not open the route. Search engines are told not to index the site.
 - Opening a route saves it to the phone, with the map around it, so it keeps working with no signal.
+- Each route also has a 6-character route code (printed on its QR card). Typing it on the home page reopens the route,
+  and "Save to my phone" shows the code and adds the route to the home screen.
+- "More about this place" pages that allow it open inside the app with a Back to my ride bar, so the ride keeps running.
+  The build checks every link each night to decide.
 
 ## Changing things
 
@@ -22,6 +26,7 @@ phone's browser with the map, spoken and written directions, stops and partner o
 | Cue wording, stops, the route line | Ride with GPS. Live by the next morning, or run the workflow by hand. |
 | Add or remove a route | `config/routes.json`, plus the route's Ride with GPS privacy code in the `ROUTE_SECRETS` secret |
 | Partner offers | `config/offers.json` (set `validUntil` and it hides itself after that date) |
+| When turns are announced, close-together turns, off-route sensitivity, stop pop-ups, screen defaults | `config/settings.json` (edit on GitHub; every value is range-checked and falls back to its default) |
 | Brand colours, phone numbers | `config/brands.json` |
 | Translations | `config/i18n/<lang>.json`. New or changed English text is listed in `i18n-missing.json` after a build and in `health.json`; the weekly drift check fills the gaps. Brief: `config/TRANSLATION_BRIEF.md` |
 | A route's QR code needs replacing | Bump its `rev` in `config/routes.json`. The old code stops working. |

@@ -2,7 +2,7 @@
 // Reads the live health.json, then checks that the site was rebuilt recently, every route opens,
 // every stop and offer link still works, every photo loads, and nothing is untranslated.
 // Prints a JSON report. Exit code 0 = all good, 1 = something needs attention.
-// Version 2 (10/10/2026): real browser user agent, redirects to another page count as broken, 403 noted not failed.
+// Version 3 (10/10/2026): also checks every typed route code. v2: real browser user agent, redirects to another page count as broken, 403 noted not failed.
 // Usage: node scripts/check.mjs [siteBase]   (route links are read from qr/links.json when present)
 import fs from 'node:fs';
 
@@ -49,6 +49,20 @@ if (fs.existsSync('qr/links.json')) {
     if (s.code !== 200) issues.push(`QR code for ${slug} does not open its route (${s.code})`);
   }
 }
+
+// every typed route code opens the same route as its QR code
+if (fs.existsSync('qr/codes.json') && fs.existsSync('qr/links.json')) {
+  const q = JSON.parse(fs.readFileSync('qr/links.json', 'utf8'));
+  const c = JSON.parse(fs.readFileSync('qr/codes.json', 'utf8'));
+  for (const [slug, code] of Object.entries(c)) {
+    try {
+      const r = await fetch(`${BASE}c/${code}.json`, { cache: 'no-store' });
+      const k = r.ok ? (await r.json()).k : null;
+      if (!q[slug] || k !== q[slug].split('#')[1]) issues.push(`route code ${code} for ${slug} does not open its route`);
+    } catch (e) { issues.push(`route code ${code} for ${slug} could not be checked`); }
+  }
+}
+if (h.problems.some(p => /^settings:/.test(p))) notes.push('a value in config/settings.json was out of range and the default was used');
 
 console.log(JSON.stringify({ ok: !issues.length, built: h.built, routes: h.routes.map(r => `${r.slug}: ${r.source}, ${r.cues} cues, ${r.stops} stops`), issues, notes }, null, 1));
 process.exit(issues.length ? 1 : 0);

@@ -13,6 +13,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 for w in ('500', '700', '900'):
     pdfmetrics.registerFont(TTFont('M' + w, f'{ROOT}/fonts/Montserrat-{w}.ttf'))
 links = json.load(open(f'{ROOT}/qr/links.json'))
+codes = json.load(open(f'{ROOT}/qr/codes.json'))
 health = json.load(open(f'{ROOT}/dist/health.json'))
 brands = json.load(open(f'{ROOT}/config/brands.json'))
 cfg = {r['slug']: r for r in json.load(open(f'{ROOT}/config/routes.json'))['routes']}
@@ -55,7 +56,7 @@ for n, r in enumerate(routes):
     img = q.make_image(fill_color=b['colors']['primary'], back_color='white').convert('RGB')
     buf = io.BytesIO(); img.save(buf, 'PNG'); buf.seek(0)
     qs = 46 * mm
-    c.drawImage(ImageReader(buf), x + pad, y + pad + 4 * mm, qs, qs)
+    c.drawImage(ImageReader(buf), x + pad, y + pad + 6 * mm, qs, qs)
     img.save(f"{ROOT}/qr/{r['slug']}.png")
     # text
     tx, tw = x + pad + qs + 4 * mm, cw - 2 * pad - qs - 4 * mm
@@ -72,7 +73,15 @@ for n, r in enumerate(routes):
         for ln in wrap(para, 'M500', 7.6, tw):
             c.drawString(tx, ty, ln); ty -= 9.8
         ty -= 3
+    # route code, for getting back in without the QR code
+    c.setFillColor(HexColor(b['colors']['sand'])); c.roundRect(x + pad, y + pad - 3 * mm, cw - 2 * pad, 7 * mm, 2 * mm, stroke=0, fill=1)
+    c.setFillColor(HexColor(b['colors']['ink'])); c.setFont('M500', 7)
+    c.drawString(x + pad + 3 * mm, y + pad - 0.6 * mm, 'Route code')
+    c.setFont('M900', 10); c.setFillColor(navy)
+    c.drawString(x + pad + 18 * mm, y + pad - 0.8 * mm, ' '.join(codes[r['slug']]))
+    c.setFont('M500', 6.4); c.setFillColor(HexColor('#3B3F45'))
+    c.drawRightString(x + cw - pad - 3 * mm, y + pad - 0.6 * mm, 'elementoutdoors.github.io/routes')
     c.setFont('M700', 7.6); c.setFillColor(HexColor(b['colors']['ink']))
-    c.drawString(tx, y + pad + 5 * mm, 'Help: ' + b['phone'])
+    c.drawString(tx, y + pad + 7 * mm, 'Help: ' + b['phone'])
 c.save()
 print('cards:', len(routes))

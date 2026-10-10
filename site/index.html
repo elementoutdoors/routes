@@ -44,6 +44,14 @@
       <h1 id="home-empty-title" data-t="Scan the QR code to open your route">Scan the QR code to open your route</h1>
       <p id="home-empty-text" data-t="Our team will give you a QR code or link when you pick up your bikes. Scan it with your phone camera and your route opens here.">Our team will give you a QR code or link when you pick up your bikes. Scan it with your phone camera and your route opens here.</p>
     </div>
+    <form id="code-form" class="code-card" autocomplete="off">
+      <label for="code-input" class="set-label" data-t="Have a route code?">Have a route code?</label>
+      <div class="code-row">
+        <input id="code-input" name="code" inputmode="text" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="14" placeholder="K7P3QX" aria-describedby="code-error">
+        <button type="submit" class="btn primary" data-t="Open">Open</button>
+      </div>
+      <p id="code-error" class="note" role="alert" hidden></p>
+    </form>
   </div>
 </section>
 
@@ -79,6 +87,7 @@
   </div>
   <div class="route-actions">
     <button type="button" class="btn primary big" id="start-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg><span id="start-label" data-t="Start riding">Start riding</span></button>
+    <button type="button" class="keep-strip" id="keep-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span data-t="Save to my phone so I can get back to it">Save to my phone so I can get back to it</span></button>
     <div class="row-links">
       <a id="call-link" class="link-btn" href="#"><span data-t="Need help? Call us">Need help? Call us</span></a>
       <button type="button" class="link-btn" id="route-settings" data-t="Settings">Settings</button>
@@ -135,6 +144,16 @@
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
   <button type="button" class="round sheet-close" id="sheet-close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <div class="sheet-body" id="sheet-body"></div>
+</div>
+
+<!-- Linked pages open here, so the ride keeps running underneath -->
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="More information" hidden>
+  <div class="viewer-bar">
+    <button type="button" class="btn accent small" id="viewer-back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><span id="viewer-back-label" data-t="Back to my ride">Back to my ride</span></button>
+    <div class="viewer-cue" id="viewer-cue" aria-live="polite"></div>
+    <a class="round ghost viewer-ext" id="viewer-ext" href="#" target="_blank" rel="noopener" aria-label="Open in browser"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+  </div>
+  <div class="viewer-body"><p class="viewer-loading" data-t="Loading the page">Loading the page</p><iframe id="viewer-frame" title="More information" referrerpolicy="no-referrer"></iframe></div>
 </div>
 
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>

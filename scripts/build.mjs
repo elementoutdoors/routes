@@ -22,7 +22,55 @@ const brands = readJson('config/brands.json');
 const offersCfg = readJson('config/offers.json');
 const i18n = Object.fromEntries(LANGS.map(l => [l, readJson(`config/i18n/${l}.json`, {})]));
 
+// Behaviour settings: every value checked against a safe range; anything wrong falls back to the default.
+const SETTINGS_RULES = {
+  announce: { firstWarningMetres: [160, 60, 400], turnMetres: [35, 10, 80], cautionWarningMetres: [120, 60, 400],
+    skipFirstWarningIfCuesCloserThanMetres: [110, 0, 300], mergeNextCueWithinMetres: [90, 0, 250] },
+  offRoute: { metres: [50, 25, 150], readings: [3, 1, 10], repeatSeconds: [60, 20, 600] },
+  stops: { triggerMetres: [60, 20, 200], cautionWarningMetres: [90, 30, 300] },
+  screen: { keepScreenOn: [true], batterySaver: [false], readStoriesAloud: [true], wakeBeforeTurnMetres: [250, 80, 1000], blackoutAfterSeconds: [20, 5, 120] },
+  speeds: { ebike: [15, 3, 40], bike: [13, 3, 40], walk: [4.5, 1, 10], kayak: [5, 1, 15] }
+};
+function loadSettings(problems) {
+  const raw = readJson('config/settings.json', {});
+  const out = {};
+  for (const [group, keys] of Object.entries(SETTINGS_RULES)) {
+    out[group] = {};
+    for (const [k, [def, min, max]] of Object.entries(keys)) {
+      const v = raw[group] && raw[group][k];
+      let ok = typeof def === 'boolean' ? typeof v === 'boolean' : (typeof v === 'number' && isFinite(v) && v >= min && v <= max);
+      if (v === undefined) ok = false;
+      out[group][k] = ok ? v : def;
+      if (!ok && v !== undefined) problems.push(`settings: ${group}.${k} = ${JSON.stringify(v)} is not allowed, using ${def}`);
+    }
+  }
+  return out;
+}
+
 const sha = s => crypto.createHash('sha1').update(s).digest('hex');
+// Short code a rider can type to reopen a route (no look-alike characters).
+const CODE_CHARS = 'ACDEFGHJKMNPQRTUVWXY34679';
+export function routeCode(slug, rev) {
+  const b = crypto.createHmac('sha256', secrets.keySalt).update(`code:${slug}:${rev || 1}`).digest();
+  let c = ''; for (let i = 0; i < 6; i++) c += CODE_CHARS[b[i] % CODE_CHARS.length];
+  return c;
+}
+// Whether a page lets itself be shown inside the app (checked on every build, so it never drifts).
+const frameCache = new Map();
+async function frameable(url) {
+  if (!url) return false;
+  if (frameCache.has(url)) return frameCache.get(url);
+  let ok = false;
+  try {
+    const r = await fetch(url, { redirect: 'follow', headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/141.0 Safari/537.36' } });
+    const xfo = (r.headers.get('x-frame-options') || '').toLowerCase();
+    const csp = (r.headers.get('content-security-policy') || '').toLowerCase();
+    const fa = (csp.match(/frame-ancestors([^;]*)/) || [])[1];
+    ok = r.ok && new URL(r.url).protocol === 'https:' && !xfo && !(fa && !/\*/.test(fa));
+  } catch (e) { ok = false; }
+  frameCache.set(url, ok);
+  return ok;
+}
 export function routeKey(slug, rev) {
   return crypto.createHmac('sha256', secrets.keySalt).update(`${slug}:${rev || 1}`).digest('base64url').slice(0, 22);
 }
@@ -213,10 +261,16 @@ async function main() {
   fs.writeFileSync(path.join(dist, 'ui.json'), JSON.stringify(uiOut));
 
   const health = { built: now.toISOString(), build, routes: [], offers: [], problems: [] };
-  const links = {};
+  const settings = loadSettings(health.problems);
+  health.settings = settings;
+  const links = {}, codes = {};
+  fs.mkdirSync(path.join(dist, 'c'), { recursive: true });
   for (const entry of cfg.routes.filter(r => r.active)) {
     const key = routeKey(entry.slug, entry.rev);
     links[entry.slug] = `${SITE_BASE}#${key}`;
+    const code = routeCode(entry.slug, entry.rev);
+    codes[entry.slug] = code;
+    fs.writeFileSync(path.join(dist, 'c', `${code}.json`), JSON.stringify({ k: key }));
     const h = { slug: entry.slug, rwgps: entry.rwgps, ok: false, source: null, warnings: [] };
     let route = null;
     try {
@@ -240,6 +294,9 @@ async function main() {
       route.i18n[l] = {};
       for (const s of strings) { if (i18n[l][s]) route.i18n[l][s] = i18n[l][s]; else missing[l].add(s); }
     }
+    route.code = code;
+    route.settings = settings;
+    for (const x of [...route.stops, ...route.offers]) x.frame = await frameable(x.url);
     fs.writeFileSync(path.join(dist, 'r', `${key}.json`), JSON.stringify(route));
     Object.assign(h, { ok: true, name: route.name, version: route.version, distance: route.distance, cues: route.cues.length,
       stops: route.stops.length, offers: route.offers.map(o => o.id),
@@ -264,6 +321,7 @@ async function main() {
   fs.writeFileSync(path.join(dist, 'i18n-missing.json'), missingOut);   // published so the weekly check can translate without the secrets
   fs.mkdirSync(path.join(ROOT, 'qr'), { recursive: true });
   fs.writeFileSync(path.join(ROOT, 'qr', 'links.json'), JSON.stringify(links, null, 1));
+  fs.writeFileSync(path.join(ROOT, 'qr', 'codes.json'), JSON.stringify(codes, null, 1));
 
   console.log(JSON.stringify({ build, routes: health.routes.map(r => [r.slug, r.ok, r.source, r.cues, r.stops, r.offers, r.warnings]), problems: health.problems, untranslated: health.untranslatedTotal }, null, 1));
   if (health.routes.some(r => !r.ok)) process.exitCode = 2;

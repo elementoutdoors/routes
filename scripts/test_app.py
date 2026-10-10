@@ -58,8 +58,10 @@ with sync_playwright() as p:
         if page.is_visible('#sheet') and i < n - 5:
             page.click('#sheet-close')
     # off route test
-    ctx.set_geolocation({'latitude': T['lat'][n // 2] + 0.003, 'longitude': T['lng'][n // 2] + 0.003, 'accuracy': 8})
-    time.sleep(2.5)
+    for _ in range(4):
+        ctx.set_geolocation({'latitude': T['lat'][n // 2] + 0.003, 'longitude': T['lng'][n // 2] + 0.003, 'accuracy': 8}); time.sleep(0.4)
+        ctx.set_geolocation({'latitude': T['lat'][n // 2] + 0.0031, 'longitude': T['lng'][n // 2] + 0.003, 'accuracy': 8}); time.sleep(0.4)
+    page.screenshot(path=f'{out}/5b-off-route.png')
     ctx.set_geolocation({'latitude': T['lat'][-1], 'longitude': T['lng'][-1], 'accuracy': 8})
     time.sleep(1.5)
     page.screenshot(path=f'{out}/6-finish.png')
