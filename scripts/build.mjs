@@ -169,7 +169,8 @@ function transform(entry, r) {
       address: o.address || null, url: o.url || null, lat: o.lat, lng: o.lng, d: Math.round(runs[0].d), validUntil: o.validUntil || null });
   }
 
-  const brand = Object.assign({ id: entry.brand }, brands[entry.brand]);
+  const brandId = brands[entry.brand] ? entry.brand : 'beo';
+  const brand = Object.assign({ id: brandId }, brands[brandId]);
   const version = sha(JSON.stringify([T.d, T.lat, cues.map(c => c.d), stops.map(s => s.d)])).slice(0, 8);
   const route = {
     slug: entry.slug, name: clean(r.name), description: clean(r.description), activity: entry.activity || 'ebike',
@@ -271,7 +272,8 @@ async function main() {
     const code = routeCode(entry.slug, entry.rev);
     codes[entry.slug] = code;
     fs.writeFileSync(path.join(dist, 'c', `${code}.json`), JSON.stringify({ k: key }));
-    const h = { slug: entry.slug, rwgps: entry.rwgps, ok: false, source: null, warnings: [] };
+    const h = { slug: entry.slug, rwgps: entry.rwgps, brand: entry.brand, ok: false, source: null, warnings: [] };
+    if (!brands[entry.brand]) health.problems.push(`${entry.slug}: brand "${entry.brand}" is not set up, showing By Earth and Ocean`);
     let route = null;
     try {
       const raw = await fetchRoute(entry);
@@ -283,7 +285,7 @@ async function main() {
     } catch (e) {
       h.warnings.push(String(e.message || e));
       const prev = OFFLINE ? null : await fetchLive(key);
-      if (prev) { route = prev; delete route.key; h.source = 'previous'; h.warnings.push('kept the last good copy'); }
+      if (prev) { route = prev; delete route.key; const bid = brands[entry.brand] ? entry.brand : 'beo'; route.brand = Object.assign({ id: bid }, brands[bid]); h.source = 'previous'; h.warnings.push('kept the last good copy'); }
     }
     if (!route) { h.ok = false; health.problems.push(`${entry.slug}: no route data`); health.routes.push(h); continue; }
 

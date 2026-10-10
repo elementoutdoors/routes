@@ -871,8 +871,9 @@
     var c = R.brand.colors, root = document.documentElement.style;
     ['primary', 'primary2', 'accent', 'line', 'ground', 'surface', 'sand', 'ink', 'muted'].forEach(function (k) { if (c[k]) root.setProperty('--' + k, c[k]); });
     var m = document.querySelector('meta[name=theme-color]'); if (m) m.setAttribute('content', c.primary);
-    var wm = $('route-wordmark'); wm.innerHTML = '';
-    R.brand.wordmark.forEach(function (w) { wm.appendChild(el('span', { text: w })); });
+    var wm = $('route-wordmark'); wm.innerHTML = ''; wm.classList.toggle('has-logo', !!R.brand.logo);
+    if (R.brand.logo) wm.appendChild(el('img', { src: R.brand.logo, alt: R.brand.name }));
+    else R.brand.wordmark.forEach(function (w) { wm.appendChild(el('span', { text: w })); });
     document.title = R.name + ' | ' + R.brand.name;
     var call = $('call-link'); call.href = R.brand.phoneHref || '#';
   }
