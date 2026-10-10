@@ -1,0 +1,6 @@
+{
+  "_about": "Stops that deliberately tell a place's story differently on one ride. The build checks that a place shared by several rides of the same brand has the same story and link on each; rides listed here for a place are left out of that check. Place names in lower case.",
+  "variants": {
+    "gyndier drive (garmin hill)": ["noosa-tri-sampler"]
+  }
+}

@@ -421,9 +421,11 @@ async function main() {
   }
   // Same place, different story: a story stop copied onto several rides instead of shared from the POI Library drifts apart.
   {
+    const variants = (readJson('config/stop-variants.json', {}).variants) || {};
     const byName = new Map();
     for (const b of built) for (const st of b.route.stops) {
       if (st.kind === 'caution' || st.kind === 'finish' || (!st.text && !st.url)) continue;
+      if ((variants[st.name.toLowerCase()] || []).includes(b.route.slug)) continue;   // a deliberate version for this ride
       const k = ((b.route.brand && b.route.brand.id) || '') + '|' + st.name.toLowerCase();   // each brand has its own wording and blog
       if (!byName.has(k)) byName.set(k, []);
       byName.get(k).push({ slug: b.route.slug, id: st.id, sig: (st.text || '') + '|' + (st.url || '') });
@@ -433,7 +435,7 @@ async function main() {
       const ids = new Set(list.map(x => x.id)), sigs = new Set(list.map(x => x.sig));
       const label = name.split('|')[1];
       if (list.length > 1) health.sharedStops.push({ name: label, brand: name.split('|')[0], rides: list.map(x => x.slug), pins: ids.size });
-      if (sigs.size > 1) health.problems.push(`stop "${label}" has a different story or link on ${list.map(x => x.slug).join(', ')}; make it one POI Library pin added to each ride`);
+      if (sigs.size > 1) health.problems.push(`stop "${label}" has a different story or link on ${list.map(x => x.slug).join(', ')}; make them match (ideally one POI Library pin added to each ride), or list the ride in config/stop-variants.json if it is meant to differ`);
     }
   }
 
