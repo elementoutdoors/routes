@@ -2,7 +2,7 @@
   "_about": "One entry per route shown in the app. Ride with GPS is the source of truth for the line, cues and stops; edit them there and the app picks the change up at the next daily sync. To change a route's link (and QR code), bump its rev.",
   "routes": [
     { "rwgps": 52186029, "slug": "full-noosa", "brand": "beo", "activity": "ebike", "rev": 1, "active": true },
-    { "rwgps": 52202908, "slug": "kids-and-family", "brand": "beo", "activity": "ebike", "rev": 1, "active": true },
+    { "rwgps": 52202908, "slug": "kids-and-family", "brand": "bikeon", "activity": "ebike", "rev": 1, "active": true },
     { "rwgps": 52219299, "slug": "surf-beaches", "brand": "beo", "activity": "ebike", "rev": 1, "active": true },
     { "rwgps": 52416633, "slug": "mt-tinbeerwah", "brand": "beo", "activity": "ebike", "rev": 1, "active": true },
     { "rwgps": 51934536, "slug": "mt-tinbeerwah-one-way", "brand": "beo", "activity": "ebike", "rev": 1, "active": true },
