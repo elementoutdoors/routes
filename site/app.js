@@ -692,8 +692,11 @@
       if (!trigger) return;
       ride.shown[s.id] = 1;
       if (s.kind === 'caution') {
-        banner(tc(s.name), 'caution', 12000);
+        // a caution with notes (ferry, beach access) opens its card so the notes are on screen, even over another stop
+        banner(tc(s.name), 'caution', 12000, s.text ? function () { openStop(s); } : null);
+        if (s.text) openStop(s, true);
         sayContent(s.name, tu('Caution.'));
+        if (S.stories && s.text) sayContent(s.text);
       } else {
         if (!sheetOpen()) openStop(s, true);
         say(tu('You have reached a stop.'));
@@ -992,7 +995,7 @@
     openSheet(function (b) {
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('Stops') }));
       var list = el('div', { class: 'list' });
-      R.stops.filter(function (s) { return s.kind !== 'caution' && s.kind !== 'finish'; }).forEach(function (s) {
+      R.stops.filter(function (s) { return (s.kind !== 'caution' || s.text) && s.kind !== 'finish'; }).forEach(function (s) {
         var it = el('button', { class: 'list-item', type: 'button' });
         it.appendChild(el('div', { class: 'li-icon' }, svg(s.kind)));
         var m = el('div', { class: 'li-main' }); m.appendChild(el('div', { class: 'li-title', text: tc(s.name) }));
@@ -1123,7 +1126,7 @@
     $('st-dist').textContent = S.units === 'imperial' ? (R.distance / 1609.344).toFixed(1) + ' mi' : (R.distance / 1000).toFixed(1) + ' km';
     $('st-gain').textContent = climbText(R.gain);
     $('st-time').textContent = timeText(R.distance / (SPEED[R.activity] || SPEED.ebike));
-    var stops = R.stops.filter(function (s) { return s.kind !== 'caution' && s.kind !== 'finish'; }).length;
+    var stops = R.stops.filter(function (s) { return (s.kind !== 'caution' || s.text) && s.kind !== 'finish'; }).length;
     $('route-stops-n').textContent = fmt(tu(stops === 1 ? '{n} stop' : '{n} stops'), { n: stops });
     var desc = tc(R.description || '');
     $('route-desc').textContent = desc;
