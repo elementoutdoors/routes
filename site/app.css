@@ -160,7 +160,11 @@ body.view-loading #v-loading,body.view-home #v-home,body.view-route #v-route,bod
 /* offer card */
 .voucher{background:var(--primary);margin:-20px -18px 0;padding:22px 18px 26px;color:#fff;border-radius:22px 22px 0 0}
 .voucher .v-card{background:#fff;color:var(--ink);border-radius:18px;overflow:hidden}
-.voucher .v-top{padding:22px 18px 16px;text-align:center}
+.voucher .v-top{padding:18px 18px 16px;text-align:center}
+.voucher .v-map{height:150px;background:#E8ECEF;position:relative}
+.voucher .v-map .maplibregl-ctrl-attrib{font-size:10px}
+a.btn{text-decoration:none}
+.voucher .v-about{font-size:14px;line-height:1.45;color:var(--muted);margin:8px 0 0}
 .voucher .v-partner{font-weight:700;color:var(--muted);font-size:15px}
 .voucher .v-logo{display:block;max-width:220px;width:70%;height:auto;margin:0 auto 4px}
 .voucher .v-conds{font-size:14px;display:flex;flex-direction:column;gap:4px}
@@ -241,3 +245,6 @@ body.view-ride .maplibregl-ctrl-bottom-right{bottom:calc(200px + var(--safe-bot)
 
 .wordmark.has-logo{padding:5px 8px;background:rgba(255,255,255,.96);box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .wordmark.has-logo img{display:block;height:46px;width:auto;max-width:150px}
+
+/* the route page map shows only the route line; icons appear once riding */
+body.view-route #map .mk{display:none}

@@ -115,7 +115,7 @@ function offersFor(T) {
     const { runs } = passes(T, o.lat, o.lng, o.radius || 400);
     if (!runs.length && !o.allRoutes) continue;
     const cond = [].concat(o.conditions || []).filter(Boolean);
-    out.push({ id: o.id, partner: o.partner, logo: o.logo || null, headline: o.headline, alt: o.alt || null, how: o.how || null,
+    out.push({ id: o.id, partner: o.partner, logo: o.logo || null, headline: o.headline, alt: o.alt || null, about: o.about || null, how: o.how || null, phone: o.phone || null,
       conditions: cond.length ? cond : null, address: o.address || null, url: o.url || null, lat: o.lat, lng: o.lng,
       d: runs.length ? Math.round(runs[0].d) : null, validUntil: o.validUntil || null });
   }
@@ -196,7 +196,7 @@ function routeStrings(route) {
   const s = new Set([route.name, route.description]);
   route.cues.forEach(c => s.add(c.n));
   route.stops.forEach(p => { s.add(p.name); s.add(p.text); });
-  route.offers.forEach(o => { s.add(o.headline); s.add(o.alt); s.add(o.how); [].concat(o.conditions || []).forEach(c => s.add(c)); });
+  route.offers.forEach(o => { s.add(o.headline); s.add(o.alt); s.add(o.about); s.add(o.how); [].concat(o.conditions || []).forEach(c => s.add(c)); });
   s.delete(''); s.delete(null); s.delete(undefined);
   return [...s];
 }

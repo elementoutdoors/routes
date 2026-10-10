@@ -1,5 +1,5 @@
 {
-  "_about": "Partner offers. An offer shows on every active route that passes within its radius (metres), or on every route if allRoutes is true. A Ride with GPS stop whose name matches matchPoi is replaced by the offer. Set validUntil (YYYY-MM-DD) to have it hide itself after that date. logo is a file in site/ (shown on the card in place of the partner name). conditions can be one line or a list of lines.",
+  "_about": "Partner offers. An offer shows on every active route that passes within its radius (metres), or on every route if allRoutes is true. A Ride with GPS stop whose name matches matchPoi is replaced by the offer. Set validUntil (YYYY-MM-DD) to have it hide itself after that date. logo is a file in site/ (shown on the card in place of the partner name). conditions can be one line or a list of lines. about is a short description under the headline; phone adds a Call button.",
   "offers": [
     {
       "id": "land-and-sea",
@@ -41,6 +41,23 @@
       "lng": 153.043367,
       "radius": 500,
       "matchPoi": "Land and Sea Brewery",
+      "validUntil": null
+    },
+    {
+      "id": "fliteschool-noosa",
+      "active": true,
+      "partner": "Fliteschool Noosa",
+      "logo": "assets/partner-fliteschool-noosa.png",
+      "headline": "10% off your eFoil flight",
+      "about": "Go eFoiling on the Noosa River. Expert instruction and quality gear, suitable for beginners through to experienced riders.",
+      "how": "Book by calling Fliteschool Noosa on 0477 418 419 and mention Bike On to get your 10% off.",
+      "phone": "0477 418 419",
+      "address": "172 Gympie Terrace, Noosaville",
+      "url": "https://efoilhq.com/",
+      "lat": -26.39787,
+      "lng": 153.059965,
+      "radius": 500,
+      "matchPoi": "Flightschool Noosa",
       "validUntil": null
     }
   ]

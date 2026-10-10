@@ -701,8 +701,30 @@
   function wakeSaver() { ride.lastTouch = Date.now(); hideSaver(); }
 
   // ---------- sheets ----------
+  // small non-interactive map used on offer cards: the route line and where the offer is
+  var miniMap = null;
+  function dropMiniMap() { if (miniMap) { try { miniMap.remove(); } catch (e) {} miniMap = null; } }
+  function addMiniMap(box, o) {
+    if (!window.maplibregl) { box.remove(); return; }
+    dropMiniMap();
+    var T = R.track, b = new maplibregl.LngLatBounds();
+    for (var i = 0; i < T.lat.length; i += 5) b.extend([T.lng[i], T.lat[i]]);
+    b.extend([o.lng, o.lat]);
+    try {
+      miniMap = new maplibregl.Map({ container: box, style: STYLE, interactive: false, attributionControl: { compact: true },
+        bounds: b, fitBoundsOptions: { padding: 22, maxZoom: 15 } });
+    } catch (e) { box.remove(); return; }
+    miniMap.on('load', function () {
+      Array.prototype.forEach.call(box.querySelectorAll('.maplibregl-compact-show'), function (n) { n.classList.remove('maplibregl-compact-show'); n.removeAttribute('open'); });
+      miniMap.addSource('route', { type: 'geojson', data: routeGeo(0, R.distance) });
+      miniMap.addLayer({ id: 'casing', type: 'line', source: 'route', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': '#ffffff', 'line-width': 6 } });
+      miniMap.addLayer({ id: 'line', type: 'line', source: 'route', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': R.brand.colors.line, 'line-width': 3.5 } });
+    });
+    new maplibregl.Marker({ element: el('div', { class: 'mk offer' }, svg('offer')) }).setLngLat([o.lng, o.lat]).addTo(miniMap);
+  }
   function sheetOpen() { return !$('sheet').hidden; }
   function openSheet(build, cls) {
+    dropMiniMap();
     var body = $('sheet-body'); body.innerHTML = ''; body.className = 'sheet-body' + (cls ? ' ' + cls : '');
     build(body);
     $('sheet').hidden = false; $('scrim').hidden = false;
@@ -710,7 +732,7 @@
     hideSaver();
     setTimeout(function () { $('sheet-close').focus(); }, 50);
   }
-  function closeSheet() { $('sheet').hidden = true; $('scrim').hidden = true; if (ride.keepOpen) { ride.keepOpen = false; scrubUrl(); } }
+  function closeSheet() { dropMiniMap(); $('sheet').hidden = true; $('scrim').hidden = true; if (ride.keepOpen) { ride.keepOpen = false; scrubUrl(); } }
 
   function linkRow(href, label, icon, frame) {
     var a = el('a', { class: 'linkrow', href: href, target: '_blank', rel: 'noopener' });
@@ -753,6 +775,7 @@
     openSheet(function (b) {
       var v = el('div', { class: 'voucher' });
       var card = el('div', { class: 'v-card' });
+      var mbox = el('div', { class: 'v-map' }); card.appendChild(mbox);
       var top = el('div', { class: 'v-top' });
       if (o.logo) {
         var lg = el('img', { class: 'v-logo', src: o.logo, alt: o.partner });
@@ -761,6 +784,7 @@
       } else top.appendChild(el('div', { class: 'v-partner', text: o.partner }));
       top.appendChild(el('h2', { id: 'sheet-title', class: 'v-head', text: tc(o.headline) }));
       if (o.alt) top.appendChild(el('div', { class: 'v-alt', text: tc(o.alt) }));
+      if (o.about) top.appendChild(el('p', { class: 'v-about', text: tc(o.about) }));
       card.appendChild(top);
       card.appendChild(el('div', { class: 'v-tear' }, '<span></span>'));
       var rows = el('div', { class: 'v-rows' });
@@ -782,8 +806,14 @@
       showMap.querySelector('span').textContent = tu('Show on the map');
       showMap.addEventListener('click', function () { closeSheet(); if (map) { ride.follow = false; updateFollowBtn(); map.easeTo({ center: [o.lng, o.lat], zoom: 16 }); } });
       acts.appendChild(showMap);
+      if (o.phone) {
+        var call = el('a', { class: 'btn outline full', href: 'tel:' + String(o.phone).replace(/[^+0-9]/g, '') }, svg('phone') + '<span></span>');
+        call.querySelector('span').textContent = fmt(tu('Call {name}'), { name: o.partner });
+        acts.appendChild(call);
+      }
       var u = safeUrl(o.url); if (u) acts.appendChild(linkRow(u, fmt(tu('Visit {name}'), { name: o.partner }), 'ext', o.frame));
       b.appendChild(acts);
+      setTimeout(function () { addMiniMap(mbox, o); }, 30);
     });
   }
   function openFinish(f) {
