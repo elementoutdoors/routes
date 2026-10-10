@@ -962,7 +962,7 @@
     // While this sheet is open the address carries the route, so "Add to Home Screen" opens this route.
     try { history.replaceState(null, '', location.pathname + '#' + R.key); } catch (e) {}
     openSheet(function (b) {
-      b.appendChild(el('div', { class: 'kicker', text: tu('Save to my phone') }));
+      b.appendChild(el('div', { class: 'kicker', text: tu('Route code') }));
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('Getting back to this route') }));
       b.appendChild(el('p', { text: tu('This route is saved on this phone. If you close the page, open the same web address again, or type this route code at the address below.') }));
       if (R.code) b.appendChild(el('div', { class: 'code-big', text: R.code, 'aria-label': tu('Route code') + ' ' + R.code.split('').join(' ') }));
