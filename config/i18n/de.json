@@ -121,7 +121,6 @@
  "From its name meaning “place of dead logs” to its heyday as the Noosa River’s working port, Tewantin’s wharf history underpinned the growth of both regional trade and settlement.": "Von seinem Namen, der „Ort der toten Baumstämme“ bedeutet, bis zu seiner Blütezeit als Arbeitshafen am Noosa River bildete die Geschichte der Kais von Tewantin die Grundlage für das Wachstum von regionalem Handel und Besiedlung.",
  "From the 265 m summit of Mount Tinbeerwah in Tewantin National Park, the 360° panorama reveals much of the Noosa region’s geography, ecology, and history.": "Vom 265 m hohen Gipfel des Mount Tinbeerwah im Tewantin National Park zeigt das 360°-Panorama viel von der Geografie, Ökologie und Geschichte der Region Noosa.",
  "Full Noosa Self-Guided Tour": "Komplette Noosa-Tour auf eigene Faust",
- "Head back to the route line. It is {dist} away.": "Fahre zurück zur Routenlinie. Sie ist {dist} entfernt.",
  "Head to the start of the route, shown by the green marker.": "Fahre zum Start der Route, angezeigt durch die grüne Markierung.",
  "If you travel further North past this point you are entering a section of beach that is also a road. Be aware of vehicles traveling at speed": "Wenn du ab hier weiter nach Norden fährst, kommst du auf einen Strandabschnitt, der auch eine Straße ist. Achte auf schnell fahrende Fahrzeuge",
  "Imperial (miles)": "Imperial (Meilen)",
@@ -243,7 +242,6 @@
  "The forested headland was first reserved as Town Reserve in 1879, safeguarding it from development. It was officially gazetted as Noosa National Park in 1930, making it one of Southeast Queensland’s earliest protected coastal areas.": "Die bewaldete Landzunge wurde 1879 erstmals als Town Reserve ausgewiesen und so vor Bebauung geschützt. 1930 wurde sie offiziell zum Noosa National Park erklärt und ist damit eines der frühesten geschützten Küstengebiete im Südosten von Queensland.",
  "The intentionally engineered Noosa Spit illustrates how shaping natural systems can yield lasting ecological, social, and protective benefits. It now thrives as a beloved public space—green, scenic, and resilient—at the heart of Noosa’s lagoon-meets-sea landscape.": "Die bewusst angelegte Noosa Spit zeigt, wie die Gestaltung natürlicher Systeme dauerhafte ökologische, soziale und schützende Vorteile bringen kann. Heute ist sie ein beliebter öffentlicher Ort, grün, malerisch und widerstandsfähig, im Herzen der Landschaft von Noosa, wo Lagune und Meer aufeinandertreffen.",
  "The launch spot for our Everglades and stingrays Kayak Tours\nA great place for a swim or a paddle (swim at your own risk, it is not patrolled)": "Der Startpunkt für unsere Everglades- und Stachelrochen-Kajaktouren\nEin toller Ort zum Schwimmen oder Paddeln (Schwimmen auf eigene Gefahr, hier gibt es keine Rettungsschwimmer)",
- "The route line is {dist} away.": "Die Routenlinie ist {dist} entfernt.",
  "Then": "Dann",
  "Then: the finish": "Dann: das Ziel",
  "Then: {text}": "Dann: {text}",
@@ -398,7 +396,6 @@
  "You have reached a stop.": "Du hast einen Stopp erreicht.",
  "You made it. Thanks for riding with us.": "Geschafft. Danke, dass du mit uns gefahren bist.",
  "You may be riding the route backwards. Check the arrows on the line.": "Du fährst die Route möglicherweise rückwärts. Prüfe die Pfeile auf der Linie.",
- "You're off the route. The route line is {dist} away.": "Du bist von der Route abgekommen. Die Routenlinie ist {dist} entfernt.",
  "Your routes": "Deine Routen",
  "continue to follow the path along the river": "weiter dem Weg am Fluss folgen",
  "or a free beer with any burger": "oder ein Freibier zu jedem Burger",
@@ -450,5 +447,8 @@
  "10% off your eFoil flight": "10 % Rabatt auf deinen eFoil-Flug",
  "Go eFoiling on the Noosa River. Expert instruction and quality gear, suitable for beginners through to experienced riders.": "Probiere eFoilen auf dem Noosa River. Fachkundige Anleitung und hochwertige Ausrüstung, geeignet für Anfänger bis erfahrene Fahrer.",
  "Book by calling Fliteschool Noosa on 0477 418 419 and mention Bike On to get your 10% off.": "Buche telefonisch bei Fliteschool Noosa unter 0477 418 419 und erwähne Bike On, um 10 % Rabatt zu erhalten.",
- "Call {name}": "{name} anrufen"
+ "Call {name}": "{name} anrufen",
+ "You're off the route. Please use the map on your screen to make your way back to the route line. If you're taking a break, tap Pause.": "Du bist von der Route abgekommen. Bitte nutze die Karte auf deinem Bildschirm, um zur Routenlinie zurückzufinden. Wenn du eine Pause machst, tippe auf Pause.",
+ "You're still off the route. The route line is {dist} away.": "Du bist immer noch von der Route abgekommen. Die Routenlinie ist {dist} entfernt.",
+ "Use the map to make your way back to the route line. It is {dist} away. Taking a break? Tap Pause.": "Nutze die Karte, um zur Routenlinie zurückzufinden. Sie ist {dist} entfernt. Machst du eine Pause? Tippe auf Pause."
 }

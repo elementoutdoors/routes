@@ -121,7 +121,6 @@
  "From its name meaning “place of dead logs” to its heyday as the Noosa River’s working port, Tewantin’s wharf history underpinned the growth of both regional trade and settlement.": "从意为“枯木之地”的名字，到作为 Noosa River 繁忙港口的鼎盛时期，Tewantin 码头的历史支撑了区域贸易和定居点的发展。",
  "From the 265 m summit of Mount Tinbeerwah in Tewantin National Park, the 360° panorama reveals much of the Noosa region’s geography, ecology, and history.": "站在 Tewantin National Park 内海拔 265 米的 Mount Tinbeerwah 山顶，360° 全景展现了 Noosa 地区大部分的地理、生态与历史面貌。",
  "Full Noosa Self-Guided Tour": "Noosa 全程自助骑行游",
- "Head back to the route line. It is {dist} away.": "请返回路线，路线在 {dist} 外。",
  "Head to the start of the route, shown by the green marker.": "前往路线起点，即绿色标记处。",
  "If you travel further North past this point you are entering a section of beach that is also a road. Be aware of vehicles traveling at speed": "如果从此处继续向北，您将进入一段同时作为道路使用的海滩。请注意高速行驶的车辆",
  "Imperial (miles)": "英制（英里）",
@@ -243,7 +242,6 @@
  "The forested headland was first reserved as Town Reserve in 1879, safeguarding it from development. It was officially gazetted as Noosa National Park in 1930, making it one of Southeast Queensland’s earliest protected coastal areas.": "这片森林覆盖的岬角于 1879 年首次被划为城镇保留地，使其免遭开发。1930 年正式公告为 Noosa National Park，成为昆士兰东南部最早受保护的沿海区域之一。",
  "The intentionally engineered Noosa Spit illustrates how shaping natural systems can yield lasting ecological, social, and protective benefits. It now thrives as a beloved public space—green, scenic, and resilient—at the heart of Noosa’s lagoon-meets-sea landscape.": "经过人工精心改造的 Noosa Spit 展示了塑造自然系统如何带来持久的生态、社会和防护效益。如今，它已成为深受喜爱的公共空间，绿意盎然、风景秀丽且富有韧性，位于 Noosa 潟湖与大海交汇景观的中心。",
  "The launch spot for our Everglades and stingrays Kayak Tours\nA great place for a swim or a paddle (swim at your own risk, it is not patrolled)": "这里是我们 Everglades 与魟鱼皮划艇之旅的出发点\n也是游泳或划桨的好地方（游泳风险自负，此处无救生员巡逻）",
- "The route line is {dist} away.": "路线距离您 {dist}。",
  "Then": "然后",
  "Then: the finish": "然后：终点",
  "Then: {text}": "然后：{text}",
@@ -398,7 +396,6 @@
  "You have reached a stop.": "您已到达一个站点。",
  "You made it. Thanks for riding with us.": "您成功了。感谢与我们一起骑行。",
  "You may be riding the route backwards. Check the arrows on the line.": "您可能在反向骑行。请查看路线上的箭头。",
- "You're off the route. The route line is {dist} away.": "您已偏离路线。路线距离您 {dist}。",
  "Your routes": "您的路线",
  "continue to follow the path along the river": "继续沿河边小路前行",
  "or a free beer with any burger": "或购买任意汉堡即送一杯免费啤酒",
@@ -450,5 +447,8 @@
  "10% off your eFoil flight": "eFoil 飞行九折优惠",
  "Go eFoiling on the Noosa River. Expert instruction and quality gear, suitable for beginners through to experienced riders.": "在努沙河上体验 eFoil 水翼冲浪。专业教练指导，装备优质，适合初学者到有经验的玩家。",
  "Book by calling Fliteschool Noosa on 0477 418 419 and mention Bike On to get your 10% off.": "致电 Fliteschool Noosa（0477 418 419）预订，并提及 Bike On 即可享受九折优惠。",
- "Call {name}": "致电 {name}"
+ "Call {name}": "致电 {name}",
+ "You're off the route. Please use the map on your screen to make your way back to the route line. If you're taking a break, tap Pause.": "你已偏离路线。请使用屏幕上的地图返回路线。如果你在休息，请点击“暂停”。",
+ "You're still off the route. The route line is {dist} away.": "你仍然偏离路线。路线在 {dist} 外。",
+ "Use the map to make your way back to the route line. It is {dist} away. Taking a break? Tap Pause.": "请使用地图返回路线，路线在 {dist} 外。在休息？请点击“暂停”。"
 }

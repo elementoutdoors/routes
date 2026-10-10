@@ -121,7 +121,6 @@
  "From its name meaning “place of dead logs” to its heyday as the Noosa River’s working port, Tewantin’s wharf history underpinned the growth of both regional trade and settlement.": "Van de naam, die “plek van dode boomstammen” betekent, tot de bloeitijd als werkhaven aan de Noosa River: de geschiedenis van de kade van Tewantin lag aan de basis van de groei van zowel de regionale handel als de bewoning.",
  "From the 265 m summit of Mount Tinbeerwah in Tewantin National Park, the 360° panorama reveals much of the Noosa region’s geography, ecology, and history.": "Vanaf de 265 m hoge top van Mount Tinbeerwah in Tewantin National Park toont het 360°-panorama een groot deel van de geografie, ecologie en geschiedenis van de regio Noosa.",
  "Full Noosa Self-Guided Tour": "Volledige Noosa-tour op eigen gelegenheid",
- "Head back to the route line. It is {dist} away.": "Ga terug naar de routelijn. Die is {dist} hiervandaan.",
  "Head to the start of the route, shown by the green marker.": "Ga naar het begin van de route, aangegeven met de groene markering.",
  "If you travel further North past this point you are entering a section of beach that is also a road. Be aware of vehicles traveling at speed": "Als je voorbij dit punt verder naar het noorden gaat, kom je op een deel van het strand dat ook een weg is. Let op voertuigen die met hoge snelheid rijden",
  "Imperial (miles)": "Imperiaal (mijlen)",
@@ -243,7 +242,6 @@
  "The forested headland was first reserved as Town Reserve in 1879, safeguarding it from development. It was officially gazetted as Noosa National Park in 1930, making it one of Southeast Queensland’s earliest protected coastal areas.": "De beboste kaap werd in 1879 voor het eerst aangewezen als gemeentelijk reservaat (Town Reserve), waardoor hij beschermd werd tegen bebouwing. In 1930 werd hij officieel uitgeroepen tot Noosa National Park, waarmee het een van de vroegst beschermde kustgebieden van Zuidoost-Queensland is.",
  "The intentionally engineered Noosa Spit illustrates how shaping natural systems can yield lasting ecological, social, and protective benefits. It now thrives as a beloved public space—green, scenic, and resilient—at the heart of Noosa’s lagoon-meets-sea landscape.": "De bewust aangelegde Noosa Spit laat zien hoe het vormgeven van natuurlijke systemen blijvende ecologische, sociale en beschermende voordelen kan opleveren. Het is nu een geliefde openbare ruimte, groen, schilderachtig en veerkrachtig, in het hart van het landschap van Noosa waar lagune en zee elkaar ontmoeten.",
  "The launch spot for our Everglades and stingrays Kayak Tours\nA great place for a swim or a paddle (swim at your own risk, it is not patrolled)": "Het vertrekpunt voor onze kajaktochten naar de Everglades en de pijlstaartroggen\nEen prima plek om te zwemmen of te peddelen (zwemmen op eigen risico, er is geen toezicht)",
- "The route line is {dist} away.": "De routelijn is {dist} hiervandaan.",
  "Then": "Daarna",
  "Then: the finish": "Daarna: de finish",
  "Then: {text}": "Daarna: {text}",
@@ -398,7 +396,6 @@
  "You have reached a stop.": "Je hebt een stop bereikt.",
  "You made it. Thanks for riding with us.": "Het is je gelukt. Bedankt dat je met ons hebt gefietst.",
  "You may be riding the route backwards. Check the arrows on the line.": "Misschien fiets je de route in omgekeerde richting. Kijk naar de pijlen op de lijn.",
- "You're off the route. The route line is {dist} away.": "Je bent van de route af. De routelijn is {dist} hiervandaan.",
  "Your routes": "Jouw routes",
  "continue to follow the path along the river": "blijf het pad langs de rivier volgen",
  "or a free beer with any burger": "of een gratis biertje bij elke burger",
@@ -450,5 +447,8 @@
  "10% off your eFoil flight": "10% korting op je eFoil-vlucht",
  "Go eFoiling on the Noosa River. Expert instruction and quality gear, suitable for beginners through to experienced riders.": "Ga eFoilen op de Noosa River. Deskundige begeleiding en goed materiaal, geschikt voor beginners tot ervaren riders.",
  "Book by calling Fliteschool Noosa on 0477 418 419 and mention Bike On to get your 10% off.": "Boek door Fliteschool Noosa te bellen op 0477 418 419 en noem Bike On voor je 10% korting.",
- "Call {name}": "{name} bellen"
+ "Call {name}": "{name} bellen",
+ "You're off the route. Please use the map on your screen to make your way back to the route line. If you're taking a break, tap Pause.": "Je bent van de route af. Gebruik de kaart op je scherm om terug te gaan naar de routelijn. Neem je een pauze, tik dan op Pauze.",
+ "You're still off the route. The route line is {dist} away.": "Je bent nog steeds van de route af. De routelijn is {dist} hier vandaan.",
+ "Use the map to make your way back to the route line. It is {dist} away. Taking a break? Tap Pause.": "Gebruik de kaart om terug te gaan naar de routelijn. Die is {dist} hier vandaan. Even pauze? Tik op Pauze."
 }

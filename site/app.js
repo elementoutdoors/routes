@@ -512,10 +512,10 @@
       var away = cand.nearest ? cand.nearest.dist : 0;
       if (!ride.off && ride.offCount >= CFG.offRoute.readings) {
         ride.off = true; ride.lastOffSay = Date.now();
-        say(fmt(tu("You're off the route. The route line is {dist} away."), { dist: distParts(away).say }), { interrupt: true });
+        say(tu("You're off the route. Please use the map on your screen to make your way back to the route line. If you're taking a break, tap Pause."), { interrupt: true });
       } else if (ride.off && Date.now() - ride.lastOffSay > CFG.offRoute.repeatSeconds * 1000) {
         ride.lastOffSay = Date.now();
-        say(fmt(tu('The route line is {dist} away.'), { dist: distParts(away).say }));
+        say(fmt(tu("You're still off the route. The route line is {dist} away."), { dist: distParts(away).say }));
       }
       ride.offAway = away;
     }
@@ -623,7 +623,7 @@
       card.classList.add('off');
       $('cue-icon').innerHTML = svg('danger');
       $('cue-dist').textContent = tu('Off route');
-      $('cue-text').textContent = fmt(tu('Head back to the route line. It is {dist} away.'), { dist: distText(ride.offAway || 0) });
+      $('cue-text').textContent = fmt(tu('Use the map to make your way back to the route line. It is {dist} away. Taking a break? Tap Pause.'), { dist: distText(ride.offAway || 0) });
       $('cue-next-text').textContent = '';
     } else if (!ride.locked && ride.fix) {
       var st = hav(ride.fix.lat, ride.fix.lng, R.track.lat[0], R.track.lng[0]);

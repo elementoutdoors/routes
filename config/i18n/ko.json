@@ -121,7 +121,6 @@
  "From its name meaning “place of dead logs” to its heyday as the Noosa River’s working port, Tewantin’s wharf history underpinned the growth of both regional trade and settlement.": "“죽은 통나무가 있는 곳”이라는 뜻의 이름에서부터 Noosa River의 상업 항구로 번성하던 시절까지, Tewantin 부두의 역사는 지역 무역과 정착의 성장을 뒷받침했습니다.",
  "From the 265 m summit of Mount Tinbeerwah in Tewantin National Park, the 360° panorama reveals much of the Noosa region’s geography, ecology, and history.": "Tewantin National Park에 있는 해발 265m의 Mount Tinbeerwah 정상에서는 360° 파노라마로 Noosa 지역의 지리, 생태, 역사를 두루 볼 수 있습니다.",
  "Full Noosa Self-Guided Tour": "Noosa 전체 셀프 가이드 투어",
- "Head back to the route line. It is {dist} away.": "경로 선으로 돌아가세요. {dist} 떨어져 있습니다.",
  "Head to the start of the route, shown by the green marker.": "초록색 표시로 나타난 경로 출발 지점으로 가세요.",
  "If you travel further North past this point you are entering a section of beach that is also a road. Be aware of vehicles traveling at speed": "이 지점을 지나 북쪽으로 더 가면 도로로도 쓰이는 해변 구간에 들어서게 됩니다. 빠른 속도로 달리는 차량에 주의하세요",
  "Imperial (miles)": "야드파운드법(마일)",
@@ -243,7 +242,6 @@
  "The forested headland was first reserved as Town Reserve in 1879, safeguarding it from development. It was officially gazetted as Noosa National Park in 1930, making it one of Southeast Queensland’s earliest protected coastal areas.": "숲이 우거진 이 곶은 1879년 처음 Town Reserve로 지정되어 개발로부터 보호되었습니다. 1930년 공식적으로 Noosa National Park로 고시되어 Southeast Queensland에서 가장 오래된 보호 해안 지역 중 하나가 되었습니다.",
  "The intentionally engineered Noosa Spit illustrates how shaping natural systems can yield lasting ecological, social, and protective benefits. It now thrives as a beloved public space—green, scenic, and resilient—at the heart of Noosa’s lagoon-meets-sea landscape.": "의도적으로 조성된 Noosa Spit은 자연 시스템을 다듬는 일이 어떻게 오래 지속되는 생태적, 사회적, 보호적 이점을 가져올 수 있는지 보여줍니다. 지금은 석호와 바다가 만나는 Noosa 풍경의 중심에서 푸르고 아름다우며 회복력 있는, 사랑받는 공공 공간으로 자리 잡았습니다.",
  "The launch spot for our Everglades and stingrays Kayak Tours\nA great place for a swim or a paddle (swim at your own risk, it is not patrolled)": "Everglades 및 가오리 카약 투어의 출발 지점입니다\n수영이나 패들링을 하기 좋은 곳입니다(안전요원이 없으니 수영은 본인 책임입니다)",
- "The route line is {dist} away.": "경로 선이 {dist} 떨어져 있습니다.",
  "Then": "그다음",
  "Then: the finish": "그다음: 도착 지점",
  "Then: {text}": "그다음: {text}",
@@ -398,7 +396,6 @@
  "You have reached a stop.": "정차 지점에 도착했습니다.",
  "You made it. Thanks for riding with us.": "도착했습니다. 함께해 주셔서 감사합니다.",
  "You may be riding the route backwards. Check the arrows on the line.": "경로를 반대 방향으로 주행하고 있을 수 있습니다. 선 위의 화살표를 확인하세요.",
- "You're off the route. The route line is {dist} away.": "경로를 벗어났습니다. 경로 선이 {dist} 떨어져 있습니다.",
  "Your routes": "내 경로",
  "continue to follow the path along the river": "강을 따라 난 길을 계속 따라가세요",
  "or a free beer with any burger": "또는 버거 주문 시 맥주 1잔 무료",
@@ -450,5 +447,8 @@
  "10% off your eFoil flight": "eFoil 체험 10% 할인",
  "Go eFoiling on the Noosa River. Expert instruction and quality gear, suitable for beginners through to experienced riders.": "누사 강에서 eFoil을 즐겨 보세요. 전문 강사와 좋은 장비로 초보자부터 경험자까지 즐길 수 있습니다.",
  "Book by calling Fliteschool Noosa on 0477 418 419 and mention Bike On to get your 10% off.": "Fliteschool Noosa(0477 418 419)에 전화로 예약하면서 Bike On을 말씀하시면 10% 할인을 받으실 수 있습니다.",
- "Call {name}": "{name}에 전화하기"
+ "Call {name}": "{name}에 전화하기",
+ "You're off the route. Please use the map on your screen to make your way back to the route line. If you're taking a break, tap Pause.": "경로를 벗어났습니다. 화면의 지도를 보고 경로 선으로 돌아가 주세요. 쉬는 중이라면 일시정지를 누르세요.",
+ "You're still off the route. The route line is {dist} away.": "아직 경로를 벗어나 있습니다. 경로 선까지 {dist} 남았습니다.",
+ "Use the map to make your way back to the route line. It is {dist} away. Taking a break? Tap Pause.": "지도를 보고 경로 선으로 돌아가세요. {dist} 떨어져 있습니다. 쉬는 중인가요? 일시정지를 누르세요."
 }

@@ -121,7 +121,6 @@
  "From its name meaning “place of dead logs” to its heyday as the Noosa River’s working port, Tewantin’s wharf history underpinned the growth of both regional trade and settlement.": "「枯れた丸太のある場所」を意味する名前の由来から、Noosa River の港として栄えた全盛期まで、Tewantin の埠頭の歴史は、地域の交易と入植の発展を支えてきました。",
  "From the 265 m summit of Mount Tinbeerwah in Tewantin National Park, the 360° panorama reveals much of the Noosa region’s geography, ecology, and history.": "Tewantin National Park にある標高265 mの Mount Tinbeerwah 山頂からは、360°のパノラマが広がり、Noosa 地域の地形、生態系、歴史の多くを見渡せます。",
  "Full Noosa Self-Guided Tour": "Full Noosa セルフガイドツアー",
- "Head back to the route line. It is {dist} away.": "ルートのラインに戻ってください。{dist}先にあります。",
  "Head to the start of the route, shown by the green marker.": "緑のマーカーで示されたルートのスタート地点へ向かってください。",
  "If you travel further North past this point you are entering a section of beach that is also a road. Be aware of vehicles traveling at speed": "この地点からさらに北へ進むと、道路としても使われているビーチ区間に入ります。高速で走行する車両に注意してください",
  "Imperial (miles)": "ヤード・ポンド法（マイル）",
@@ -243,7 +242,6 @@
  "The forested headland was first reserved as Town Reserve in 1879, safeguarding it from development. It was officially gazetted as Noosa National Park in 1930, making it one of Southeast Queensland’s earliest protected coastal areas.": "この森に覆われた岬は1879年に町の保護区（Town Reserve）として初めて指定され、開発から守られました。1930年には正式に Noosa National Park として官報告示され、クイーンズランド州南東部で最も早く保護された海岸地域のひとつとなりました。",
  "The intentionally engineered Noosa Spit illustrates how shaping natural systems can yield lasting ecological, social, and protective benefits. It now thrives as a beloved public space—green, scenic, and resilient—at the heart of Noosa’s lagoon-meets-sea landscape.": "人の手で意図的に造られた Noosa Spit は、自然の仕組みを整えることで、生態系、社会、防護の面で長く続く恩恵が得られることを示しています。現在では、ラグーンと海が出会う Noosa の風景の中心にある、緑豊かで景色が美しく、災害にも強い、愛される公共の場所となっています。",
  "The launch spot for our Everglades and stingrays Kayak Tours\nA great place for a swim or a paddle (swim at your own risk, it is not patrolled)": "Everglades とアカエイを巡るカヤックツアーの出発地点です\n泳いだりパドリングしたりするのに最適な場所です（監視員はいないため、泳ぐ場合は自己責任でお願いします）",
- "The route line is {dist} away.": "ルートのラインは{dist}先にあります。",
  "Then": "その後",
  "Then: the finish": "その後：ゴール",
  "Then: {text}": "その後：{text}",
@@ -398,7 +396,6 @@
  "You have reached a stop.": "立ち寄りスポットに到着しました。",
  "You made it. Thanks for riding with us.": "ゴールです。ご利用いただきありがとうございました。",
  "You may be riding the route backwards. Check the arrows on the line.": "ルートを逆方向に走っている可能性があります。ライン上の矢印を確認してください。",
- "You're off the route. The route line is {dist} away.": "ルートから外れています。ルートのラインは{dist}先にあります。",
  "Your routes": "あなたのルート",
  "continue to follow the path along the river": "川沿いの遊歩道をそのまま進んでください",
  "or a free beer with any burger": "またはバーガーのご注文でビール1杯無料",
@@ -450,5 +447,8 @@
  "10% off your eFoil flight": "eFoil フライトが10%オフ",
  "Go eFoiling on the Noosa River. Expert instruction and quality gear, suitable for beginners through to experienced riders.": "ヌーサ川で eFoil を体験しよう。経験豊富なインストラクターと上質な機材で、初心者から経験者まで楽しめます。",
  "Book by calling Fliteschool Noosa on 0477 418 419 and mention Bike On to get your 10% off.": "Fliteschool Noosa（0477 418 419）にお電話でご予約の際、Bike On とお伝えいただくと10%オフになります。",
- "Call {name}": "{name} に電話"
+ "Call {name}": "{name} に電話",
+ "You're off the route. Please use the map on your screen to make your way back to the route line. If you're taking a break, tap Pause.": "ルートから外れています。画面の地図を見てルートの線に戻ってください。休憩中の場合は「一時停止」をタップしてください。",
+ "You're still off the route. The route line is {dist} away.": "まだルートから外れています。ルートの線まで {dist} です。",
+ "Use the map to make your way back to the route line. It is {dist} away. Taking a break? Tap Pause.": "地図を見てルートの線に戻ってください。ルートまで {dist} です。休憩中ですか？「一時停止」をタップしてください。"
 }
