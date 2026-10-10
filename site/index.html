@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#182B3D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Ride Guide</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<link href="app.css?v=__BUILD__" rel="stylesheet">
+</head>
+<body class="view-loading">
+
+<div id="map" aria-label="Route map"></div>
+
+<!-- Loading -->
+<section id="v-loading" class="view" aria-live="polite">
+  <div class="loading-dot"></div>
+  <p data-t="Loading your route">Loading your route</p>
+</section>
+
+<!-- Home / no route -->
+<section id="v-home" class="view">
+  <header class="topbar">
+    <div class="wordmark" id="home-wordmark"><span>RIDE</span><span>GUIDE</span></div>
+    <button class="chip" id="home-settings" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+  </header>
+  <div class="home-body">
+    <div id="home-list-wrap" hidden>
+      <h1 data-t="Your routes">Your routes</h1>
+      <div id="home-list" class="list"></div>
+    </div>
+    <div id="home-empty" class="empty-card">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="big-icon"><path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3z"/><path d="M15 15h2v2h-2zM19 19h2v2h-2zM15 19h2M19 15h2"/></svg>
+      <h1 id="home-empty-title" data-t="Scan the QR code to open your route">Scan the QR code to open your route</h1>
+      <p id="home-empty-text" data-t="Our team will give you a QR code or link when you pick up your bikes. Scan it with your phone camera and your route opens here.">Our team will give you a QR code or link when you pick up your bikes. Scan it with your phone camera and your route opens here.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Route overview -->
+<section id="v-route" class="view">
+  <header class="topbar overlay">
+    <button class="chip" id="route-back" type="button" aria-label="Your routes" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <div class="wordmark" id="route-wordmark"></div>
+    <div class="chips">
+      <button class="chip text" id="route-lang" type="button">EN</button>
+      <button class="chip text" id="route-units" type="button">km</button>
+    </div>
+  </header>
+  <div class="map-spacer" aria-hidden="true"></div>
+  <div class="route-body">
+    <div class="eyebrow" data-t="Self guided ride">Self guided ride</div>
+    <h1 id="route-name"></h1>
+    <div class="stats">
+      <div class="stat"><div class="stat-v" id="st-dist"></div><div class="stat-l" data-t="Distance">Distance</div></div>
+      <div class="stat"><div class="stat-v" id="st-gain"></div><div class="stat-l" data-t="Climbing">Climbing</div></div>
+      <div class="stat"><div class="stat-v" id="st-time"></div><div class="stat-l" data-t="Riding time">Riding time</div></div>
+    </div>
+    <div id="route-offers"></div>
+    <div class="pills">
+      <button type="button" class="pill" id="route-stops-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span id="route-stops-n"></span></button>
+      <button type="button" class="pill" id="route-cues-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1"/></svg><span data-t="Directions">Directions</span></button>
+    </div>
+    <div class="desc-wrap" id="route-desc-wrap">
+      <p id="route-desc" class="desc clamp"></p>
+      <button type="button" class="link-btn" id="route-desc-more" data-t="Read more">Read more</button>
+    </div>
+    <div class="offline-note" id="offline-note"><span class="spin" aria-hidden="true"></span><span id="offline-text" data-t="Saving the route to your phone">Saving the route to your phone</span></div>
+  </div>
+  <div class="route-actions">
+    <button type="button" class="btn primary big" id="start-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg><span id="start-label" data-t="Start riding">Start riding</span></button>
+    <div class="row-links">
+      <a id="call-link" class="link-btn" href="#"><span data-t="Need help? Call us">Need help? Call us</span></a>
+      <button type="button" class="link-btn" id="route-settings" data-t="Settings">Settings</button>
+    </div>
+  </div>
+</section>
+
+<!-- Riding -->
+<section id="v-ride" class="view">
+  <div class="cue-card" id="cue-card" role="status" aria-live="polite">
+    <div class="cue-main">
+      <div class="cue-icon" id="cue-icon" aria-hidden="true"></div>
+      <div class="cue-text-wrap">
+        <div class="cue-dist" id="cue-dist"></div>
+        <div class="cue-text" id="cue-text"></div>
+      </div>
+    </div>
+    <div class="cue-next">
+      <div id="cue-next-text"></div>
+      <button type="button" class="round ghost" id="cue-repeat" aria-label="Repeat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+    </div>
+  </div>
+  <div class="banner" id="banner" hidden></div>
+  <div class="side-btns">
+    <button type="button" class="round" id="btn-voice" aria-label="Voice on or off"></button>
+    <button type="button" class="round" id="btn-follow" aria-label="Centre on me"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button>
+    <button type="button" class="round" id="btn-ride-settings" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  </div>
+  <div class="bottom-sheet">
+    <div class="grab" aria-hidden="true"></div>
+    <div class="remain-row">
+      <div>
+        <div class="remain" id="remain"></div>
+        <div class="remain-sub" id="remain-sub"></div>
+      </div>
+      <button type="button" class="btn outline small" id="end-btn" data-t="End ride">End ride</button>
+    </div>
+    <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+    <div class="bottom-btns">
+      <button type="button" class="tile" id="b-cues"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1"/></svg><span data-t="Directions">Directions</span></button>
+      <button type="button" class="tile" id="b-stops"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span data-t="Stops">Stops</span></button>
+      <button type="button" class="tile dark" id="b-offers"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9V6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v3a3 3 0 0 0 0 6v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a3 3 0 0 0 0-6z"/></svg><span id="b-offers-label" data-t="Offers">Offers</span></button>
+    </div>
+  </div>
+  <button type="button" class="saver" id="saver" hidden>
+    <span class="saver-dist" id="saver-dist"></span>
+    <span class="saver-text" id="saver-text"></span>
+    <span class="saver-hint" data-t="Tap to wake the screen">Tap to wake the screen</span>
+  </button>
+</section>
+
+<!-- Modal sheet -->
+<div class="scrim" id="scrim" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
+  <button type="button" class="round sheet-close" id="sheet-close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="sheet-body" id="sheet-body"></div>
+</div>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="app.js?v=__BUILD__"></script>
+</body>
+</html>

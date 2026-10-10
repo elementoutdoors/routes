@@ -1,0 +1,21 @@
+{
+  "_about": "Partner offers. An offer shows on every active route that passes within its radius (metres). A Ride with GPS stop whose name matches matchPoi is replaced by the offer. Set validUntil (YYYY-MM-DD) to have it hide itself after that date.",
+  "offers": [
+    {
+      "id": "land-and-sea",
+      "active": true,
+      "partner": "Land and Sea Brewery",
+      "headline": "2 for 1 gin, beer or vodka",
+      "alt": "or a free beer with any burger",
+      "how": "Collect your voucher card from us. Land and Sea needs the physical card handed over, so this screen on its own won't work.",
+      "conditions": "One voucher card per rider. Choose one of the two offers.",
+      "address": "19 Venture Drive, Noosaville",
+      "url": "https://www.landandseabrewery.com/",
+      "lat": -26.408018,
+      "lng": 153.043367,
+      "radius": 500,
+      "matchPoi": "Land and Sea Brewery",
+      "validUntil": null
+    }
+  ]
+}

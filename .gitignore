@@ -1,0 +1,7 @@
+.secrets.json
+cache/
+node_modules/
+dist/
+qr/
+i18n-missing.json
+__pycache__/

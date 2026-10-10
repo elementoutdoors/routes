@@ -1,0 +1,54 @@
+name: Build and publish
+
+# Rebuilds the site from Ride with GPS every night, on every change, and on demand.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '7 17 * * *'   # 3:07am Brisbane
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build from Ride with GPS
+        id: build
+        continue-on-error: true
+        env:
+          ROUTE_SECRETS: ${{ secrets.ROUTE_SECRETS }}
+        run: node scripts/build.mjs
+      - name: Check the build has every route
+        run: |
+          test -f dist/index.html
+          node -e "const h=require('./dist/health.json'); const bad=h.routes.filter(r=>!r.ok); if(!h.routes.length||bad.length===h.routes.length){console.error('No routes built');process.exit(1)}"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Report problems
+        run: |
+          sleep 20
+          curl -sf "${{ steps.deployment.outputs.page_url }}health.json" -o health.json
+          node -e "const h=require('./health.json'); if(h.problems.length){console.error('Problems: '+h.problems.join('; '));process.exit(1)} console.log('All routes OK')"

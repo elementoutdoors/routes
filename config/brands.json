@@ -1,0 +1,38 @@
+{
+  "beo": {
+    "name": "By Earth and Ocean",
+    "wordmark": ["BY EARTH", "& OCEAN"],
+    "phone": "(07) 5474 3322",
+    "phoneHref": "tel:+61754743322",
+    "website": "https://byearthandocean.com.au/",
+    "colors": {
+      "primary": "#182B3D",
+      "primary2": "#203B52",
+      "accent": "#F5CA3A",
+      "line": "#E26327",
+      "ground": "#FAF8F4",
+      "surface": "#FFFFFF",
+      "sand": "#F3EEE9",
+      "ink": "#292929",
+      "muted": "#5B5F66"
+    }
+  },
+  "bikeon": {
+    "name": "Bike On",
+    "wordmark": ["BIKE", "ON"],
+    "phone": "(07) 5474 3322",
+    "phoneHref": "tel:+61754743322",
+    "website": "https://bikeon.com.au/",
+    "colors": {
+      "primary": "#0C5AA9",
+      "primary2": "#08427C",
+      "accent": "#FFFFFF",
+      "line": "#0C5AA9",
+      "ground": "#F4F6F8",
+      "surface": "#FFFFFF",
+      "sand": "#E9EEF3",
+      "ink": "#231F20",
+      "muted": "#4D535A"
+    }
+  }
+}
