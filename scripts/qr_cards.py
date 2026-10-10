@@ -43,13 +43,17 @@ for n, r in enumerate(routes):
     # cut guide
     c.setStrokeColor(HexColor('#D5DAE0')); c.setDash(2, 3); c.rect(x, y, cw, ch); c.setDash()
     pad = 6 * mm
-    # header band
-    c.setFillColor(navy); c.rect(x + pad, y + ch - pad - 13 * mm, cw - 2 * pad, 13 * mm, stroke=0, fill=1)
-    c.setFillColor(HexColor('#FFFFFF')); c.setFont('M900', 10)
-    c.drawString(x + pad + 4 * mm, y + ch - pad - 5.6 * mm, b['wordmark'][0])
-    c.setFillColor(line); c.drawString(x + pad + 4 * mm, y + ch - pad - 10.2 * mm, b['wordmark'][1])
-    c.setFillColor(accent); c.setFont('M700', 7.5)
-    c.drawRightString(x + cw - pad - 4 * mm, y + ch - pad - 7.8 * mm, 'SELF GUIDED RIDE')
+    # header: brand logo on white, brand colour rule underneath
+    logo = ImageReader(f"{ROOT}/site/{b['logo']}") if b.get('logo') else None
+    hy = y + ch - pad - 13 * mm
+    if logo:
+        lw, lh = logo.getSize(); h = 12 * mm; w = lw * h / lh
+        c.drawImage(logo, x + pad, hy, w, h, mask='auto')
+    else:
+        c.setFillColor(navy); c.setFont('M900', 10); c.drawString(x + pad, hy + 6 * mm, ' '.join(b['wordmark']))
+    c.setFillColor(navy); c.setFont('M800' if False else 'M900', 7.5)
+    c.drawRightString(x + cw - pad, hy + 4.5 * mm, 'SELF GUIDED RIDE')
+    c.setFillColor(line); c.rect(x + pad, hy - 1.6 * mm, cw - 2 * pad, 0.9 * mm, stroke=0, fill=1)
     # QR
     q = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_M, border=1, box_size=10)
     q.add_data(links[r['slug']]); q.make(fit=True)
