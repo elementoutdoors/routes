@@ -150,6 +150,7 @@
     park: '<path d="M12 3l6 9H6z"/><path d="M12 8l7 10H5z"/><path d="M12 18v3"/>',
     turn: '<path d="M8 21V9a4 4 0 0 1 8 0v4"/><path d="M12 10l4 4 4-4"/>',
     drink: '<path d="M6 3h12l-1.5 18h-9z"/><path d="M6.5 8h11"/>',
+    service: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/>',
     offer: '<path d="M3 9V6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v3a3 3 0 0 0 0 6v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a3 3 0 0 0 0-6z"/>',
     start: '<path d="M7 4l12 8-12 8z"/>',
     ext: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
@@ -679,10 +680,11 @@
       if (nx && nx.d - c.d < A.mergeNextCueWithinMetres) { ride.cueState[i + 1] = 1; sayContent(nx.n, tu('Then')); }
     }
   }
+  var FACILITY = { toilet: 1, food: 1, drink: 1, service: 1 };   // on the map and in the Stops list, never popped up or spoken
   function checkStops() {
     if (!ride.fix) return;
     R.stops.forEach(function (s) {
-      if (ride.shown[s.id] || s.kind === 'toilet' || s.kind === 'food' || s.kind === 'finish') return;
+      if (ride.shown[s.id] || FACILITY[s.kind] || s.kind === 'finish') return;
       var near = hav(ride.fix.lat, ride.fix.lng, s.lat, s.lng);
       var along = Math.abs(s.d - ride.d);
       var cw = CFG.stops.cautionWarningMetres, tr = CFG.stops.triggerMetres;
@@ -910,7 +912,7 @@
     });
   }
   function kindLabel(k) {
-    return tu({ caution: 'Take care', view: 'Lookout', toilet: 'Toilets', food: 'Food and drink', park: 'Park', turn: 'Turnaround point', drink: 'Food and drink', finish: 'Finish' }[k] || 'Point of interest');
+    return tu({ caution: 'Take care', view: 'Lookout', toilet: 'Toilets', food: 'Food and drink', park: 'Park', turn: 'Turnaround point', drink: 'Food and drink', service: 'Facilities', finish: 'Finish' }[k] || 'Point of interest');
   }
   function openOffer(o) {
     openSheet(function (b) {

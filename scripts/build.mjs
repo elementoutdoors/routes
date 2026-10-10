@@ -197,7 +197,22 @@ async function watchBlogs(report) {
 // ---------- transform ----------
 const CUE_TYPES = { 'left': 'left', 'right': 'right', 'slight left': 'slight-left', 'slight right': 'slight-right', 'sharp left': 'sharp-left',
   'sharp right': 'sharp-right', 'straight': 'straight', 'uturn': 'uturn', 'u turn': 'uturn', 'danger': 'danger', 'generic': 'generic' };
-const POI_KINDS = { caution: 'caution', restroom: 'toilet', food: 'food', viewpoint: 'view', park: 'park', stop: 'turn', bar: 'drink', generic: 'info' };
+// Ride with GPS pin icon -> what the app does with it (see the "Stops" guide in the project doc).
+// caution: a warning, shown and spoken before the rider gets there. Story icons: pop up and are read when the rider arrives.
+// Facility icons (toilet, food, drink, service): shown on the map and in the Stops list only, never popped up or spoken.
+const POI_KINDS = {
+  caution: 'caution',
+  generic: 'info', monument: 'info', library: 'info', trailhead: 'info', ferry: 'info', geocache: 'info', start: 'info',
+  segment_start: 'info', segment_end: 'info', control: 'info',
+  viewpoint: 'view', summit: 'view',
+  park: 'park', camping: 'park', swimming: 'park',
+  stop: 'turn', finish: 'finish',
+  restroom: 'toilet', shower: 'toilet',
+  food: 'food', coffee: 'food', convenience_store: 'food',
+  bar: 'drink', winery: 'drink',
+  water: 'service', parking: 'service', gas: 'service', transit: 'service', atm: 'service', shopping: 'service', lodging: 'service',
+  bike_shop: 'service', bike_parking: 'service', bikeshare: 'service', hospital: 'service', first_aid: 'service', aid_station: 'service', rest_stop: 'service'
+};
 const clean = s => (s || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 const photoUrl = id => `https://ridewithgps.com/photos/${id}/large.jpg`;
 
@@ -231,7 +246,7 @@ function transform(entry, r) {
     if (!name) continue;
     if (offerNames.some(n => name.toLowerCase().includes(n))) continue;   // replaced by an offer card
     let kind = POI_KINDS[p.poi_type_name] || 'info';
-    const isFinish = /review|enjoyed|thank/i.test(name) || /g\.page\/r\//.test(p.url || '');
+    const isFinish = kind === 'finish' || /review|enjoyed|thank/i.test(name) || /g\.page\/r\//.test(p.url || '');
     if (isFinish) kind = 'finish';
     const { runs, nearest } = passes(T, p.lat, p.lng, 60);
     let d;
@@ -404,6 +419,23 @@ async function main() {
     if (h.source !== 'ridewithgps') health.problems.push(`${entry.slug}: using last good copy (${h.warnings[0]})`);
     health.routes.push(h);
   }
+  // Same place, different story: a story stop copied onto several rides instead of shared from the POI Library drifts apart.
+  {
+    const byName = new Map();
+    for (const b of built) for (const st of b.route.stops) {
+      if (st.kind === 'caution' || st.kind === 'finish' || (!st.text && !st.url)) continue;
+      const k = st.name.toLowerCase();
+      if (!byName.has(k)) byName.set(k, []);
+      byName.get(k).push({ slug: b.route.slug, id: st.id, sig: (st.text || '') + '|' + (st.url || '') });
+    }
+    health.sharedStops = [];
+    for (const [name, list] of byName) {
+      const ids = new Set(list.map(x => x.id)), sigs = new Set(list.map(x => x.sig));
+      if (list.length > 1) health.sharedStops.push({ name, rides: list.map(x => x.slug), pins: ids.size });
+      if (sigs.size > 1) health.problems.push(`stop "${list[0] && name}" has a different story or link on ${list.map(x => x.slug).join(', ')}; make it one POI Library pin added to each ride`);
+    }
+  }
+
   // natural voice recordings, then the route files
   try {
     await buildVoice({ routes: built.map(b => b.route), i18n, langs: LANGS, dist, appSource: fs.readFileSync(path.join(ROOT, 'site/app.js'), 'utf8'),

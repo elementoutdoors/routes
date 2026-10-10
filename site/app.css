@@ -141,8 +141,8 @@ a.btn{text-decoration:none;box-sizing:border-box}
 .mk{width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.3);cursor:pointer;padding:0}
 .mk svg{width:17px;height:17px;stroke-width:2.4}
 .mk.caution{background:#C2410C}
-.mk.toilet,.mk.food{background:#5B5F66;width:28px;height:28px}
-.mk.toilet svg,.mk.food svg{width:14px;height:14px}
+.mk.toilet,.mk.food,.mk.drink,.mk.service{background:#5B5F66;width:28px;height:28px}
+.mk.toilet svg,.mk.food svg,.mk.drink svg,.mk.service svg{width:14px;height:14px}
 .mk.offer{background:var(--accent);color:var(--primary);border-radius:10px}
 .mk.finish,.mk.start{background:#2F5D3A}
 .me{width:22px;height:22px;border-radius:50%;background:#1A73E8;border:4px solid #fff;box-shadow:0 0 0 8px rgba(26,115,232,.2),0 2px 6px rgba(0,0,0,.3);position:relative}
