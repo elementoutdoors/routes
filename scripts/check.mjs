@@ -2,18 +2,22 @@
 // Reads the live health.json, then checks that the site was rebuilt recently, every route opens,
 // every stop and offer link still works, every photo loads, and nothing is untranslated.
 // Prints a JSON report. Exit code 0 = all good, 1 = something needs attention.
+// Version 2 (10/10/2026): real browser user agent, redirects to another page count as broken, 403 noted not failed.
 // Usage: node scripts/check.mjs [siteBase]   (route links are read from qr/links.json when present)
 import fs from 'node:fs';
 
 const BASE = (process.argv[2] || 'https://elementoutdoors.github.io/routes/').replace(/\/?$/, '/');
 const issues = [], notes = [];
 
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36';
+const norm = u => { const x = new URL(u); return (x.host.replace(/^www\./, '') + x.pathname.replace(/\/+$/, '')).toLowerCase(); };
+// status code, plus where the link really lands (a page that now redirects somewhere else is a dead link)
 async function status(url, method = 'HEAD') {
   try {
-    let r = await fetch(url, { method, redirect: 'follow', headers: { 'User-Agent': 'Mozilla/5.0 RideGuideCheck' } });
-    if ((r.status === 405 || r.status === 403) && method === 'HEAD') r = await fetch(url, { redirect: 'follow', headers: { 'User-Agent': 'Mozilla/5.0 RideGuideCheck' } });
-    return r.status;
-  } catch (e) { return 0; }
+    let r = await fetch(url, { method, redirect: 'follow', headers: { 'User-Agent': UA } });
+    if ((r.status === 405 || r.status === 403 || r.status === 404) && method === 'HEAD') r = await fetch(url, { redirect: 'follow', headers: { 'User-Agent': UA } });
+    return { code: r.status, moved: r.url && norm(r.url) !== norm(url) ? r.url : null };
+  } catch (e) { return { code: 0, moved: null }; }
 }
 
 const res = await fetch(BASE + 'health.json', { cache: 'no-store' });
@@ -28,8 +32,13 @@ Object.entries(h.untranslatedTotal || {}).forEach(([l, n]) => { if (n) issues.pu
 
 const links = new Set(), photos = new Set();
 h.routes.forEach(r => { (r.links || []).forEach(u => links.add(u)); (r.photos || []).forEach(u => photos.add(u)); });
-for (const u of links) { const s = await status(u); if (s === 0 || s >= 400) issues.push(`link not working (${s || 'no answer'}): ${u}`); }
-for (const u of photos) { const s = await status(u, 'GET'); if (s === 0 || s >= 400) issues.push(`photo not loading (${s || 'no answer'}): ${u}`); }
+for (const u of links) {
+  const s = await status(u);
+  if (s.code === 403 || s.code === 429) notes.push(`could not check (site blocks checkers, ${s.code}): ${u}`);
+  else if (s.code === 0 || s.code >= 400) issues.push(`link not working (${s.code || 'no answer'}): ${u}`);
+  else if (s.moved && !/\/(r|review)\b|g\.page|google\./.test(u + s.moved)) issues.push(`link now goes somewhere else: ${u} lands on ${s.moved}`);
+}
+for (const u of photos) { const s = await status(u, 'GET'); if (s.code === 0 || s.code >= 400) issues.push(`photo not loading (${s.code || 'no answer'}): ${u}`); }
 
 // every QR link opens its route (only possible where the private link list is available)
 if (fs.existsSync('qr/links.json')) {
@@ -37,7 +46,7 @@ if (fs.existsSync('qr/links.json')) {
   for (const [slug, url] of Object.entries(q)) {
     const key = url.split('#')[1];
     const s = await status(`${BASE}r/${key}.json`, 'GET');
-    if (s !== 200) issues.push(`QR code for ${slug} does not open its route (${s})`);
+    if (s.code !== 200) issues.push(`QR code for ${slug} does not open its route (${s.code})`);
   }
 }
 
