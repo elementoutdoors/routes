@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write   # to keep natural voice recordings on the voice-cache branch
   pages: write
   id-token: write
 
@@ -25,12 +25,31 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Get saved voice recordings
+        run: |
+          if git fetch --depth=1 origin voice-cache:voice-cache 2>/dev/null; then git worktree add .voice-cache voice-cache; else mkdir -p .voice-cache; fi
+          find .voice-cache -type f -not -path '*/.git*' | sort | xargs -r sha1sum | sha1sum > /tmp/voice-before
       - name: Build from Ride with GPS
         id: build
         continue-on-error: true
         env:
           ROUTE_SECRETS: ${{ secrets.ROUTE_SECRETS }}
+          GOOGLE_TTS_KEY: ${{ secrets.GOOGLE_TTS_KEY }}
+          VOICE_CACHE: .voice-cache
         run: node scripts/build.mjs
+      - name: Keep new voice recordings
+        if: always()
+        run: |
+          find .voice-cache -type f -not -path '*/.git*' | sort | xargs -r sha1sum | sha1sum > /tmp/voice-after
+          if cmp -s /tmp/voice-before /tmp/voice-after; then echo "No new recordings"; exit 0; fi
+          # one commit only, replaced each time, so the branch never piles up old audio
+          mkdir -p /tmp/vc && cp -a .voice-cache/. /tmp/vc/ && rm -rf /tmp/vc/.git && cd /tmp/vc
+          git init -q -b voice-cache
+          git config user.name "Ride Guide build"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "Voice recordings $(date -u +%FT%H:%MZ)"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:voice-cache
+          echo "Saved $(find . -name '*.mp3' | wc -l) recordings"
+
       - name: Check the build has every route
         run: |
           test -f dist/index.html

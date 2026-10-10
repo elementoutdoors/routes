@@ -8,6 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { buildVoice } from './voice.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const OFFLINE = process.argv.includes('--offline');
@@ -289,6 +290,7 @@ async function main() {
   const links = {}, codes = {};
   fs.mkdirSync(path.join(dist, 'c'), { recursive: true });
   fs.mkdirSync(path.join(dist, 'g'), { recursive: true });
+  const built = [];
   for (const entry of cfg.routes.filter(r => r.active)) {
     const key = routeKey(entry.slug, entry.rev);
     links[entry.slug] = `${SITE_BASE}#${key}`;
@@ -331,7 +333,7 @@ async function main() {
       route.gpx = gname;
     }
     for (const x of [...route.stops, ...route.offers]) x.frame = await frameable(x.url);
-    fs.writeFileSync(path.join(dist, 'r', `${key}.json`), JSON.stringify(route));
+    built.push({ key, route });   // written after the voice step adds its recordings
     Object.assign(h, { ok: true, name: route.name, version: route.version, distance: route.distance, gpx: !!route.gpx, cues: route.cues.length,
       stops: route.stops.length, offers: route.offers.map(o => o.id),
       links: [...new Set(route.stops.map(s => s.url).filter(Boolean).concat(route.offers.map(o => o.url).filter(Boolean)))],
@@ -340,6 +342,13 @@ async function main() {
     if (h.source !== 'ridewithgps') health.problems.push(`${entry.slug}: using last good copy (${h.warnings[0]})`);
     health.routes.push(h);
   }
+  // natural voice recordings, then the route files
+  try {
+    await buildVoice({ routes: built.map(b => b.route), i18n, langs: LANGS, dist, appSource: fs.readFileSync(path.join(ROOT, 'site/app.js'), 'utf8'),
+      health, allRoutesOk: health.routes.every(r => r.ok && r.source === 'ridewithgps') });
+  } catch (e) { health.problems.push('voice step failed: ' + (e.message || e)); fs.writeFileSync(path.join(dist, 'voice.json'), '{}'); }
+  for (const b of built) fs.writeFileSync(path.join(dist, 'r', `${b.key}.json`), JSON.stringify(b.route));
+
   for (const o of offersCfg.offers) {
     const expired = o.validUntil && new Date(o.validUntil + 'T23:59:59+10:00') < now;
     if (o.active && (typeof o.lat !== 'number' || typeof o.lng !== 'number')) health.problems.push(`offer ${o.id} has no location yet`);

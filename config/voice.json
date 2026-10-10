@@ -1,0 +1,6 @@
+{
+  "_about": "Natural voice for spoken directions and stories (Google Chirp 3 HD). voice is the Chirp 3 HD voice name used in every language. monthlyCharacterCap keeps use inside Google's free 1 million characters a month; lines over the cap wait for next month and the phone voice covers them. maxMinutesPerBuild stops a long first run from holding up the site.",
+  "voice": "Aoede",
+  "monthlyCharacterCap": 900000,
+  "maxMinutesPerBuild": 35
+}

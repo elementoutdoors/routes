@@ -41,7 +41,8 @@ self.addEventListener('fetch', function (e) {
   }
   if (url.origin === location.origin) {
     if (/\/r\/[^/]+\.json$/.test(url.pathname) || /health\.json$/.test(url.pathname)) { e.respondWith(networkFirst(req, DATA)); return; }
-    if (/ui\.json$/.test(url.pathname)) { e.respondWith(networkFirst(req, SHELL)); return; }
+    if (/(ui|voice)\.json$/.test(url.pathname)) { e.respondWith(networkFirst(req, SHELL)); return; }
+    if (/\/v\/[0-9a-f]+\/[0-9a-f]+\.mp3$/.test(url.pathname)) { e.respondWith(caches.match(req).then(function (hit) { return hit || cacheFirst(req, DATA); })); return; }   // natural voice recordings
     if (/\/assets\//.test(url.pathname)) { e.respondWith(caches.match(req).then(function (hit) { return hit || cacheFirst(req, DATA); })); return; }   // partner logos, kept for offline
     e.respondWith(caches.match(req).then(function (hit) { return hit || fetch(req); }));
     return;

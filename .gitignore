@@ -5,3 +5,4 @@ dist/
 qr/
 i18n-missing.json
 __pycache__/
+.voice-cache/

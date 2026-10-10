@@ -27,7 +27,7 @@
   var touched = lsGet('rg.touched', null);
   var savedS = lsGet('rg.settings', {});
   if (!touched) touched = Object.keys(savedS);
-  var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, stories: true, wake: true, saver: false, sat: false }, savedS);
+  var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, natural: true, stories: true, wake: true, saver: false, sat: false }, savedS);
   function saveSettings(key) {
     if (key && touched.indexOf(key) < 0) touched.push(key);
     var out = {}; touched.forEach(function (k) { out[k] = S[k]; });
@@ -198,6 +198,8 @@
   function loadUi() {
     var cached = lsGet('rg.ui', null);
     if (cached) UI = cached;
+    var v = lsGet('rg.voice', null); if (v) setVoiceManifest(v);
+    fetchJson('voice.json?v=' + BUILD).then(function (m) { setVoiceManifest(m); lsSet('rg.voice', m); if (R) precacheVoice(); }).catch(function () {});
     return fetchJson('ui.json?v=' + BUILD).then(function (u) { UI = u; lsSet('rg.ui', u); }).catch(function () {});
   }
   function storeRoute(key, data) {
@@ -374,28 +376,120 @@
     var pool = exact.length ? exact : near;
     return pool.filter(function (v) { return v.localService; })[0] || pool[0] || null;
   }
+  // Natural voice: lines recorded at build time (Google Chirp 3 HD) play as audio; anything without a recording,
+  // or when Natural voice is off, uses the phone's own voice. One queue keeps both in order.
+  // voiceHash must match scripts/voice.mjs.
+  function voiceHash(str) {
+    var a = 0x811c9dc5, b = 0x01000193 ^ 0x5bd1e995;
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charCodeAt(i);
+      a ^= c; a = Math.imul(a, 0x01000193) >>> 0;
+      b ^= c; b = Math.imul(b, 0x01000193) >>> 0; b ^= b >>> 13;
+    }
+    return ('0000000' + (a >>> 0).toString(16)).slice(-8) + ('0000000' + (b >>> 0).toString(16)).slice(-8);
+  }
+  var VOICE = {};   // { lang: { tag, h: Set, pre: [] } }
+  function setVoiceManifest(m) {
+    VOICE = {};
+    Object.keys(m || {}).forEach(function (l) { VOICE[l] = { tag: m[l].tag, h: new Set(m[l].h || []), pre: m[l].pre || [] }; });
+  }
+  var routeClips = {};
+  function setRouteClips() { routeClips = {}; var v = (R && R.voice) || {}; Object.keys(v).forEach(function (l) { routeClips[l] = new Set(v[l]); }); }
+  function clipFor(lang, text) {
+    var vm = VOICE[lang]; if (!vm || !text) return null;
+    var h = voiceHash(lang + '|' + String(text).trim());
+    return (vm.h.has(h) || (routeClips[lang] && routeClips[lang].has(h))) ? 'v/' + vm.tag + '/' + h + '.mp3' : null;
+  }
+  var aud = null, queue = [], speaking = false, phoneTimer = null;
+  function audioEl() {
+    if (!aud) {
+      aud = new Audio(); aud.preload = 'auto';
+      aud.addEventListener('ended', nextLine);
+      aud.addEventListener('error', function () { var it = aud._item; if (it && !it.fell) { it.fell = true; phoneLine(it); } });
+    }
+    return aud;
+  }
+  function stopSpeech() {
+    queue = []; speaking = false; clearTimeout(phoneTimer);
+    try { if (aud) { aud._item = null; aud.pause(); } } catch (e) {}
+    try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) {}
+  }
+  function phoneLine(it) {
+    if (!window.speechSynthesis) { nextLine(); return; }
+    var finished = false;
+    function fin() { if (finished) return; finished = true; clearTimeout(phoneTimer); nextLine(); }
+    try {
+      var u = new SpeechSynthesisUtterance(it.text), v = pickVoice(it.lang);
+      u.lang = SPEECH_LANG[it.lang] || 'en-AU'; if (v) u.voice = v; u.rate = 1; u.pitch = 1;
+      u.onend = fin; u.onerror = fin;
+      speechSynthesis.speak(u);
+      phoneTimer = setTimeout(fin, Math.max(4000, it.text.length * 110));   // some phones never fire onend
+    } catch (e) { fin(); }
+  }
+  function nextLine() {
+    var it = queue.shift();
+    if (!it) { speaking = false; return; }
+    speaking = true;
+    if (it.url) {
+      var a = audioEl(); a._item = it; a.src = it.url;
+      var p; try { p = a.play(); } catch (e) { p = null; it.fell = true; phoneLine(it); return; }
+      if (p && p.catch) p.catch(function () { if (!it.fell) { it.fell = true; phoneLine(it); } });
+    } else phoneLine(it);
+  }
+  function enqueue(items, interrupt) {
+    if (interrupt) stopSpeech();
+    items.forEach(function (it) { queue.push(it); });
+    if (!speaking) nextLine();
+  }
+  // parts: [{ text, lang }]. All recorded: play the recordings. Otherwise speak with the phone voice,
+  // joining parts in the same language so it reads as one sentence.
+  function speakParts(parts, opts) {
+    opts = opts || {};
+    parts = parts.filter(function (p) { return p && p.text; });
+    if (!parts.length) return;
+    if (!S.voice && !opts.force) return;
+    lastSaid = parts.map(function (p) { return p.text; }).join(' ');
+    var urls = S.natural ? parts.map(function (p) { return clipFor(p.lang, p.text); }) : [];
+    var items;
+    if (S.natural && urls.every(Boolean)) items = parts.map(function (p, i) { return { text: p.text, lang: p.lang, url: urls[i] }; });
+    else {
+      items = [];
+      parts.forEach(function (p) {
+        var last = items[items.length - 1];
+        if (last && last.lang === p.lang) last.text += (/^(zh|ja)$/.test(p.lang) ? '' : ' ') + p.text;
+        else items.push({ text: p.text, lang: p.lang, url: null });
+      });
+    }
+    enqueue(items, opts.interrupt);
+  }
   var lastSaid = '';
   function say(text, opts) {
     opts = opts || {};
-    if (!text || !window.speechSynthesis) return;
-    if (!S.voice && !opts.force) return;
-    lastSaid = text;
-    try {
-      if (opts.interrupt) speechSynthesis.cancel();
-      var u = new SpeechSynthesisUtterance(text);
-      var lang = opts.lang || S.lang, v = pickVoice(lang);
-      u.lang = SPEECH_LANG[lang] || 'en-AU';
-      if (v) u.voice = v;
-      u.rate = 1; u.pitch = 1;
-      speechSynthesis.speak(u);
-    } catch (e) {}
+    speakParts([{ text: text, lang: opts.lang || S.lang }], opts);
   }
   // A cue or story that has not been translated yet is spoken in English with an English voice.
   function sayContent(english, prefix) {
-    var m = R.i18n && R.i18n[S.lang], tr = m && m[english];
-    var sep = /^(zh|ja)$/.test(S.lang) ? '' : ' ';
-    if (S.lang === 'en' || tr) say((prefix ? prefix + sep : '') + (tr || english));
-    else { if (prefix) say(prefix); say(english, { lang: 'en' }); }
+    var m = R.i18n && R.i18n[S.lang], tr = S.lang === 'en' ? english : (m && m[english]);
+    var parts = [].concat(prefix == null ? [] : prefix).map(function (p) { return { text: p, lang: S.lang }; });
+    parts.push(tr ? { text: tr, lang: S.lang } : { text: english, lang: 'en' });
+    speakParts(parts);
+  }
+  // Save this route's recordings and the common lines to the phone so the voice works with no signal.
+  function precacheVoice() {
+    if (!R || !navigator.onLine || !S.natural) return;
+    var l = S.lang, vm = VOICE[l], urls = [];
+    if (!vm) return;
+    (R.voice && R.voice[l] || []).forEach(function (h) { urls.push('v/' + vm.tag + '/' + h + '.mp3'); });
+    (vm.pre || []).forEach(function (h) { urls.push('v/' + vm.tag + '/' + h + '.mp3'); });
+    if (l !== 'en' && VOICE.en && R.voice && R.voice.en) {
+      // English recordings for lines not yet translated
+      var m = (R.i18n && R.i18n[l]) || {};
+      var texts = R.cues.map(function (c) { return c.n; }).concat(R.stops.map(function (x) { return x.name; }), R.stops.map(function (x) { return x.text; }));
+      texts.forEach(function (t) { if (t && !m[t]) { var u = clipFor('en', t); if (u) urls.push(u); } });
+    }
+    var stamp = 'rg.vsave.' + R.key + '.' + R.version + '.' + l + '.' + urls.length + '.' + vm.tag;
+    if (lsGet(stamp, false)) return;
+    fetchAll(urls).then(function (failed) { if (failed < 3) lsSet(stamp, true); });
   }
 
   // ---------- wake lock ----------
@@ -436,7 +530,7 @@
   }
   function endRide() {
     ride.active = false; ride.paused = false; stopGps(); stopSim(); releaseWake(); hideSaver(); updatePauseBtn();
-    try { speechSynthesis.cancel(); } catch (e) {}
+    stopSpeech();
     lsDel(progressKey());
     ride.d = 0; updateDone();
     openRoute();
@@ -446,7 +540,7 @@
   function pauseRide() {
     if (!ride.active || ride.paused) return;
     ride.paused = true; ride.off = false; ride.offCount = 0; ride.onCount = 0;
-    try { speechSynthesis.cancel(); } catch (e) {}
+    stopSpeech();
     say(tu('Ride paused. Directions are off until you tap Resume.'), { interrupt: true });
     releaseWake(); hideSaver(); updatePauseBtn(); renderRide(); saveProgress();
   }
@@ -548,7 +642,7 @@
     if (st < 1 && dist <= prepAt && dist > A.turnMetres + 25 && (c.d - prevD) > A.skipFirstWarningIfCuesCloserThanMetres) {
       ride.cueState[i] = 1;
       var pre = fmt(tu('In {dist},'), { dist: distParts(Math.max(dist, 20)).say });
-      sayContent(c.n, (danger ? tu('Caution.') + ' ' : '') + pre);
+      sayContent(c.n, danger ? [tu('Caution.'), pre] : pre);
     } else if (st < 2 && dist <= A.turnMetres) {
       ride.cueState[i] = 2;
       sayContent(c.n, danger ? tu('Caution.') : null);
@@ -757,7 +851,7 @@
       if (s.text || s.name) {
         var listen = el('button', { class: 'btn primary full', type: 'button' }, svg('vol') + '<span></span>');
         listen.querySelector('span').textContent = tu('Listen');
-        listen.addEventListener('click', function () { try { speechSynthesis.cancel(); } catch (e) {} var was = S.voice; S.voice = true; sayContent(s.name); if (s.text) sayContent(s.text); S.voice = was; });
+        listen.addEventListener('click', function () { stopSpeech(); var was = S.voice; S.voice = true; sayContent(s.name); if (s.text) sayContent(s.text); S.voice = was; });
         acts.appendChild(listen);
       }
       var u = safeUrl(s.url);
@@ -902,11 +996,11 @@
       var lg = group(tu('Language')), grid = el('div', { class: 'lang-grid' });
       LANGS.forEach(function (l) {
         var bt = el('button', { type: 'button', 'aria-pressed': String(l[0] === S.lang), lang: l[0], text: l[1] });
-        bt.addEventListener('click', function () { S.lang = l[0]; saveSettings('lang'); refreshAll(); openSettings(); });
+        bt.addEventListener('click', function () { S.lang = l[0]; saveSettings('lang'); refreshAll(); precacheVoice(); openSettings(); });
         grid.appendChild(bt);
       });
       lg.appendChild(grid);
-      if (S.lang !== 'en' && !pickVoice(S.lang) && voices.length) lg.appendChild(el('p', { class: 'note', text: tu('This phone has no voice for this language, so directions are shown on screen and spoken in English.') }));
+      if (S.lang !== 'en' && !(S.natural && VOICE[S.lang]) && !pickVoice(S.lang) && voices.length) lg.appendChild(el('p', { class: 'note', text: tu('This phone has no voice for this language, so directions are shown on screen and spoken in English.') }));
       var vg = group(tu('Voice and screen')), cl = el('div', { class: 'card-list' });
       function toggle(title, sub, key, after) {
         var row = el('div', { class: 'toggle-row' }), t = el('div');
@@ -916,6 +1010,7 @@
         row.appendChild(t); row.appendChild(sw); cl.appendChild(row);
       }
       toggle(tu('Spoken directions'), null, 'voice', updateVoiceBtn);
+      toggle(tu('Natural voice'), tu("Clearer recorded voice. Turn off to use your phone's own voice."), 'natural', function () { stopSpeech(); precacheVoice(); });
       toggle(tu('Read stop stories aloud'), null, 'stories');
       toggle(tu('Keep screen on'), tu('Stops the phone locking while you ride'), 'wake', function () { if (S.wake) requestWake(); else releaseWake(); });
       toggle(tu('Battery saver'), tu('Blacks out the map between turns'), 'saver', saverTick);
@@ -1008,6 +1103,7 @@
   }
   function useRoute(key, data) {
     R = data; R.key = key;
+    setRouteClips();
     applyRouteSettings();
     applyBrand();
     applyStaticText();
@@ -1015,6 +1111,7 @@
     addMarkers();
     openRoute();
     saveOffline();
+    precacheVoice();
   }
 
   // ---------- in-app page viewer (the ride keeps running underneath) ----------
@@ -1135,12 +1232,12 @@
     $('route-desc-more').addEventListener('click', function () { $('route-desc').classList.remove('clamp'); this.hidden = true; });
     $('sheet-close').addEventListener('click', closeSheet);
     $('scrim').addEventListener('click', closeSheet);
-    $('btn-voice').addEventListener('click', function () { S.voice = !S.voice; saveSettings('voice'); updateVoiceBtn(); if (!S.voice) { try { speechSynthesis.cancel(); } catch (e) {} } else say(tu('Voice on.')); });
+    $('btn-voice').addEventListener('click', function () { S.voice = !S.voice; saveSettings('voice'); updateVoiceBtn(); if (!S.voice) { stopSpeech(); } else say(tu('Voice on.')); });
     $('btn-follow').addEventListener('click', function () { ride.follow = true; updateFollowBtn(); if (map && ride.fix) map.easeTo({ center: [ride.fix.lng, ride.fix.lat], zoom: Math.max(map.getZoom(), 15.5) }); });
     $('cue-repeat').addEventListener('click', function () {
-      if (ride.paused) { try { speechSynthesis.cancel(); } catch (e) {} var w = S.voice; S.voice = true; say(tu('Ride paused. Directions are off until you tap Resume.')); S.voice = w; return; }
+      if (ride.paused) { stopSpeech(); var w = S.voice; S.voice = true; say(tu('Ride paused. Directions are off until you tap Resume.')); S.voice = w; return; }
       var i = nextCueIndex(); if (i < 0) return;
-      try { speechSynthesis.cancel(); } catch (e) {}
+      stopSpeech();
       var was = S.voice; S.voice = true;
       sayContent(R.cues[i].n, fmt(tu('In {dist},'), { dist: distParts(Math.max(R.cues[i].d - ride.d, 10)).say }));
       S.voice = was;
