@@ -424,15 +424,16 @@ async function main() {
     const byName = new Map();
     for (const b of built) for (const st of b.route.stops) {
       if (st.kind === 'caution' || st.kind === 'finish' || (!st.text && !st.url)) continue;
-      const k = st.name.toLowerCase();
+      const k = ((b.route.brand && b.route.brand.id) || '') + '|' + st.name.toLowerCase();   // each brand has its own wording and blog
       if (!byName.has(k)) byName.set(k, []);
       byName.get(k).push({ slug: b.route.slug, id: st.id, sig: (st.text || '') + '|' + (st.url || '') });
     }
     health.sharedStops = [];
     for (const [name, list] of byName) {
       const ids = new Set(list.map(x => x.id)), sigs = new Set(list.map(x => x.sig));
-      if (list.length > 1) health.sharedStops.push({ name, rides: list.map(x => x.slug), pins: ids.size });
-      if (sigs.size > 1) health.problems.push(`stop "${list[0] && name}" has a different story or link on ${list.map(x => x.slug).join(', ')}; make it one POI Library pin added to each ride`);
+      const label = name.split('|')[1];
+      if (list.length > 1) health.sharedStops.push({ name: label, brand: name.split('|')[0], rides: list.map(x => x.slug), pins: ids.size });
+      if (sigs.size > 1) health.problems.push(`stop "${label}" has a different story or link on ${list.map(x => x.slug).join(', ')}; make it one POI Library pin added to each ride`);
     }
   }
 
