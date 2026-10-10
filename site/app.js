@@ -288,10 +288,10 @@
       b.addEventListener('click', function (e) { e.stopPropagation(); openStop(s); });
       markers.push(new maplibregl.Marker({ element: b }).setLngLat([s.lng, s.lat]).addTo(map));
     });
-    R.offers.forEach(function (o) {
-      var b = el('button', { class: 'mk offer', type: 'button', 'aria-label': o.partner }, svg('offer'));
-      b.addEventListener('click', function (e) { e.stopPropagation(); openOffer(o); });
-      markers.push(new maplibregl.Marker({ element: b }).setLngLat([o.lng, o.lat]).addTo(map));
+    offerPlaces().forEach(function (g) {
+      var b = el('button', { class: 'mk offer', type: 'button', 'aria-label': g[0].partner }, svg('offer'));
+      b.addEventListener('click', function (e) { e.stopPropagation(); openOffers(g); });
+      markers.push(new maplibregl.Marker({ element: b }).setLngLat([g[0].lng, g[0].lat]).addTo(map));
     });
   }
   function setSatellite(on) {
@@ -344,6 +344,7 @@
           Object.keys(seen).forEach(function (k) { var p = k.split('/'); urls.push(tpl.replace('{z}', p[0]).replace('{x}', p[1]).replace('{y}', p[2])); });
         }
         R.stops.forEach(function (s) { (s.photos || []).forEach(function (u) { urls.push(u); }); });
+        R.offers.forEach(function (o) { if (o.logo) urls.push(o.logo); });
         return fetchAll(urls);
       });
     }).then(function (failed) {
@@ -553,12 +554,12 @@
   }
   function checkOffers() {
     if (!ride.fix) return;
-    R.offers.forEach(function (o) {
-      var id = 'offer-' + o.id;
-      if (ride.shown[id] || o.d < 300) return;
+    offerPlaces().forEach(function (g) {
+      var o = g[0], id = 'offer-' + o.id;
+      if (ride.shown[id] || o.d == null || o.d < 300) return;
       if (hav(ride.fix.lat, ride.fix.lng, o.lat, o.lng) < 150) {
         ride.shown[id] = 1;
-        banner(fmt(tu('Rider offer nearby: {name}'), { name: o.partner }), 'offer', 15000, function () { openOffer(o); });
+        banner(fmt(tu('Rider offer nearby: {name}'), { name: o.partner }), 'offer', 15000, function () { openOffers(g); });
         say(fmt(tu('Rider offer nearby: {name}'), { name: o.partner }));
       }
     });
@@ -719,15 +720,23 @@
       var v = el('div', { class: 'voucher' });
       var card = el('div', { class: 'v-card' });
       var top = el('div', { class: 'v-top' });
-      top.appendChild(el('div', { class: 'v-partner', text: o.partner }));
+      if (o.logo) {
+        var lg = el('img', { class: 'v-logo', src: o.logo, alt: o.partner });
+        lg.addEventListener('error', function () { lg.replaceWith(el('div', { class: 'v-partner', text: o.partner })); });
+        top.appendChild(lg);
+      } else top.appendChild(el('div', { class: 'v-partner', text: o.partner }));
       top.appendChild(el('h2', { id: 'sheet-title', class: 'v-head', text: tc(o.headline) }));
       if (o.alt) top.appendChild(el('div', { class: 'v-alt', text: tc(o.alt) }));
       card.appendChild(top);
       card.appendChild(el('div', { class: 'v-tear' }, '<span></span>'));
       var rows = el('div', { class: 'v-rows' });
       if (o.how) rows.appendChild(el('div', { class: 'v-how', text: tc(o.how) }));
-      if (o.conditions) rows.appendChild(el('div', { class: 'v-row' }, '<span></span><span></span>'));
-      if (o.conditions) { rows.lastChild.firstChild.textContent = tu('Conditions'); rows.lastChild.lastChild.textContent = tc(o.conditions); }
+      if (o.conditions) {
+        var cr = el('div', { class: 'v-conds' });
+        cr.appendChild(el('div', { class: 'v-conds-k', text: tu('Conditions') }));
+        [].concat(o.conditions).forEach(function (c) { cr.appendChild(el('div', { class: 'v-cond', text: tc(c) })); });
+        rows.appendChild(cr);
+      }
       if (o.address) { var r2 = el('div', { class: 'v-row' }, '<span></span><span></span>'); r2.firstChild.textContent = tu('Where'); r2.lastChild.textContent = o.address; rows.appendChild(r2); }
       if (o.validUntil) { var r3 = el('div', { class: 'v-row' }, '<span></span><span></span>'); r3.firstChild.textContent = tu('Valid until'); r3.lastChild.textContent = new Date(o.validUntil + 'T00:00:00').toLocaleDateString(S.lang); rows.appendChild(r3); }
       card.appendChild(rows);
@@ -788,15 +797,22 @@
       b.appendChild(list);
     });
   }
-  function openOffers() {
-    if (R.offers.length === 1) return openOffer(R.offers[0]);
+  // offers grouped by partner and place, so a partner with two offers gets one map marker and one nearby alert
+  function offerPlaces() {
+    var g = {};
+    R.offers.forEach(function (o) { var k = o.partner + '|' + o.lat.toFixed(4) + '|' + o.lng.toFixed(4); (g[k] = g[k] || []).push(o); });
+    return Object.keys(g).map(function (k) { return g[k]; });
+  }
+  function openOffers(list) {
+    var offers = Array.isArray(list) ? list : R.offers;
+    if (offers.length === 1) return openOffer(offers[0]);
     openSheet(function (b) {
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('Rider offers') }));
       var list = el('div', { class: 'list' });
-      if (!R.offers.length) b.appendChild(el('p', { text: tu('There are no rider offers on this route.') }));
-      R.offers.forEach(function (o) {
+      if (!offers.length) b.appendChild(el('p', { text: tu('There are no rider offers on this route.') }));
+      offers.forEach(function (o) {
         var it = el('button', { class: 'list-item', type: 'button' });
-        it.appendChild(el('div', { class: 'li-icon' }, svg('offer')));
+        it.appendChild(o.logo ? el('img', { class: 'li-logo', src: o.logo, alt: '' }) : el('div', { class: 'li-icon' }, svg('offer')));
         var m = el('div', { class: 'li-main' }); m.appendChild(el('div', { class: 'li-title', text: tc(o.headline) }));
         m.appendChild(el('div', { class: 'li-sub', text: o.partner })); it.appendChild(m);
         it.addEventListener('click', function () { openOffer(o); });

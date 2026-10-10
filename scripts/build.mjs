@@ -106,6 +106,22 @@ function passes(T, lat, lng, maxDist) {
   return { runs, nearest };
 }
 
+// Offers for a route: every active, in-date offer the route passes within its radius, plus any set to allRoutes.
+// d is how far along the route it is passed (null for an allRoutes offer the route never goes near).
+function offersFor(T) {
+  const out = [];
+  for (const o of offersCfg.offers) {
+    if (!o.active || (o.validUntil && new Date(o.validUntil + 'T23:59:59+10:00') < new Date())) continue;
+    const { runs } = passes(T, o.lat, o.lng, o.radius || 400);
+    if (!runs.length && !o.allRoutes) continue;
+    const cond = [].concat(o.conditions || []).filter(Boolean);
+    out.push({ id: o.id, partner: o.partner, logo: o.logo || null, headline: o.headline, alt: o.alt || null, how: o.how || null,
+      conditions: cond.length ? cond : null, address: o.address || null, url: o.url || null, lat: o.lat, lng: o.lng,
+      d: runs.length ? Math.round(runs[0].d) : null, validUntil: o.validUntil || null });
+  }
+  return out;
+}
+
 // ---------- transform ----------
 const CUE_TYPES = { 'left': 'left', 'right': 'right', 'slight left': 'slight-left', 'slight right': 'slight-right', 'sharp left': 'sharp-left',
   'sharp right': 'sharp-right', 'straight': 'straight', 'uturn': 'uturn', 'u turn': 'uturn', 'danger': 'danger', 'generic': 'generic' };
@@ -161,13 +177,7 @@ function transform(entry, r) {
   }
   stops.sort((a, b) => a.d - b.d);
 
-  const offers = [];
-  for (const o of activeOffers) {
-    const { runs, nearest } = passes(T, o.lat, o.lng, o.radius || 400);
-    if (!runs.length) continue;
-    offers.push({ id: o.id, partner: o.partner, headline: o.headline, alt: o.alt || null, how: o.how || null, conditions: o.conditions || null,
-      address: o.address || null, url: o.url || null, lat: o.lat, lng: o.lng, d: Math.round(runs[0].d), validUntil: o.validUntil || null });
-  }
+  const offers = offersFor(T);
 
   const brandId = brands[entry.brand] ? entry.brand : 'beo';
   const brand = Object.assign({ id: brandId }, brands[brandId]);
@@ -186,7 +196,7 @@ function routeStrings(route) {
   const s = new Set([route.name, route.description]);
   route.cues.forEach(c => s.add(c.n));
   route.stops.forEach(p => { s.add(p.name); s.add(p.text); });
-  route.offers.forEach(o => { s.add(o.headline); s.add(o.alt); s.add(o.how); s.add(o.conditions); });
+  route.offers.forEach(o => { s.add(o.headline); s.add(o.alt); s.add(o.how); [].concat(o.conditions || []).forEach(c => s.add(c)); });
   s.delete(''); s.delete(null); s.delete(undefined);
   return [...s];
 }
@@ -289,6 +299,9 @@ async function main() {
     }
     if (!route) { h.ok = false; health.problems.push(`${entry.slug}: no route data`); health.routes.push(h); continue; }
 
+    // offers always come from config/offers.json, even when the route itself is the last good copy
+    route.offers = offersFor(route.track);
+
     // translations for this route
     const strings = routeStrings(route);
     route.i18n = {};
@@ -313,6 +326,7 @@ async function main() {
     health.offers.push({ id: o.id, active: o.active && !expired, expired: !!expired,
       onRoutes: health.routes.filter(r => (r.offers || []).includes(o.id)).map(r => r.slug) });
     if (o.active && !expired && !health.routes.some(r => (r.offers || []).includes(o.id))) health.problems.push(`offer ${o.id} is not near any route`);
+    if (o.logo && !fs.existsSync(path.join(ROOT, 'site', o.logo))) health.problems.push(`offer ${o.id}: logo ${o.logo} is missing, card shows the name instead`);
   }
   health.untranslatedTotal = Object.fromEntries(LANGS.map(l => [l, missing[l].size]));
   fs.writeFileSync(path.join(dist, 'health.json'), JSON.stringify(health, null, 1));

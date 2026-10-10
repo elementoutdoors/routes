@@ -1,14 +1,40 @@
 {
-  "_about": "Partner offers. An offer shows on every active route that passes within its radius (metres). A Ride with GPS stop whose name matches matchPoi is replaced by the offer. Set validUntil (YYYY-MM-DD) to have it hide itself after that date.",
+  "_about": "Partner offers. An offer shows on every active route that passes within its radius (metres), or on every route if allRoutes is true. A Ride with GPS stop whose name matches matchPoi is replaced by the offer. Set validUntil (YYYY-MM-DD) to have it hide itself after that date. logo is a file in site/ (shown on the card in place of the partner name). conditions can be one line or a list of lines.",
   "offers": [
     {
       "id": "land-and-sea",
       "active": true,
+      "allRoutes": true,
       "partner": "Land and Sea Brewery",
+      "logo": "assets/partner-land-and-sea.png",
       "headline": "2 for 1 gin, beer or vodka",
-      "alt": "or a free beer with any burger",
       "how": "Collect your voucher card from us. Land and Sea needs the physical card handed over, so this screen on its own won't work.",
-      "conditions": "One voucher card per rider. Choose one of the two offers.",
+      "conditions": [
+        "18+ only. Responsible service of alcohol applies.",
+        "Trading hours vary.",
+        "One voucher card per rider. Choose one of the two offers."
+      ],
+      "address": "19 Venture Drive, Noosaville",
+      "url": "https://www.landandseabrewery.com/",
+      "lat": -26.408018,
+      "lng": 153.043367,
+      "radius": 500,
+      "matchPoi": "Land and Sea Brewery",
+      "validUntil": null
+    },
+    {
+      "id": "land-and-sea-burger",
+      "active": true,
+      "allRoutes": true,
+      "partner": "Land and Sea Brewery",
+      "logo": "assets/partner-land-and-sea.png",
+      "headline": "Free beer with any burger",
+      "how": "Collect your voucher card from us. Land and Sea needs the physical card handed over, so this screen on its own won't work.",
+      "conditions": [
+        "18+ only. Responsible service of alcohol applies.",
+        "Trading hours vary.",
+        "One voucher card per rider. Choose one of the two offers."
+      ],
       "address": "19 Venture Drive, Noosaville",
       "url": "https://www.landandseabrewery.com/",
       "lat": -26.408018,

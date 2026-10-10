@@ -436,5 +436,8 @@
  "The start of the route is {dist} away. Head to the green marker.": "ルートのスタート地点まで {dist} です。緑のマーカーへ向かってください。",
  "This route is saved on this phone. If you close the page, open the same web address again, or type this route code at the address below.": "このルートはこのスマートフォンに保存されています。ページを閉じた場合は、同じウェブアドレスをもう一度開くか、下のアドレスでこのルートコードを入力してください。",
  "You are a long way from this route. To see how it works from here, use Test drive in Settings.": "このルートから遠く離れています。ここから動作を確認するには、設定の「テスト走行」を使ってください。",
- "Loading the page": "ページを読み込んでいます"
+ "Loading the page": "ページを読み込んでいます",
+ "Free beer with any burger": "バーガーご注文でビール1杯無料",
+ "18+ only. Responsible service of alcohol applies.": "18歳以上限定。アルコールの責任ある提供に関する規則が適用されます。",
+ "Trading hours vary.": "営業時間は変動します。"
 }

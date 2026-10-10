@@ -156,6 +156,11 @@ body.view-loading #v-loading,body.view-home #v-home,body.view-route #v-route,bod
 .voucher .v-card{background:#fff;color:var(--ink);border-radius:18px;overflow:hidden}
 .voucher .v-top{padding:22px 18px 16px;text-align:center}
 .voucher .v-partner{font-weight:700;color:var(--muted);font-size:15px}
+.voucher .v-logo{display:block;max-width:220px;width:70%;height:auto;margin:0 auto 4px}
+.voucher .v-conds{font-size:14px;display:flex;flex-direction:column;gap:4px}
+.voucher .v-conds-k{color:var(--muted);font-weight:500}
+.voucher .v-cond{font-weight:700;line-height:1.4}
+.list-item .li-logo{width:64px;height:42px;object-fit:contain;flex:none}
 .voucher .v-head{font-size:30px;font-weight:900;line-height:1.1;margin:8px 0 6px}
 .voucher .v-alt{font-size:17px;font-weight:700;color:var(--primary2)}
 .voucher .v-tear{position:relative;height:22px;display:flex;align-items:center}
