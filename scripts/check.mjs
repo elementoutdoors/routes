@@ -42,6 +42,7 @@ else {
   try {
     const m = await (await fetch(BASE + 'voice.json', { cache: 'no-store' })).json();
     for (const [l, x] of Object.entries(m)) {
+      if (l.startsWith('_')) continue;   // _say: speech rules, not recordings
       const sample = (x.pre || x.h || [])[0];
       if (!sample) { notes.push(`natural voice: no recordings yet for ${l}`); continue; }
       const s = await status(`${BASE}v/${x.tag}/${sample}.mp3`, 'GET');
