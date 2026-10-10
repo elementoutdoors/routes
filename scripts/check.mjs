@@ -2,7 +2,7 @@
 // Reads the live health.json, then checks that the site was rebuilt recently, every route opens,
 // every stop and offer link still works, every photo loads, and nothing is untranslated.
 // Prints a JSON report. Exit code 0 = all good, 1 = something needs attention.
-// Version 3 (10/10/2026): also checks every typed route code. v2: real browser user agent, redirects to another page count as broken, 403 noted not failed.
+// Version 4 (10/10/2026): also checks the natural voice (recording running, inside the monthly cap, recordings load). v3: every typed route code. v2: real browser user agent, redirects to another page count as broken, 403 noted not failed.
 // Usage: node scripts/check.mjs [siteBase]   (route links are read from qr/links.json when present)
 import fs from 'node:fs';
 
@@ -29,6 +29,25 @@ if (ageH > 50) issues.push(`site last rebuilt ${Math.round(ageH)} hours ago (nig
 h.problems.forEach(p => issues.push(p));
 h.routes.forEach(r => r.warnings.filter(w => /from the route/.test(w)).forEach(w => notes.push(`${r.slug}: ${w}`)));
 Object.entries(h.untranslatedTotal || {}).forEach(([l, n]) => { if (n) issues.push(`${n} strings not yet translated into ${l}`); });
+
+// natural voice: the build records new lines each night; check it is running, inside its cap, and the recordings load
+const v = h.voice;
+if (!v) issues.push('natural voice: no voice report in health.json (voice step not running)');
+else {
+  if ((v.notes || []).some(n => /GOOGLE_TTS_KEY not set/.test(n))) issues.push('natural voice: the Google key is missing from the build (GitHub secret GOOGLE_TTS_KEY)');
+  if (v.charsThisMonth > v.cap) issues.push(`natural voice: ${v.charsThisMonth} characters used this month, over the ${v.cap} cap`);
+  if (v.waiting) notes.push(`natural voice: ${v.waiting} of ${v.lines} lines still to record (phone voice covers them until then)`);
+  if (v.failed) notes.push(`natural voice: ${v.failed} recordings failed in the last build`);
+  try {
+    const m = await (await fetch(BASE + 'voice.json', { cache: 'no-store' })).json();
+    for (const [l, x] of Object.entries(m)) {
+      const sample = (x.pre || x.h || [])[0];
+      if (!sample) { notes.push(`natural voice: no recordings yet for ${l}`); continue; }
+      const s = await status(`${BASE}v/${x.tag}/${sample}.mp3`, 'GET');
+      if (s.code !== 200) issues.push(`natural voice: ${l} recordings not loading (${s.code})`);
+    }
+  } catch (e) { issues.push('natural voice: voice.json not reachable'); }
+}
 
 const links = new Set(), photos = new Set();
 h.routes.forEach(r => { (r.links || []).forEach(u => links.add(u)); (r.photos || []).forEach(u => photos.add(u)); });
