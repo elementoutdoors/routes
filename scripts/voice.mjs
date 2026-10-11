@@ -158,7 +158,11 @@ async function pickVoices(key, want, notes) {
       const chosen = chirp.find(n => n.endsWith('-' + want)) || chirp[0] || null;
       if (!chosen) { notes.push(`no natural voice for ${l} (${code}); phone voice used`); continue; }
       if (!chosen.endsWith('-' + want)) notes.push(`${l}: voice ${want} not offered, using ${chosen}`);
-      out[l] = { code, name: chosen, tag: crypto.createHash('sha1').update(chosen).digest('hex').slice(0, 6) };
+      // The tag (the folder recordings are published under) also carries this language's speech rules, so when how a line
+      // is said changes (a new rule or respelling, which re-records the line), its address changes too and phones fetch the
+      // new recording instead of keeping the old one they saved (Ben heard old years read out, 11/10/2026).
+      const say = JSON.stringify({ rules: SPEECH.rules.filter(r => !r.langs || r.langs.includes(l)), names: SPEECH.names });
+      out[l] = { code, name: chosen, tag: crypto.createHash('sha1').update(chosen + '|' + say).digest('hex').slice(0, 6) };
     } catch (e) { notes.push(`${l}: could not list voices (${e.message})`); if (e.status === 400 || e.status === 403) throw e; }
   }
   return out;
