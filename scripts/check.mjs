@@ -3,7 +3,7 @@
 // every stop and offer link still works, every photo loads, and nothing is untranslated.
 // Prints a JSON report. Exit code 0 = all good, 1 = something needs attention.
 // Version 7 (11/10/2026): also checks stories-voice.json (every full story published for the EO Crew staff app, with its recordings loading).
-// Version 7 (11/10/2026): the Story Library (library/) is the master. Every live blog section or pin that differs from it is listed in "push" (from scripts/library.mjs plan) for the run to put back; house rule findings in the library are listed in "houseRules" for Ben.
+// Version 8 (11/10/2026): the Story Library (library/) is the master. Every live blog section or pin that differs from it is listed in "push" (from scripts/library.mjs plan) for the run to put back; house rule findings in the library are listed in "houseRules" for Ben.
 // Version 6 (11/10/2026): also checks the places record (health.json "places"): every blog section and stop summary that differs from the agreed text, with before and after in "placeChanges" for the weekly check to decide; a story whose blog change is waiting on Ben is a note, not an issue.
 // Version 5 (11/10/2026): also checks the full stories (every linked place has one, none out of step with its blog section, the blogs can be read) and listen.html.
 // Version 4 (10/10/2026): also checks the natural voice (recording running, inside the monthly cap, recordings load). v3: every typed route code. v2: real browser user agent, redirects to another page count as broken, 403 noted not failed.
