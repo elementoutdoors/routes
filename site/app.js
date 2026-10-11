@@ -1242,7 +1242,7 @@
       chk.box = el('div', { id: 'check-panel' });
       document.body.appendChild(chk.box);
     }
-    if (!chk.ring) chk.ring = new maplibregl.Marker({ element: el('div', { class: 'check-ring' }) }).setLngLat(pointAt(0)).addTo(map);
+    if (!chk.ring) { var rw = el('div', { class: 'check-ring-wrap' }); rw.appendChild(el('div', { class: 'check-ring' })); chk.ring = new maplibregl.Marker({ element: rw }).setLngLat(pointAt(0)).addTo(map); }
     stepCheck(Math.min(chk.i, chk.items.length - 1));
   }
   function closeCheck() {
@@ -1266,8 +1266,7 @@
     chk.i = i = Math.max(0, Math.min(items.length - 1, i));
     var it = items[i], p = pointAt(it.d), b = chk.box;
     chk.ring.setLngLat(p);
-    map.easeTo({ center: p, zoom: Math.max(map.getZoom(), 17), duration: 500 });
-    b.innerHTML = '';
+        b.innerHTML = '';
     var top = el('div', { class: 'ck-top' });
     var back = el('button', { class: 'ck-link', type: 'button', text: 'Back to route' });
     back.addEventListener('click', closeCheck);
@@ -1309,6 +1308,7 @@
       op.addEventListener('click', function () { openStop(it.stop); });
       b.appendChild(op);
     }
+    map.easeTo({ center: p, zoom: Math.max(map.getZoom(), 17), duration: 500, offset: [0, -Math.round((b.offsetHeight || 240) / 2)] });
   }
 
   // ---------- simulator (test drive) ----------
