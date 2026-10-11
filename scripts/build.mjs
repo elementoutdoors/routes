@@ -254,14 +254,23 @@ function transform(entry, r) {
     let off = 0;
     if (!runs.length) { d = nearest ? nearest.d : 0; off = nearest ? Math.round(nearest.dist) : 0; if (off > 300) warnings.push(`stop "${name}" is ${off} m from the route`); }
     if (isFinish) d = Math.max(d, distance - 1);
-    const dup = stops.find(s => s.name === name && hav(s.lat, s.lng, p.lat, p.lng) < 40);
-    if (dup) continue;
     stops.push({
       id: String(p.id), kind, name, text: clean(p.description), url: p.url || null,
       lat: +p.lat.toFixed(6), lng: +p.lng.toFixed(6), d: Math.round(d), off,
-      photos: (p.photo_ids || []).slice(0, 6).map(photoUrl)
+      photos: (p.photo_ids || []).slice(0, 6).map(photoUrl), lib: p.parent_type === 'Club'
     });
   }
+  // A POI Library pin replaces the ride's own old copy of the same place (same name, within 400 m). The copy is left out
+  // of the app and listed in health.json as safe to delete in Ride with GPS. A pin named "DELETE ME..." is always left out.
+  const superseded = [];
+  for (let i = stops.length - 1; i >= 0; i--) {
+    const s = stops[i];
+    const libTwin = !s.lib && stops.find(o => o !== s && o.lib && o.name.toLowerCase() === s.name.toLowerCase() && hav(o.lat, o.lng, s.lat, s.lng) < 400);
+    if (/^delete me/i.test(s.name) || libTwin) { superseded.push({ id: s.id, name: s.name, reason: libTwin ? 'library pin ' + libTwin.id + ' replaces it' : 'named DELETE ME' }); stops.splice(i, 1); continue; }
+    const dup = stops.find((o, j) => j < i && o.name === s.name && hav(o.lat, o.lng, s.lat, s.lng) < 40);
+    if (dup) stops.splice(i, 1);
+  }
+  stops.forEach(s => { delete s.lib; });
   stops.sort((a, b) => a.d - b.d);
 
   const offers = offersFor(T, entry.slug);
@@ -275,7 +284,7 @@ function transform(entry, r) {
     hero: r.highlighted_photo_id ? photoUrl(r.highlighted_photo_id) : null,
     track: T, cues, stops, offers, updated: r.updated_at || null
   };
-  return { route, warnings };
+  return { route, warnings, superseded };
 }
 
 // strings in a route that need translating
@@ -382,6 +391,7 @@ async function main() {
       if (problems.length) throw new Error('bad data from Ride with GPS: ' + problems.join(', '));
       const t = transform(entry, r);
       route = t.route; h.warnings.push(...t.warnings); h.source = 'ridewithgps';
+      if (t.superseded.length) h.pinsToDelete = t.superseded;   // old copies the app now leaves out; safe to delete in Ride with GPS
     } catch (e) {
       h.warnings.push(String(e.message || e));
       const prev = OFFLINE ? null : await fetchLive(key);
