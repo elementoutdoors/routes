@@ -1,0 +1,4 @@
+{
+  "_about": "The build keeps a ride's last good copy when it suddenly loses 30% or more of its stops in Ride with GPS. List a ride here when a big drop is meant, run the build, then take it out again.",
+  "rides": []
+}

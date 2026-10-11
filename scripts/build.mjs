@@ -393,6 +393,14 @@ async function main() {
       const problems = validate(r);
       if (problems.length) throw new Error('bad data from Ride with GPS: ' + problems.join(', '));
       const t = transform(entry, r);
+      // Guard: a ride that suddenly loses a lot of its stops keeps its last good copy until someone looks
+      // (for example, pins taken off in Ride with GPS by mistake). Rides listed in config/allow-stop-drop.json are let through.
+      if (!OFFLINE) {
+        const live = await fetchLive(key);
+        const was = live && live.stops ? live.stops.length : 0, now = t.route.stops.length;
+        const allow = ((readJson('config/allow-stop-drop.json', {}).rides) || []).includes(entry.slug);
+        if (was >= 5 && now < was * 0.7 && !allow) throw new Error(`stops dropped from ${was} to ${now} in Ride with GPS; kept the last good copy (if this is meant, add ${entry.slug} to config/allow-stop-drop.json, then take it out after the next build)`);
+      }
       route = t.route; h.warnings.push(...t.warnings); h.source = 'ridewithgps';
       if (t.superseded.length) h.pinsToDelete = t.superseded;   // old copies the app now leaves out; safe to delete in Ride with GPS
     } catch (e) {
