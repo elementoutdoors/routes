@@ -9,18 +9,18 @@
  },
  "talk": {
   "points": [
-   "The Noosa Everglades is one of only two everglade systems in the world: mirrored waterways, wetlands and lakes, unlike Florida's sawgrass marshes.",
-   "A 67 km waterway system from Rainbow Beach to Lake Weyba, with six major lakes: Weyba, Donella, Cooroibah, Cootharaba, Cooloola and Como.",
-   "Over 65% of the catchment is protected in Great Sandy National Park. Slow-moving water lets sediment settle, so it's crystal clear except after heavy rain.",
-   "Home to over 44% of Australia's bird species, including egrets, herons and the white-bellied sea eagle; plus barramundi, stingrays and mangrove jack.",
+   "The Noosa Everglades system is often described as one of only two everglades systems in the world: mirrored waterways, wetlands and lakes, unlike Florida's sawgrass marshes.",
+   "A 67 km waterway system from Rainbow Beach to Lake Weyba, with six major lakes: Weyba, Doonella, Cooroibah, Cootharaba, Cooloola and Como.",
+   "Over 65% of the catchment lies inside Great Sandy National Park. Slow-moving water lets sediment settle, so it's crystal clear except after heavy rain.",
+   "The wider Noosa Biosphere is home to 343 bird species, about 44% of Australia's, including egrets, herons and the white-bellied sea eagle; plus barramundi, stingrays and mangrove jack.",
    "The Noosa Biosphere Reserve is part of UNESCO's global network, and one of three connected biospheres with Great Sandy and the Sunshine Coast.",
-   "Iconic and vulnerable species: koala, glossy black cockatoo, greater glider, Australian lungfish and the rare Mary River cod. 42% of the Noosa Biosphere is protected land."
+   "Iconic and vulnerable species: koala, glossy black cockatoo, greater glider, Australian lungfish and the rare Mary River cod. 42% of the Noosa Biosphere is national park, conservation park, state forest, lakes and wetlands."
   ],
   "detail": "",
   "detail_blocks": [
    {
     "type": "text",
-    "text": "**Overview** The Noosa Everglades is one of only two everglade systems in the world, the other being the Florida Everglades in the United States. Unlike Florida's sawgrass marshes, the Noosa Everglades are characterized by a network of mirrored waterways, wetlands, and lakes, lined with paperbark trees and surrounded by subtropical rainforest and eucalyptus woodlands. This unique environment supports a diverse range of wildlife and plays a crucial role in maintaining water quality within the Noosa River system."
+    "text": "**Overview** The Noosa Everglades system is often described as one of only two everglades systems in the world, the other being the Florida Everglades in the United States. Unlike Florida's sawgrass marshes, the Noosa Everglades are characterized by a network of mirrored waterways, wetlands, and lakes, lined with paperbark trees and surrounded by subtropical rainforest and eucalyptus woodlands. This unique environment supports a diverse range of wildlife and plays a crucial role in maintaining water quality within the Noosa River system."
    },
    {
     "type": "text",
@@ -30,7 +30,7 @@
     "type": "list",
     "items": [
      "Lake Weyba",
-     "Lake Donella",
+     "Lake Doonella",
      "Lake Cooroibah",
      "Lake Cootharaba",
      "Lake Cooloola",
@@ -39,11 +39,11 @@
    },
    {
     "type": "text",
-    "text": "The Noosa Everglades function as a natural filtration system, with over 65% of the total catchment area protected within the Great Sandy National Park. This protected status ensures minimal agricultural runoff, helping to maintain water clarity, particularly in the lower reaches of the everglades. The slow movement of water through the system contributes to the formation of its mirrored waterways, making it one of the most pristine and unique ecosystems in Australia."
+    "text": "The Noosa Everglades function as a natural filtration system, with over 65% of the total catchment area inside the Great Sandy National Park. Being national park ensures minimal agricultural runoff, helping to maintain water clarity, particularly in the lower reaches of the everglades. The slow movement of water through the system contributes to the formation of its mirrored waterways, making it one of the most pristine and unique ecosystems in Australia."
    },
    {
     "type": "text",
-    "text": "**Wildlife and Ecology** The Noosa Everglades provide vital habitat for an abundance of wildlife, including over 50% of Australia's bird species. Notable bird species include:"
+    "text": "**Wildlife and Ecology** The Noosa Everglades provide vital habitat for an abundance of wildlife, and the wider Noosa Biosphere has about 44% of Australia's bird species. Notable bird species include:"
    },
    {
     "type": "list",
@@ -138,7 +138,7 @@
    },
    {
     "type": "text",
-    "text": "With nearly 42% of the biosphere protected as national parks, conservation parks, state forests, lakes, and wetlands, the Noosa region remains one of the most ecologically significant areas in Australia, showcasing a rich blend of biodiversity and natural beauty. The balance between conservation and sustainable human activity ensures the long-term preservation of this remarkable ecosystem, making it a key destination for ecotourism and scientific research."
+    "text": "With nearly 42% of the biosphere set aside as national parks, conservation parks, state forests, lakes, and wetlands, the Noosa region remains one of the most ecologically significant areas in Australia, showcasing a rich blend of biodiversity and natural beauty. The balance between conservation and sustainable human activity ensures the long-term preservation of this remarkable ecosystem, making it a key destination for ecotourism and scientific research."
    }
   ],
   "stop_title": "Everglades and Biosphere"
