@@ -183,6 +183,9 @@
 
   // ---------- data loading ----------
   var routeIndex = lsGet('rg.routes', {});   // key -> {name, slug, saved}
+  // Staff check mode: opened from a check link (...?check#KEY). Lets staff step through every direction and stop on the map.
+  // Lasts until the page is closed; riders never see it.
+  var CHECK = /[?&]check\b/.test(location.search);
   function keyFromUrl() {
     var h = (location.hash || '').replace(/^#\/?/, '');
     var q = (location.search.match(/[?&]r=([A-Za-z0-9_-]{8,})/) || [])[1];
@@ -676,7 +679,7 @@
       if (!ride.saidStart) {
         ride.saidStart = true;
         say(fmt(tu('The start of the route is {dist} away. Head to the green marker.'), { dist: distParts(toStart).say }));
-        if (toStart > 3000 && !ride.sim) banner(tu('You are a long way from this route. To see how it works from here, use Test drive in Settings.'), 'caution', 12000);
+        if (toStart > 3000 && !ride.sim) banner(tu('You are a long way from this route.'), 'caution', 12000);
       }
     } else {
       ride.onCount = 0;
@@ -1198,7 +1201,10 @@
       vg.appendChild(cl);
       seg(group(tu('Map')), [[false, tu('Standard')], [true, tu('Satellite')]], S.sat, function (v) { setSatellite(v); });
       var mg = b.lastChild; mg.appendChild(el('p', { class: 'note', text: tu('Satellite view needs signal.') }));
-      if (R) {
+      if (R && CHECK) {
+        var chkBtn = el('button', { class: 'btn full', type: 'button', text: 'Check directions step by step' });
+        chkBtn.addEventListener('click', function () { closeSheet(); openCheck(); });
+        b.appendChild(chkBtn);
         var demo = el('button', { class: 'btn outline full', type: 'button', text: tu('Test drive: watch the route play through') });
         demo.addEventListener('click', function () { closeSheet(); startSim(); });
         b.appendChild(demo);
@@ -1211,6 +1217,98 @@
       }
       b.appendChild(el('div', { class: 'ver', text: 'Ride Guide ' + BUILD + (R ? ' · ' + R.version : '') }));
     });
+  }
+
+  // ---------- staff check: step through every direction and stop ----------
+  var chk = { i: 0, items: null, ring: null, box: null };
+  function checkItems() {
+    var out = [];
+    R.cues.forEach(function (c) { out.push({ d: c.d, cue: c }); });
+    R.stops.forEach(function (s) {
+      if (FACILITY[s.kind] || s.kind === 'finish') return;
+      if (s.kind === 'caution') (s.ds || [s.d]).forEach(function (d, k, all) { out.push({ d: d, stop: s, pass: all.length > 1 ? k + 1 : 0, of: all.length }); });
+      else out.push({ d: s.d, stop: s });
+    });
+    out.sort(function (a, b) { return a.d - b.d || (a.cue ? -1 : 1); });
+    return out;
+  }
+  function openCheck() {
+    if (!R || !map) return;
+    if (ride.active) { ride.active = false; stopGps(); stopSim(); }
+    closeSheet();
+    chk.items = checkItems();
+    show('check');
+    if (!chk.box) {
+      chk.box = el('div', { id: 'check-panel' });
+      document.body.appendChild(chk.box);
+    }
+    if (!chk.ring) chk.ring = new maplibregl.Marker({ element: el('div', { class: 'check-ring' }) }).setLngLat(pointAt(0)).addTo(map);
+    stepCheck(Math.min(chk.i, chk.items.length - 1));
+  }
+  function closeCheck() {
+    stopSpeech();
+    if (chk.ring) { chk.ring.remove(); chk.ring = null; }
+    openRoute();
+  }
+  function hearCheck(it) {
+    stopSpeech();
+    var was = S.voice; S.voice = true;
+    if (it.cue) sayContent(it.cue.n, it.cue.t === 'danger' ? tu('Caution.') : null, { interrupt: true });
+    else if (it.stop.kind === 'caution') sayContent(it.stop.name, tu('Caution.'), { interrupt: true });
+    else {
+      if (!it.stop.plain && it.stop.kind !== 'turn') say(tu('You have reached a point of interest.'), { interrupt: true });
+      sayContent(it.stop.name);
+    }
+    S.voice = was;
+  }
+  function stepCheck(i) {
+    var items = chk.items; if (!items || !items.length) return;
+    chk.i = i = Math.max(0, Math.min(items.length - 1, i));
+    var it = items[i], p = pointAt(it.d), b = chk.box;
+    chk.ring.setLngLat(p);
+    map.easeTo({ center: p, zoom: Math.max(map.getZoom(), 17), duration: 500 });
+    b.innerHTML = '';
+    var top = el('div', { class: 'ck-top' });
+    var back = el('button', { class: 'ck-link', type: 'button', text: 'Back to route' });
+    back.addEventListener('click', closeCheck);
+    top.appendChild(back);
+    top.appendChild(el('span', { class: 'ck-count', text: (i + 1) + ' of ' + items.length }));
+    b.appendChild(top);
+    var kind, icon, text, sub;
+    var km = (it.d / 1000).toFixed(2) + ' km';
+    if (it.cue) {
+      kind = it.cue.t === 'danger' ? 'Caution (direction)' : 'Direction';
+      icon = cueIcon(it.cue.t); text = it.cue.n;
+      var prev = items.slice(0, i).reverse().filter(function (x) { return x.cue; })[0];
+      sub = 'At ' + km + (prev ? ', ' + distText(it.d - prev.d) + ' after the last direction' : '') + '. The ring is where the turn is.';
+    } else {
+      var s = it.stop;
+      kind = s.kind === 'caution' ? 'Caution' + (it.pass ? ' (pass ' + it.pass + ' of ' + it.of + ')' : '') : 'Stop: ' + kindLabel(s.kind);
+      icon = s.kind; text = s.name;
+      sub = 'At ' + km + (s.kind === 'caution' ? '. Read about ' + CFG.stops.cautionWarningMetres + ' m before the ring.' : '. Read when the rider reaches it.') + (s.off ? ' Pin is ' + s.off + ' m off the route.' : '');
+    }
+    var row = el('div', { class: 'ck-row' });
+    row.appendChild(el('div', { class: 'ck-icon' + (it.cue ? '' : ' ' + it.stop.kind) }, svg(icon)));
+    var m = el('div', { class: 'ck-main' });
+    m.appendChild(el('div', { class: 'ck-kind', text: kind }));
+    m.appendChild(el('div', { class: 'ck-text', text: text }));
+    m.appendChild(el('div', { class: 'ck-sub', text: sub }));
+    row.appendChild(m); b.appendChild(row);
+    var nav = el('div', { class: 'ck-nav' });
+    var pv = el('button', { class: 'btn outline', type: 'button', text: '‹ Back' });
+    var hr = el('button', { class: 'btn outline', type: 'button', text: 'Hear it' });
+    var nx = el('button', { class: 'btn', type: 'button', text: 'Next ›' });
+    pv.disabled = i === 0; nx.disabled = i === items.length - 1;
+    pv.addEventListener('click', function () { stepCheck(chk.i - 1); });
+    nx.addEventListener('click', function () { stepCheck(chk.i + 1); });
+    hr.addEventListener('click', function () { hearCheck(it); });
+    nav.appendChild(pv); nav.appendChild(hr); nav.appendChild(nx);
+    b.appendChild(nav);
+    if (!it.cue) {
+      var op = el('button', { class: 'ck-link', type: 'button', text: 'Open the stop card' });
+      op.addEventListener('click', function () { openStop(it.stop); });
+      b.appendChild(op);
+    }
   }
 
   // ---------- simulator (test drive) ----------
@@ -1281,6 +1379,7 @@
     if (!map) initMap(); else { addRouteLayers(); fitRoute(); }
     addMarkers();
     openRoute();
+    if (CHECK) openCheck();
     saveOffline();
     precacheVoice();
   }
