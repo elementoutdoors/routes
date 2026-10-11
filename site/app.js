@@ -1202,7 +1202,7 @@
       seg(group(tu('Map')), [[false, tu('Standard')], [true, tu('Satellite')]], S.sat, function (v) { setSatellite(v); });
       var mg = b.lastChild; mg.appendChild(el('p', { class: 'note', text: tu('Satellite view needs signal.') }));
       if (R && CHECK) {
-        var chkBtn = el('button', { class: 'btn full', type: 'button', text: 'Check directions step by step' });
+        var chkBtn = el('button', { class: 'btn primary full', type: 'button', text: 'Check directions step by step' });
         chkBtn.addEventListener('click', function () { closeSheet(); openCheck(); });
         b.appendChild(chkBtn);
         var demo = el('button', { class: 'btn outline full', type: 'button', text: tu('Test drive: watch the route play through') });
@@ -1274,7 +1274,7 @@
     top.appendChild(el('span', { class: 'ck-count', text: (i + 1) + ' of ' + items.length }));
     b.appendChild(top);
     var kind, icon, text, sub;
-    var km = (it.d / 1000).toFixed(2) + ' km';
+    var km = distText(it.d);
     if (it.cue) {
       kind = it.cue.t === 'danger' ? 'Caution (direction)' : 'Direction';
       icon = cueIcon(it.cue.t); text = it.cue.n;
@@ -1296,7 +1296,7 @@
     var nav = el('div', { class: 'ck-nav' });
     var pv = el('button', { class: 'btn outline', type: 'button', text: '‹ Back' });
     var hr = el('button', { class: 'btn outline', type: 'button', text: 'Hear it' });
-    var nx = el('button', { class: 'btn', type: 'button', text: 'Next ›' });
+    var nx = el('button', { class: 'btn primary', type: 'button', text: 'Next ›' });
     pv.disabled = i === 0; nx.disabled = i === items.length - 1;
     pv.addEventListener('click', function () { stepCheck(chk.i - 1); });
     nx.addEventListener('click', function () { stepCheck(chk.i + 1); });
