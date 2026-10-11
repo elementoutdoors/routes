@@ -54,6 +54,11 @@ phone's browser with the map, spoken and written directions, stops and partner o
   untranslated text and offers that are not near any route.
 - `scripts/check.mjs` runs from the Element Outdoors Drift Check Register each week: site rebuilt recently,
   every QR code opens its route, links and photos work, nothing untranslated, stories and the places record in step.
+- Phones: the route and voice.json are fetched fresh whenever there is signal; recordings and logos are kept on the phone.
+  Recordings live under a folder tag that includes the speech rules, so a re-recorded line gets a new address. When the app
+  comes back to the screen with no ride under way it fetches the latest route and recordings and loads a new app version.
+  The build publishes `files.json` (a fingerprint of every recording and logo) and flags in health.json any recording that
+  changed at the same address.
 - A failed nightly build emails the GitHub account owner.
 
 ## Local work
