@@ -87,7 +87,9 @@ export function comparePlaces(record, sections, stops, unreadBrands = []) {
   return rep;
 }
 
-// While a stop summary has a card open, the app keeps the agreed summary. Returns the stop ids held on this route.
+// The Story Library is the master for every stop summary that links to a library place: the app always reads the
+// library's words, whatever Ride with GPS says (the weekly check puts Ride with GPS back in step). Returns the stop ids
+// where Ride with GPS differs from the library on this route.
 export function holdStops(route, record, blogs, isVariant) {
   const held = [];
   const recP = (record && record.stops) || {};
@@ -95,7 +97,7 @@ export function holdStops(route, record, blogs, isVariant) {
     const p = placeOf(blogs, s.url);
     if (!p || isVariant(s)) continue;
     const id = stopId(p.place, s.name), r = recP[id];
-    if (!r || !r.pending || typeof r.text !== 'string') continue;
+    if (!r || typeof r.text !== 'string') continue;
     if ((s.text || '') !== r.text) { s.text = r.text; held.push(id); }
   }
   return held;

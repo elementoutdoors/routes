@@ -1,0 +1,46 @@
+{
+ "key": "yurol-ringtail",
+ "kind": "place",
+ "title": "Yurol and Ringtail forests",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Yurol and Ringtail forests",
+   "area": "cooroy-region",
+   "after": null,
+   "paras": [
+    "Pomona was once a centre of forestry, and the Yurol and Ringtail state forests on its eastern side were mostly given over to pine plantation. When the state's plantation forests were privatised, the Noosa Parks Association went to the plantation owner and negotiated a price, and the state, Noosa Council and the association shared the cost of the Yurol and Ringtail acquisition, delivered in 2018. In 2022 the Queensland Government announced that more than 2,400 hectares of former state forest and plantation would join Tewantin National Park once the final pine and hardwood harvest was finished, with revegetation to follow. The Kabi Kabi Peoples are working with Queensland Parks and Wildlife Service on managing the park and on replanting. Drone surveys have found koalas here, and the forest is habitat for threatened species such as the giant barred frog and Richmond birdwing butterfly."
+   ]
+  },
+  "beo": {
+   "heading": "Yurol and Ringtail forests",
+   "area": "ringtail-yurol",
+   "after": null,
+   "paras": [
+    "East of Pomona the gravel runs into the Yurol and Ringtail forests. For decades this was state forest, much of it planted with pine. When Queensland's plantation forests were privatised, the Noosa Parks Association approached the plantation owner and negotiated a price, and the state, Noosa Council and the association shared the cost of buying Yurol and Ringtail, a deal delivered in 2018. In 2022 the Queensland Government announced that more than 2,400 hectares of former state forest and plantation would join Tewantin National Park once the last pine and hardwood harvest was done, with replanting to follow. The Kabi Kabi Peoples are working with Queensland Parks and Wildlife Service on managing and revegetating the park. Drone surveys have found koalas here, and the forest is habitat for threatened species including the giant barred frog and the Richmond birdwing butterfly. Yurol Forest Drive carries fast traffic, so ride single file."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Yurol and Ringtail forests",
+    "text": "You are entering the Yurol and Ringtail forests, once state forest and pine plantation. Bought back for the community in 2018, they are being restored and added to Tewantin National Park, including koala habitat."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "Yurol and Ringtail forests",
+    "text": "You are entering the Yurol and Ringtail forests, once state forest and pine plantation. Bought back for the community in 2018, they are being restored and added to Tewantin National Park, including koala habitat."
+   }
+  ]
+ },
+ "story": [
+  "The Yurol and Ringtail forests were state forest for decades, much of them planted with pine.",
+  "When Queensland sold off its plantation forests, the Noosa Parks Association went to the new owner and negotiated a price. The state, Noosa Council and the association shared the cost, and the deal was done in 2018.",
+  "In 2022 the government announced that more than 2,400 hectares would join Tewantin National Park once the last pine and hardwood harvest was finished, with replanting to follow. The Kabi Kabi Peoples are working with the parks service on caring for the land.",
+  "Drone surveys have found koalas here, and the forest shelters threatened species like the giant barred frog and the Richmond birdwing butterfly."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

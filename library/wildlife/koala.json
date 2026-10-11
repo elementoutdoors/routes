@@ -1,0 +1,37 @@
+{
+ "key": "koala",
+ "kind": "wildlife",
+ "title": "Koala",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Koala",
+  "scientific_name": "Phascolarctos cinereus",
+  "local_name": "GALI (Kabi Kabi)",
+  "group": "Mammal",
+  "description": "Rarely seen. Koalas live in the forests our bike rides pass through, but they sleep most of the day high in the gums, grey fur against grey bark. Tell guests not to expect one; a sighting is a bonus.",
+  "detail": [
+   {
+    "text": "The name comes from the Dharug language of the Sydney region, from gula, often said to mean \"no water\", because koalas get most of the water they need from eucalyptus leaves. It is not a Kabi Kabi word.",
+    "type": "text"
+   },
+   {
+    "text": "Koalas were once common here. Between 1903 and 1927 about 4.5 million koala pelts were traded in Queensland, including from this area. The last open season, in August 1927, took close to 600,000 pelts and caused such an outcry that it was never repeated.",
+    "type": "text"
+   },
+   {
+    "text": "By the 1960s numbers were so low that six koalas were brought from Caboolture to restock Noosa National Park. Today they are very rarely seen on the headland, and koalas are listed as endangered in Queensland.",
+    "type": "text"
+   },
+   {
+    "text": "The comeback: about 2,400 ha of pine and hardwood plantation in the Yurol and Ringtail state forests is being added to Tewantin National Park. From 2022 to 2024 Noosa Landcare planted about 133,000 trees over 332 ha of logged land, chosen to bring back the eucalypts koalas feed on. Thermal drone surveys found close to 300 koalas, with more than 500 expected once the new forest grows.",
+    "type": "text"
+   }
+  ],
+  "how_to_spot": "Best chance is a quiet moment in the forest along Gyndier Drive or on the Wooroi trails. Look for a grey ball wedged in the fork of a tall gum. If you see one, keep guests back and quiet.",
+  "conservation": "Endangered in Queensland. Very rarely seen on the Noosa headland. To report a sick or injured koala, call 1300 ANIMAL (1300 264 625).",
+  "source": "Bike On ride stories blog, Koalas section: https://bikeon.com.au/noosa-self-guided-rides-what-you-will-see/#koalas (also the Know Noosa story Koalas). Talking points set by Ben, 11 Oct 2026."
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df31",
+ "story_key": "koalas"
+}

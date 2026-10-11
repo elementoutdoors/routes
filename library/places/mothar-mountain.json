@@ -1,0 +1,35 @@
+{
+ "key": "mothar-mountain",
+ "kind": "place",
+ "title": "Mothar Mountain Rock Pools",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "Mothar Mountain Rock Pools",
+   "area": "woondum-mary-valley",
+   "after": "woondum",
+   "paras": [
+    "At the western foot of Woondum National Park, Boulder Creek spills through a chain of rock pools that are a favourite with day trippers from Gympie. The day-use area has picnic facilities and toilets, and a steep 3.2 kilometre return walk climbs to the summit of Mount Boulder. The pools and nearby Kabi Boys Creek were used for Kabi Kabi initiation ceremonies, and they remain significant to the Kabi Kabi First Nation today. Mothar Mountain itself was once also written \"Mother Mountain\". Its little school opened in 1908 and closed in 1970, and the 1957 public hall is on the Gympie local heritage register."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Mothar Mountain Rock Pools",
+    "text": "These are the Mothar Mountain Rock Pools on Boulder Creek, a favourite swimming hole for Gympie locals. The pools are a significant Kabi Kabi place, once used for initiation ceremonies, so please treat them with respect."
+   }
+  ]
+ },
+ "story": [
+  "At the western foot of Woondum National Park, Boulder Creek spills through a chain of rock pools, a favourite swimming spot for Gympie locals.",
+  "There are picnic tables and toilets here, and a steep walk of about three kilometres return climbs to the top of Mount Boulder.",
+  "The pools, and nearby Kabi Boys Creek, were used for Kabi Kabi initiation ceremonies, and they remain significant to the Kabi Kabi First Nation today. Please treat them with respect.",
+  "Mothar Mountain was once also written Mother Mountain. Its little school ran from 1908 to 1970."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558",
+ "lint_ok": [
+  "spelling: Mothar Mountain"
+ ]
+}

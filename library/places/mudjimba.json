@@ -1,0 +1,31 @@
+{
+ "key": "mudjimba",
+ "kind": "place",
+ "title": "Mudjimba Beach and Old Woman Island",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Mudjimba Beach and Old Woman Island",
+   "area": "coast",
+   "after": "mount-coolum",
+   "paras": [
+    "Mudjimba takes its name from the midyim, a coastal shrub with sweet white berries; the name is said to mean \"place of midyim\". The island holds two Kabi Kabi stories. In one, it is the head of the warrior Coolum, struck off by Ninderry. In another, two women crossed on a bunya pine log that then drifted away, leaving them stranded, living on midyim berries, fish and shellfish. As they aged, people on the mainland could see only one of them at a time, so it became Old Woman Island. The island, under two hectares, is part of Maroochy River Conservation Park and a nesting site for wedge-tailed shearwaters, with about 2,700 burrows counted in the late 1990s. Surfers rate its break as one for experts only, reached by boat. On shore, Mudjimba was first developed as the Surfrider Estate, and its residents formed an association in 1960."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Mudjimba Beach and Old Woman Island",
+    "text": "That small island offshore is Mudjimba, or Old Woman Island. One story says two women were stranded there living on midyim berries; another says it is the head of the warrior Coolum."
+   }
+  ]
+ },
+ "story": [
+  "Mudjimba takes its name from midyim, a coastal shrub with sweet white berries. The name is said to mean place of midyim.",
+  "The island offshore holds two Kabi Kabi stories. In one, it is the head of the warrior Coolum, struck off by his rival Ninderry. In the other, two women crossed to it on a bunya pine log that drifted away, leaving them stranded, living on midyim berries, fish and shellfish. As they grew old, people on the mainland could only ever see one of them at a time, and so it became Old Woman Island.",
+  "Today the island is a conservation park and a nesting place for wedge-tailed shearwaters, with about 2,700 burrows counted in the late 1990s."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

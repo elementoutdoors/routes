@@ -1,0 +1,31 @@
+{
+ "key": "royal-mail-hotel",
+ "kind": "place",
+ "title": "Royal Mail Hotel and Parkyn's Hut",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Royal Mail Hotel and Parkyn's Hut",
+   "area": "tewantin",
+   "after": "tewantin-wharves",
+   "paras": [
+    "The first Royal Mail Hotel opened quietly in May 1882, built for Ned Murdock, a Cobb and Co coach driver. Under later owners its buggies and coaches met the trains at Cooroy once the railway arrived in 1891, and the hotel became a holiday favourite for Gympie families. In March 1939 the two storey timber hotel was destroyed in a spectacular fire. Its brick replacement, designed by architects Addison and Macdonald for the Queensland Brewery, reopened in 1941 and still carries its original \"Royal Mail\" lettering; Heritage Noosa calls it a relatively rare mid century corner hotel. At the same intersection stands Parkyn's Hut, a hardwood miner's cottage from the Monkland at Gympie, carted to Tewantin by bullock team around 1920. The Parkyn family used it for guests from 1938, and in 2001 it was moved here to open as the Tewantin Heritage and Tourist Information Centre."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Royal Mail Hotel and Parkyn's Hut",
+    "text": "Close by is the Royal Mail Hotel, on a site that has held a pub since 1882, and Parkyn's Hut, an old Gympie miner's cottage that is now Tewantin's heritage centre."
+   }
+  ]
+ },
+ "story": [
+  "The first Royal Mail Hotel opened in May 1882, built for Ned Murdock, a Cobb and Co coach driver. Once the railway reached Cooroy in 1891, its coaches met the trains, and it became a holiday favourite for Gympie families.",
+  "In March 1939 the two storey timber hotel burned down in a spectacular fire. The brick hotel you see now reopened in 1941, and it still carries its original Royal Mail lettering.",
+  "At the same corner stands Parkyn's Hut, a hardwood miner's cottage from Gympie that was carted to Tewantin by bullock team around 1920. The Parkyn family used it for guests, and in 2001 it was moved here to become the Tewantin Heritage and Tourist Information Centre."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

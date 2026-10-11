@@ -1,0 +1,31 @@
+{
+ "key": "traveston",
+ "kind": "place",
+ "title": "Traveston",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "Traveston",
+   "area": "woondum-mary-valley",
+   "after": "beenaam-valley",
+   "paras": [
+    "Traveston is probably named after the Traverston pastoral run of the 1850s. When James Nash wrote in October 1867 to claim the reward for his Gympie gold find, he described the field as lying between Curra and \"Traviston\". The North Coast railway reached Traveston from Cooran in June 1889, and in 1898 the powder magazine for the Gympie mines was moved here because it was considered too close to town. Nash himself was its keeper until he retired in 1912. After the First World War locals bought the building and turned it into the Traveston Soldiers' Memorial Hall. About eight kilometres west, Traveston Crossing on the Mary River was chosen in 2006 for a large dam to supply south east Queensland. After a long community campaign, federal environment minister Peter Garrett refused it in late 2009 because of its impact on the Mary River cod, the Mary River turtle and the Australian lungfish."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Traveston",
+    "text": "Traveston is quiet dairy country with a gold rush story. James Nash, who found gold at Gympie in 1867, described his field as lying near here, and in his last working years he kept the Gympie mines' explosives magazine at Traveston."
+   }
+  ]
+ },
+ "story": [
+  "Traveston is probably named after a pastoral run of the 1850s. When James Nash claimed the reward for finding gold at Gympie in 1867, he described his field as lying between Curra and Traviston.",
+  "The railway reached Traveston in June 1889, and in 1898 the explosives store for the Gympie mines was moved here, because it was too close to town. Nash himself looked after it until he retired in 1912. After the First World War, locals turned it into the Soldiers' Memorial Hall.",
+  "Just west of here, a big dam on the Mary River was planned in 2006. After a long community campaign, the federal government refused it in 2009, to protect the Mary River cod, the Mary River turtle and the Australian lungfish."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

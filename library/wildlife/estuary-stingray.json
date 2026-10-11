@@ -1,0 +1,60 @@
+{
+ "key": "estuary-stingray",
+ "kind": "wildlife",
+ "title": "Estuary Stingray",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Estuary Stingray",
+  "other_names": "Brown stingray",
+  "scientific_name": "Hemitrygon fluviorum",
+  "group": "Ray",
+  "description": "The estuary stingray, also called the brown stingray, is a stingray species found only in eastern Australia, particularly in southern Queensland and New South Wales. It inhabits shallow, mangrove-lined tidal rivers, estuaries, and bays, preferring sandy or muddy bottoms. This species can grow up to 93 cm (37 in) wide, with a diamond-shaped body, long, whip-like tail, and distinctive row of thorns along its back. Its yellow-brown to olive coloration helps it blend into its environment.",
+  "detail": [
+   {
+    "type": "text",
+    "text": "**Habitat & Distribution -** The estuary stingray is found along 1,700 km (1,100 mi) of Australia's eastern coast, from Repulse Bay (Queensland) to the Hacking River (New South Wales). It is most common in southern Queensland, especially in Hervey Bay and Moreton Bay. It is rarely found in deeper waters but has been recorded at depths of 28 m (92 ft). Some past reports from Cape York, the Northern Territory, and the South China Sea were misidentifications of other stingray species."
+   },
+   {
+    "type": "text",
+    "text": "This ray prefers calm, sheltered environments like tidal rivers, estuaries, and bays lined with mangroves. It can tolerate brackish and even freshwater, sometimes swimming upriver beyond tidal limits. Water temperatures in its range vary from 24-29°C (75-84°F) in the north to 17-23°C (63-73°F) in the south."
+   },
+   {
+    "type": "text",
+    "text": "**Diet & Reproduction -** While the estuary stingray has a reputation for feeding on farmed oysters, its diet mainly consists of crustaceans and polychaete worms, including soldier crabs. It has been observed foraging in mudflats as the tide rises."
+   },
+   {
+    "type": "text",
+    "text": "This species is aplacental viviparous, meaning the mother nourishes developing young with uterine milk. Courtship behavior, where the male follows and bites the female's disc, has been seen between July and October. Newborns measure around 11 cm (4.3 in) across and are often found in estuaries and rivers, suggesting these areas may serve as nurseries. Males mature at 41 cm (16 in) wide around seven years of age, while females mature at 63 cm (25 in) after 13 years, making it one of the widest maturity gaps among stingrays. Males live up to 16 years, while females can reach 23 years."
+   },
+   {
+    "type": "text",
+    "text": "**Threats & Conservation -** Once common, the estuary stingray has declined due to several threats:"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Fishing Bycatch - It is frequently caught in bottom trawl and gillnet fisheries, often killed through \"spiking\", where fishers pierce its head with a metal bar.",
+     "Recreational Fishing - Many are accidentally caught by anglers, with over 10% of the population in Moreton Bay showing fishing-related injuries such as embedded hooks and mutilated tails.",
+     "Habitat Destruction - Urban development, land reclamation, pollution, and flood barriers have destroyed much of its preferred habitat.",
+     "Persecution by Shellfish Farmers - Due to its reputation for consuming farmed oysters, it has been intentionally killed in some areas."
+    ]
+   },
+   {
+    "type": "text",
+    "text": "Due to its population decline, the IUCN classifies the estuary stingray as Near Threatened, with projections suggesting it could become Endangered without conservation efforts. Although Marine Protected Areas (MPAs) exist in its range, many do not offer sufficient protection from fishing. However, Hervey Bay and parts of Moreton Bay remain strongholds for the species, and the Queensland government has added it to the Back on Track species prioritization framework to support conservation measures."
+   }
+  ],
+  "conservation": "Near Threatened (IUCN)",
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/456d7b668_estuary-stingray.jpeg",
+  "photo_focus": {
+   "x": 50,
+   "y": 50
+  },
+  "photo_width": 172,
+  "photo_height": 148,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Sting Ray Talk"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df1d"
+}

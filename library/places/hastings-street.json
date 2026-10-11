@@ -1,0 +1,32 @@
+{
+ "key": "hastings-street",
+ "kind": "place",
+ "title": "Hastings Street",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Hastings Street",
+   "area": "noosa-heads",
+   "after": null,
+   "paras": [
+    "Hastings Street began as a surveyed village of allotments behind the beach in 1879, and the pioneer Walter Hay was its first landowner, buying three blocks in 1882. For decades the only easy way in was by boat from Tewantin, so it stayed a sleepy holiday spot of boarding houses and a few shops. The road bridges of 1929 changed that, and from the 1930s cafes and guesthouses spread along the beachfront. The street was sealed in the 1950s, and surfing put it on the map in the 1960s. Its low-rise character is no accident: in 1990 the council capped building heights at four storeys across the shire, part of a long local push to keep Noosa low-rise. Nobody is sure where the name came from; one theory points to a Gympie goldfields reef named after the ship Warren Hastings."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Hastings Street",
+    "text": "Hastings Street was surveyed as a little beach village in 1879, and for fifty years most visitors arrived by boat. A four storey height cap from 1990 helps keep the low-rise feel you see today."
+   }
+  ]
+ },
+ "story": [
+  "Hastings Street began in 1879 as a little surveyed village behind the beach. The pioneer Walter Hay was its first landowner, buying three blocks in 1882.",
+  "For fifty years the easy way in was by boat from Tewantin, so it stayed a sleepy spot of boarding houses and a few shops. Then the road bridges of 1929 opened, and cafes and guesthouses began to spread along the beachfront.",
+  "The street was sealed in the 1950s, and surfing put it on the map in the 1960s.",
+  "The low-rise feel is no accident. In 1990 the council capped buildings at four storeys across the shire. As for the name, nobody is quite sure. One theory points to a Gympie gold reef named after a ship, the Warren Hastings."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

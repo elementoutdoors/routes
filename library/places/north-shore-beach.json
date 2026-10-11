@@ -1,0 +1,32 @@
+{
+ "key": "north-shore-beach",
+ "kind": "place",
+ "title": "Noosa North Shore beach",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Noosa North Shore beach",
+   "area": "tewantin",
+   "after": "north-shore-ferry",
+   "paras": [
+    "From the end of Beach Road the sand runs north towards Teewah and, about 60 km on, Rainbow Beach. This is the southern start of the Cooloola beach drive through the Cooloola Recreation Area of Great Sandy National Park, and the beach is also a road: Queensland road rules apply, vehicles need permits, and four wheel drives travel at speed. <a href=\"https://www.bikeon.com.au/bike_rides/noosa-north-shore/\">Ride within about two hours of low tide</a>, on firm sand, and turn back before the tide does. The dunes behind you matter. In January 2026 Noosa Council reported that the North Shore had its highest number of recorded turtle nests that season, from endangered loggerheads and threatened green turtles. A nest can hold around 150 eggs, yet as few as one hatchling in a thousand survives to adulthood. Keep off the dunes, use the marked access tracks, and never ride the beach at night, when lights confuse nesting turtles and hatchlings."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Noosa North Shore beach",
+    "text": "This beach is the start of the long Cooloola coast running north towards Teewah and Rainbow Beach. Loggerhead and green turtles nest in these dunes from November to March, so stay on the firm sand below them."
+   }
+  ]
+ },
+ "story": [
+  "From here the sand runs north towards Teewah, and about 60 kilometres on, Rainbow Beach. This is the start of the Cooloola beach drive in Great Sandy National Park.",
+  "Remember the beach is also a road. Road rules apply, and four wheel drives travel at speed. Ride within about two hours of low tide, on the firm sand, and turn back before the tide does.",
+  "The dunes behind you matter. Endangered loggerhead and threatened green turtles nest here, and in early 2026 Noosa Council reported the North Shore's highest number of recorded nests. A nest can hold around 150 eggs, yet as few as one hatchling in a thousand survives to grow up.",
+  "So please keep off the dunes, use the marked tracks, and never ride the beach at night, when lights confuse nesting turtles and hatchlings."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

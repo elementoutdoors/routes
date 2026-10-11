@@ -1,0 +1,46 @@
+{
+ "key": "lake-macdonald",
+ "kind": "place",
+ "title": "Lake Macdonald",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Lake Macdonald",
+   "area": "cooroy-region",
+   "after": "ringtail-creek-road",
+   "paras": [
+    "Lake Macdonald is the reservoir behind Six Mile Creek Dam, built in 1965 and raised by 3.6 metres in 1980. It holds about 8,018 megalitres for South East Queensland's drinking water and covers around 260 hectares, and it is named in memory of former Noosa Shire Council chairman Ian MacDonald. Seqwater is upgrading the dam, with a new spillway and rebuilt embankments, and the water level has been lowered while the work goes on. The lake is stocked with Mary River cod, bass, yellowbelly and saratoga, and a hatchery on its banks has bred the endangered cod for release into the Mary River catchment. Paddlers and birdwatchers love it. Along Lake Macdonald Drive are the Noosa Botanic Gardens, opened in 1990, with eight hectares of gardens, a bush chapel and a Greek style amphitheatre."
+   ]
+  },
+  "beo": {
+   "heading": "Lake Macdonald",
+   "area": "ringtail-yurol",
+   "after": "ringtail-creek-road",
+   "paras": [
+    "Lake Macdonald is Noosa's water supply. It formed behind Six Mile Creek Dam, built in 1965 and raised by 3.6 metres in 1980, and now holds about 8,018 megalitres across roughly 260 hectares. It is named in memory of Ian MacDonald, a former chairman of Noosa Shire Council. Seqwater is upgrading the dam with a new spillway and rebuilt embankments, and the lake has been kept lower while the work goes on. Anglers know it for Mary River cod, bass, yellowbelly and saratoga, and a hatchery beside the lake has bred the endangered cod for release into the Mary River catchment. Paddlers and birdwatchers love it too. If you have time, the Noosa Botanic Gardens on Lake Macdonald Drive, opened in 1990, have eight hectares of gardens, a bush chapel and a Greek style amphitheatre, a short detour from the route."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Lake Macdonald",
+    "text": "Lake Macdonald formed in 1965 when Six Mile Creek was dammed for Noosa's water supply. It is named after former shire chairman Ian MacDonald, and its waters are stocked with the endangered Mary River cod."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "Lake Macdonald",
+    "text": "Lake Macdonald formed in 1965 when Six Mile Creek was dammed for Noosa's water supply. It is named after former shire chairman Ian MacDonald, and its waters are stocked with the endangered Mary River cod."
+   }
+  ]
+ },
+ "story": [
+  "Lake Macdonald is Noosa's water supply. It formed behind Six Mile Creek Dam, built in 1965 and raised in 1980, and it covers around 260 hectares.",
+  "It is named in memory of Ian MacDonald, a former chairman of Noosa Shire Council. The dam is being upgraded with a new spillway, and the lake has been kept lower while the work goes on.",
+  "The lake is stocked with Mary River cod, bass, yellowbelly and saratoga, and a hatchery beside it has bred the endangered cod for release back into the Mary River catchment. Paddlers and birdwatchers love it too.",
+  "Along Lake Macdonald Drive are the Noosa Botanic Gardens, opened in 1990, with eight hectares of gardens, a bush chapel and an amphitheatre."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

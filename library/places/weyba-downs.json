@@ -1,0 +1,45 @@
+{
+ "key": "weyba-downs",
+ "kind": "place",
+ "title": "Lake Weyba western shore",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Lake Weyba western shore",
+   "area": "lake-weyba-region",
+   "after": "lake-weyba",
+   "paras": [
+    "The lakeside path at Weyba Downs follows the western shore of Lake Weyba, the southern end of the Noosa Everglades system. The catchment was never fertile enough for farming, so much of the lake still looks as it did to its Kabi Kabi custodians, whose shell middens, scarred trees and a large stone fish trap at the southern end remain. In the 1890s, under the Co-operative Communities Land Settlement Act, 59 unemployed Brisbane men and their families, the Woolloongabba Exemplars, settled the western side. They sold fish to Gympie and Brisbane, but their hand dug wells dried up and the commune had collapsed by 1896. Eumarella Road takes its name from the Tainsh family property at Rocky Point, a local picnic spot into the 1950s. South of the lake, Murdering Creek is thought to mark a massacre of Aboriginal people in the 1860s; historians have not settled the date or how many died."
+   ]
+  },
+  "beo": {
+   "heading": "Lake Weyba western shore",
+   "area": "doonella-weyba",
+   "after": null,
+   "paras": [
+    "On Forests, Farms &amp; Foreshore the last kilometres follow the western shore of Lake Weyba at Weyba Downs. The lake is the <a href=\"https://byearthandocean.com.au/kayak-noosa-everglades-lake-weyba/\">southern end of the Noosa Everglades system</a>, and because the land around it was never rich enough to farm, much of it still looks as it did to its Kabi Kabi custodians. Their shell middens, scarred trees and a large stone fish trap at the southern end survive. In the 1890s, under the Co-operative Communities Land Settlement Act, 59 unemployed Brisbane men and their families, known as the Woolloongabba Exemplars, tried to make a living on this side of the lake, selling fish to Gympie and Brisbane. Their hand dug wells failed, and by 1896 the commune was gone. Eumarella Road is named after the Tainsh family property at Rocky Point, a picnic spot into the 1950s. To the south, Murdering Creek is thought to mark a massacre of Aboriginal people in the 1860s; historians have not settled the date or how many died."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Lake Weyba western shore",
+    "text": "This quiet western shore of Lake Weyba looks much as it did to its Kabi Kabi custodians. In the 1890s a short lived co-operative commune, the Woolloongabba Exemplars, tried to make a living here, selling fish to Gympie and Brisbane."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "Lake Weyba western shore",
+    "text": "This quiet western shore of Lake Weyba looks much as it did to its Kabi Kabi custodians. In the 1890s a short lived co-operative commune, the Woolloongabba Exemplars, tried to make a living here, selling fish to Gympie and Brisbane."
+   }
+  ]
+ },
+ "story": [
+  "This quiet western shore of Lake Weyba, the southern end of the Noosa Everglades system, has changed very little. The land was never rich enough to farm, so much of it still looks as it did to its Kabi Kabi custodians. Their shell middens, scarred trees and a large stone fish trap remain.",
+  "In the 1890s, under a government scheme, 59 unemployed men from Brisbane and their families tried to make a living on this side of the lake. They were known as the Woolloongabba Exemplars, and they sold fish to Gympie and Brisbane. Their hand dug wells failed, and by 1896 the commune was gone.",
+  "South of the lake, Murdering Creek is thought to mark a massacre of Aboriginal people in the 1860s. Historians have not settled the date, or how many died."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

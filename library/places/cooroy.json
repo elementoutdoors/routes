@@ -1,0 +1,32 @@
+{
+ "key": "cooroy",
+ "kind": "place",
+ "title": "Cooroy",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Cooroy",
+   "area": "cooroy-region",
+   "after": "lake-macdonald",
+   "paras": [
+    "Cooroy takes its name from the nearby mountain, originally Coorooey, from the Kabi Kabi word for possum. Timber came first: by 1885 sawmillers Dath, Henderson and Co held 2046 hectares here, and the Fenwick brothers and Robert Morrish opened a sawmill in 1908 that ran until 2000. The railway arrived in 1891, and the timber station and goods shed are now heritage listed. As the land was cleared, dairying grew. The Wide Bay Co-operative Dairy Association opened a butter factory on Maple Street in 1915, replaced by the current brick building in 1930. It closed in 1975, was bought by Noosa Council in 1991 and became the Butter Factory Arts Centre in 2005. Nearby, the Lower Mill site keeps a heritage listed timber drying kiln from 1956. Maple Street's cafes make Cooroy a classic coffee stop."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Cooroy",
+    "text": "This is Cooroy, named after Mt Cooroy, from the Kabi Kabi word for possum. The town grew on timber and dairying, and the 1930 brick Butter Factory on Maple Street is now an arts centre."
+   }
+  ]
+ },
+ "story": [
+  "Cooroy takes its name from the nearby mountain, first written Coorooey, from the Kabi Kabi word for possum.",
+  "Timber came first. A sawmill opened here in 1908 and ran until 2000. The railway arrived in 1891, and its timber station and goods shed are now heritage listed.",
+  "As the land was cleared, dairying grew. A butter factory opened on Maple Street in 1915, and the brick building you see replaced it in 1930. It closed in 1975, and since 2005 it has been the Butter Factory Arts Centre.",
+  "Nearby, the old mill site keeps a heritage listed timber drying kiln from 1956. And Maple Street's cafes make Cooroy a classic coffee stop."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

@@ -1,0 +1,46 @@
+{
+ "key": "ringtail-creek-road",
+ "kind": "place",
+ "title": "Ringtail Creek Road and the 1870 Shortcut",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Ringtail Creek Road and the 1870 Shortcut",
+   "area": "cooroy-region",
+   "after": "yurol-ringtail",
+   "paras": [
+    "After gold was found at Gympie in 1867, the only coach road ran south to Brisbane, a slow trip with bushrangers waiting on the way back. Walter Hay, whose gravestone calls him the father of Noosa, was engaged to cut a direct route from the goldfields to a new port on the lower Noosa River. He rode into Tewantin at the end of blazing the Shortcut just before Christmas 1870. The route passed through Cooran and the Ringtail scrub, and it was soon a Cobb and Co coach route, until rail from Cooran and later Cooroy replaced it. Local historian Phil Jarratt traced the old coach route along this road; past the gravel it becomes <a href=\"https://www.bikeon.com.au/exploring-the-noosa-trail-network/\">Trail 4 of the Noosa Trail Network</a>, whose rough Alt 4 section follows the original 1870 road."
+   ]
+  },
+  "beo": {
+   "heading": "Ringtail Creek Road and the 1870 Shortcut",
+   "area": "ringtail-yurol",
+   "after": "yurol-ringtail",
+   "paras": [
+    "This road carries a piece of Noosa's founding story. Gold was found at Gympie in 1867, and the only coach road ran the long way south to Brisbane, with bushrangers waiting on the return trip. Walter Hay, remembered on his gravestone as the father of Noosa, was engaged to cut a direct track from the goldfields to a new port on the lower Noosa River, and he rode into Tewantin at the end of the job just before Christmas 1870. His Shortcut ran through Cooran and the Ringtail scrub and soon carried Cobb and Co coaches, until the railway at Cooran and later Cooroy took the traffic. Local historian Phil Jarratt traced the coach route along this road. Beyond the gravel it continues as Trail 4 of the Noosa Trail Network, and its rough Alt 4 section follows the original 1870 road. Like Hay, you are heading from the goldfields side down towards the river."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Ringtail Creek Road and the 1870 Shortcut",
+    "text": "Ringtail Creek Road follows part of the Shortcut, the track Walter Hay blazed in 1870 from the Gympie goldfields to Tewantin. Cobb and Co coaches soon used it, until the railway took over."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "Ringtail Creek Road and the 1870 Shortcut",
+    "text": "Ringtail Creek Road follows part of the Shortcut, the track Walter Hay blazed in 1870 from the Gympie goldfields to Tewantin. Cobb and Co coaches soon used it, until the railway took over."
+   }
+  ]
+ },
+ "story": [
+  "This road carries a piece of Noosa's founding story.",
+  "After gold was found at Gympie in 1867, the only coach road ran the long way south to Brisbane, with bushrangers waiting on the trip back. Walter Hay, remembered as the father of Noosa, was asked to cut a direct track from the goldfields to a new port on the Noosa River. He rode into Tewantin at the end of the job just before Christmas 1870.",
+  "His Shortcut ran through Cooran and the Ringtail scrub, and Cobb and Co coaches soon used it, until the railway took over.",
+  "Local historian Phil Jarratt traced the old coach route along this road. Past the gravel it becomes part of the Noosa Trail Network, and its rough alternative section follows the original road of 1870."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

@@ -1,0 +1,24 @@
+{
+ "key": "brahminy-kite",
+ "kind": "wildlife",
+ "title": "Brahminy Kite",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Brahminy Kite",
+  "scientific_name": "Haliastur indus",
+  "group": "Bird",
+  "description": "A medium-sized bird of prey with striking chestnut plumage and a contrasting white head and breast. It is commonly found along the coastlines and inland waterways of Australia, feeding on fish, small mammals, and carrion.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/51347b442_brahminy-kite.jpeg",
+  "photo_focus": {
+   "x": 48,
+   "y": 45
+  },
+  "photo_width": 220,
+  "photo_height": 255,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df25"
+}

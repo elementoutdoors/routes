@@ -1,0 +1,31 @@
+{
+ "key": "mt-cooroora",
+ "kind": "place",
+ "title": "Mt Cooroora and the King of the Mountain",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "Mt Cooroora and the King of the Mountain",
+   "area": "pomona-cooroora",
+   "after": "cooroora-trail",
+   "paras": [
+    "Mt Cooroora is a 439 metre intrusive volcanic plug, the high point of Tuchekoi National Park and the backdrop to every view of Pomona. Its name is an Aboriginal one, recorded by early settlers as Karura. The mountain is best known for the King of the Mountain. The story goes that in 1958 Bruce Samuels, a local footballer and railway porter, ran to the top as a hangover cure, then won a £100 wager that he could do it again in under an hour. A formal race followed in 1959, the Cooroy Pomona Lions Club revived it in 1979, and it grew into a July festival for the whole district. The race is no longer run: in 2024 the organisers announced it would end, after new permit conditions for protecting the track. Look up from Pomona and you can still pick out the runners' track up the mountain. A walking path climbs to a viewpoint above the tree line; the true summit is a steep rock scramble."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Mt Cooroora and the King of the Mountain",
+    "text": "Above you is Mt Cooroora, a 439 metre volcanic plug. For decades runners raced from Pomona to the summit and back in the King of the Mountain. The race has ended, but you can still see their track."
+   }
+  ]
+ },
+ "story": [
+  "Mount Cooroora is a 439 metre volcanic plug, the high point of Tuchekoi National Park and the backdrop to every view of Pomona. Early settlers recorded its Aboriginal name as Karura.",
+  "It is best known for the King of the Mountain. The story goes that in 1958 Bruce Samuels, a local footballer and railway porter, ran to the top as a hangover cure, then won a hundred pound bet that he could do it again in under an hour.",
+  "A formal race followed in 1959. It was revived in 1979 and grew into a July festival for the whole district. The race is no longer run. In 2024 the organisers announced it would end. But look up from Pomona and you can still pick out the runners' track up the mountain."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

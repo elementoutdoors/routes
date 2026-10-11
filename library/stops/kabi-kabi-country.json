@@ -1,0 +1,117 @@
+{
+ "key": "kabi-kabi-country",
+ "kind": "stop",
+ "title": "Kabi Kabi Country",
+ "status": "live",
+ "updated": "2026-10-11",
+ "tours": {
+  "stingrays-everglades": 1
+ },
+ "talk": {
+  "points": [
+   "Wunya ngulum (one-ya nulem) means Welcome everyone in the Kabi Kabi language. The language is endangered, but efforts are under way to preserve and revive it.",
+   "The Kabi Kabi people are the Traditional Custodians of land in South East Queensland, including Moreton Bay, the Sunshine Coast, Noosa, Maryborough and Gympie.",
+   "Place names we can see from here: Mt Cooroy (originally Coorooey, from kurui, possum); Lake Weyba (place of stingrays; -ba means place; the Kabi Kabi used the lake as a food source); Noosa (from Noothera or Gnuthuru, shadow or shady place).",
+   "Overview of the rest of the tour. Point out the house on the other side of the lake as an orientation point."
+  ],
+  "detail": "Other place names: Mt Cooran (Guran, tall trees); Lake Cooroibah (Kurui-ba, place of possums); Mt Cooroora (a brush tail possum); Lake Cootharaba (where wood for studded clubs was found); Doonan (leaf of a tree); Eumundi (after the chieftain Ngumundi); Maroochydore (Murukutchi-dha, place of the black swan); Teewah (dead wood or dry timber); Tewantin (Dauwadhum, place of dead logs); Mt Tinbeerwah (place of grasstrees, or high hill).",
+  "detail_blocks": [
+   {
+    "type": "heading",
+    "text": "Welcome or Wunya ngulum...(One-ya nulem)"
+   },
+   {
+    "type": "text",
+    "text": "Reference https://gubbigubbidyungungoo.com/"
+   },
+   {
+    "type": "text",
+    "text": "**'Wunya Ngulum'** means Welcome Everyone in Kabi Kabi Language. Like many Indigenous Australian languages, Kabi Kabi is endangered, but efforts are being made to preserve and revitalize it."
+   },
+   {
+    "type": "heading",
+    "text": "Traditional owners Kabi Kabi"
+   },
+   {
+    "type": "text",
+    "text": "Reference https://gubbigubbidyungungoo.com/"
+   },
+   {
+    "type": "text",
+    "text": "Australian Aboriginals are considered the oldest continuous civilisation on earth, with culture dating back 50,000 years. There are estimated to have been around 250 distinct Indigenous language groups at the time of European colonization, each with its own dialects, customs, and traditions. These groups are often referred to as tribes, nations, or clans, and they have unique connections to specific land areas and cultural practices."
+   },
+   {
+    "type": "text",
+    "text": "The Kabi Kabi people are the Traditional Custodians of the land located in Southeast Queensland, located in the Moreton Bay, Sunshine Coast, Noosa, Maryborough and Gympie region."
+   },
+   {
+    "type": "text",
+    "text": "The traditional lands of the Kabi Kabi people stretches from the northern banks of the Pine River Caboolture in the south, to Burrum River in the north near Maryborough/ Hervey bay the Conondale Ranges (Murgon) in the west."
+   },
+   {
+    "type": "text",
+    "text": "Kabi Kabi Country includes the areas of Petrie, Redcliffe, Caboolture, Bribie Island, Sunshine Coast and hinterlands, Noosa, Rainbow Beach, Hervey Bay, Maryborough and Gympie."
+   },
+   {
+    "type": "text",
+    "text": "Kabi Kabi Country includes beautiful beaches, lakes, rivers, creeks, mountains, and rainforests, some of which you will see or visit today!"
+   },
+   {
+    "type": "text",
+    "text": "The correct spelling and pronunciation of the Traditional Custodians of the Moreton Bay, Sunshine Coast, Noosa, Maryborough and Gympie region is the Kabi Kabi people (pronunciation: Gu-bee Gu-bee). 'Kabi Kabi' is the incorrect spelling and pronunciation of the Kabi Kabi language group name."
+   },
+   {
+    "type": "text",
+    "text": "The Europeans recorded the Indigenous languages in a written form as they heard it. **The spelling 'Kabi Kabi' is the European interpretation of the language name of Kabi Kabi.** The Indigenous languages spoken in Australia were mostly an oral language and not recorded in written form until the arrival of the European explorers, historians and surveyors."
+   },
+   {
+    "type": "text",
+    "text": "Historically, with no guidelines or consistency, the Kabi Kabi language name was written as Kabi, Kgabi or Gabi."
+   },
+   {
+    "type": "heading",
+    "text": "Place Names"
+   },
+   {
+    "type": "text",
+    "text": "Reference: Heritage Place Name Origins (sunshinecoast.qld.gov.au) (https://heritage.sunshinecoast.qld.gov.au/Museums-and-Places/Place-Name-Origins)"
+   },
+   {
+    "type": "text",
+    "text": "The Indigenous languages spoken in Australia were mostly an oral language and not recorded in written form until the arrival of the European explorers, historians, and surveyors. As such, there are inconsistencies in the written name of a place vs what is now recognised as the aboriginal word for the place."
+   },
+   {
+    "type": "list",
+    "items": [
+     "**Mt Cooran** - From **Guran** meaning **tall trees.**",
+     "**Lake Cooroibah** - (Lake Cooroibah) **kurui-ba** meaning **place of possums**.",
+     "**Mt Cooroora -** Signifies a \"brush tail possum,\" specifically referring to this type of possum in the Kabi Kabi language.",
+     "**Mt Cooroy** - Mt Cooroy's original name was Coorooey, from the Aboriginal word **kurui** meaning **possum**. The town got its name from the mountain.",
+     "**Lake Cootharaba** - This was the Aboriginal name for the lake. It meant **place where the wood used in making notched or studded clubs could be found.**",
+     "**Doonan** - It is thought to mean **'leaf of a tree'.**",
+     "**Eumundi** - **Ngumundi or Huomundy** name of **Aboriginal chieftain** said to have adopted escaped convict Bracefield as his son in 1831.",
+     "**Gympie** - Kabi Kabi name for a **stinging tree** which grew prolifically around the Mary River.",
+     "**Maroochydore** - is from **Murukutchi-dha**, the **place of the black swan.**",
+     "**Noosa -** The Aboriginal people called Noosa Head, **Wantima,** meaning **rising up or climbing up**. The name first used by white people was **Bracefield's Head** or **Cape Bracefield**. This was as a result of an exploratory party involving Andrew Petrie and others finding the runaway convict, Bracefield, living with the Kabi Kabi people in the area in 1842. However, it came to be given a permanent name of Aboriginal derivation **Noosa -** **Noothera or Gnuthuru** meaning **shadow or shady place.**",
+     "**Pomona -** Lieutenant Bligh took up land in this area in 1860 and called it Caroora. For a couple of years after the railway line was built the rail stop was called Cooroora siding. The nearby mountain is still called Cooroora Mountain. The railway and postal authorities found it confusing having Cooran, Cooroora and Cooroy so close together, so the Railway Department changed the name to Pinbarren Siding. This lasted until 1906 when the Pinbarren Progress Association was invited to suggest a new name and they chose Pomona. Pomona was the Roman goddess of fruit and fruit trees.",
+     "**Teewah** - **Dauwah**, meaning **dead wood or dry timber.**",
+     "**Tewantin** - **Dauwadhum** meaning **place of dead logs.** It was timber that brought the first white men to the area, and the felled logs were dragged or rafted to a sawmill set up in the 1860s on the shores of Lake Doonella. The timber was shipped out down the Noosa River from there to Brisbane. So a name meaning dead wood or place of dead logs seems appropriate.",
+     "**Mt Tinbeerwah** - **Place of grasstrees** or high hill climbing up.",
+     "**Lake Weyba** - A number of places along the Sunshine Coast end in -ba, this being the Aboriginal term for place. Weyba probably means the **place of stingrays**."
+    ]
+   }
+  ],
+  "stop_title": "Welcome"
+ },
+ "story": [
+  "Wunya ngulum. In the Kabi Kabi language that means welcome everyone. Like many Aboriginal languages, Kabi Kabi is endangered, and people are working to keep it alive.",
+  "The Kabi Kabi people are the Traditional Custodians of this land. Their Country reaches from the Pine River near Caboolture in the south to the Burrum River near Maryborough in the north, and west to the Conondale Ranges. It takes in beaches, lakes, rivers, creeks, mountains and rainforest.",
+  "Many local names come from their language. Tewantin is said to mean place of dead logs. Cooroibah is said to mean place of possums. And Weyba is understood to mean place of stingrays.",
+  "These languages were spoken, not written, so early Europeans wrote the names down as they heard them. That is why spellings vary, and why the same name was once written Kabi, Kgabi or Gabi."
+ ],
+ "eocrew": {
+  "document_id": "6abbafe4990e468def4fe82f",
+  "section_id": "6abbafe6fa3dae8d630b088e"
+ },
+ "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
+}

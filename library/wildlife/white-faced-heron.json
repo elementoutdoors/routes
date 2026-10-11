@@ -1,0 +1,24 @@
+{
+ "key": "white-faced-heron",
+ "kind": "wildlife",
+ "title": "White-Faced Heron",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "White-Faced Heron",
+  "scientific_name": "Egretta novaehollandiae",
+  "group": "Bird",
+  "description": "A medium-sized heron native to Australia, recognizable by its pale blue-grey body and distinctive white face. It inhabits a wide range of wetland environments and feeds on insects, fish, and amphibians.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/a99b3f724_white-faced-heron.jpeg",
+  "photo_focus": {
+   "x": 50,
+   "y": 40
+  },
+  "photo_width": 220,
+  "photo_height": 163,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df24"
+}

@@ -1,0 +1,32 @@
+{
+ "key": "david-low-way",
+ "kind": "place",
+ "title": "David Low Way",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "David Low Way",
+   "area": "coast",
+   "after": null,
+   "paras": [
+    "Until 1960 there was no road along this coast. Coolum was reached from Yandina, on a road that was often partly under water where it crossed a swamp. David Low, born in Yandina in 1911, was Country Party member for Cooroora from 1947 to 1974 and chairman of Maroochy Shire from 1952 to 1967, and he championed both a coastal road and an airport. He turned the first sod on 13 July 1959. Premier Frank Nicklin opened the first section, Sunshine Beach to Peregian, on 2 April 1960; developer T M Burke built the northern end in return for development rights at Peregian and Sunrise Beach. Coolum to Peregian followed in May 1961, and on 12 August 1961 the Scenic Coastal Highway was officially opened at Mudjimba Beach, the same day Maroochy Airport was opened at Marcoola. Critics called the airport a \"white elephant\" and Low's \"big mistake\". Today the road runs 36 km from Maroochydore to Noosa Heads."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "David Low Way",
+    "text": "This coast road is named after David Low, the Yandina-born MP and Maroochy Shire chairman who pushed for it. The first section, Sunshine Beach to Peregian, opened in April 1960."
+   }
+  ]
+ },
+ "story": [
+  "Until 1960 there was no road along this coast at all. Coolum was reached from Yandina, on a road that often flooded where it crossed a swamp.",
+  "This road is named after David Low, born in Yandina in 1911, a long serving local member of parliament and chairman of Maroochy Shire, who pushed for a coast road and an airport.",
+  "The first section, Sunshine Beach to Peregian, opened in April 1960. The developer of Peregian and Sunrise Beach built the northern end in return for the right to develop the land. The whole road was officially opened in August 1961, the same day as the Maroochy airport, which critics called a white elephant.",
+  "Today the road runs 36 kilometres, from Maroochydore to Noosa Heads."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

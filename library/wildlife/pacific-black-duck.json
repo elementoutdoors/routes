@@ -1,0 +1,25 @@
+{
+ "key": "pacific-black-duck",
+ "kind": "wildlife",
+ "title": "Pacific Black Duck",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Pacific Black Duck",
+  "other_names": "PBD, grey duck (NZ), pārera",
+  "scientific_name": "Anas superciliosa",
+  "group": "Bird",
+  "description": "Commonly known as the PBD, this dabbling duck is found in much of Indonesia, New Guinea, Australia, New Zealand, and many islands in the southwestern Pacific. It is usually called the grey duck in New Zealand, where it is also known by its Māori name, pārera.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/0aac9edb2_pacific-black-duck.jpeg",
+  "photo_focus": {
+   "x": 50,
+   "y": 50
+  },
+  "photo_width": 220,
+  "photo_height": 147,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df30"
+}

@@ -1,0 +1,32 @@
+{
+ "key": "noosa-main-beach",
+ "kind": "place",
+ "title": "Noosa Main Beach",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Noosa Main Beach",
+   "area": "noosa-heads",
+   "after": "noosa-spit",
+   "paras": [
+    "Main Beach runs about 1.2 km from the headland to the river mouth and faces almost due north into Laguna Bay, which keeps the swell gentle on most days. A lifesaving reel stood on the sand by 1915, and the surf club traces its first steps to 1928. The beach has always fought the sea: cyclones in 1967 stripped so much sand that residents dumped rocks to protect their homes, a rock wall went in from 1969, and since 2009 a sand recycling system has pumped sand from the river end back to the eastern end. Around the headland, the points made Noosa famous with surfers. Kevin \"The Sheik\" Freeman was riding them in the 1940s, and a 1963 Surfing World story called the waves the best in the Commonwealth. In 2020 the coast from North Sunshine Beach to the river became the world's 10th World Surfing Reserve. Each spring the Noosa Triathlon swim leg starts here."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Noosa Main Beach",
+    "text": "Noosa Main Beach faces north into Laguna Bay, which keeps it sheltered on most days. Lifesavers have patrolled here since the late 1920s, and the point breaks around the headland are now a World Surfing Reserve."
+   }
+  ]
+ },
+ "story": [
+  "Main Beach runs about a kilometre and a bit from the headland to the river mouth. It faces almost due north into Laguna Bay, which is why the water is so calm on most days.",
+  "Lifesavers were here early. A rescue reel stood on the sand by 1915, and the surf club traces its start to 1928.",
+  "The beach has always fought the sea. Cyclones in 1967 stripped away so much sand that residents dumped rocks to save their homes. A rock wall followed, and since 2009 a pump has carried sand from the river end back to the eastern end.",
+  "Around the headland are the point breaks that made Noosa famous with surfers. In 2020 this stretch of coast became the world's tenth World Surfing Reserve. And every spring, the Noosa Triathlon swim starts right here."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

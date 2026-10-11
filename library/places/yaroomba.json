@@ -1,0 +1,31 @@
+{
+ "key": "yaroomba",
+ "kind": "place",
+ "title": "Yaroomba and Point Arkwright",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Yaroomba and Point Arkwright",
+   "area": "coast",
+   "after": "coolum-beach",
+   "paras": [
+    "The rocky headland of Point Arkwright is where the base of Mount Coolum meets the Pacific. Its name appears to honour Sir Richard Arkwright, inventor of cotton spinning machinery, paired with Point Cartwright further south, named after another textile inventor. Yaroomba, said to mean \"surf on the beach\", began in 1953 as an estate called Coronation Beach, named for the Queen's coronation, and took its present name in 1961. Much of it is taken up by the resort and golf course long known as the Hyatt Regency, later home to the Australian PGA Championship and, under Clive Palmer, a park of lifesize dinosaurs. South again, Marcoola is a coined name built from MARoochydore and COOlum. Its surf club began in 1969 with a nippers group and caused a stir in 1979 by training girls before women could join surf clubs."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Yaroomba and Point Arkwright",
+    "text": "Yaroomba is said to mean surf on the beach. The headland here, Point Arkwright, is the foot of Mount Coolum running into the sea, and Marcoola, to the south, is a blend of Maroochydore and Coolum."
+   }
+  ]
+ },
+ "story": [
+  "The rocky headland of Point Arkwright is where the base of Mount Coolum meets the Pacific. Its name seems to honour Richard Arkwright, inventor of cotton spinning machines, just as Point Cartwright further south is named after another textile inventor.",
+  "Yaroomba is said to mean surf on the beach. It began in 1953 as an estate called Coronation Beach, named for the Queen's coronation, and took its present name in 1961. Much of it is taken up by the resort and golf course that once hosted the Australian PGA Championship.",
+  "South again, Marcoola is a made up name, from Maroochydore and Coolum. Its surf club caused a stir in 1979 by training girls, before women could join surf clubs."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

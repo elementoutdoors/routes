@@ -1,0 +1,46 @@
+{
+ "key": "wooroi",
+ "kind": "place",
+ "title": "Tewantin National Park, Wooroi",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Tewantin National Park, Wooroi",
+   "area": "tinbeerwah",
+   "after": null,
+   "paras": [
+    "Tewantin National Park protects rainforest, open eucalypt forest and the last wallum remnants between Noosa and Cooroy, on the traditional Country of the Kabi Kabi and Gubbi Gubbi peoples. Much of it was once State Forest 959. After years of lobbying by the Noosa Parks Association the forest was declared national park in 2010, and land from the Yurol and Ringtail state forests was added from 2011. Its forestry past lingers: a heritage site along Gyndier Drive holds remains of an old forestry camp, including references to Chinese workers. The Wooroi day-use area, shaded by coastal she-oaks and bloodwoods, is a historic picnic spot and the trailhead for <a href=\"https://www.bikeon.com.au/mountain-bike-hire/\">eleven mountain bike trails</a>, from the easy Hovea loop to the one way Turn 10, managed by Queensland Parks and Wildlife Service with the Noosa Trailblazers Mountain Bike Club. Listen for eastern whipbirds, and watch for swamp wallabies, echidnas and glossy black cockatoos."
+   ]
+  },
+  "beo": {
+   "heading": "Tewantin National Park, Wooroi",
+   "area": "tewantin-national-park",
+   "after": "gyndier-drive",
+   "paras": [
+    "Coming off the forest roads, the Wooroi day-use area is where many of our hinterland rides meet the <a href=\"https://byearthandocean.com.au/mountain-biking-noosa-ride-the-forest-hinterland-trails/\">mountain bike trails of Tewantin National Park</a>. The park protects rainforest, open eucalypt forest and the last wallum remnants between Noosa and Cooroy, on the traditional Country of the Kabi Kabi and Gubbi Gubbi peoples. Most of it was State Forest 959 until 2010, when years of lobbying by the Noosa Parks Association saw it declared national park, and land from the Yurol and Ringtail state forests has been added since 2011. A heritage site on Gyndier Drive keeps traces of an old forestry camp, including references to Chinese workers. Wooroi itself is a historic picnic ground under coastal she-oaks and bloodwoods, and the trailhead for eleven mountain bike trails managed by Queensland Parks and Wildlife Service with the Noosa Trailblazers Mountain Bike Club. Listen for eastern whipbirds, and keep an eye out for swamp wallabies, echidnas and glossy black cockatoos."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Tewantin National Park, Wooroi",
+    "text": "This is Wooroi, a historic picnic ground in Tewantin National Park. It was state forest until it became national park in 2010, and its mountain bike trails are managed with the Noosa Trailblazers club."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "Tewantin National Park, Wooroi",
+    "text": "This is Wooroi, a historic picnic ground in Tewantin National Park. It was state forest until it became national park in 2010, and its mountain bike trails are managed with the Noosa Trailblazers club."
+   }
+  ]
+ },
+ "story": [
+  "Wooroi is a historic picnic ground in Tewantin National Park, shaded by she-oaks and bloodwoods, and the trailhead for eleven mountain bike trails.",
+  "The park protects rainforest, open eucalypt forest and the last patches of wallum heath between Noosa and Cooroy, on the Country of the Kabi Kabi and Gubbi Gubbi peoples.",
+  "Most of it was state forest until 2010, when years of lobbying by the Noosa Parks Association saw it declared a national park, and land from the Yurol and Ringtail forests has been added since. Along Gyndier Drive, a heritage site still holds traces of an old forestry camp.",
+  "The trails are managed by the Queensland Parks and Wildlife Service with the Noosa Trailblazers Mountain Bike Club. Listen for whipbirds, and watch for swamp wallabies, echidnas and glossy black cockatoos."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

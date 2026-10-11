@@ -1,0 +1,24 @@
+{
+ "key": "australian-pelican",
+ "kind": "wildlife",
+ "title": "Australian Pelican",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Australian Pelican",
+  "scientific_name": "Pelecanus conspicillatus",
+  "group": "Bird",
+  "description": "A large waterbird with predominantly white plumage, black wings, and a distinctive long pink bill, the longest of any living bird. It is widespread across Australia, inhabiting inland and coastal waters, and primarily feeds on fish.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/2aa6aa95c_australian-pelican.jpeg",
+  "photo_focus": {
+   "x": 50,
+   "y": 40
+  },
+  "photo_width": 220,
+  "photo_height": 275,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df28"
+}

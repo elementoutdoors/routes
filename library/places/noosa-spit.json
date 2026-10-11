@@ -1,0 +1,32 @@
+{
+ "key": "noosa-spit",
+ "kind": "place",
+ "title": "Noosa Spit and Noosa Woods",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Noosa Spit and Noosa Woods",
+   "area": "noosa-heads",
+   "after": "hastings-street",
+   "paras": [
+    "The river mouth has never sat still. The Noosa River once reached the sea near today's Noosa Woods, and when beachfront building made the entrance unstable, engineers relocated the mouth to the north west in 1978 and built the spit groyne to hold it there. A second groyne followed in 1982. Noosa Woods has its own story. It was once rainforest of brush box, lilly pilly and ash, cleared by council in 1962 for a busy camping ground that families returned to every summer. In 1990 camping was ended and the Woods was replanted as a rainforest recreation area, a decision that sparked protest marches down Hastings Street at the time. Across the water, Noosa Sound was built in the early 1970s on Hays Island, a mangrove island raised with dredged sand. Today the Spit is a favourite for picnics, dogs and shorebird watching."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Noosa Spit and Noosa Woods",
+    "text": "The Noosa River once met the sea right about here. In 1978 the mouth was moved north and a rock wall built, and the old caravan camp in Noosa Woods was replanted as rainforest in 1990."
+   }
+  ]
+ },
+ "story": [
+  "The mouth of the Noosa River has never sat still. It once reached the sea close to where Noosa Woods is now.",
+  "When building along the beach made the entrance unstable, engineers moved the river mouth to the north west in 1978 and built the rock wall at the spit to hold it there. A second wall followed in 1982.",
+  "Noosa Woods has its own story. It was once rainforest, cleared by the council in 1962 for a busy camping ground that families came back to every summer. In 1990 camping ended and the woods were replanted as rainforest, which sparked protest marches down Hastings Street.",
+  "Across the water, Noosa Sound was built in the early 1970s on a mangrove island raised with dredged sand. Today the spit is a favourite for picnics, dog walks and watching shorebirds."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

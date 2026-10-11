@@ -1,0 +1,31 @@
+{
+ "key": "cooroora-trail",
+ "kind": "place",
+ "title": "Cooroora Trail",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "Cooroora Trail",
+   "area": "pomona-cooroora",
+   "after": null,
+   "paras": [
+    "The Cooroora Trail is Trail 5 of the <a href=\"https://byearthandocean.com.au/exploring-the-noosa-trail-network/\">Noosa Trail Network</a>, a set of signposted trails for walkers, horse riders and mountain bikers linking Pomona, Cooran, Kin Kin, Lake Macdonald and Cooroy. This 9 km stretch between Cooran and Pomona is largely in Tuchekoi National Park, around 390 hectares of bushland around Mt Cooroora, and gives wonderful views of Mt Cooroora and Mt Cooran. You will pass gates, picnic shelters and heritage signs along the way. Much of the network crosses private farmland, so please shut every gate behind you, do not skid, and give way to walkers and horses. After heavy rain the tracks become slippery, and some sections may be closed, so check before you ride. Trails like this are part of why Noosa is emerging as one of Australia's <a href=\"https://bikeon.com.au/noosa-winter-riding-destination-biosphere-trails/\">great winter cycling destinations</a>."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Cooroora Trail",
+    "text": "You are on the Cooroora Trail, part of the Noosa Trail Network between Cooran and Pomona. Much of it runs through Tuchekoi National Park, with views to Mt Cooroora and Mt Cooran."
+   }
+  ]
+ },
+ "story": [
+  "You are on the Cooroora Trail, part of the Noosa Trail Network, a set of signposted trails for walkers, horse riders and mountain bikers that links Pomona, Cooran, Kin Kin, Lake Macdonald and Cooroy.",
+  "This stretch, about nine kilometres between Cooran and Pomona, runs mostly through Tuchekoi National Park, with lovely views of Mount Cooroora and Mount Cooran. You will pass gates, picnic shelters and heritage signs.",
+  "Much of the network crosses private farmland, so please shut every gate behind you, do not skid, and give way to walkers and horses. After heavy rain the tracks get slippery and some sections may close."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

@@ -1,0 +1,46 @@
+{
+ "key": "lake-doonella",
+ "kind": "place",
+ "title": "Lake Doonella",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Lake Doonella",
+   "area": "noosaville",
+   "after": null,
+   "paras": [
+    "Lake Doonella is a shallow, tidal lake joined to the Noosa River between Tewantin and Noosaville, fringed with mangroves and patches of seagrass. In 1871 the first land sold along the river was 80 acres on its shore, opposite Tewantin, and in 1907 the lake hosted an aquatic sports day. For decades it was the barrier between Tewantin and Gympie Terrace, until a timber bridge opened across its mouth on 19 October 1929, with about 700 cars queued to cross. The lake was declared a fish habitat area in 1983 and is now part of the Noosa River Fish Habitat Area, a nursery for bream, whiting, flathead, mud crabs and prawns. From the path, watch for black swans, pelicans and cormorants, and look down for mangrove roots at low tide."
+   ]
+  },
+  "beo": {
+   "heading": "Lake Doonella",
+   "area": "doonella-weyba",
+   "after": "weyba-downs",
+   "paras": [
+    "Lake Doonella is the last stretch of water before you roll back into Noosaville, and a sign that a long day in the hills is nearly done. It is a shallow tidal lake joined to the Noosa River between Tewantin and Noosaville, edged with mangroves and seagrass, and one of the named parts of the Noosa Everglades system. The first land sold on the river, 80 acres in 1871, lay on its shore opposite Tewantin. For decades the lake cut Tewantin off from the Gympie Terrace settlement, until a timber bridge opened across its mouth on 19 October 1929 and about 700 cars queued to cross. Since 1983 it has been protected as a fish habitat area, now part of the Noosa River Fish Habitat Area, a nursery for bream, whiting, flathead, mud crabs and prawns. Look for black swans, pelicans and cormorants on the last kilometres home."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Lake Doonella",
+    "text": "Lake Doonella is a shallow tidal lake off the Noosa River, protected since 1983 as a fish habitat area. Look for black swans, pelicans and cormorants along the mangrove edge."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "Lake Doonella",
+    "text": "Lake Doonella is a shallow tidal lake off the Noosa River, protected since 1983 as a fish habitat area. Look for black swans, pelicans and cormorants along the mangrove edge."
+   }
+  ]
+ },
+ "story": [
+  "Lake Doonella is a shallow tidal lake joined to the Noosa River between Tewantin and Noosaville. Its edges are lined with mangroves and patches of seagrass, and it is one of the named parts of the Noosa Everglades system.",
+  "The first land ever sold along the river, 80 acres, was on its shore opposite Tewantin, back in 1871.",
+  "For decades the lake cut Tewantin off from Gympie Terrace. That changed on the 19th of October 1929, when a timber bridge opened across its mouth and about 700 cars queued to cross.",
+  "Since 1983 it has been protected as a fish habitat area, a nursery for bream, whiting, flathead, mud crabs and prawns. Look for black swans, pelicans and cormorants, and at low tide, the mangrove roots."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

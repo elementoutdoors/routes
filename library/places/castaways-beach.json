@@ -1,0 +1,32 @@
+{
+ "key": "castaways-beach",
+ "kind": "place",
+ "title": "Castaways Beach and Marcus Beach",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Castaways Beach and Marcus Beach",
+   "area": "coast",
+   "after": "sunrise-beach",
+   "paras": [
+    "When the coast road opened in 1960, three small bridges carried it over Burgess Creek, Castaways Creek and one more creek towards Marcus Beach. The first development on this section of coast was the Castaway Motel, owned by Peter and Marea Brown, and the beach took its name. Castaways Estate, on the western side, was given nautical street names such as Wavecrest Drive, and today it is houses only, with no units. Marcus Beach honours Marcus Burke, who became chairman of T M Burke Pty Ltd after his father died. Its beachfront lots were sold from the 1970s, the western side in the 1980s, with timber-themed street names like Redwood. Noosa Council fought to keep the Marcus High Dunes undeveloped; the developer was compensated and the dunes are now part of Noosa National Park."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Castaways Beach and Marcus Beach",
+    "text": "Castaways Beach is named after the Castaway Motel, the first building on this stretch. Marcus Beach, just south, is named after Marcus Burke, son of the developer who built this road."
+   }
+  ]
+ },
+ "story": [
+  "When the coast road opened in 1960, three small bridges carried it over the creeks along this stretch.",
+  "The first building here was the Castaway Motel, and the beach took its name. The estate behind it was given seaside street names, and it is still houses only, with no units.",
+  "Marcus Beach is named after Marcus Burke, who ran the family development company after his father died. Its streets have timber names, like Redwood.",
+  "Noosa Council fought to keep the high dunes at Marcus Beach from being built on. The developer was paid out, and the dunes are now part of Noosa National Park."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

@@ -1,0 +1,32 @@
+{
+ "key": "woondum",
+ "kind": "place",
+ "title": "Woondum National Park",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "Woondum National Park",
+   "area": "woondum-mary-valley",
+   "after": null,
+   "paras": [
+    "Woondum National Park covers about 4,000 hectares of steep ranges between Cooran, Kin Kin and Mothar Mountain. It was long managed as State forest, and in 2009 it became a national park. The Queensland Government records the name as reportedly coming from Kabi words for blue tongue lizard and place. Tall eucalypt forest covers the ridges, with rainforest in the sheltered gullies and creeks tumbling over boulders below. Foresters prized Woondum's spotted gums because they resist a fungal leaf and shoot disease, and seed from here went to plantations across south east Queensland. The park holds fourteen regional ecosystems, including endangered gallery rainforest, and records of koalas, sooty owls, plumed frogmouths and the tusked frog. The Kabi Kabi First Nation holds deep connections here, and the Mothar Mountain rock pools and Kabi Boys Creek are significant cultural sites."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Woondum National Park",
+    "text": "You are riding through Woondum National Park, declared in 2009 on former State forest. Its spotted gums are valued as seed trees because they resist a fungal leaf disease. The name is said to mean place of the blue tongue lizard."
+   }
+  ]
+ },
+ "story": [
+  "Woondum National Park covers about 4,000 hectares of steep ranges between Cooran, Kin Kin and Mothar Mountain. It was state forest for a long time, and became a national park in 2009.",
+  "The name is reportedly from Kabi words for blue tongue lizard and place.",
+  "Tall eucalypt forest covers the ridges, with rainforest in the gullies and creeks tumbling over boulders. Foresters prized Woondum's spotted gums because they resist a leaf disease, and their seed went to plantations across the south east.",
+  "The park shelters koalas, sooty owls, frogmouths and the tusked frog. The Kabi Kabi First Nation holds deep connections here, and the Mothar Mountain rock pools are a significant cultural site."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

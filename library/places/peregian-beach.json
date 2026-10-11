@@ -1,0 +1,32 @@
+{
+ "key": "peregian-beach",
+ "kind": "place",
+ "title": "Peregian Beach",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Peregian Beach",
+   "area": "coast",
+   "after": "castaways-beach",
+   "paras": [
+    "Peregian is thought to come from a First Nations word for emu, and Sunshine Coast place name records suggest emus were once plentiful in the district. Until the late 1950s this was Crown land. When the coast road came through, developer T M Burke and Co, working with Maroochy councillor David Low, took a 20 year lease with development rights in return for building it. The first house was built on Pelican Street in 1960 and is still there, and the first 120 lots were laid out around it. With no town plan until 1973, streets simply followed the easiest line. A community swimming pool opened in the middle of the shopping square in 1964. The surf club, founded in 1962, has had a rollercoaster life: closed after a cyclone in 1974, revived in 1984, folded in 2014 and back on patrol since 2022."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Peregian Beach",
+    "text": "Peregian is often translated as emu, a nod to the birds once common here. The first house went up in 1960 on Pelican Street, the year the coast road arrived, and it still stands."
+   }
+  ]
+ },
+ "story": [
+  "Peregian is thought to come from a First Nations word for emu, and the records suggest emus were once common here.",
+  "Until the late 1950s this was all Crown land. When the coast road came through, the developer took a lease with the right to build here in return for building the road. The first house went up on Pelican Street in 1960, and it is still there.",
+  "With no town plan until 1973, the streets simply followed the easiest line. A community pool opened in the middle of the shopping square in 1964.",
+  "The surf club, founded in 1962, has had a rollercoaster life. It closed after a cyclone in 1974, came back in 1984, folded in 2014, and has been back on patrol since 2022."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

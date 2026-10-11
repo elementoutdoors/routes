@@ -1,0 +1,46 @@
+{
+ "key": "kin-kin",
+ "kind": "place",
+ "title": "Kin Kin",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Kin Kin",
+   "area": "pomona-region",
+   "after": "pomona-memorial-forest",
+   "paras": [
+    "Kin Kin's name has long been debated. The Queensland Government records it as reportedly coming from a Kabi word, kauin kauin, indicating the red soil drained by Kin Kin Creek, while many locals prefer \"plenty of black ants\", a story you'll see in the ant sculpture outside the general store. Timber getters worked the ranges from the late 1870s, floating logs down Kin Kin Creek to the sawmill on Lake Cootharaba. In 1905 the Lands Department opened 6,000 acres here for selection, and bananas and dairy followed; the Kin Kin Dairy Company ran from 1914 to 1937. The two storey hotel, designed by Cooroy architect William Fenwick, opened in November 1915. It lost its roof and verandahs in the 1971 tornado, took about three metres of floodwater in April 2009, and reopened in late 2023 after a long restoration. Main Street also keeps the old post office, bank and School of Arts."
+   ]
+  },
+  "beo": {
+   "heading": "Kin Kin",
+   "area": "kin-kin-cootharaba",
+   "after": "kin-kin-sawmill",
+   "paras": [
+    "Kin Kin is the heart of the northern hinterland and a natural regroup point on our longer rides. Nobody quite agrees on the name. The Queensland Government records it as reportedly from a Kabi word, kauin kauin, for the red soil drained by Kin Kin Creek, while many locals prefer \"plenty of black ants\", which is why an ant sculpture stands outside the general store. Timber getters worked the ranges from the late 1870s and floated logs down Kin Kin Creek to the sawmill on Lake Cootharaba. In 1905 the Lands Department opened 6,000 acres for selection, and bananas and dairying followed; the Kin Kin Dairy Company ran from 1914 to 1937. The two storey hotel, designed by Cooroy architect William Fenwick, opened in November 1915. It lost its roof and verandahs in the 1971 tornado, took around three metres of floodwater in April 2009, and reopened in late 2023 after a long restoration. Look out for the old post office, bank and School of Arts on Main Street."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Kin Kin",
+    "text": "Welcome to Kin Kin. The two storey Kin Kin Hotel opened here in 1915 and has come through a tornado and record floods from Kin Kin Creek. The name is said to come from a Kabi word for red soil, though many locals say it means plenty of black ants."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "Kin Kin",
+    "text": "Welcome to Kin Kin. The two storey Kin Kin Hotel opened here in 1915 and has come through a tornado and record floods from Kin Kin Creek. The name is said to come from a Kabi word for red soil, though many locals say it means plenty of black ants."
+   }
+  ]
+ },
+ "story": [
+  "Nobody quite agrees on the name Kin Kin. The Queensland Government records it as coming from a Kabi word for the red soil along Kin Kin Creek. Many locals prefer plenty of black ants, which is why there is an ant sculpture outside the general store.",
+  "Timber getters worked these ranges from the late 1870s, floating logs down Kin Kin Creek to the sawmill on Lake Cootharaba. In 1905 the land was opened for selection, and bananas and dairying followed.",
+  "The two storey hotel opened in November 1915. It lost its roof and verandahs in a tornado in 1971, took about three metres of floodwater in 2009, and reopened in late 2023 after a long restoration.",
+  "Look out for the old post office, bank and School of Arts on Main Street."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

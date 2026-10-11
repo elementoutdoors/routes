@@ -1,0 +1,32 @@
+{
+ "key": "noosa-national-park",
+ "kind": "place",
+ "title": "Noosa National Park",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Noosa National Park",
+   "area": "noosa-heads",
+   "after": "noosa-main-beach",
+   "paras": [
+    "The forested headland at the end of Hastings Street is the reason Noosa still looks the way it does. It was set aside as a reserve in 1879, and about 600 acres around the headland were declared a national park in 1939. Back then the park did not even reach the sea. In 1962 Dr Arthur Harrold and friends formed what became the Noosa Parks Association to stop a road being built around the cliffs, and over the following decades the park grew to take in the shoreline, Alexandria Bay and land as far south as Coolum. Today Queensland Parks and Wildlife Service manages about 3,000 ha across several sections. Bikes stop at the racks, but the Coastal Walk carries on past Boiling Pot, Tea Tree Bay and Dolphin Point to Hell's Gates. Look for koalas in the trees, dolphins and turtles below the cliffs, and humpback whales from June to November."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Noosa National Park",
+    "text": "This headland was set aside as a reserve in 1879 and declared a national park in 1939. Lock your bike here and walk on; koalas, dolphins, turtles and, in winter and spring, whales are often seen."
+   }
+  ]
+ },
+ "story": [
+  "The forested headland in front of you is the reason Noosa still looks the way it does.",
+  "It was set aside as a reserve way back in 1879, and about 600 acres were declared a national park in 1939. Back then the park did not even reach the sea.",
+  "In 1962 a local doctor, Arthur Harrold, and his friends started what became the Noosa Parks Association, to stop a road being built around the cliffs. Over the following decades the park grew to take in the shoreline, Alexandria Bay, and land as far south as Coolum. Today it covers about 3,000 hectares.",
+  "Bikes stay here at the racks, but the Coastal Walk carries on past Boiling Pot, Tea Tree Bay and Dolphin Point to Hell's Gates. Look for koalas in the trees, dolphins and turtles below the cliffs, and from June to November, humpback whales."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

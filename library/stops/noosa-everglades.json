@@ -1,0 +1,157 @@
+{
+ "key": "noosa-everglades",
+ "kind": "stop",
+ "title": "The Noosa Everglades system",
+ "status": "live",
+ "updated": "2026-10-11",
+ "tours": {
+  "stingrays-everglades": 3
+ },
+ "talk": {
+  "points": [
+   "The Noosa Everglades is one of only two everglade systems in the world: mirrored waterways, wetlands and lakes, unlike Florida's sawgrass marshes.",
+   "A 67 km waterway system from Rainbow Beach to Lake Weyba, with six major lakes: Weyba, Donella, Cooroibah, Cootharaba, Cooloola and Como.",
+   "Over 65% of the catchment is protected in Great Sandy National Park. Slow-moving water lets sediment settle, so it's crystal clear except after heavy rain.",
+   "Home to over 44% of Australia's bird species, including egrets, herons and the white-bellied sea eagle; plus barramundi, stingrays and mangrove jack.",
+   "The Noosa Biosphere Reserve is part of UNESCO's global network, and one of three connected biospheres with Great Sandy and the Sunshine Coast.",
+   "Iconic and vulnerable species: koala, glossy black cockatoo, greater glider, Australian lungfish and the rare Mary River cod. 42% of the Noosa Biosphere is protected land."
+  ],
+  "detail": "",
+  "detail_blocks": [
+   {
+    "type": "text",
+    "text": "**Overview** The Noosa Everglades is one of only two everglade systems in the world, the other being the Florida Everglades in the United States. Unlike Florida's sawgrass marshes, the Noosa Everglades are characterized by a network of mirrored waterways, wetlands, and lakes, lined with paperbark trees and surrounded by subtropical rainforest and eucalyptus woodlands. This unique environment supports a diverse range of wildlife and plays a crucial role in maintaining water quality within the Noosa River system."
+   },
+   {
+    "type": "text",
+    "text": "**Geography and Hydrology** The Noosa Everglades are part of a 67 km-long waterway system that extends from Rainbow Beach in the north to Lake Weyba in the south. This system includes six major lakes:"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Lake Weyba",
+     "Lake Donella",
+     "Lake Cooroibah",
+     "Lake Cootharaba",
+     "Lake Cooloola",
+     "Lake Como"
+    ]
+   },
+   {
+    "type": "text",
+    "text": "The Noosa Everglades function as a natural filtration system, with over 65% of the total catchment area protected within the Great Sandy National Park. This protected status ensures minimal agricultural runoff, helping to maintain water clarity, particularly in the lower reaches of the everglades. The slow movement of water through the system contributes to the formation of its mirrored waterways, making it one of the most pristine and unique ecosystems in Australia."
+   },
+   {
+    "type": "text",
+    "text": "**Wildlife and Ecology** The Noosa Everglades provide vital habitat for an abundance of wildlife, including over 50% of Australia's bird species. Notable bird species include:"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Eastern Great Egret",
+     "White-Faced Heron",
+     "Vulnerable Australian Painted Snipe",
+     "Glossy Black-Cockatoo",
+     "Coxen's Fig Parrot"
+    ]
+   },
+   {
+    "type": "text",
+    "text": "The waterways also support a variety of aquatic life, such as:"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Barramundi",
+     "Mangrove Jack",
+     "Stingrays",
+     "Bull Sharks (found primarily in deeper waters)"
+    ]
+   },
+   {
+    "type": "text",
+    "text": "The surrounding wetlands and forests support a diverse array of land-dwelling species, including:"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Koalas",
+     "Grey-Headed Flying Foxes",
+     "Greater Gliders",
+     "Water Mice"
+    ]
+   },
+   {
+    "type": "text",
+    "text": "**Noosa Biosphere** The Noosa Biosphere Reserve is part of the World Network of Biosphere Reserves, designated to balance conservation with sustainable human activity. It is one of three neighbouring biospheres in the region:"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Great Sandy Biosphere",
+     "Noosa Biosphere",
+     "Sunshine Coast Biosphere"
+    ]
+   },
+   {
+    "type": "text",
+    "text": "Located within the MacPherson-Macleay overlap, where temperate and subtropical climate zones meet, the Noosa Biosphere includes:"
+   },
+   {
+    "type": "list",
+    "items": [
+     "65 distinct regional ecosystems (11 classified as endangered, 26 of concern)",
+     "A species-rich river and lake system with two nationally important wetlands (Noosa River and Lake Weyba)",
+     "2,224 native plant species, including Noosa's floral symbol, Key's Boronia, which is endemic to Cooloola",
+     "637 native animal species, including iconic and vulnerable species",
+     "343 bird species, making up 44% of Australia's total bird varieties, with 35 species listed under international migratory agreements"
+    ]
+   },
+   {
+    "type": "heading",
+    "text": "Notable Wildlife in the Noosa Biosphere"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Koala",
+     "Grey-Headed Flying Fox",
+     "Glossy Black-Cockatoo",
+     "Water Mouse",
+     "Ground Parrot",
+     "Coxen's Fig Parrot",
+     "Greater Glider",
+     "Mary River Cod",
+     "Cooloola Blind Snake",
+     "Australian Lungfish",
+     "Three-Toed Snake-Tooth Skink",
+     "Giant Barred Frog and other acid frog species"
+    ]
+   },
+   {
+    "type": "text",
+    "text": "**Marine and Conservation Significance** The Noosa Biosphere also plays a role in the conservation of marine megafauna, including the annual humpback whale migration. Each year, approximately 18,000 humpback whales pass through the region, with some resting in the local bays with their calves before continuing their journey south."
+   },
+   {
+    "type": "text",
+    "text": "Additionally, the Noosa River system supports an abundance of fish species that are critical to local fisheries and ecological health. The region's commitment to conservation ensures that these populations remain stable despite growing environmental pressures."
+   },
+   {
+    "type": "text",
+    "text": "With nearly 42% of the biosphere protected as national parks, conservation parks, state forests, lakes, and wetlands, the Noosa region remains one of the most ecologically significant areas in Australia, showcasing a rich blend of biodiversity and natural beauty. The balance between conservation and sustainable human activity ensures the long-term preservation of this remarkable ecosystem, making it a key destination for ecotourism and scientific research."
+   }
+  ],
+  "stop_title": "Everglades and Biosphere"
+ },
+ "story": [
+  "Lake Weyba is the southern gateway to the Noosa Everglades system. The Noosa Everglades are often described as one of only two everglades systems in the world, the other being the Florida Everglades.",
+  "Instead of sawgrass marsh, this system is a chain of mirror-like waterways, wetlands and lakes, about 65 kilometres long, with a catchment of 85,000 hectares. It is part of the UNESCO Noosa Biosphere Reserve.",
+  "Down here at the southern end the water is salty and tidal, so mangroves line the creeks. Further north, as the water turns fresh, the mangroves disappear and paperbarks and rainforest take over.",
+  "Much of the catchment lies inside the Great Sandy National Park, so very little farm runoff reaches the water. The biosphere reserve is home to 343 bird species, about 44 per cent of all the bird species in Australia."
+ ],
+ "eocrew": {
+  "document_id": "6abbafe4990e468def4fe82f",
+  "section_id": "6abbafe6fa3dae8d630b0890"
+ },
+ "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
+}

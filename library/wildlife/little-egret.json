@@ -1,0 +1,24 @@
+{
+ "key": "little-egret",
+ "kind": "wildlife",
+ "title": "Little Egret",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Little Egret",
+  "scientific_name": "Egretta garzetta",
+  "group": "Bird",
+  "description": "A small white heron with a slender black beak, long black legs, and, in the western race, yellow feet. It feeds in shallow water and on land, consuming a variety of small creatures.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/bc70ab7c8_little-egret.jpeg",
+  "photo_focus": {
+   "x": 50,
+   "y": 35
+  },
+  "photo_width": 220,
+  "photo_height": 330,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df29"
+}

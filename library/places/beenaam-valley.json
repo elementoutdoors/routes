@@ -1,0 +1,31 @@
+{
+ "key": "beenaam-valley",
+ "kind": "place",
+ "title": "Beenaam Valley",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "Beenaam Valley",
+   "area": "woondum-mary-valley",
+   "after": "mothar-mountain",
+   "paras": [
+    "At the northern end of these rides the route drops into Beenaam Valley, a small farming valley under the Beenaam Range, about 20 kilometres east of Gympie. Gympie's name comes from a Kabi word, gimpi, for the stinging tree. The official locality spelling is Beenaam, though you will see Beenham on the road signs. Around 60 people live here among grazing paddocks and crops. Like its neighbours Cedar Pocket and Neusa Vale, the valley once had its own small school: Beenam Range opened in 1912 and finally closed in 1965, when families voted to replace the bush schools with a central school at Greens Creek."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Beenaam Valley",
+    "text": "You are in Beenaam Valley, the most northerly part of the ride, about 20 kilometres from Gympie. This is quiet grazing country. Its little bush school, Beenam Range, closed in 1965 when a central school opened near Gympie."
+   }
+  ]
+ },
+ "story": [
+  "Beenaam Valley is a small farming valley under the Beenaam Range, about 20 kilometres east of Gympie. The official spelling is Beenaam, though the road signs say Beenham.",
+  "Gympie's own name comes from a Kabi word, gimpi, for the stinging tree.",
+  "Around sixty people live here among grazing paddocks and crops. Like its neighbours, the valley once had its own little school, which opened in 1912 and closed in 1965, when families voted for a central school instead."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

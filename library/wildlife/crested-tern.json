@@ -1,0 +1,25 @@
+{
+ "key": "crested-tern",
+ "kind": "wildlife",
+ "title": "Crested Tern",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Crested Tern",
+  "other_names": "Greater Crested Tern",
+  "scientific_name": "Thalasseus bergii",
+  "group": "Bird",
+  "description": "The Greater Crested Tern is a large tern species with a distinctive shaggy black crest and a long yellow bill. It is commonly found along Australian coastlines, feeding primarily on fish.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/4b92d9c2f_crested-tern.jpeg",
+  "photo_focus": {
+   "x": 50,
+   "y": 50
+  },
+  "photo_width": 220,
+  "photo_height": 125,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df22"
+}

@@ -1,0 +1,25 @@
+{
+ "key": "osprey",
+ "kind": "wildlife",
+ "title": "Osprey",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Osprey",
+  "other_names": "Sea hawk",
+  "scientific_name": "Pandion haliaetus",
+  "group": "Bird",
+  "description": "Also known as the sea hawk, the Osprey is a large raptor with a wingspan of up to 1.8 meters. It is brown on the upperparts and predominantly greyish on the head and underparts. Ospreys are found near coastlines and larger waterways, feeding almost exclusively on fish.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/124ec2464_osprey.jpeg",
+  "photo_focus": {
+   "x": 35,
+   "y": 35
+  },
+  "photo_width": 251,
+  "photo_height": 285,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df26"
+}

@@ -1,0 +1,46 @@
+{
+ "key": "boreen-point",
+ "kind": "place",
+ "title": "Boreen Point and Lake Cootharaba",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Boreen Point and Lake Cootharaba",
+   "area": "pomona-region",
+   "after": "kin-kin",
+   "paras": [
+    "Lake Cootharaba is the biggest lake on the Noosa River, roughly 10 kilometres long, about 25 kilometres around and on average only about a metre and a half deep. The river enters from the north through the Noosa Everglades system, often described as one of only two everglades in the world, and leaves to the south towards Noosa Heads. Kin Kin Creek feeds the top of the lake. The Queensland Government records several possible meanings for Cootharaba, including the Indigenous name for the lake, a place where wood for notched or studded clubs could be found. In 1870 a timber company, McGhie, Luya and Co, took up land at Mill Point, a few kilometres north of here, and built the Cootharaba Sawmills, later adding a tramway to haul cedar logs from the hinterland. The mill closed in 1892. Boreen Point grew later; its estate blocks went to auction in 1933, and today it hosts sailing regattas."
+   ]
+  },
+  "beo": {
+   "heading": "Boreen Point and Lake Cootharaba",
+   "area": "kin-kin-cootharaba",
+   "after": "cootharaba-lookout",
+   "paras": [
+    "<a href=\"https://byearthandocean.com.au/noosas-most-iconic-gravel-rides-over-100km/\">Through Lake Country</a> swings out to Boreen Point on the shore of Lake Cootharaba, the largest lake on the Noosa River. It is roughly 10 kilometres long and about 25 kilometres around, yet averages only about a metre and a half deep. The river flows in from the north through the Noosa Everglades system, often described as one of only two everglades in the world, and leaves to the south towards Noosa Heads, while Kin Kin Creek feeds the top of the lake. The Queensland Government records several possible meanings for Cootharaba, including the Indigenous name for the lake, a place where wood for notched or studded clubs could be found. In 1870 the timber company McGhie, Luya and Co took up land at Mill Point, a few kilometres north, and built the Cootharaba Sawmills, later adding a tramway to haul cedar logs from the hinterland. The mill closed in 1892. Boreen Point came later, with its estate blocks auctioned in 1933, and it is now known for sailing regattas."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Boreen Point and Lake Cootharaba",
+    "text": "This is Boreen Point on Lake Cootharaba, the largest lake on the Noosa River and the gateway to the Noosa Everglades system. A few kilometres up the shore, Mill Point was a busy timber town from 1870 to 1892."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "Boreen Point and Lake Cootharaba",
+    "text": "This is Boreen Point on Lake Cootharaba, the largest lake on the Noosa River and the gateway to the Noosa Everglades system. A few kilometres up the shore, Mill Point was a busy timber town from 1870 to 1892."
+   }
+  ]
+ },
+ "story": [
+  "Lake Cootharaba is the biggest lake on the Noosa River, about ten kilometres long, yet on average only about a metre and a half deep.",
+  "The river flows in from the north through the Noosa Everglades system, which is often described as one of only two everglades in the world, and leaves to the south towards Noosa Heads.",
+  "The Queensland Government records several possible meanings for Cootharaba, including a place where wood for clubs could be found.",
+  "In 1870 a timber company, McGhie, Luya and Co, set up the Cootharaba Sawmills at Mill Point, a few kilometres north of here, and later added a tramway to haul cedar logs from the hinterland. The mill closed in 1892. Boreen Point came later, with its first blocks sold in 1933, and today it is known for sailing regattas."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

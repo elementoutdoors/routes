@@ -1,0 +1,62 @@
+{
+ "key": "koalas",
+ "kind": "place",
+ "title": "Koalas",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Koalas",
+   "area": "tinbeerwah",
+   "after": "gyndier-drive",
+   "paras": [
+    "Koalas live in the forests our rides pass through, but please do not expect to see one. They spend most of the day asleep high in the gums, grey fur against grey bark, and Noosa's koalas are few and far between. A sighting is a rare bonus, not part of the ride.",
+    "The name is not from Kabi Kabi, the language of this Country. It comes from the Dharug language of the Sydney region, where the word gula is often said to mean \"no water\", because koalas get most of the water they need from eucalyptus leaves.",
+    "Koalas were once common around Noosa. Between 1903 and 1927 about 4.5 million koala pelts were officially traded in Queensland, including from this area, and the state held open seasons on them. The last, in August 1927, took close to 600,000 pelts and caused such an outcry that it was never repeated. By the 1960s numbers here were so low that six koalas were brought from Caboolture to Noosa National Park to restock it. Today they are rarely seen on the headland, and koalas are listed as endangered in Queensland.",
+    "The good news is in the hinterland forests west of Tewantin. About 2,400 hectares of pine and hardwood plantation in the Yurol and Ringtail state forests are being added to Tewantin National Park. Between 2022 and 2024 Noosa Landcare planted about 133,000 trees over 332 hectares of logged land, chosen to bring back the eucalypts koalas feed on. Thermal drone surveys found about one koala for every five hectares of remnant forest, close to 300 koalas, with more than 500 expected once the new forest grows.",
+    "Your best chance is a quiet moment in the forest along Gyndier Drive or on the Wooroi trails. Look for a grey ball wedged in the fork of a tall gum. If you spot one, keep your distance and your voice down. To report a sick or injured koala, call 1300 ANIMAL (1300 264 625)."
+   ]
+  },
+  "beo": {
+   "heading": "Koalas",
+   "area": "tewantin-national-park",
+   "after": "wooroi",
+   "paras": [
+    "Koalas share these hinterland forests with you, but the odds of seeing one are slim. They sleep through most of the day high in the eucalypts, and their grey coats disappear against the bark. Think of a sighting as a lucky extra, not something the ride promises.",
+    "Koala is not a Kabi Kabi word. It came into English from the Dharug language around Sydney, from gula, which is often said to mean \"no water\". Koalas get most of their water from the leaves they eat.",
+    "A century ago koalas were common across this country. Queensland officially traded about 4.5 million pelts between 1903 and 1927, including from the Noosa area, and its last open season, in August 1927, took close to 600,000. The public outcry ended the hunt for good, but by the 1960s so few were left that six koalas were moved from Caboolture into Noosa National Park. Koalas are now listed as endangered in Queensland.",
+    "The Yurol and Ringtail forests are where the comeback is happening. Bought back from plantation forestry in 2018, about 2,400 hectares are being added to Tewantin National Park. Noosa Landcare planted about 133,000 trees over 332 hectares between 2022 and 2024, focused on koala feed trees, and thermal drone surveys counted close to 300 koalas in the forest, with more than 500 expected as the replanting matures.",
+    "Keep half an eye on the canopy along Gyndier Drive and through the Yurol and Ringtail forests. If you find one, stay back and stay quiet. Report a sick or injured koala on 1300 ANIMAL (1300 264 625)."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Koalas on Gyndier Drive",
+    "text": "Koala country. The forest along Gyndier Drive is koala habitat, joined to the Yurol and Ringtail forests being replanted for them. Koalas are rarely seen, so count yourself lucky if you spot one."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "Koalas at Laguna Lookout",
+    "text": "Koalas were once common around Noosa, but very few remain on this headland and sightings are now rare. If you walk up to the lookout, glance into the gums. A koala here is a real stroke of luck."
+   },
+   {
+    "name": "Koalas in Tewantin National Park",
+    "text": "Koala country. Tewantin National Park is koala habitat, so glance up into the forks of the tall gums as you roll through. Sightings are rare, so count yourself lucky if you spot one."
+   },
+   {
+    "name": "Koalas on Gyndier Drive",
+    "text": "Koala country. The forest along Gyndier Drive is koala habitat, joined to the Yurol and Ringtail forests being replanted for them. Koalas are rarely seen, so count yourself lucky if you spot one."
+   }
+  ]
+ },
+ "story": [
+  "Keep half an eye on the treetops. Koalas live in these forests, but they sleep most of the day high in the gums, so seeing one is a rare bonus, not something to count on.",
+  "Their name comes from the Dharug language of the Sydney region, not from Kabi Kabi. The word gula is often said to mean no water, because koalas get most of the water they need from eucalyptus leaves.",
+  "Koalas were once common around Noosa. Their fur was traded by the million, and Queensland's last open season, in August 1927, took close to 600,000 pelts. The outcry ended the hunt for good. By the 1960s koalas here were so scarce that six were brought in to restock Noosa National Park.",
+  "The comeback is happening in the Yurol and Ringtail forests. About 2,400 hectares of old plantation are becoming national park, and about 133,000 trees have been planted to bring back the gums koalas feed on. Drone surveys found close to 300 koalas, with more than 500 expected as the new forest grows."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

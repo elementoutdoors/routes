@@ -1,261 +1,45 @@
 {
- "_about": "Full stories, written to be heard, one per place on the ride story blogs. A stop whose link points at a place on one of the blogs below plays its story when the rider taps Hear the full story. Each story is a list of short paragraphs (each one is recorded on its own). src holds a fingerprint of the blog section the story was written from, per blog; the nightly build compares it with the live blog and reports a changed section in health.json so the weekly check rewrites the story (see config/STORY_BRIEF.md). A story with an origin instead of a blog (the kayak tour stories) has no blog fingerprint and is kept by hand from that origin. Every story, linked to a ride or not, is recorded in the natural voice and published with its recordings in stories-voice.json for the EO Crew staff app.",
+ "_about": "GENERATED from the Story Library (library/, see library/README.md) by scripts/library.mjs. Never edit this file: change the library and run node scripts/library.mjs generate. Full stories, written to be heard; src is the fingerprint of the library blog text each story was written from; a story with an origin instead (the kayak tour stops) has no blog. Every story, linked to a ride or not, is recorded in the natural voice and published with its recordings in stories-voice.json for the EO Crew staff app.",
  "blogs": {
   "bikeon": "https://bikeon.com.au/noosa-self-guided-rides-what-you-will-see/",
   "beo": "https://byearthandocean.com.au/noosa-hinterland-self-guided-rides-places/"
  },
  "stories": {
-  "noosa-national-park": {
-   "title": "Noosa National Park",
+  "apollonian-hotel": {
+   "title": "The Apollonian Hotel",
    "paras": [
-    "The forested headland in front of you is the reason Noosa still looks the way it does.",
-    "It was set aside as a reserve way back in 1879, and about 600 acres were declared a national park in 1939. Back then the park did not even reach the sea.",
-    "In 1962 a local doctor, Arthur Harrold, and his friends started what became the Noosa Parks Association, to stop a road being built around the cliffs. Over the following decades the park grew to take in the shoreline, Alexandria Bay, and land as far south as Coolum. Today it covers about 3,000 hectares.",
-    "Bikes stay here at the racks, but the Coastal Walk carries on past Boiling Pot, Tea Tree Bay and Dolphin Point to Hell's Gates. Look for koalas in the trees, dolphins and turtles below the cliffs, and from June to November, humpback whales."
+    "The Apollonian Hotel started life on the goldfields.",
+    "It was built in Gympie around 1868 as a music hall hotel by Billy Barlow, a well known entertainer, a year after James Nash's gold find turned Gympie into a boom town.",
+    "After several owners it closed in 1951. Then in the late 1980s the whole building was taken apart, carried to Boreen Point in four pieces, and put back together beside the lake.",
+    "Heritage Noosa describes it as one of the last surviving timber music hall hotels of its era, with wide verandahs under a broad pyramid roof."
    ],
    "src": {
-    "bikeon": "36a11397009a"
+    "bikeon": "75c2d647b263",
+    "beo": "33db1d7c4625"
    }
   },
-  "noosa-main-beach": {
-   "title": "Noosa Main Beach",
+  "beenaam-valley": {
+   "title": "Beenaam Valley",
    "paras": [
-    "Main Beach runs about a kilometre and a bit from the headland to the river mouth. It faces almost due north into Laguna Bay, which is why the water is so calm on most days.",
-    "Lifesavers were here early. A rescue reel stood on the sand by 1915, and the surf club traces its start to 1928.",
-    "The beach has always fought the sea. Cyclones in 1967 stripped away so much sand that residents dumped rocks to save their homes. A rock wall followed, and since 2009 a pump has carried sand from the river end back to the eastern end.",
-    "Around the headland are the point breaks that made Noosa famous with surfers. In 2020 this stretch of coast became the world's tenth World Surfing Reserve. And every spring, the Noosa Triathlon swim starts right here."
+    "Beenaam Valley is a small farming valley under the Beenaam Range, about 20 kilometres east of Gympie. The official spelling is Beenaam, though the road signs say Beenham.",
+    "Gympie's own name comes from a Kabi word, gimpi, for the stinging tree.",
+    "Around sixty people live here among grazing paddocks and crops. Like its neighbours, the valley once had its own little school, which opened in 1912 and closed in 1965, when families voted for a central school instead."
    ],
    "src": {
-    "bikeon": "7dd52e0b6a04"
+    "beo": "a5ee290d4dfe"
    }
   },
-  "hastings-street": {
-   "title": "Hastings Street",
+  "boreen-point": {
+   "title": "Boreen Point and Lake Cootharaba",
    "paras": [
-    "Hastings Street began in 1879 as a little surveyed village behind the beach. The pioneer Walter Hay was its first landowner, buying three blocks in 1882.",
-    "For fifty years the easy way in was by boat from Tewantin, so it stayed a sleepy spot of boarding houses and a few shops. Then the road bridges of 1929 opened, and cafes and guesthouses began to spread along the beachfront.",
-    "The street was sealed in the 1950s, and surfing put it on the map in the 1960s.",
-    "The low-rise feel is no accident. In 1990 the council capped buildings at four storeys across the shire. As for the name, nobody is quite sure. One theory points to a Gympie gold reef named after a ship, the Warren Hastings."
+    "Lake Cootharaba is the biggest lake on the Noosa River, about ten kilometres long, yet on average only about a metre and a half deep.",
+    "The river flows in from the north through the Noosa Everglades system, which is often described as one of only two everglades in the world, and leaves to the south towards Noosa Heads.",
+    "The Queensland Government records several possible meanings for Cootharaba, including a place where wood for clubs could be found.",
+    "In 1870 a timber company, McGhie, Luya and Co, set up the Cootharaba Sawmills at Mill Point, a few kilometres north of here, and later added a tramway to haul cedar logs from the hinterland. The mill closed in 1892. Boreen Point came later, with its first blocks sold in 1933, and today it is known for sailing regattas."
    ],
    "src": {
-    "bikeon": "622bbb598e63"
-   }
-  },
-  "noosa-spit": {
-   "title": "Noosa Spit and Noosa Woods",
-   "paras": [
-    "The mouth of the Noosa River has never sat still. It once reached the sea close to where Noosa Woods is now.",
-    "When building along the beach made the entrance unstable, engineers moved the river mouth to the north west in 1978 and built the rock wall at the spit to hold it there. A second wall followed in 1982.",
-    "Noosa Woods has its own story. It was once rainforest, cleared by the council in 1962 for a busy camping ground that families came back to every summer. In 1990 camping ended and the woods were replanted as rainforest, which sparked protest marches down Hastings Street.",
-    "Across the water, Noosa Sound was built in the early 1970s on a mangrove island raised with dredged sand. Today the spit is a favourite for picnics, dog walks and watching shorebirds."
-   ],
-   "src": {
-    "bikeon": "6a03800024c0"
-   }
-  },
-  "laguna-lookout": {
-   "title": "Laguna Lookout",
-   "paras": [
-    "The climb up Viewland Drive is short and very steep, so this is where the e-assist earns its keep.",
-    "From the top you look over the whole lower river. Main Beach and the river mouth are below you, the Noosa River winds north towards Lake Cooroibah, and beyond it lies the sand mass of Great Sandy National Park. To the west are the old volcanic peaks of the hinterland. It is at its best at sunset.",
-    "Surveyor James Burnett named Laguna Bay in July 1847, and nobody recorded why. Laguna is Spanish for lagoon, and an 1866 newspaper called it Nusa Bay, or as it is better known, Lagoona Bay.",
-    "On the walk up, keep an eye out for kookaburras, lace monitors and koalas, and between June and November, scan the bay for humpback whales."
-   ],
-   "src": {
-    "bikeon": "b82d7da3c960"
-   }
-  },
-  "halse-lodge": {
-   "title": "Halse Lodge",
-   "paras": [
-    "Up the hill is Halse Lodge, which holds one of the oldest stories in Noosa Heads.",
-    "In 1881 the land passed to the pioneer Walter Hay, who built a two storey timber boarding house called Bayview. Early visitors reached it by coach, or by boat from Tewantin.",
-    "It changed hands many times, was largely rebuilt in the 1920s, and was later known as Hillcrest. In 1959 the Anglican Church bought it and named it after Archbishop Reginald Halse, and used it for group holidays for nearly thirty years.",
-    "It joined the Queensland Heritage Register in 1997 and still takes guests today. It is one of only ten state heritage places in Noosa Shire, and the only one in Noosa Heads."
-   ],
-   "src": {
-    "bikeon": "e8413d618ca3"
-   }
-  },
-  "gympie-terrace": {
-   "title": "Gympie Terrace",
-   "paras": [
-    "Gold was found at Gympie in 1867, and soon miners and their families were building simple holiday shacks along this riverbank. The settlement took the name of their home town, Gympie Terrace.",
-    "For nearly sixty years the river was the only way in. Then the Lake Doonella bridge opened in 1929, and by 1933 about sixty houses and shops lined the Terrace.",
-    "During the Second World War, troops trained in amphibious vehicles on the river and on Lake Weyba. After the war, fishing, prawning and boat hire took over the waterfront.",
-    "The suburb became Noosaville in the early 1920s. When renaming the street was suggested in 2009, long time families pushed back, and Gympie Terrace stayed. Noosa Triathlon cyclists still race along it every year."
-   ],
-   "src": {
-    "bikeon": "6fac481247f6"
-   }
-  },
-  "munna-point": {
-   "title": "Munna Point",
-   "paras": [
-    "Munna Point, where the river bends at the end of Gympie Terrace, was noted by an early settler as a camping and fishing place, and a corroboree ground for Aboriginal people.",
-    "In 1871 it fell inside a reserve for an Aboriginal mission, which was cancelled in 1878. In the early 1900s most Kabi Kabi people were forcibly moved inland to Barambah, now called Cherbourg.",
-    "Holiday camping began here around 1929, when the new bridges brought cars, and part of the reserve was set aside for caravans in 1956. When camping ended at Noosa Woods in 1990, Munna Point became the last camping ground on the estuary.",
-    "In 2009 the park joined the Queensland Heritage Register, as a fine example of the waterside camping reserves that shaped holidays on this coast."
-   ],
-   "src": {
-    "bikeon": "f5cfaeb4ef5e"
-   }
-  },
-  "lake-doonella": {
-   "title": "Lake Doonella",
-   "paras": [
-    "Lake Doonella is a shallow tidal lake joined to the Noosa River between Tewantin and Noosaville. Its edges are lined with mangroves and patches of seagrass, and it is one of the named parts of the Noosa Everglades system.",
-    "The first land ever sold along the river, 80 acres, was on its shore opposite Tewantin, back in 1871.",
-    "For decades the lake cut Tewantin off from Gympie Terrace. That changed on the 19th of October 1929, when a timber bridge opened across its mouth and about 700 cars queued to cross.",
-    "Since 1983 it has been protected as a fish habitat area, a nursery for bream, whiting, flathead, mud crabs and prawns. Look for black swans, pelicans and cormorants, and at low tide, the mangrove roots."
-   ],
-   "src": {
-    "bikeon": "6004aa112608",
-    "beo": "d42134d2a5d6"
-   }
-  },
-  "weyba-bridge": {
-   "title": "Weyba Bridge",
-   "paras": [
-    "Weyba Creek winds from Lake Weyba, the southern gateway to the Noosa Everglades system, down to the Noosa River. Bridging it has always been a saga.",
-    "The first bridge opened in 1886 and was soon ruined by shipworm. A timber bridge opened in October 1929, the same day as the Doonella bridge, and at last Tewantin, Noosaville and Noosa Heads were joined by road.",
-    "When a concrete bridge took over from 1969, locals kept the old one for walkers. It partly collapsed in 1991, and a community group raised the money for the replica you are riding on, built in 1995.",
-    "The mangroves here are a nursery for fish, crabs and prawns. And the name Weyba is thought to come from an Aboriginal word for stingray, though some sources say flying squirrel."
-   ],
-   "src": {
-    "bikeon": "8eb1a7bc7493"
-   }
-  },
-  "tewantin-wharves": {
-   "title": "Tewantin's old wharves",
-   "paras": [
-    "Tewantin grew up around a timber wharf right here on the riverbank.",
-    "In 1870 the Port Master mapped Nusa Harbour as a better way to ship timber than the Mary or Maroochy rivers. The town was proclaimed in 1871, and by 1874 a wharf and goods shed stood on this bank. Timber came down the river, including from the big sawmill on Lake Cootharaba, and steamers carried timber, fish and oysters to Brisbane.",
-    "From 1878 Cobb and Co coaches linked the steamers with the Gympie goldfields. The railway took much of the passenger trade in 1889.",
-    "The name Tewantin is usually traced to the Kabi Kabi word dauwadhan, often translated as dead trees or logs. Later, the Parkyn family ran a jetty, boat hire and bait business here, and one of their buildings still stands at today's Noosa Marina."
-   ],
-   "src": {
-    "bikeon": "e547dbbf05c5"
-   }
-  },
-  "royal-mail-hotel": {
-   "title": "Royal Mail Hotel and Parkyn's Hut",
-   "paras": [
-    "The first Royal Mail Hotel opened in May 1882, built for Ned Murdock, a Cobb and Co coach driver. Once the railway reached Cooroy in 1891, its coaches met the trains, and it became a holiday favourite for Gympie families.",
-    "In March 1939 the two storey timber hotel burned down in a spectacular fire. The brick hotel you see now reopened in 1941, and it still carries its original Royal Mail lettering.",
-    "At the same corner stands Parkyn's Hut, a hardwood miner's cottage from Gympie that was carted to Tewantin by bullock team around 1920. The Parkyn family used it for guests, and in 2001 it was moved here to become the Tewantin Heritage and Tourist Information Centre."
-   ],
-   "src": {
-    "bikeon": "6067d2af75ca"
-   }
-  },
-  "north-shore-ferry": {
-   "title": "Noosa North Shore Ferry",
-   "paras": [
-    "The far bank has its own timber past. In 1872 Abraham Luya bought land on the North Shore and built a timber depot and wharf, and a little village called Colloy grew around it. A sawmill ran on the northern bank opposite Tewantin until 1891.",
-    "For decades after that, the only way across was by boat. Noosa Library records that a passenger and vehicle ferry started here in 1963, opening the way to the North Shore and the beach run north to Teewah.",
-    "The ferry is run under contract to Noosa Council, and new operators took over in July 2024 with two new ferries and cashless payments. Upstream, the river widens into Lake Cooroibah on its way down from the Noosa Everglades system."
-   ],
-   "src": {
-    "bikeon": "aaa10e1145a6"
-   }
-  },
-  "north-shore-beach": {
-   "title": "Noosa North Shore beach",
-   "paras": [
-    "From here the sand runs north towards Teewah, and about 60 kilometres on, Rainbow Beach. This is the start of the Cooloola beach drive in Great Sandy National Park.",
-    "Remember the beach is also a road. Road rules apply, and four wheel drives travel at speed. Ride within about two hours of low tide, on the firm sand, and turn back before the tide does.",
-    "The dunes behind you matter. Endangered loggerhead and threatened green turtles nest here, and in early 2026 Noosa Council reported the North Shore's highest number of recorded nests. A nest can hold around 150 eggs, yet as few as one hatchling in a thousand survives to grow up.",
-    "So please keep off the dunes, use the marked tracks, and never ride the beach at night, when lights confuse nesting turtles and hatchlings."
-   ],
-   "src": {
-    "bikeon": "7228508253d3"
-   }
-  },
-  "wooroi": {
-   "title": "Tewantin National Park, Wooroi",
-   "paras": [
-    "Wooroi is a historic picnic ground in Tewantin National Park, shaded by she-oaks and bloodwoods, and the trailhead for eleven mountain bike trails.",
-    "The park protects rainforest, open eucalypt forest and the last patches of wallum heath between Noosa and Cooroy, on the Country of the Kabi Kabi and Gubbi Gubbi peoples.",
-    "Most of it was state forest until 2010, when years of lobbying by the Noosa Parks Association saw it declared a national park, and land from the Yurol and Ringtail forests has been added since. Along Gyndier Drive, a heritage site still holds traces of an old forestry camp.",
-    "The trails are managed by the Queensland Parks and Wildlife Service with the Noosa Trailblazers Mountain Bike Club. Listen for whipbirds, and watch for swamp wallabies, echidnas and glossy black cockatoos."
-   ],
-   "src": {
-    "bikeon": "2c3239819cdb",
-    "beo": "405fe0607233"
-   }
-  },
-  "gyndier-drive": {
-   "title": "Gyndier Drive (Garmin Hill)",
-   "paras": [
-    "Gyndier Drive follows the old range road between Cooroy and Tewantin. The Cooroy to Tewantin road opened in December 1928, the first main road built in Noosa Shire.",
-    "Today it is closed to cars, with bollards at each end, and climbs about three kilometres through the forest to Sunrise Road.",
-    "Two events made it famous. Since 1998 the Noosa Hill Climb has raced cars up a closed course here, with fourteen tight corners.",
-    "And the Noosa Triathlon, first held in 1983 with about 180 athletes, sends its bike leg up this same climb. Racers call it Garmin Hill. The event has grown into a five day festival with more than 13,000 competitors, and is billed as the largest Olympic distance triathlon in the world. On a normal day it is a quiet forest road, so watch for walkers."
-   ],
-   "src": {
-    "bikeon": "7d0400024e8a",
-    "beo": "a3c18efb3fc1"
-   }
-  },
-  "mt-tinbeerwah": {
-   "title": "Mt Tinbeerwah",
-   "paras": [
-    "Mount Tinbeerwah is a volcanic plug, formed millions of years ago, rising 265 metres above the sea. Its name is said to mean place of grass trees, or high hill climbing up. Sources differ.",
-    "From the carpark, a short track of about a kilometre return leads first to a lower lookout with coastal views, then up to the summit. The summit lookout was once a forestry fire tower, and old photos show day trippers walking back from it in 1952.",
-    "The view runs all the way around, from the coast to the hinterland, and on a clear day, south to the Glass House Mountains.",
-    "The rocky top carries a rare mint bush, listed as vulnerable. Climbers use the cliffs beside the track, so stay behind the safety fence. There are toilets here, but no drinking water."
-   ],
-   "src": {
-    "bikeon": "242d97a2b2db"
-   }
-  },
-  "lake-weyba": {
-   "title": "Lake Weyba",
-   "paras": [
-    "Lake Weyba is the southern gateway to the Noosa Everglades system. It is a large, shallow, tidal saltwater lake, fringed by mangroves, salt pans and open forest, and joined to the Noosa River by Weyba Creek.",
-    "It is listed as a wetland of national importance, and it is an important breeding ground for fish.",
-    "The name, once spelt Weiba, is often said to come from a Gubbi Gubbi word for stingray, though some say flying squirrel. Both live here. For the Kabi Kabi people the lake was a rich source of food, and shell middens and scarred trees remain around its shores.",
-    "Noosa's first professional fisherman, Joseph Keyser, settled on the north west shore, and he is remembered for wheeling smoked mullet all the way to the Gympie goldfields in a barrow. Today the whole eastern shore is national park."
-   ],
-   "src": {
-    "bikeon": "fa49e8eaedef"
-   }
-  },
-  "weyba-downs": {
-   "title": "Lake Weyba western shore",
-   "paras": [
-    "This quiet western shore of Lake Weyba, the southern end of the Noosa Everglades system, has changed very little. The land was never rich enough to farm, so much of it still looks as it did to its Kabi Kabi custodians. Their shell middens, scarred trees and a large stone fish trap remain.",
-    "In the 1890s, under a government scheme, 59 unemployed men from Brisbane and their families tried to make a living on this side of the lake. They were known as the Woolloongabba Exemplars, and they sold fish to Gympie and Brisbane. Their hand dug wells failed, and by 1896 the commune was gone.",
-    "South of the lake, Murdering Creek is thought to mark a massacre of Aboriginal people in the 1860s. Historians have not settled the date, or how many died."
-   ],
-   "src": {
-    "bikeon": "18adae6096e0",
-    "beo": "8d93c297b72e"
-   }
-  },
-  "david-low-way": {
-   "title": "David Low Way",
-   "paras": [
-    "Until 1960 there was no road along this coast at all. Coolum was reached from Yandina, on a road that often flooded where it crossed a swamp.",
-    "This road is named after David Low, born in Yandina in 1911, a long serving local member of parliament and chairman of Maroochy Shire, who pushed for a coast road and an airport.",
-    "The first section, Sunshine Beach to Peregian, opened in April 1960. The developer of Peregian and Sunrise Beach built the northern end in return for the right to develop the land. The whole road was officially opened in August 1961, the same day as the Maroochy airport, which critics called a white elephant.",
-    "Today the road runs 36 kilometres, from Maroochydore to Noosa Heads."
-   ],
-   "src": {
-    "bikeon": "4f47abe4e37d"
-   }
-  },
-  "sunrise-beach": {
-   "title": "Sunrise Beach and Sunshine Beach",
-   "paras": [
-    "For decades, locals simply called this stretch of sand Coolum Beach.",
-    "In 1925 the developer T M Burke visited Tewantin and was struck by the coast. His company was given the land in return for building the bridges over Lake Doonella and Weyba Creek, and in 1929 it launched a new estate here called Golden Beach, with a lifesaving carnival reported around the country.",
-    "After the war, the lifesavers restarting their club found a Caloundra club already used the name Golden Beach. So they suggested Sunshine Beach, and it became official in 1949.",
-    "Sunrise Beach came later. The land west of the new coast road was named Sunrise Estate, and it was released in stages from 1970."
-   ],
-   "src": {
-    "bikeon": "ec6f8df53dd6"
+    "bikeon": "43d9fa7432da",
+    "beo": "c30a3d67f33a"
    }
   },
   "castaways-beach": {
@@ -270,29 +54,6 @@
     "bikeon": "ac4b64d43ebf"
    }
   },
-  "peregian-beach": {
-   "title": "Peregian Beach",
-   "paras": [
-    "Peregian is thought to come from a First Nations word for emu, and the records suggest emus were once common here.",
-    "Until the late 1950s this was all Crown land. When the coast road came through, the developer took a lease with the right to build here in return for building the road. The first house went up on Pelican Street in 1960, and it is still there.",
-    "With no town plan until 1973, the streets simply followed the easiest line. A community pool opened in the middle of the shopping square in 1964.",
-    "The surf club, founded in 1962, has had a rollercoaster life. It closed after a cyclone in 1974, came back in 1984, folded in 2014, and has been back on patrol since 2022."
-   ],
-   "src": {
-    "bikeon": "f9fe6c302393"
-   }
-  },
-  "emu-mountain": {
-   "title": "Emu Mountain and the Peregian heath",
-   "paras": [
-    "Between Peregian and Coolum, the road crosses open wallum, the low, sandy heath that once covered much of this coast.",
-    "Rising out of it is Emu Mountain, also called Mount Peregian, a rocky knoll left from an ancient volcano. A short, steep walk of just over a kilometre return climbs to an old survey marker at the top, with views from Noosa to Maroochydore and the Glass House Mountains, and whales offshore in winter and spring.",
-    "The mountain shares its name with the endangered Mount Emu she-oak, a wiry shrub found only in a narrow strip between Beerburrum and Noosa. The heath around it is home to the threatened ground parrot and the wallum froglet, and it is known for its wildflowers."
-   ],
-   "src": {
-    "bikeon": "d26a4edee2c9"
-   }
-  },
   "coolum-beach": {
    "title": "Coolum Beach",
    "paras": [
@@ -303,100 +64,6 @@
    ],
    "src": {
     "bikeon": "9e2a8cb24000"
-   }
-  },
-  "mount-coolum": {
-   "title": "Mount Coolum",
-   "paras": [
-    "At 208 metres, Mount Coolum is the landmark of this coast, a dome of volcanic rock whose base runs into the sea.",
-    "Kabi Kabi tradition tells of the warrior Coolum, who loved Maroochy, until she was stolen by Ninderry. Ninderry struck off Coolum's head, and it rolled into the ocean to become Mudjimba Island. Coolum's body turned to stone as this headless mountain, and Maroochy's tears became the Maroochy River.",
-    "In the 1980s the mountain was a target for development, until a community campaign saved it. It became a national park in 1990. Its summit heath grows on the Sunshine Coast only here and on a few Glass House peaks, and about half the plant species of the whole region grow in the park."
-   ],
-   "src": {
-    "bikeon": "aa7ddbea0d67"
-   }
-  },
-  "yaroomba": {
-   "title": "Yaroomba and Point Arkwright",
-   "paras": [
-    "The rocky headland of Point Arkwright is where the base of Mount Coolum meets the Pacific. Its name seems to honour Richard Arkwright, inventor of cotton spinning machines, just as Point Cartwright further south is named after another textile inventor.",
-    "Yaroomba is said to mean surf on the beach. It began in 1953 as an estate called Coronation Beach, named for the Queen's coronation, and took its present name in 1961. Much of it is taken up by the resort and golf course that once hosted the Australian PGA Championship.",
-    "South again, Marcoola is a made up name, from Maroochydore and Coolum. Its surf club caused a stir in 1979 by training girls, before women could join surf clubs."
-   ],
-   "src": {
-    "bikeon": "3fe6e9089c4f"
-   }
-  },
-  "mudjimba": {
-   "title": "Mudjimba Beach and Old Woman Island",
-   "paras": [
-    "Mudjimba takes its name from midyim, a coastal shrub with sweet white berries. The name is said to mean place of midyim.",
-    "The island offshore holds two Kabi Kabi stories. In one, it is the head of the warrior Coolum, struck off by his rival Ninderry. In the other, two women crossed to it on a bunya pine log that drifted away, leaving them stranded, living on midyim berries, fish and shellfish. As they grew old, people on the mainland could only ever see one of them at a time, and so it became Old Woman Island.",
-    "Today the island is a conservation park and a nesting place for wedge-tailed shearwaters, with about 2,700 burrows counted in the late 1990s."
-   ],
-   "src": {
-    "bikeon": "da3666c816ca"
-   }
-  },
-  "twin-waters": {
-   "title": "Twin Waters and the Maroochy River",
-   "paras": [
-    "Twin Waters sits between the ocean and the Maroochy River. It is mostly a canal estate with a golf course, opened around 1990.",
-    "What makes it special for riders is the edge. Most of the river frontage is protected in the Maroochy River Conservation Park, set aside in 1992.",
-    "The sandbanks and mudflats of the lower river are prized shorebird habitat. Council surveys have recorded the critically endangered far eastern curlew, bar-tailed godwits, whimbrels and pied oystercatchers. Low tide is the time to look.",
-    "And in the Kabi Kabi story of Coolum and Ninderry, this river is the tears Maroochy wept for her lost love."
-   ],
-   "src": {
-    "bikeon": "32e5efe0eab0"
-   }
-  },
-  "mckane-lookout": {
-   "title": "James McKane Memorial Lookout",
-   "paras": [
-    "Most of our hinterland rides start here, at about 330 metres above the sea on Tablelands Road. Locals tend to call it the Tablelands Lookout.",
-    "On a clear day the view runs right across the hinterland to the coast, with the volcanic peak of Mount Cooroora standing out. The lookouts on this network take in Mount Cooroy, Mount Coolum, Mount Tinbeerwah, Lake Cootharaba and the Cooloola coast.",
-    "The lookout park is a stop on the Noosa Trail Network, and walkers and riders use it as a trailhead for steep trails down through the rainforest of Woondum National Park to Kin Kin.",
-    "Before you go, check your brakes and take a last look. The road down to Cooran is steep."
-   ],
-   "src": {
-    "beo": "947f29288c7f"
-   }
-  },
-  "mt-cooroora": {
-   "title": "Mt Cooroora and the King of the Mountain",
-   "paras": [
-    "Mount Cooroora is a 439 metre volcanic plug, the high point of Tuchekoi National Park and the backdrop to every view of Pomona. Early settlers recorded its Aboriginal name as Karura.",
-    "It is best known for the King of the Mountain. The story goes that in 1958 Bruce Samuels, a local footballer and railway porter, ran to the top as a hangover cure, then won a hundred pound bet that he could do it again in under an hour.",
-    "A formal race followed in 1959. It was revived in 1979 and grew into a July festival for the whole district. The race is no longer run. In 2024 the organisers announced it would end. But look up from Pomona and you can still pick out the runners' track up the mountain."
-   ],
-   "src": {
-    "beo": "cebecb842a53"
-   }
-  },
-  "pomona": {
-   "title": "Pomona",
-   "paras": [
-    "Pomona began as a railway siding when the North Coast line came through in 1891. Timber getters cleared the land first, then came dairy, sugar cane and fruit.",
-    "Railway and postal staff kept mixing up Cooran, Cooroora and Cooroy, so in 1900 locals chose a new name, Pomona, after the Roman goddess of fruit.",
-    "When Noosa Shire was formed in 1910, Pomona was its biggest town and became its seat, until the council moved to Tewantin in 1980. The 1911 council chambers on Factory Street are now the Noosa Shire Museum, and the same street keeps the old butter factory.",
-    "The original station buildings were moved across the tracks and reopened in 2001 as the Pomona Railway Station Gallery. And it is a good place for a coffee."
-   ],
-   "src": {
-    "bikeon": "3051fd429ecb",
-    "beo": "2244506a60f3"
-   }
-  },
-  "majestic-theatre": {
-   "title": "Majestic Theatre",
-   "paras": [
-    "The Majestic Theatre was built in 1921 as a hall with shops, and was soon showing films. Pomona's first talkie screened here in April 1931.",
-    "Ron and Mandy West bought it in 1974. In 1987 Ron played the music live on his restored Wurlitzer organ for a 1926 silent film, and before long the Wests were showing nothing but silent films.",
-    "The Majestic is promoted as the oldest authentic silent movie theatre in the world, and Queensland's longest running picture theatre. It joined the Queensland Heritage Register in 2009.",
-    "Volunteers now own and run it, and its 1937 organ was relaunched in 2019 after six and a half years of restoration."
-   ],
-   "src": {
-    "bikeon": "0b75cff12ca5",
-    "beo": "40dcfbb08264"
    }
   },
   "cooran": {
@@ -422,45 +89,6 @@
     "beo": "b795d11284bc"
    }
   },
-  "yurol-ringtail": {
-   "title": "Yurol and Ringtail forests",
-   "paras": [
-    "The Yurol and Ringtail forests were state forest for decades, much of them planted with pine.",
-    "When Queensland sold off its plantation forests, the Noosa Parks Association went to the new owner and negotiated a price. The state, Noosa Council and the association shared the cost, and the deal was done in 2018.",
-    "In 2022 the government announced that more than 2,400 hectares would join Tewantin National Park once the last pine and hardwood harvest was finished, with replanting to follow. The Kabi Kabi Peoples are working with the parks service on caring for the land.",
-    "Drone surveys have found koalas here, and the forest shelters threatened species like the giant barred frog and the Richmond birdwing butterfly."
-   ],
-   "src": {
-    "bikeon": "25806efb4aac",
-    "beo": "3cd242b43de4"
-   }
-  },
-  "ringtail-creek-road": {
-   "title": "Ringtail Creek Road and the 1870 Shortcut",
-   "paras": [
-    "This road carries a piece of Noosa's founding story.",
-    "After gold was found at Gympie in 1867, the only coach road ran the long way south to Brisbane, with bushrangers waiting on the trip back. Walter Hay, remembered as the father of Noosa, was asked to cut a direct track from the goldfields to a new port on the Noosa River. He rode into Tewantin at the end of the job just before Christmas 1870.",
-    "His Shortcut ran through Cooran and the Ringtail scrub, and Cobb and Co coaches soon used it, until the railway took over.",
-    "Local historian Phil Jarratt traced the old coach route along this road. Past the gravel it becomes part of the Noosa Trail Network, and its rough alternative section follows the original road of 1870."
-   ],
-   "src": {
-    "bikeon": "d8611dbc072a",
-    "beo": "70b13c2b4522"
-   }
-  },
-  "lake-macdonald": {
-   "title": "Lake Macdonald",
-   "paras": [
-    "Lake Macdonald is Noosa's water supply. It formed behind Six Mile Creek Dam, built in 1965 and raised in 1980, and it covers around 260 hectares.",
-    "It is named in memory of Ian MacDonald, a former chairman of Noosa Shire Council. The dam is being upgraded with a new spillway, and the lake has been kept lower while the work goes on.",
-    "The lake is stocked with Mary River cod, bass, yellowbelly and saratoga, and a hatchery beside it has bred the endangered cod for release back into the Mary River catchment. Paddlers and birdwatchers love it too.",
-    "Along Lake Macdonald Drive are the Noosa Botanic Gardens, opened in 1990, with eight hectares of gardens, a bush chapel and an amphitheatre."
-   ],
-   "src": {
-    "bikeon": "33b33b2d48b2",
-    "beo": "22db4eb34507"
-   }
-  },
   "cooroy": {
    "title": "Cooroy",
    "paras": [
@@ -473,17 +101,6 @@
     "bikeon": "2717367d74b9"
    }
   },
-  "pomona-memorial-forest": {
-   "title": "Pomona Memorial Forest",
-   "paras": [
-    "Beside the road is the Pomona Memorial Forest, on the site of the original Pinbarren State School.",
-    "During the Second World War, the students of Pomona's school forestry club planted it to honour local servicemen. A newspaper in 1946 counted 2,400 timber trees, including more than 1,700 hoop pines. Kauri pines, silky oaks and flooded gums were planted too.",
-    "A plaque records that the forest was rededicated in October 1955, together with the Cooroy Pomona RSL. From here the road keeps climbing over the range at Pinbarren, the high point of the ride, before dropping into Kin Kin."
-   ],
-   "src": {
-    "bikeon": "164880c8ac24"
-   }
-  },
   "cootharaba-lookout": {
    "title": "Cootharaba Lookout",
    "paras": [
@@ -494,6 +111,90 @@
    ],
    "src": {
     "beo": "929b50fece89"
+   }
+  },
+  "david-low-way": {
+   "title": "David Low Way",
+   "paras": [
+    "Until 1960 there was no road along this coast at all. Coolum was reached from Yandina, on a road that often flooded where it crossed a swamp.",
+    "This road is named after David Low, born in Yandina in 1911, a long serving local member of parliament and chairman of Maroochy Shire, who pushed for a coast road and an airport.",
+    "The first section, Sunshine Beach to Peregian, opened in April 1960. The developer of Peregian and Sunrise Beach built the northern end in return for the right to develop the land. The whole road was officially opened in August 1961, the same day as the Maroochy airport, which critics called a white elephant.",
+    "Today the road runs 36 kilometres, from Maroochydore to Noosa Heads."
+   ],
+   "src": {
+    "bikeon": "4f47abe4e37d"
+   }
+  },
+  "emu-mountain": {
+   "title": "Emu Mountain and the Peregian heath",
+   "paras": [
+    "Between Peregian and Coolum, the road crosses open wallum, the low, sandy heath that once covered much of this coast.",
+    "Rising out of it is Emu Mountain, also called Mount Peregian, a rocky knoll left from an ancient volcano. A short, steep walk of just over a kilometre return climbs to an old survey marker at the top, with views from Noosa to Maroochydore and the Glass House Mountains, and whales offshore in winter and spring.",
+    "The mountain shares its name with the endangered Mount Emu she-oak, a wiry shrub found only in a narrow strip between Beerburrum and Noosa. The heath around it is home to the threatened ground parrot and the wallum froglet, and it is known for its wildflowers."
+   ],
+   "src": {
+    "bikeon": "d26a4edee2c9"
+   }
+  },
+  "gympie-terrace": {
+   "title": "Gympie Terrace",
+   "paras": [
+    "Gold was found at Gympie in 1867, and soon miners and their families were building simple holiday shacks along this riverbank. The settlement took the name of their home town, Gympie Terrace.",
+    "For nearly sixty years the river was the only way in. Then the Lake Doonella bridge opened in 1929, and by 1933 about sixty houses and shops lined the Terrace.",
+    "During the Second World War, troops trained in amphibious vehicles on the river and on Lake Weyba. After the war, fishing, prawning and boat hire took over the waterfront.",
+    "The suburb became Noosaville in the early 1920s. When renaming the street was suggested in 2009, long time families pushed back, and Gympie Terrace stayed. Noosa Triathlon cyclists still race along it every year."
+   ],
+   "src": {
+    "bikeon": "6fac481247f6"
+   }
+  },
+  "gyndier-drive": {
+   "title": "Gyndier Drive (Garmin Hill)",
+   "paras": [
+    "Gyndier Drive follows the old range road between Cooroy and Tewantin. The Cooroy to Tewantin road opened in December 1928, the first main road built in Noosa Shire.",
+    "Today it is closed to cars, with bollards at each end, and climbs about three kilometres through the forest to Sunrise Road.",
+    "Two events made it famous. Since 1998 the Noosa Hill Climb has raced cars up a closed course here, with fourteen tight corners.",
+    "And the Noosa Triathlon, first held in 1983 with about 180 athletes, sends its bike leg up this same climb. Racers call it Garmin Hill. The event has grown into a five day festival with more than 13,000 competitors, and is billed as the largest Olympic distance triathlon in the world. On a normal day it is a quiet forest road, so watch for walkers."
+   ],
+   "src": {
+    "bikeon": "7d0400024e8a",
+    "beo": "a3c18efb3fc1"
+   }
+  },
+  "halse-lodge": {
+   "title": "Halse Lodge",
+   "paras": [
+    "Up the hill is Halse Lodge, which holds one of the oldest stories in Noosa Heads.",
+    "In 1881 the land passed to the pioneer Walter Hay, who built a two storey timber boarding house called Bayview. Early visitors reached it by coach, or by boat from Tewantin.",
+    "It changed hands many times, was largely rebuilt in the 1920s, and was later known as Hillcrest. In 1959 the Anglican Church bought it and named it after Archbishop Reginald Halse, and used it for group holidays for nearly thirty years.",
+    "It joined the Queensland Heritage Register in 1997 and still takes guests today. It is one of only ten state heritage places in Noosa Shire, and the only one in Noosa Heads."
+   ],
+   "src": {
+    "bikeon": "e8413d618ca3"
+   }
+  },
+  "hastings-street": {
+   "title": "Hastings Street",
+   "paras": [
+    "Hastings Street began in 1879 as a little surveyed village behind the beach. The pioneer Walter Hay was its first landowner, buying three blocks in 1882.",
+    "For fifty years the easy way in was by boat from Tewantin, so it stayed a sleepy spot of boarding houses and a few shops. Then the road bridges of 1929 opened, and cafes and guesthouses began to spread along the beachfront.",
+    "The street was sealed in the 1950s, and surfing put it on the map in the 1960s.",
+    "The low-rise feel is no accident. In 1990 the council capped buildings at four storeys across the shire. As for the name, nobody is quite sure. One theory points to a Gympie gold reef named after a ship, the Warren Hastings."
+   ],
+   "src": {
+    "bikeon": "622bbb598e63"
+   }
+  },
+  "kin-kin-sawmill": {
+   "title": "Kin Kin Sawmill",
+   "paras": [
+    "The Kin Kin Sawmill is one of the last working country sawmills of its kind on the North Coast.",
+    "Arthur Hempsall and his son Lionel set it up in 1948, to cut timber for the wooden cases that carried the district's fruit to market.",
+    "As cardboard boxes took over, the mill turned to pallet timber and hardwood for power pole cross arms and railway sleepers. The Hempsall family ran it until 1991.",
+    "It joined the Queensland Heritage Register in 2008, because so much of its original layout and machinery survives."
+   ],
+   "src": {
+    "beo": "081b7fb35bc9"
    }
   },
   "kin-kin": {
@@ -509,54 +210,103 @@
     "beo": "5336382f107c"
    }
   },
-  "kin-kin-sawmill": {
-   "title": "Kin Kin Sawmill",
+  "koalas": {
+   "title": "Koalas",
    "paras": [
-    "The Kin Kin Sawmill is one of the last working country sawmills of its kind on the North Coast.",
-    "Arthur Hempsall and his son Lionel set it up in 1948, to cut timber for the wooden cases that carried the district's fruit to market.",
-    "As cardboard boxes took over, the mill turned to pallet timber and hardwood for power pole cross arms and railway sleepers. The Hempsall family ran it until 1991.",
-    "It joined the Queensland Heritage Register in 2008, because so much of its original layout and machinery survives."
+    "Keep half an eye on the treetops. Koalas live in these forests, but they sleep most of the day high in the gums, so seeing one is a rare bonus, not something to count on.",
+    "Their name comes from the Dharug language of the Sydney region, not from Kabi Kabi. The word gula is often said to mean no water, because koalas get most of the water they need from eucalyptus leaves.",
+    "Koalas were once common around Noosa. Their fur was traded by the million, and Queensland's last open season, in August 1927, took close to 600,000 pelts. The outcry ended the hunt for good. By the 1960s koalas here were so scarce that six were brought in to restock Noosa National Park.",
+    "The comeback is happening in the Yurol and Ringtail forests. About 2,400 hectares of old plantation are becoming national park, and about 133,000 trees have been planted to bring back the gums koalas feed on. Drone surveys found close to 300 koalas, with more than 500 expected as the new forest grows."
    ],
    "src": {
-    "beo": "081b7fb35bc9"
+    "bikeon": "056800237553",
+    "beo": "cf8f492017fb"
    }
   },
-  "boreen-point": {
-   "title": "Boreen Point and Lake Cootharaba",
+  "laguna-lookout": {
+   "title": "Laguna Lookout",
    "paras": [
-    "Lake Cootharaba is the biggest lake on the Noosa River, about ten kilometres long, yet on average only about a metre and a half deep.",
-    "The river flows in from the north through the Noosa Everglades system, which is often described as one of only two everglades in the world, and leaves to the south towards Noosa Heads.",
-    "The Queensland Government records several possible meanings for Cootharaba, including a place where wood for clubs could be found.",
-    "In 1870 a timber company, McGhie, Luya and Co, set up the Cootharaba Sawmills at Mill Point, a few kilometres north of here, and later added a tramway to haul cedar logs from the hinterland. The mill closed in 1892. Boreen Point came later, with its first blocks sold in 1933, and today it is known for sailing regattas."
+    "The climb up Viewland Drive is short and very steep, so this is where the e-assist earns its keep.",
+    "From the top you look over the whole lower river. Main Beach and the river mouth are below you, the Noosa River winds north towards Lake Cooroibah, and beyond it lies the sand mass of Great Sandy National Park. To the west are the old volcanic peaks of the hinterland. It is at its best at sunset.",
+    "Surveyor James Burnett named Laguna Bay in July 1847, and nobody recorded why. Laguna is Spanish for lagoon, and an 1866 newspaper called it Nusa Bay, or as it is better known, Lagoona Bay.",
+    "On the walk up, keep an eye out for kookaburras, lace monitors and koalas, and between June and November, scan the bay for humpback whales."
    ],
    "src": {
-    "bikeon": "43d9fa7432da",
-    "beo": "c30a3d67f33a"
+    "bikeon": "b82d7da3c960"
    }
   },
-  "apollonian-hotel": {
-   "title": "The Apollonian Hotel",
+  "lake-doonella": {
+   "title": "Lake Doonella",
    "paras": [
-    "The Apollonian Hotel started life on the goldfields.",
-    "It was built in Gympie around 1868 as a music hall hotel by Billy Barlow, a well known entertainer, a year after James Nash's gold find turned Gympie into a boom town.",
-    "After several owners it closed in 1951. Then in the late 1980s the whole building was taken apart, carried to Boreen Point in four pieces, and put back together beside the lake.",
-    "Heritage Noosa describes it as one of the last surviving timber music hall hotels of its era, with wide verandahs under a broad pyramid roof."
+    "Lake Doonella is a shallow tidal lake joined to the Noosa River between Tewantin and Noosaville. Its edges are lined with mangroves and patches of seagrass, and it is one of the named parts of the Noosa Everglades system.",
+    "The first land ever sold along the river, 80 acres, was on its shore opposite Tewantin, back in 1871.",
+    "For decades the lake cut Tewantin off from Gympie Terrace. That changed on the 19th of October 1929, when a timber bridge opened across its mouth and about 700 cars queued to cross.",
+    "Since 1983 it has been protected as a fish habitat area, a nursery for bream, whiting, flathead, mud crabs and prawns. Look for black swans, pelicans and cormorants, and at low tide, the mangrove roots."
    ],
    "src": {
-    "bikeon": "75c2d647b263",
-    "beo": "33db1d7c4625"
+    "bikeon": "6004aa112608",
+    "beo": "d42134d2a5d6"
    }
   },
-  "woondum": {
-   "title": "Woondum National Park",
+  "lake-macdonald": {
+   "title": "Lake Macdonald",
    "paras": [
-    "Woondum National Park covers about 4,000 hectares of steep ranges between Cooran, Kin Kin and Mothar Mountain. It was state forest for a long time, and became a national park in 2009.",
-    "The name is reportedly from Kabi words for blue tongue lizard and place.",
-    "Tall eucalypt forest covers the ridges, with rainforest in the gullies and creeks tumbling over boulders. Foresters prized Woondum's spotted gums because they resist a leaf disease, and their seed went to plantations across the south east.",
-    "The park shelters koalas, sooty owls, frogmouths and the tusked frog. The Kabi Kabi First Nation holds deep connections here, and the Mothar Mountain rock pools are a significant cultural site."
+    "Lake Macdonald is Noosa's water supply. It formed behind Six Mile Creek Dam, built in 1965 and raised in 1980, and it covers around 260 hectares.",
+    "It is named in memory of Ian MacDonald, a former chairman of Noosa Shire Council. The dam is being upgraded with a new spillway, and the lake has been kept lower while the work goes on.",
+    "The lake is stocked with Mary River cod, bass, yellowbelly and saratoga, and a hatchery beside it has bred the endangered cod for release back into the Mary River catchment. Paddlers and birdwatchers love it too.",
+    "Along Lake Macdonald Drive are the Noosa Botanic Gardens, opened in 1990, with eight hectares of gardens, a bush chapel and an amphitheatre."
    ],
    "src": {
-    "beo": "8d8c152b308b"
+    "bikeon": "33b33b2d48b2",
+    "beo": "22db4eb34507"
+   }
+  },
+  "lake-weyba": {
+   "title": "Lake Weyba",
+   "paras": [
+    "Lake Weyba is the southern gateway to the Noosa Everglades system. It is a large, shallow, tidal saltwater lake, fringed by mangroves, salt pans and open forest, and joined to the Noosa River by Weyba Creek.",
+    "It is listed as a wetland of national importance, and it is an important breeding ground for fish.",
+    "The name, once spelt Weiba, is often said to come from a Gubbi Gubbi word for stingray, though some say flying squirrel. Both live here. For the Kabi Kabi people the lake was a rich source of food, and shell middens and scarred trees remain around its shores.",
+    "Noosa's first professional fisherman, Joseph Keyser, settled on the north west shore, and he is remembered for wheeling smoked mullet all the way to the Gympie goldfields in a barrow. Today the whole eastern shore is national park."
+   ],
+   "src": {
+    "bikeon": "fa49e8eaedef"
+   }
+  },
+  "majestic-theatre": {
+   "title": "Majestic Theatre",
+   "paras": [
+    "The Majestic Theatre was built in 1921 as a hall with shops, and was soon showing films. Pomona's first talkie screened here in April 1931.",
+    "Ron and Mandy West bought it in 1974. In 1987 Ron played the music live on his restored Wurlitzer organ for a 1926 silent film, and before long the Wests were showing nothing but silent films.",
+    "The Majestic is promoted as the oldest authentic silent movie theatre in the world, and Queensland's longest running picture theatre. It joined the Queensland Heritage Register in 2009.",
+    "Volunteers now own and run it, and its 1937 organ was relaunched in 2019 after six and a half years of restoration."
+   ],
+   "src": {
+    "bikeon": "0b75cff12ca5",
+    "beo": "40dcfbb08264"
+   }
+  },
+  "mary-river": {
+   "title": "Mary River country",
+   "paras": [
+    "The farms around here drain into the Mary River, which runs about 310 kilometres north past Gympie to the Great Sandy Strait. It was named in 1847 for Lady Mary, wife of the Governor.",
+    "Cedar cutters rafted logs down it in the 1800s, and by the 1950s the Mary Valley made about fifteen per cent of Queensland's butter. The Mary Valley Rattler steam train still runs from Gympie.",
+    "The river is famous for three animals. The Mary River cod lives naturally only in this river system. The Mary River turtle is found only here, and can breathe through its tail end, staying underwater for days. And the Australian lungfish, found naturally only in the Mary and Burnett rivers, belongs to a family that goes back 380 million years."
+   ],
+   "src": {
+    "beo": "c01023e3ae44"
+   }
+  },
+  "mckane-lookout": {
+   "title": "James McKane Memorial Lookout",
+   "paras": [
+    "Most of our hinterland rides start here, at about 330 metres above the sea on Tablelands Road. Locals tend to call it the Tablelands Lookout.",
+    "On a clear day the view runs right across the hinterland to the coast, with the volcanic peak of Mount Cooroora standing out. The lookouts on this network take in Mount Cooroy, Mount Coolum, Mount Tinbeerwah, Lake Cootharaba and the Cooloola coast.",
+    "The lookout park is a stop on the Noosa Trail Network, and walkers and riders use it as a trailhead for steep trails down through the rainforest of Woondum National Park to Kin Kin.",
+    "Before you go, check your brakes and take a last look. The road down to Cooran is steep."
+   ],
+   "src": {
+    "beo": "947f29288c7f"
    }
   },
   "mothar-mountain": {
@@ -571,15 +321,204 @@
     "beo": "f07a3a756eac"
    }
   },
-  "beenaam-valley": {
-   "title": "Beenaam Valley",
+  "mount-coolum": {
+   "title": "Mount Coolum",
    "paras": [
-    "Beenaam Valley is a small farming valley under the Beenaam Range, about 20 kilometres east of Gympie. The official spelling is Beenaam, though the road signs say Beenham.",
-    "Gympie's own name comes from a Kabi word, gimpi, for the stinging tree.",
-    "Around sixty people live here among grazing paddocks and crops. Like its neighbours, the valley once had its own little school, which opened in 1912 and closed in 1965, when families voted for a central school instead."
+    "At 208 metres, Mount Coolum is the landmark of this coast, a dome of volcanic rock whose base runs into the sea.",
+    "Kabi Kabi tradition tells of the warrior Coolum, who loved Maroochy, until she was stolen by Ninderry. Ninderry struck off Coolum's head, and it rolled into the ocean to become Mudjimba Island. Coolum's body turned to stone as this headless mountain, and Maroochy's tears became the Maroochy River.",
+    "In the 1980s the mountain was a target for development, until a community campaign saved it. It became a national park in 1990. Its summit heath grows on the Sunshine Coast only here and on a few Glass House peaks, and about half the plant species of the whole region grow in the park."
    ],
    "src": {
-    "beo": "a5ee290d4dfe"
+    "bikeon": "aa7ddbea0d67"
+   }
+  },
+  "mt-cooroora": {
+   "title": "Mt Cooroora and the King of the Mountain",
+   "paras": [
+    "Mount Cooroora is a 439 metre volcanic plug, the high point of Tuchekoi National Park and the backdrop to every view of Pomona. Early settlers recorded its Aboriginal name as Karura.",
+    "It is best known for the King of the Mountain. The story goes that in 1958 Bruce Samuels, a local footballer and railway porter, ran to the top as a hangover cure, then won a hundred pound bet that he could do it again in under an hour.",
+    "A formal race followed in 1959. It was revived in 1979 and grew into a July festival for the whole district. The race is no longer run. In 2024 the organisers announced it would end. But look up from Pomona and you can still pick out the runners' track up the mountain."
+   ],
+   "src": {
+    "beo": "cebecb842a53"
+   }
+  },
+  "mt-tinbeerwah": {
+   "title": "Mt Tinbeerwah",
+   "paras": [
+    "Mount Tinbeerwah is a volcanic plug, formed millions of years ago, rising 265 metres above the sea. Its name is said to mean place of grass trees, or high hill climbing up. Sources differ.",
+    "From the carpark, a short track of about a kilometre return leads first to a lower lookout with coastal views, then up to the summit. The summit lookout was once a forestry fire tower, and old photos show day trippers walking back from it in 1952.",
+    "The view runs all the way around, from the coast to the hinterland, and on a clear day, south to the Glass House Mountains.",
+    "The rocky top carries a rare mint bush, listed as vulnerable. Climbers use the cliffs beside the track, so stay behind the safety fence. There are toilets here, but no drinking water."
+   ],
+   "src": {
+    "bikeon": "242d97a2b2db"
+   }
+  },
+  "mudjimba": {
+   "title": "Mudjimba Beach and Old Woman Island",
+   "paras": [
+    "Mudjimba takes its name from midyim, a coastal shrub with sweet white berries. The name is said to mean place of midyim.",
+    "The island offshore holds two Kabi Kabi stories. In one, it is the head of the warrior Coolum, struck off by his rival Ninderry. In the other, two women crossed to it on a bunya pine log that drifted away, leaving them stranded, living on midyim berries, fish and shellfish. As they grew old, people on the mainland could only ever see one of them at a time, and so it became Old Woman Island.",
+    "Today the island is a conservation park and a nesting place for wedge-tailed shearwaters, with about 2,700 burrows counted in the late 1990s."
+   ],
+   "src": {
+    "bikeon": "da3666c816ca"
+   }
+  },
+  "munna-point": {
+   "title": "Munna Point",
+   "paras": [
+    "Munna Point, where the river bends at the end of Gympie Terrace, was noted by an early settler as a camping and fishing place, and a corroboree ground for Aboriginal people.",
+    "In 1871 it fell inside a reserve for an Aboriginal mission, which was cancelled in 1878. In the early 1900s most Kabi Kabi people were forcibly moved inland to Barambah, now called Cherbourg.",
+    "Holiday camping began here around 1929, when the new bridges brought cars, and part of the reserve was set aside for caravans in 1956. When camping ended at Noosa Woods in 1990, Munna Point became the last camping ground on the estuary.",
+    "In 2009 the park joined the Queensland Heritage Register, as a fine example of the waterside camping reserves that shaped holidays on this coast."
+   ],
+   "src": {
+    "bikeon": "f5cfaeb4ef5e"
+   }
+  },
+  "noosa-main-beach": {
+   "title": "Noosa Main Beach",
+   "paras": [
+    "Main Beach runs about a kilometre and a bit from the headland to the river mouth. It faces almost due north into Laguna Bay, which is why the water is so calm on most days.",
+    "Lifesavers were here early. A rescue reel stood on the sand by 1915, and the surf club traces its start to 1928.",
+    "The beach has always fought the sea. Cyclones in 1967 stripped away so much sand that residents dumped rocks to save their homes. A rock wall followed, and since 2009 a pump has carried sand from the river end back to the eastern end.",
+    "Around the headland are the point breaks that made Noosa famous with surfers. In 2020 this stretch of coast became the world's tenth World Surfing Reserve. And every spring, the Noosa Triathlon swim starts right here."
+   ],
+   "src": {
+    "bikeon": "7dd52e0b6a04"
+   }
+  },
+  "noosa-national-park": {
+   "title": "Noosa National Park",
+   "paras": [
+    "The forested headland in front of you is the reason Noosa still looks the way it does.",
+    "It was set aside as a reserve way back in 1879, and about 600 acres were declared a national park in 1939. Back then the park did not even reach the sea.",
+    "In 1962 a local doctor, Arthur Harrold, and his friends started what became the Noosa Parks Association, to stop a road being built around the cliffs. Over the following decades the park grew to take in the shoreline, Alexandria Bay, and land as far south as Coolum. Today it covers about 3,000 hectares.",
+    "Bikes stay here at the racks, but the Coastal Walk carries on past Boiling Pot, Tea Tree Bay and Dolphin Point to Hell's Gates. Look for koalas in the trees, dolphins and turtles below the cliffs, and from June to November, humpback whales."
+   ],
+   "src": {
+    "bikeon": "36a11397009a"
+   }
+  },
+  "noosa-spit": {
+   "title": "Noosa Spit and Noosa Woods",
+   "paras": [
+    "The mouth of the Noosa River has never sat still. It once reached the sea close to where Noosa Woods is now.",
+    "When building along the beach made the entrance unstable, engineers moved the river mouth to the north west in 1978 and built the rock wall at the spit to hold it there. A second wall followed in 1982.",
+    "Noosa Woods has its own story. It was once rainforest, cleared by the council in 1962 for a busy camping ground that families came back to every summer. In 1990 camping ended and the woods were replanted as rainforest, which sparked protest marches down Hastings Street.",
+    "Across the water, Noosa Sound was built in the early 1970s on a mangrove island raised with dredged sand. Today the spit is a favourite for picnics, dog walks and watching shorebirds."
+   ],
+   "src": {
+    "bikeon": "6a03800024c0"
+   }
+  },
+  "north-shore-beach": {
+   "title": "Noosa North Shore beach",
+   "paras": [
+    "From here the sand runs north towards Teewah, and about 60 kilometres on, Rainbow Beach. This is the start of the Cooloola beach drive in Great Sandy National Park.",
+    "Remember the beach is also a road. Road rules apply, and four wheel drives travel at speed. Ride within about two hours of low tide, on the firm sand, and turn back before the tide does.",
+    "The dunes behind you matter. Endangered loggerhead and threatened green turtles nest here, and in early 2026 Noosa Council reported the North Shore's highest number of recorded nests. A nest can hold around 150 eggs, yet as few as one hatchling in a thousand survives to grow up.",
+    "So please keep off the dunes, use the marked tracks, and never ride the beach at night, when lights confuse nesting turtles and hatchlings."
+   ],
+   "src": {
+    "bikeon": "7228508253d3"
+   }
+  },
+  "north-shore-ferry": {
+   "title": "Noosa North Shore Ferry",
+   "paras": [
+    "The far bank has its own timber past. In 1872 Abraham Luya bought land on the North Shore and built a timber depot and wharf, and a little village called Colloy grew around it. A sawmill ran on the northern bank opposite Tewantin until 1891.",
+    "For decades after that, the only way across was by boat. Noosa Library records that a passenger and vehicle ferry started here in 1963, opening the way to the North Shore and the beach run north to Teewah.",
+    "The ferry is run under contract to Noosa Council, and new operators took over in July 2024 with two new ferries and cashless payments. Upstream, the river widens into Lake Cooroibah on its way down from the Noosa Everglades system."
+   ],
+   "src": {
+    "bikeon": "aaa10e1145a6"
+   }
+  },
+  "peregian-beach": {
+   "title": "Peregian Beach",
+   "paras": [
+    "Peregian is thought to come from a First Nations word for emu, and the records suggest emus were once common here.",
+    "Until the late 1950s this was all Crown land. When the coast road came through, the developer took a lease with the right to build here in return for building the road. The first house went up on Pelican Street in 1960, and it is still there.",
+    "With no town plan until 1973, the streets simply followed the easiest line. A community pool opened in the middle of the shopping square in 1964.",
+    "The surf club, founded in 1962, has had a rollercoaster life. It closed after a cyclone in 1974, came back in 1984, folded in 2014, and has been back on patrol since 2022."
+   ],
+   "src": {
+    "bikeon": "f9fe6c302393"
+   }
+  },
+  "pomona-memorial-forest": {
+   "title": "Pomona Memorial Forest",
+   "paras": [
+    "Beside the road is the Pomona Memorial Forest, on the site of the original Pinbarren State School.",
+    "During the Second World War, the students of Pomona's school forestry club planted it to honour local servicemen. A newspaper in 1946 counted 2,400 timber trees, including more than 1,700 hoop pines. Kauri pines, silky oaks and flooded gums were planted too.",
+    "A plaque records that the forest was rededicated in October 1955, together with the Cooroy Pomona RSL. From here the road keeps climbing over the range at Pinbarren, the high point of the ride, before dropping into Kin Kin."
+   ],
+   "src": {
+    "bikeon": "164880c8ac24"
+   }
+  },
+  "pomona": {
+   "title": "Pomona",
+   "paras": [
+    "Pomona began as a railway siding when the North Coast line came through in 1891. Timber getters cleared the land first, then came dairy, sugar cane and fruit.",
+    "Railway and postal staff kept mixing up Cooran, Cooroora and Cooroy, so in 1900 locals chose a new name, Pomona, after the Roman goddess of fruit.",
+    "When Noosa Shire was formed in 1910, Pomona was its biggest town and became its seat, until the council moved to Tewantin in 1980. The 1911 council chambers on Factory Street are now the Noosa Shire Museum, and the same street keeps the old butter factory.",
+    "The original station buildings were moved across the tracks and reopened in 2001 as the Pomona Railway Station Gallery. And it is a good place for a coffee."
+   ],
+   "src": {
+    "bikeon": "3051fd429ecb",
+    "beo": "2244506a60f3"
+   }
+  },
+  "ringtail-creek-road": {
+   "title": "Ringtail Creek Road and the 1870 Shortcut",
+   "paras": [
+    "This road carries a piece of Noosa's founding story.",
+    "After gold was found at Gympie in 1867, the only coach road ran the long way south to Brisbane, with bushrangers waiting on the trip back. Walter Hay, remembered as the father of Noosa, was asked to cut a direct track from the goldfields to a new port on the Noosa River. He rode into Tewantin at the end of the job just before Christmas 1870.",
+    "His Shortcut ran through Cooran and the Ringtail scrub, and Cobb and Co coaches soon used it, until the railway took over.",
+    "Local historian Phil Jarratt traced the old coach route along this road. Past the gravel it becomes part of the Noosa Trail Network, and its rough alternative section follows the original road of 1870."
+   ],
+   "src": {
+    "bikeon": "d8611dbc072a",
+    "beo": "70b13c2b4522"
+   }
+  },
+  "royal-mail-hotel": {
+   "title": "Royal Mail Hotel and Parkyn's Hut",
+   "paras": [
+    "The first Royal Mail Hotel opened in May 1882, built for Ned Murdock, a Cobb and Co coach driver. Once the railway reached Cooroy in 1891, its coaches met the trains, and it became a holiday favourite for Gympie families.",
+    "In March 1939 the two storey timber hotel burned down in a spectacular fire. The brick hotel you see now reopened in 1941, and it still carries its original Royal Mail lettering.",
+    "At the same corner stands Parkyn's Hut, a hardwood miner's cottage from Gympie that was carted to Tewantin by bullock team around 1920. The Parkyn family used it for guests, and in 2001 it was moved here to become the Tewantin Heritage and Tourist Information Centre."
+   ],
+   "src": {
+    "bikeon": "6067d2af75ca"
+   }
+  },
+  "sunrise-beach": {
+   "title": "Sunrise Beach and Sunshine Beach",
+   "paras": [
+    "For decades, locals simply called this stretch of sand Coolum Beach.",
+    "In 1925 the developer T M Burke visited Tewantin and was struck by the coast. His company was given the land in return for building the bridges over Lake Doonella and Weyba Creek, and in 1929 it launched a new estate here called Golden Beach, with a lifesaving carnival reported around the country.",
+    "After the war, the lifesavers restarting their club found a Caloundra club already used the name Golden Beach. So they suggested Sunshine Beach, and it became official in 1949.",
+    "Sunrise Beach came later. The land west of the new coast road was named Sunrise Estate, and it was released in stages from 1970."
+   ],
+   "src": {
+    "bikeon": "ec6f8df53dd6"
+   }
+  },
+  "tewantin-wharves": {
+   "title": "Tewantin's old wharves",
+   "paras": [
+    "Tewantin grew up around a timber wharf right here on the riverbank.",
+    "In 1870 the Port Master mapped Nusa Harbour as a better way to ship timber than the Mary or Maroochy rivers. The town was proclaimed in 1871, and by 1874 a wharf and goods shed stood on this bank. Timber came down the river, including from the big sawmill on Lake Cootharaba, and steamers carried timber, fish and oysters to Brisbane.",
+    "From 1878 Cobb and Co coaches linked the steamers with the Gympie goldfields. The railway took much of the passenger trade in 1889.",
+    "The name Tewantin is usually traced to the Kabi Kabi word dauwadhan, often translated as dead trees or logs. Later, the Parkyn family ran a jetty, boat hire and bait business here, and one of their buildings still stands at today's Noosa Marina."
+   ],
+   "src": {
+    "bikeon": "e547dbbf05c5"
    }
   },
   "traveston": {
@@ -593,28 +532,89 @@
     "beo": "d0d54f68d022"
    }
   },
-  "mary-river": {
-   "title": "Mary River country",
+  "twin-waters": {
+   "title": "Twin Waters and the Maroochy River",
    "paras": [
-    "The farms around here drain into the Mary River, which runs about 310 kilometres north past Gympie to the Great Sandy Strait. It was named in 1847 for Lady Mary, wife of the Governor.",
-    "Cedar cutters rafted logs down it in the 1800s, and by the 1950s the Mary Valley made about fifteen per cent of Queensland's butter. The Mary Valley Rattler steam train still runs from Gympie.",
-    "The river is famous for three animals. The Mary River cod lives naturally only in this river system. The Mary River turtle is found only here, and can breathe through its tail end, staying underwater for days. And the Australian lungfish, found naturally only in the Mary and Burnett rivers, belongs to a family that goes back 380 million years."
+    "Twin Waters sits between the ocean and the Maroochy River. It is mostly a canal estate with a golf course, opened around 1990.",
+    "What makes it special for riders is the edge. Most of the river frontage is protected in the Maroochy River Conservation Park, set aside in 1992.",
+    "The sandbanks and mudflats of the lower river are prized shorebird habitat. Council surveys have recorded the critically endangered far eastern curlew, bar-tailed godwits, whimbrels and pied oystercatchers. Low tide is the time to look.",
+    "And in the Kabi Kabi story of Coolum and Ninderry, this river is the tears Maroochy wept for her lost love."
    ],
    "src": {
-    "beo": "c01023e3ae44"
+    "bikeon": "32e5efe0eab0"
    }
   },
-  "koalas": {
-   "title": "Koalas",
+  "weyba-bridge": {
+   "title": "Weyba Bridge",
    "paras": [
-    "Keep half an eye on the treetops. Koalas live in these forests, but they sleep most of the day high in the gums, so seeing one is a rare bonus, not something to count on.",
-    "Their name comes from the Dharug language of the Sydney region, not from Kabi Kabi. The word gula is often said to mean no water, because koalas get most of the water they need from eucalyptus leaves.",
-    "Koalas were once common around Noosa. Their fur was traded by the million, and Queensland's last open season, in August 1927, took close to 600,000 pelts. The outcry ended the hunt for good. By the 1960s koalas here were so scarce that six were brought in to restock Noosa National Park.",
-    "The comeback is happening in the Yurol and Ringtail forests. About 2,400 hectares of old plantation are becoming national park, and about 133,000 trees have been planted to bring back the gums koalas feed on. Drone surveys found close to 300 koalas, with more than 500 expected as the new forest grows."
+    "Weyba Creek winds from Lake Weyba, the southern gateway to the Noosa Everglades system, down to the Noosa River. Bridging it has always been a saga.",
+    "The first bridge opened in 1886 and was soon ruined by shipworm. A timber bridge opened in October 1929, the same day as the Doonella bridge, and at last Tewantin, Noosaville and Noosa Heads were joined by road.",
+    "When a concrete bridge took over from 1969, locals kept the old one for walkers. It partly collapsed in 1991, and a community group raised the money for the replica you are riding on, built in 1995.",
+    "The mangroves here are a nursery for fish, crabs and prawns. And the name Weyba is thought to come from an Aboriginal word for stingray, though some sources say flying squirrel."
    ],
    "src": {
-    "bikeon": "056800237553",
-    "beo": "cf8f492017fb"
+    "bikeon": "8eb1a7bc7493"
+   }
+  },
+  "weyba-downs": {
+   "title": "Lake Weyba western shore",
+   "paras": [
+    "This quiet western shore of Lake Weyba, the southern end of the Noosa Everglades system, has changed very little. The land was never rich enough to farm, so much of it still looks as it did to its Kabi Kabi custodians. Their shell middens, scarred trees and a large stone fish trap remain.",
+    "In the 1890s, under a government scheme, 59 unemployed men from Brisbane and their families tried to make a living on this side of the lake. They were known as the Woolloongabba Exemplars, and they sold fish to Gympie and Brisbane. Their hand dug wells failed, and by 1896 the commune was gone.",
+    "South of the lake, Murdering Creek is thought to mark a massacre of Aboriginal people in the 1860s. Historians have not settled the date, or how many died."
+   ],
+   "src": {
+    "bikeon": "18adae6096e0",
+    "beo": "8d93c297b72e"
+   }
+  },
+  "woondum": {
+   "title": "Woondum National Park",
+   "paras": [
+    "Woondum National Park covers about 4,000 hectares of steep ranges between Cooran, Kin Kin and Mothar Mountain. It was state forest for a long time, and became a national park in 2009.",
+    "The name is reportedly from Kabi words for blue tongue lizard and place.",
+    "Tall eucalypt forest covers the ridges, with rainforest in the gullies and creeks tumbling over boulders. Foresters prized Woondum's spotted gums because they resist a leaf disease, and their seed went to plantations across the south east.",
+    "The park shelters koalas, sooty owls, frogmouths and the tusked frog. The Kabi Kabi First Nation holds deep connections here, and the Mothar Mountain rock pools are a significant cultural site."
+   ],
+   "src": {
+    "beo": "8d8c152b308b"
+   }
+  },
+  "wooroi": {
+   "title": "Tewantin National Park, Wooroi",
+   "paras": [
+    "Wooroi is a historic picnic ground in Tewantin National Park, shaded by she-oaks and bloodwoods, and the trailhead for eleven mountain bike trails.",
+    "The park protects rainforest, open eucalypt forest and the last patches of wallum heath between Noosa and Cooroy, on the Country of the Kabi Kabi and Gubbi Gubbi peoples.",
+    "Most of it was state forest until 2010, when years of lobbying by the Noosa Parks Association saw it declared a national park, and land from the Yurol and Ringtail forests has been added since. Along Gyndier Drive, a heritage site still holds traces of an old forestry camp.",
+    "The trails are managed by the Queensland Parks and Wildlife Service with the Noosa Trailblazers Mountain Bike Club. Listen for whipbirds, and watch for swamp wallabies, echidnas and glossy black cockatoos."
+   ],
+   "src": {
+    "bikeon": "2c3239819cdb",
+    "beo": "405fe0607233"
+   }
+  },
+  "yaroomba": {
+   "title": "Yaroomba and Point Arkwright",
+   "paras": [
+    "The rocky headland of Point Arkwright is where the base of Mount Coolum meets the Pacific. Its name seems to honour Richard Arkwright, inventor of cotton spinning machines, just as Point Cartwright further south is named after another textile inventor.",
+    "Yaroomba is said to mean surf on the beach. It began in 1953 as an estate called Coronation Beach, named for the Queen's coronation, and took its present name in 1961. Much of it is taken up by the resort and golf course that once hosted the Australian PGA Championship.",
+    "South again, Marcoola is a made up name, from Maroochydore and Coolum. Its surf club caused a stir in 1979 by training girls, before women could join surf clubs."
+   ],
+   "src": {
+    "bikeon": "3fe6e9089c4f"
+   }
+  },
+  "yurol-ringtail": {
+   "title": "Yurol and Ringtail forests",
+   "paras": [
+    "The Yurol and Ringtail forests were state forest for decades, much of them planted with pine.",
+    "When Queensland sold off its plantation forests, the Noosa Parks Association went to the new owner and negotiated a price. The state, Noosa Council and the association shared the cost, and the deal was done in 2018.",
+    "In 2022 the government announced that more than 2,400 hectares would join Tewantin National Park once the last pine and hardwood harvest was finished, with replanting to follow. The Kabi Kabi Peoples are working with the parks service on caring for the land.",
+    "Drone surveys have found koalas here, and the forest shelters threatened species like the giant barred frog and the Richmond birdwing butterfly."
+   ],
+   "src": {
+    "bikeon": "25806efb4aac",
+    "beo": "3cd242b43de4"
    }
   },
   "kabi-kabi-country": {
@@ -625,30 +625,7 @@
     "Many local names come from their language. Tewantin is said to mean place of dead logs. Cooroibah is said to mean place of possums. And Weyba is understood to mean place of stingrays.",
     "These languages were spoken, not written, so early Europeans wrote the names down as they heard them. That is why spellings vary, and why the same name was once written Kabi, Kgabi or Gabi."
    ],
-   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
-   "src": {}
-  },
-  "noosa-private-airport": {
-   "title": "Noosa's private airport",
-   "paras": [
-    "Across the water is Noosa's private airport. It was set up in the early 1980s, as more and more people flew in to holiday in Noosa. It sits close to Noosa Heads, the national park, the beaches and the hinterland.",
-    "It is used by private planes and helicopters, not airlines. The airfield takes up about 56 hectares, part of a much larger property of more than 400 hectares.",
-    "Guides call it Bob's Airport, after the owner who bought it in 2008.",
-    "Noosa sits inside a biosphere reserve, so anything built around the airport has to meet strict rules that protect the plants and animals of the area."
-   ],
-   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
-   "src": {}
-  },
-  "noosa-everglades": {
-   "title": "The Noosa Everglades system",
-   "paras": [
-    "Lake Weyba is the southern gateway to the Noosa Everglades system. The Noosa Everglades are often described as one of only two everglades systems in the world, the other being the Florida Everglades.",
-    "Instead of sawgrass marsh, this system is a chain of mirror-like waterways, wetlands and lakes, about 65 kilometres long, with a catchment of 85,000 hectares. It is part of the UNESCO Noosa Biosphere Reserve.",
-    "Down here at the southern end the water is salty and tidal, so mangroves line the creeks. Further north, as the water turns fresh, the mangroves disappear and paperbarks and rainforest take over.",
-    "Much of the catchment lies inside the Great Sandy National Park, so very little farm runoff reaches the water. The biosphere reserve is home to 343 bird species, about 44 per cent of all the bird species in Australia."
-   ],
-   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
-   "src": {}
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
   },
   "keyser-creek": {
    "title": "Keyser Creek",
@@ -658,19 +635,27 @@
     "On a still day the dark water becomes a mirror. Trees, sky and clouds reflect so clearly it is hard to tell where the bank ends. That is why this part of the Noosa Everglades system is known for its reflections.",
     "The paperbarks give shelter and nesting places to birds, reptiles and fish. Move slowly and quietly, and you may see more than you expect."
    ],
-   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
-   "src": {}
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
   },
-  "weyba-mangroves": {
-   "title": "The mangroves",
+  "noosa-everglades": {
+   "title": "The Noosa Everglades system",
    "paras": [
-    "Mangroves are what make this southern end of the Noosa Everglades system special. They need salty, tidal water, so further north, where the water turns fresh, they disappear. Eight kinds grow here.",
-    "They live where few plants can. Their roots filter out up to 90 per cent of the salt in seawater, and they push the rest into yellow leaves that drop off. Roots that poke up out of the mud let them breathe in waterlogged ground.",
-    "They hold the banks together, and they filter pollution out of the water as it flows down the system. They are also a carbon sink, storing four to five times more carbon than a rainforest, most of it locked away in the mud.",
-    "Their roots give food and shelter to young fish, crabs and prawns. Three out of every four fish we eat in Australia use a mangrove at some point in their lives. Without mangroves, there would be far fewer fish in the sea."
+    "Lake Weyba is the southern gateway to the Noosa Everglades system. The Noosa Everglades are often described as one of only two everglades systems in the world, the other being the Florida Everglades.",
+    "Instead of sawgrass marsh, this system is a chain of mirror-like waterways, wetlands and lakes, about 65 kilometres long, with a catchment of 85,000 hectares. It is part of the UNESCO Noosa Biosphere Reserve.",
+    "Down here at the southern end the water is salty and tidal, so mangroves line the creeks. Further north, as the water turns fresh, the mangroves disappear and paperbarks and rainforest take over.",
+    "Much of the catchment lies inside the Great Sandy National Park, so very little farm runoff reaches the water. The biosphere reserve is home to 343 bird species, about 44 per cent of all the bird species in Australia."
    ],
-   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
-   "src": {}
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
+  },
+  "noosa-private-airport": {
+   "title": "Noosa's private airport",
+   "paras": [
+    "Across the water is Noosa's private airport. It was set up in the early 1980s, as more and more people flew in to holiday in Noosa. It sits close to Noosa Heads, the national park, the beaches and the hinterland.",
+    "It is used by private planes and helicopters, not airlines. The airfield takes up about 56 hectares, part of a much larger property of more than 400 hectares.",
+    "Guides call it Bob's Airport, after the owner who bought it in 2008.",
+    "Noosa sits inside a biosphere reserve, so anything built around the airport has to meet strict rules that protect the plants and animals of the area."
+   ],
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
   },
   "stingray-sanctuary": {
    "title": "The stingray sanctuary",
@@ -680,8 +665,17 @@
     "The ray seen most often is the cowtail. Many here are juveniles, but a cowtail can grow to about 1.8 metres across, with a tail twice as long as its body. The brown estuary stingray is special too. It lives only on the east coast of Queensland and New South Wales, and it is listed as near threatened.",
     "Stingrays are wild animals, so they are often seen but never guaranteed. Give them space, never touch or chase them, and let them carry on with their day."
    ],
-   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
-   "src": {}
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
+  },
+  "weyba-mangroves": {
+   "title": "The mangroves",
+   "paras": [
+    "Mangroves are what make this southern end of the Noosa Everglades system special. They need salty, tidal water, so further north, where the water turns fresh, they disappear. Eight kinds grow here.",
+    "They live where few plants can. Their roots filter out up to 90 per cent of the salt in seawater, and they push the rest into yellow leaves that drop off. Roots that poke up out of the mud let them breathe in waterlogged ground.",
+    "They hold the banks together, and they filter pollution out of the water as it flows down the system. They are also a carbon sink, storing four to five times more carbon than a rainforest, most of it locked away in the mud.",
+    "Their roots give food and shelter to young fish, crabs and prawns. Three out of every four fish we eat in Australia use a mangrove at some point in their lives. Without mangroves, there would be far fewer fish in the sea."
+   ],
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
   }
  }
 }

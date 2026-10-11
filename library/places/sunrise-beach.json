@@ -1,0 +1,32 @@
+{
+ "key": "sunrise-beach",
+ "kind": "place",
+ "title": "Sunrise Beach and Sunshine Beach",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Sunrise Beach and Sunshine Beach",
+   "area": "coast",
+   "after": "david-low-way",
+   "paras": [
+    "The first selectors here proposed a \"Town of Alexandra\" around 1890, and for decades locals simply called this stretch Coolum Beach. In 1925 developer T M Burke visited Tewantin and was struck by the coast. His company gained the land in return for building bridges over Lake Doonella and Weyba Creek, and in October 1929 launched \"Noosa Beach Estate Golden Beach\" with a lifesaving carnival reported around the country. The Depression slowed sales. After the war, local lifesavers restarting their club learned that a Caloundra club already used the name Golden Beach, so they proposed Sunshine Beach, adopted officially in July 1949. Sunrise Beach came later: Burke's local manager Peter Sharpe named the land west of the new road \"Sunrise Estate\", and it was released in stages from 1970 into the early 2000s."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Sunrise Beach and Sunshine Beach",
+    "text": "Sunshine Beach, just east of here, was sold in 1929 as Golden Beach and only became Sunshine Beach in 1949. Sunrise Beach began as Sunrise Estate, released in stages from 1970."
+   }
+  ]
+ },
+ "story": [
+  "For decades, locals simply called this stretch of sand Coolum Beach.",
+  "In 1925 the developer T M Burke visited Tewantin and was struck by the coast. His company was given the land in return for building the bridges over Lake Doonella and Weyba Creek, and in 1929 it launched a new estate here called Golden Beach, with a lifesaving carnival reported around the country.",
+  "After the war, the lifesavers restarting their club found a Caloundra club already used the name Golden Beach. So they suggested Sunshine Beach, and it became official in 1949.",
+  "Sunrise Beach came later. The land west of the new coast road was named Sunrise Estate, and it was released in stages from 1970."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

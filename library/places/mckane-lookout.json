@@ -1,0 +1,32 @@
+{
+ "key": "mckane-lookout",
+ "kind": "place",
+ "title": "James McKane Memorial Lookout",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "James McKane Memorial Lookout",
+   "area": "cooran-tablelands",
+   "after": null,
+   "paras": [
+    "Most of our hinterland rides start here, at about 330 metres on Tablelands Road above Cooran. The lookout park is a stop on the Noosa Trail Network, with picnic shelters, barbecues and toilets, and on a clear day the view runs across the hinterland to the coast, with the volcanic peak of Mt Cooroora standing out. The trail network's guide says its lookouts take in Mt Cooroora, Mt Cooroy, Mt Coolum, Mt Tinbeerwah, Lake Cootharaba and the Cooloola coast. Walkers and riders also use the lookout as a trailhead for the steep network trails that drop through the rainforest of nearby Woondum National Park to Kin Kin. Locals tend to call it the Tablelands Lookout. Check your brakes and take a last look before the descent."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "James McKane Memorial Lookout",
+    "text": "Welcome to the James McKane Memorial Lookout, known locally as the Tablelands Lookout. Take in the volcanic peaks and the coast before you go, because from here the long run down toward Noosa begins."
+   }
+  ]
+ },
+ "story": [
+  "Most of our hinterland rides start here, at about 330 metres above the sea on Tablelands Road. Locals tend to call it the Tablelands Lookout.",
+  "On a clear day the view runs right across the hinterland to the coast, with the volcanic peak of Mount Cooroora standing out. The lookouts on this network take in Mount Cooroy, Mount Coolum, Mount Tinbeerwah, Lake Cootharaba and the Cooloola coast.",
+  "The lookout park is a stop on the Noosa Trail Network, and walkers and riders use it as a trailhead for steep trails down through the rainforest of Woondum National Park to Kin Kin.",
+  "Before you go, check your brakes and take a last look. The road down to Cooran is steep."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

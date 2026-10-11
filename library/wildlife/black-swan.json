@@ -1,0 +1,24 @@
+{
+ "key": "black-swan",
+ "kind": "wildlife",
+ "title": "Black Swan",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Black Swan",
+  "scientific_name": "Cygnus atratus",
+  "group": "Bird",
+  "description": "A large waterbird native to Australia, the Black Swan has black plumage and a red bill. It is nomadic, with erratic migration patterns dependent on climatic conditions, and primarily feeds on aquatic vegetation.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/4f768d726_black-swan.jpeg",
+  "photo_focus": {
+   "x": 55,
+   "y": 50
+  },
+  "photo_width": 220,
+  "photo_height": 147,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df2f"
+}

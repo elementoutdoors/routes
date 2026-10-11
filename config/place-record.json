@@ -1,5 +1,5 @@
 {
- "_about": "The places record: the agreed text of each ride story place, per brand. 'sections' holds each place's section on that brand's ride story blog (\"brand#anchor\"); 'stops' holds each Ride with GPS stop summary that links to it (the POI Library pin description, \"brand#anchor|Pin name\"). The build compares the live blogs and Ride with GPS with this every night and lists differences in health.json 'places'. The weekly check decides each one: wording only is agreed straight away; a change of fact goes to Ben on the Ride Story Review page, and 'pending' holds the agreed text (the app keeps reading the agreed stop summary) until he rules. Change it only with scripts/place-record.mjs. Facts and Ben's rulings on places: the 'Places record' tab of the ride stories doc (https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558). See config/STORY_BRIEF.md.",
+ "_about": "GENERATED from the Story Library (library/) by scripts/library.mjs. The text every ride story blog section and Ride with GPS stop summary must show. The nightly build lists each live difference in health.json \"places\"; the weekly Story Library check puts the library version back. Never edit this file.",
  "sections": {
   "beo#apollonian-hotel": {
    "text": "The Apollonian Hotel at Boreen Point started life on the goldfields. Robert \"Billy\" Barlow, a well known monologue entertainer, built it in Gympie around 1868 as a music hall hotel, a year after James Nash's gold find turned Gympie into a boom town. It passed through several owners and closed in 1951. In the late 1980s the building was taken down, carried to Boreen Point in four pieces and rebuilt beside the lake, where it opened again as a hotel. Heritage Noosa describes it as one of the last surviving timber music hall hotels of its era, with wide verandahs under a broad pyramid roof. On a ride that passes Traveston, where Nash first described his field, it is a fitting end to the gold rush thread.",
@@ -59,6 +59,11 @@
   "beo#lake-macdonald": {
    "text": "Lake Macdonald is Noosa's water supply. It formed behind Six Mile Creek Dam, built in 1965 and raised by 3.6 metres in 1980, and now holds about 8,018 megalitres across roughly 260 hectares. It is named in memory of Ian MacDonald, a former chairman of Noosa Shire Council. Seqwater is upgrading the dam with a new spillway and rebuilt embankments, and the lake has been kept lower while the work goes on. Anglers know it for Mary River cod, bass, yellowbelly and saratoga, and a hatchery beside the lake has bred the endangered cod for release into the Mary River catchment. Paddlers and birdwatchers love it too. If you have time, the Noosa Botanic Gardens on Lake Macdonald Drive, opened in 1990, have eight hectares of gardens, a bush chapel and a Greek style amphitheatre, a short detour from the route.",
    "hash": "22db4eb34507",
+   "agreed": "2026-10-11"
+  },
+  "beo#majestic-theatre": {
+   "text": "A short walk from the station, the Majestic Theatre is worth a few minutes off the bike. It was built in 1921 as a social hall with shops, was soon screening films, and showed Pomona's first talkie on 28 April 1931. Ron and Mandy West took it over in 1974. In 1987 Ron played the music live on his restored Wurlitzer organ for a screening of Rudolph Valentino's 1926 film The Son of the Sheik, and before long the Wests were showing nothing but silent films. The Majestic is promoted as the oldest authentic silent movie theatre in the world and as Queensland's longest continuously operating picture theatre, and it joined the Queensland Heritage Register in 2009. The volunteers of Pomona Arts Inc now own and run it, and its 1937 Compton organ was relaunched in 2019 after six and a half years of restoration.",
+   "hash": "40dcfbb08264",
    "agreed": "2026-10-11"
   },
   "beo#mary-river": {
@@ -254,6 +259,11 @@
   "bikeon#peregian-beach": {
    "text": "Peregian is thought to come from a First Nations word for emu, and Sunshine Coast place name records suggest emus were once plentiful in the district. Until the late 1950s this was Crown land. When the coast road came through, developer T M Burke and Co, working with Maroochy councillor David Low, took a 20 year lease with development rights in return for building it. The first house was built on Pelican Street in 1960 and is still there, and the first 120 lots were laid out around it. With no town plan until 1973, streets simply followed the easiest line. A community swimming pool opened in the middle of the shopping square in 1964. The surf club, founded in 1962, has had a rollercoaster life: closed after a cyclone in 1974, revived in 1984, folded in 2014 and back on patrol since 2022.",
    "hash": "f9fe6c302393",
+   "agreed": "2026-10-11"
+  },
+  "bikeon#pomona": {
+   "text": "Pomona began as a railway siding when the North Coast line opened through here in 1891. Timber getters cleared the land first; dairying, sugar cane and fruit growing followed. Railway and postal staff kept muddling Cooran, Cooroora and Cooroy, so the siding became Pinbarren, and in 1900 locals chose Pomona, after the Roman goddess of fruit. When Noosa Shire was created in 1910, Pomona was its largest town and became its administrative centre. The 1911 council chambers on Factory Street now house the Noosa Shire Museum; the council moved to Tewantin in 1980. Factory Street also keeps the former butter factory of 1919. The original station buildings closed in 1991 and were moved across the tracks in 2000 to become the volunteer run Pomona Railway Station Gallery, opened in 2001.",
+   "hash": "3051fd429ecb",
    "agreed": "2026-10-11"
   },
   "bikeon#pomona-memorial-forest": {

@@ -10,6 +10,8 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { buildVoice } from './voice.mjs';
 import { fp, blogList, placeOf, stopId, blogSections, readBlogs, comparePlaces, holdStops } from './places.mjs';
+import { loadLibrary, storiesFrom, recordFrom, compiled, generatedDrift, lint } from './library.mjs';
+import { libraryPage } from './library-page.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const OFFLINE = process.argv.includes('--offline');
@@ -22,8 +24,13 @@ const secrets = process.env.ROUTE_SECRETS ? JSON.parse(process.env.ROUTE_SECRETS
 const cfg = readJson('config/routes.json');
 const brands = readJson('config/brands.json');
 const offersCfg = readJson('config/offers.json');
-const storiesCfg = readJson('config/stories.json', { blogs: {}, stories: {} });
-const placeRecord = readJson('config/place-record.json', { sections: {}, stops: {} });
+// The Story Library (library/) is the source of every story, blog section and pin line. The stories and the places record
+// are made from it here, so the site always follows the library; the committed copies in config/ are checked against it.
+let library = null, libraryProblems = [];
+try { library = loadLibrary(ROOT); } catch (e) { libraryProblems.push('story library: ' + (e.message || e)); }
+const storiesCfg = library ? storiesFrom(library) : readJson('config/stories.json', { blogs: {}, stories: {} });
+const placeRecord = library ? recordFrom(library) : readJson('config/place-record.json', { sections: {}, stops: {} });
+if (library) generatedDrift(library, ROOT).forEach(f => libraryProblems.push(`story library: ${f} is out of step with the library (run node scripts/library.mjs generate and commit)`));
 const i18n = Object.fromEntries(LANGS.map(l => [l, readJson(`config/i18n/${l}.json`, {})]));
 
 // Behaviour settings: every value checked against a safe range; anything wrong falls back to the default.
@@ -524,6 +531,15 @@ async function main() {
         }
       } catch (e) { /* first build with files.json, or the live site unreachable: nothing to compare */ }
     }
+  }
+  // the Story Library, published for EO Crew (wildlife cards, kayak talking points) and as a page to read
+  health.problems.push(...libraryProblems);
+  if (library) {
+    const lib = compiled(library);
+    fs.writeFileSync(path.join(dist, 'library.json'), JSON.stringify(lib));
+    fs.writeFileSync(path.join(dist, 'library.html'), libraryPage(lib));
+    const kinds = {}; lib.entries.forEach(e => { kinds[e.kind] = (kinds[e.kind] || 0) + 1; });
+    health.library = { entries: lib.entries.length, kinds, houseRules: lint(library) };
   }
   health.untranslatedTotal = Object.fromEntries(LANGS.map(l => [l, missing[l].size]));
   fs.writeFileSync(path.join(dist, 'health.json'), JSON.stringify(health, null, 1));

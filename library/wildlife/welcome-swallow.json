@@ -1,0 +1,24 @@
+{
+ "key": "welcome-swallow",
+ "kind": "wildlife",
+ "title": "Welcome Swallow",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Welcome Swallow",
+  "scientific_name": "Hirundo neoxena",
+  "group": "Bird",
+  "description": "A small passerine bird native to Australia and nearby islands. It has a glossy blue-black upper body, a reddish forehead and throat, and a pale underbody. It feeds on insects and is often seen in open areas near water.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/a14e7c6ef_welcome-swallow.jpeg",
+  "photo_focus": {
+   "x": 55,
+   "y": 40
+  },
+  "photo_width": 200,
+  "photo_height": 150,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df2b"
+}

@@ -1,0 +1,25 @@
+{
+ "key": "egret",
+ "kind": "wildlife",
+ "title": "Egret",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Egret",
+  "other_names": "Eastern Great Egret",
+  "scientific_name": "Ardea alba modesta",
+  "group": "Bird",
+  "description": "Egrets are herons with white or buff plumage, developing fine plumes during the breeding season. They are commonly found in wetland areas across Australia, feeding on fish, amphibians, and invertebrates.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/77f5b4a0b_egret.jpeg",
+  "photo_focus": {
+   "x": 45,
+   "y": 35
+  },
+  "photo_width": 220,
+  "photo_height": 330,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df23"
+}

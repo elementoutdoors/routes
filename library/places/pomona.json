@@ -1,0 +1,40 @@
+{
+ "key": "pomona",
+ "kind": "place",
+ "title": "Pomona",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Pomona",
+   "area": "pomona-region",
+   "after": null,
+   "paras": [
+    "Pomona began as a railway siding when the North Coast line opened through here in 1891. Timber getters cleared the land first; dairying, sugar cane and fruit growing followed. Railway and postal staff kept muddling Cooran, Cooroora and Cooroy, so the siding became Pinbarren, and in 1900 locals chose Pomona, after the Roman goddess of fruit. When Noosa Shire was created in 1910, Pomona was its largest town and became its administrative centre. The 1911 council chambers on Factory Street now house the Noosa Shire Museum; the council moved to Tewantin in 1980. Factory Street also keeps the former butter factory of 1919. The original station buildings closed in 1991 and were moved across the tracks in 2000 to become the volunteer run Pomona Railway Station Gallery, opened in 2001."
+   ]
+  },
+  "beo": {
+   "heading": "Pomona",
+   "area": "pomona-cooroora",
+   "after": "mt-cooroora",
+   "paras": [
+    "Pomona is the halfway town on many of our hinterland rides, and the obvious place for a coffee. It began as a railway siding when the North Coast line came through in 1891, on land first cleared by timber getters and then farmed for dairy, sugar cane and fruit. The siding was briefly called Pinbarren, because railway and postal staff kept confusing Cooran, Cooroora and Cooroy, and in 1900 locals settled on Pomona, after the Roman goddess of fruit. When Noosa Shire was formed in 1910, Pomona was its biggest town and became its seat, until the council moved to Tewantin in 1980. The 1911 council chambers on Factory Street are now the Noosa Shire Museum, and the same street keeps the 1919 butter factory. The original station buildings, closed in 1991, were moved across the tracks in 2000 and reopened in 2001 as the volunteer run Pomona Railway Station Gallery."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Pomona",
+    "text": "Welcome to Pomona, named in 1900 after the Roman goddess of fruit. From 1910 to 1980 it was the seat of Noosa Shire, and the old railway station is now an art gallery."
+   }
+  ]
+ },
+ "story": [
+  "Pomona began as a railway siding when the North Coast line came through in 1891. Timber getters cleared the land first, then came dairy, sugar cane and fruit.",
+  "Railway and postal staff kept mixing up Cooran, Cooroora and Cooroy, so in 1900 locals chose a new name, Pomona, after the Roman goddess of fruit.",
+  "When Noosa Shire was formed in 1910, Pomona was its biggest town and became its seat, until the council moved to Tewantin in 1980. The 1911 council chambers on Factory Street are now the Noosa Shire Museum, and the same street keeps the old butter factory.",
+  "The original station buildings were moved across the tracks and reopened in 2001 as the Pomona Railway Station Gallery. And it is a good place for a coffee."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

@@ -1,0 +1,32 @@
+{
+ "key": "twin-waters",
+ "kind": "place",
+ "title": "Twin Waters and the Maroochy River",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Twin Waters and the Maroochy River",
+   "area": "coast",
+   "after": "mudjimba",
+   "paras": [
+    "Twin Waters sits between the ocean and the Maroochy River, on land that was once part of Mudjimba and a coastal locality called Ningerry Beach. It is largely a canal estate with a golf course designed by Peter Thomson and Mike Wolveridge, opened around 1990 to 1991. What makes it special for riders is the edge: most of the river frontage is protected in the Maroochy River Conservation Park, set aside in 1992. The lower river's sandbanks and mudflats are high value shorebird habitat, where Council surveys have recorded the critically endangered far eastern curlew, bar-tailed godwits, whimbrels and pied oystercatchers. Low tide is the time to look. In the Kabi Kabi story of Coolum and Ninderry, this river is the tears Maroochy wept for her lost love."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Twin Waters and the Maroochy River",
+    "text": "You are beside the Maroochy River. In the Kabi Kabi story, the river is the tears of Maroochy, and its sandbanks are feeding grounds for migratory shorebirds such as the endangered bar-tailed godwit."
+   }
+  ]
+ },
+ "story": [
+  "Twin Waters sits between the ocean and the Maroochy River. It is mostly a canal estate with a golf course, opened around 1990.",
+  "What makes it special for riders is the edge. Most of the river frontage is protected in the Maroochy River Conservation Park, set aside in 1992.",
+  "The sandbanks and mudflats of the lower river are prized shorebird habitat. Council surveys have recorded the critically endangered far eastern curlew, bar-tailed godwits, whimbrels and pied oystercatchers. Low tide is the time to look.",
+  "And in the Kabi Kabi story of Coolum and Ninderry, this river is the tears Maroochy wept for her lost love."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

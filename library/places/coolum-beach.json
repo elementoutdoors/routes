@@ -1,0 +1,32 @@
+{
+ "key": "coolum-beach",
+ "kind": "place",
+ "title": "Coolum Beach",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Coolum Beach",
+   "area": "coast",
+   "after": "emu-mountain",
+   "paras": [
+    "Coolum is thought to come from gulum or kulum, often translated as blunt or headless, after the flat top of Mount Coolum. For its first decades this was cane and dairy country; a cane tramway reached Coolum in 1923 and an estate sale that year promised bathing sheds, golf links and tobogganing on the hill. The surf club began in 1919, when local settler Jack Morgan took up a challenge to \"do something about lifesaving\" on his beach. It nearly folded after a Boxing Day triple drowning in 1948, and was rebuilt by its last two active members. Parks along the foreshore honour Edward Tickle, who planted the foreshore trees, and club stalwart Norrie Job. Up the hill, Low's Lookout is named after road gang boss Ted Low, David Low's brother. World tour surfer and Olympian Julian Wilson surfed here as a grommet."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Coolum Beach",
+    "text": "Coolum's surf club has guarded this beach since 1919, one of the oldest on the Sunshine Coast. Coolum is said to mean blunt or headless, after the flat top of Mount Coolum."
+   }
+  ]
+ },
+ "story": [
+  "Coolum is thought to come from gulum or kulum, often translated as blunt or headless, after the flat top of Mount Coolum.",
+  "For its first decades this was sugar cane and dairy country. A cane tramway reached Coolum in 1923, and a land sale that year promised bathing sheds, golf links and tobogganing on the hill.",
+  "The surf club began in 1919, when local settler Jack Morgan took up a challenge to do something about lifesaving on his beach. It nearly folded after three people drowned on Boxing Day 1948, and was rebuilt by its last two active members.",
+  "Up the hill, Low's Lookout is named after road gang boss Ted Low, David Low's brother. And world tour surfer and Olympian Julian Wilson surfed here as a young grommet."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

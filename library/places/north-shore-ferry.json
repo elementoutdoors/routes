@@ -1,0 +1,31 @@
+{
+ "key": "north-shore-ferry",
+ "kind": "place",
+ "title": "Noosa North Shore Ferry",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Noosa North Shore Ferry",
+   "area": "tewantin",
+   "after": "royal-mail-hotel",
+   "paras": [
+    "The far bank has its own timber past. In 1872 Abraham Luya bought 84 acres on the North Shore and built a timber depot and wharf, and a small village called Colloy grew around it. By 1880 Dath, Henderson and Co ran a sawmill on the northern bank opposite Tewantin; it closed in 1891. For decades after, the far side was reached only by boat. Noosa Library's timeline records that Herbert Woods introduced a passenger and vehicle ferry here in 1963, opening the way to the North Shore and the beach run to Teewah. The service is run under contract to Noosa Council. In July 2024 Entrada Travel Group took over from Noosa North Shore Ferries, operators since 1999, bringing new 27 and 12 vehicle ferries and cashless payments. Upstream the river widens into Lake Cooroibah on its way down from the Noosa Everglades system."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Noosa North Shore Ferry",
+    "text": "This ferry is the only road link to Noosa North Shore. A passenger and car ferry has crossed here since the 1960s, but the North Shore's story starts earlier, with sawmills and wharves in the 1870s."
+   }
+  ]
+ },
+ "story": [
+  "The far bank has its own timber past. In 1872 Abraham Luya bought land on the North Shore and built a timber depot and wharf, and a little village called Colloy grew around it. A sawmill ran on the northern bank opposite Tewantin until 1891.",
+  "For decades after that, the only way across was by boat. Noosa Library records that a passenger and vehicle ferry started here in 1963, opening the way to the North Shore and the beach run north to Teewah.",
+  "The ferry is run under contract to Noosa Council, and new operators took over in July 2024 with two new ferries and cashless payments. Upstream, the river widens into Lake Cooroibah on its way down from the Noosa Everglades system."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

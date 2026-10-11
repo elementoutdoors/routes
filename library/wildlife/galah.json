@@ -1,0 +1,25 @@
+{
+ "key": "galah",
+ "kind": "wildlife",
+ "title": "Galah",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Galah",
+  "other_names": "Pink and Grey Cockatoo",
+  "scientific_name": "Eolophus roseicapilla",
+  "group": "Bird",
+  "description": "Also known as the Pink and Grey Cockatoo, the Galah is a common Australian parrot with distinctive pink and grey plumage. It is highly social and often found in large flocks, feeding on seeds and grains.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/c0739b0d3_galah.jpeg",
+  "photo_focus": {
+   "x": 45,
+   "y": 50
+  },
+  "photo_width": 220,
+  "photo_height": 147,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df2c"
+}

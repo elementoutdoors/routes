@@ -1,0 +1,36 @@
+{
+ "key": "mt-tinbeerwah",
+ "kind": "place",
+ "title": "Mt Tinbeerwah",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Mt Tinbeerwah",
+   "area": "tinbeerwah",
+   "after": "koalas",
+   "paras": [
+    "Mt Tinbeerwah rises 265 m above sea level, a volcanic plug formed millions of years ago. The name is said to mean \"place of grasstrees\" or \"high hill climbing up\"; sources differ. From the carpark a 1 km return track, about 45 minutes, leads first to a lower lookout with coastal views, reachable by wheelchair and pram, then climbs to the summit. The summit lookout was once a forestry fire observation tower, and Noosa Library photos show daytrippers returning to their bus from it in 1952. The 360 degree view takes in the coast and hinterland, and on clear days the volcanic plugs of the Glass House Mountains to the south. The rocky summit carries montane heath and a rare mint bush known as Prostanthera sp. (Mt Tinbeerwah), listed as vulnerable. Climbers use the cliffs beside the track; stay behind the safety fence. There are toilets at the day-use area but no drinking water."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Mt Tinbeerwah",
+    "text": "Mt Tinbeerwah is an old volcanic plug, 265 m high. Lock your bike and walk the short track to the summit, once a forestry fire tower, for 360 degree views from the coast to the Glass House Mountains."
+   },
+   {
+    "name": "Welcome to Mt Tinbeerwah",
+    "text": "Mount Tinbeerwah is more than a beautiful lookout. Geology, Indigenous culture, early day trips, forestry, conservation and adventure all meet here."
+   }
+  ]
+ },
+ "story": [
+  "Mount Tinbeerwah is a volcanic plug, formed millions of years ago, rising 265 metres above the sea. Its name is said to mean place of grass trees, or high hill climbing up. Sources differ.",
+  "From the carpark, a short track of about a kilometre return leads first to a lower lookout with coastal views, then up to the summit. The summit lookout was once a forestry fire tower, and old photos show day trippers walking back from it in 1952.",
+  "The view runs all the way around, from the coast to the hinterland, and on a clear day, south to the Glass House Mountains.",
+  "The rocky top carries a rare mint bush, listed as vulnerable. Climbers use the cliffs beside the track, so stay behind the safety fence. There are toilets here, but no drinking water."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

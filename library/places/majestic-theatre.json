@@ -1,0 +1,40 @@
+{
+ "key": "majestic-theatre",
+ "kind": "place",
+ "title": "Majestic Theatre",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Majestic Theatre",
+   "area": "pomona-region",
+   "after": "pomona",
+   "paras": [
+    "Built in 1921 as a social hall with shops attached, the Majestic was soon showing pictures, and Pomona's first talkie screened here on 28 April 1931. Ron and Mandy West bought it in 1974. In 1987 Ron screened the 1926 Rudolph Valentino film The Son of the Sheik for a group of travel agents, improvising the music on his restored Wurlitzer organ, and within months the Wests decided to show only silent films. The Majestic has since been promoted as the oldest authentic silent movie theatre in the world and Queensland's longest continuously operating picture theatre. It was entered on the Queensland Heritage Register in 2009. Today the volunteer group Pomona Arts Inc owns and runs it, and its 1937 Compton organ, restored over six and a half years, was relaunched in 2019."
+   ]
+  },
+  "beo": {
+   "heading": "Majestic Theatre",
+   "area": "pomona-cooroora",
+   "after": "pomona",
+   "paras": [
+    "A short walk from the station, the Majestic Theatre is worth a few minutes off the bike. It was built in 1921 as a social hall with shops, was soon screening films, and showed Pomona's first talkie on 28 April 1931. Ron and Mandy West took it over in 1974. In 1987 Ron played the music live on his restored Wurlitzer organ for a screening of Rudolph Valentino's 1926 film The Son of the Sheik, and before long the Wests were showing nothing but silent films. The Majestic is promoted as the oldest authentic silent movie theatre in the world and as Queensland's longest continuously operating picture theatre, and it joined the Queensland Heritage Register in 2009. The volunteers of Pomona Arts Inc now own and run it, and its 1937 Compton organ was relaunched in 2019 after six and a half years of restoration."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Majestic Theatre",
+    "text": "Just off Station Street is the Majestic Theatre, built as a hall in 1921. It is Queensland's longest continuously operating picture theatre, famous worldwide for silent films with live organ music."
+   }
+  ]
+ },
+ "story": [
+  "The Majestic Theatre was built in 1921 as a hall with shops, and was soon showing films. Pomona's first talkie screened here in April 1931.",
+  "Ron and Mandy West bought it in 1974. In 1987 Ron played the music live on his restored Wurlitzer organ for a 1926 silent film, and before long the Wests were showing nothing but silent films.",
+  "The Majestic is promoted as the oldest authentic silent movie theatre in the world, and Queensland's longest running picture theatre. It joined the Queensland Heritage Register in 2009.",
+  "Volunteers now own and run it, and its 1937 organ was relaunched in 2019 after six and a half years of restoration."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

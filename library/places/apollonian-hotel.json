@@ -1,0 +1,46 @@
+{
+ "key": "apollonian-hotel",
+ "kind": "place",
+ "title": "The Apollonian Hotel",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "The Apollonian Hotel",
+   "area": "pomona-region",
+   "after": "boreen-point",
+   "paras": [
+    "The Apollonian is a gold rush pub that moved to the lake. It was built in Gympie around 1868 as a music hall hotel by Robert \"Billy\" Barlow, a well known monologue entertainer, a year after James Nash's gold find turned Gympie into a boom town. After several owners it closed in 1951. In the late 1980s the building was taken down, carried to Boreen Point in four pieces and put back together, reopening as a hotel. Heritage Noosa describes it as one of the last surviving timber music hall hotels of its era, with wide verandahs under a broad pyramid roof. It is a neat link between the Gympie goldfields and Noosa."
+   ]
+  },
+  "beo": {
+   "heading": "The Apollonian Hotel",
+   "area": "kin-kin-cootharaba",
+   "after": "boreen-point",
+   "paras": [
+    "The Apollonian Hotel at Boreen Point started life on the goldfields. Robert \"Billy\" Barlow, a well known monologue entertainer, built it in Gympie around 1868 as a music hall hotel, a year after James Nash's gold find turned Gympie into a boom town. It passed through several owners and closed in 1951. In the late 1980s the building was taken down, carried to Boreen Point in four pieces and rebuilt beside the lake, where it opened again as a hotel. Heritage Noosa describes it as one of the last surviving timber music hall hotels of its era, with wide verandahs under a broad pyramid roof. On a ride that passes Traveston, where Nash first described his field, it is a fitting end to the gold rush thread."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "The Apollonian Hotel",
+    "text": "The Apollonian Hotel was built in Gympie in the gold rush years and licensed in 1868. It closed in 1951, and in the 1980s it was moved here in pieces and rebuilt beside the lake."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "The Apollonian Hotel",
+    "text": "The Apollonian Hotel was built in Gympie in the gold rush years and licensed in 1868. It closed in 1951, and in the 1980s it was moved here in pieces and rebuilt beside the lake."
+   }
+  ]
+ },
+ "story": [
+  "The Apollonian Hotel started life on the goldfields.",
+  "It was built in Gympie around 1868 as a music hall hotel by Billy Barlow, a well known entertainer, a year after James Nash's gold find turned Gympie into a boom town.",
+  "After several owners it closed in 1951. Then in the late 1980s the whole building was taken apart, carried to Boreen Point in four pieces, and put back together beside the lake.",
+  "Heritage Noosa describes it as one of the last surviving timber music hall hotels of its era, with wide verandahs under a broad pyramid roof."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

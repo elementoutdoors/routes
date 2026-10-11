@@ -1,0 +1,31 @@
+{
+ "key": "mount-coolum",
+ "kind": "place",
+ "title": "Mount Coolum",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Mount Coolum",
+   "area": "coast",
+   "after": "yaroomba",
+   "paras": [
+    "At 208 m, Mount Coolum is the landmark of this coast, a dome of volcanic rock whose base runs into the sea at Point Arkwright. Kabi Kabi tradition tells of the warrior Coolum and his love for Maroochy, who was stolen by Ninderry. Ninderry struck off Coolum's head, which rolled into the ocean to become Mudjimba Island; Coolum's body turned to stone as this headless mountain, and Maroochy's tears became the Maroochy River. In the 1980s the mountain was a development target until a community campaign saved it. It became a national park in 1990, with coastal sections at Marcoola added in 2001. Its summit montane heath is found on the Sunshine Coast only here and on a few Glass House peaks, and about half the region's plant species grow in the park."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Mount Coolum",
+    "text": "In a Kabi Kabi story, the warrior Coolum lost his head to his rival Ninderry; his body became this flat-topped mountain and his head rolled into the sea as Mudjimba Island."
+   }
+  ]
+ },
+ "story": [
+  "At 208 metres, Mount Coolum is the landmark of this coast, a dome of volcanic rock whose base runs into the sea.",
+  "Kabi Kabi tradition tells of the warrior Coolum, who loved Maroochy, until she was stolen by Ninderry. Ninderry struck off Coolum's head, and it rolled into the ocean to become Mudjimba Island. Coolum's body turned to stone as this headless mountain, and Maroochy's tears became the Maroochy River.",
+  "In the 1980s the mountain was a target for development, until a community campaign saved it. It became a national park in 1990. Its summit heath grows on the Sunshine Coast only here and on a few Glass House peaks, and about half the plant species of the whole region grow in the park."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

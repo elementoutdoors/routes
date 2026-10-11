@@ -1,0 +1,24 @@
+{
+ "key": "white-bellied-sea-eagle",
+ "kind": "wildlife",
+ "title": "White-Bellied Sea Eagle",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "White-Bellied Sea Eagle",
+  "scientific_name": "Haliaeetus leucogaster",
+  "group": "Bird",
+  "description": "A large bird of prey found near water bodies across Australia, known for its distinctive white belly and powerful build. It primarily feeds on fish but is opportunistic and will consume a variety of prey, including carrion. Its wingspan ranges from 1.78 to 2.2 meters.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/438bd24d0_white-bellied-sea-eagle.jpeg",
+  "photo_focus": {
+   "x": 50,
+   "y": 50
+  },
+  "photo_width": 220,
+  "photo_height": 176,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df20"
+}

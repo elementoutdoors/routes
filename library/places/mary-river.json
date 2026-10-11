@@ -1,0 +1,31 @@
+{
+ "key": "mary-river",
+ "kind": "place",
+ "title": "Mary River country",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "Mary River country",
+   "area": "woondum-mary-valley",
+   "after": "traveston",
+   "paras": [
+    "The farms around Tuchekoi, Federal and Coles Creek drain into the Mary River, which runs about 310 kilometres north past Gympie to the Great Sandy Strait. The river was named in 1847 for Lady Mary, wife of Governor Charles FitzRoy. Cedar cutters rafted logs down it in the 1800s, and by the 1950s the Mary Valley was one of Queensland's most important dairy districts, making about 15 per cent of the state's butter. Pineapple growers later kept the Mary Valley branch railway running, and today the Mary Valley Rattler steam train still runs from Gympie. The river is famous for three animals. The Mary River cod lives naturally only in this catchment. The Mary River turtle is found only in the Mary and can breathe through its cloaca, staying underwater for days. The Australian lungfish occurs naturally only in the Mary and Burnett rivers and belongs to a group that first appears in fossils 380 million years old."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Mary River country",
+    "text": "Just west of here flows the Mary River, home to three rare animals: the Mary River cod, the Mary River turtle, which can breathe through its tail end, and the Australian lungfish, a fish whose family dates back 380 million years."
+   }
+  ]
+ },
+ "story": [
+  "The farms around here drain into the Mary River, which runs about 310 kilometres north past Gympie to the Great Sandy Strait. It was named in 1847 for Lady Mary, wife of the Governor.",
+  "Cedar cutters rafted logs down it in the 1800s, and by the 1950s the Mary Valley made about fifteen per cent of Queensland's butter. The Mary Valley Rattler steam train still runs from Gympie.",
+  "The river is famous for three animals. The Mary River cod lives naturally only in this river system. The Mary River turtle is found only here, and can breathe through its tail end, staying underwater for days. And the Australian lungfish, found naturally only in the Mary and Burnett rivers, belongs to a family that goes back 380 million years."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

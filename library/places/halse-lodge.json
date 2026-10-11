@@ -1,0 +1,32 @@
+{
+ "key": "halse-lodge",
+ "kind": "place",
+ "title": "Halse Lodge",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Halse Lodge",
+   "area": "noosa-heads",
+   "after": "noosa-national-park",
+   "paras": [
+    "Halse Lodge holds one of the oldest stories in Noosa Heads. The land was taken up in the 1870s and passed to the pioneer Walter Hay in 1881, who built Bayview there, a two storey timber boarding house where early visitors arrived by coach or by boat from Tewantin. It changed hands many times, was largely rebuilt in the 1920s, and was later known as Hillcrest. In 1959 the Anglican Church bought it and named it after Archbishop Reginald Halse, using it for group holidays for nearly thirty years. It was entered on the Queensland Heritage Register in 1997 and still takes guests today, one of only ten state heritage places in Noosa Shire and the only one in Noosa Heads."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Halse Lodge",
+    "text": "Up the hill here is Halse Lodge, which began as Walter Hay's Bayview boarding house in the 1880s. It is one of only ten places in Noosa Shire on the Queensland Heritage Register."
+   }
+  ]
+ },
+ "story": [
+  "Up the hill is Halse Lodge, which holds one of the oldest stories in Noosa Heads.",
+  "In 1881 the land passed to the pioneer Walter Hay, who built a two storey timber boarding house called Bayview. Early visitors reached it by coach, or by boat from Tewantin.",
+  "It changed hands many times, was largely rebuilt in the 1920s, and was later known as Hillcrest. In 1959 the Anglican Church bought it and named it after Archbishop Reginald Halse, and used it for group holidays for nearly thirty years.",
+  "It joined the Queensland Heritage Register in 1997 and still takes guests today. It is one of only ten state heritage places in Noosa Shire, and the only one in Noosa Heads."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

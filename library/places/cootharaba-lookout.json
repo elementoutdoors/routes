@@ -1,0 +1,33 @@
+{
+ "key": "cootharaba-lookout",
+ "kind": "place",
+ "title": "Cootharaba Lookout",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "Cootharaba Lookout",
+   "area": "kin-kin-cootharaba",
+   "after": "kin-kin",
+   "paras": [
+    "Locals called it Shepperson's Lookout for decades, after the Shepperson family who ran a dairy farm on the hill. Sydney Wallace Shepperson took up his selection on Sheppersons Hill in 1935 and was president of the Kin Kin Cricket Club, and his wife led the local Country Women's Association. In September 2026 Noosa Council finished an upgrade and the site now carries the name Cootharaba Lookout, with two new viewing platforms, picnic seating, shade, water, a horse hitching post and more than 700 native trees and shrubs. It sits on the Wahpunga Trail, the spine of the Noosa Biosphere Trails, so you may share the track with walkers and horse riders.",
+    "The view east is over the <a href=\"https://byearthandocean.com.au/understanding-the-noosa-everglade-system/\">Noosa Everglades system</a>. It is one vast, interconnected system that runs about 65 kilometres from the coastal wetlands through the lower lakes to the upper Noosa River, with a catchment of about 85,000 hectares, more than 50 ecosystems and over 700 native species. Lake Cootharaba is its largest lake and the gateway to the upper river, known as the River of Mirrors. Downstream come Lake Cooroibah, Lake Doonella and the lower estuary, and at the southern end is Lake Weyba, the system's southern gateway. It is often described as one of only two everglades in the world, the other being in Florida."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Cootharaba Lookout",
+    "text": "This is Cootharaba Lookout, long known as Shepperson's Lookout. Below is Lake Cootharaba, the largest lake in the Noosa Everglades system, which is often described as one of only two everglades in the world."
+   }
+  ]
+ },
+ "story": [
+  "For decades, locals called this Shepperson's Lookout, after the Shepperson family who ran a dairy farm on the hill from 1935.",
+  "In September 2026 Noosa Council finished an upgrade, and it now carries the name Cootharaba Lookout, with two new viewing platforms, picnic seats, shade, water and more than 700 native plants. It sits on the Wahpunga Trail, so you may share the track with walkers and horse riders.",
+  "The view east is over the Noosa Everglades system, one vast, connected system that runs about 65 kilometres from the coastal wetlands, through the lakes, to the upper Noosa River. Its catchment covers about 85,000 hectares, with more than 50 ecosystems and over 700 native species.",
+  "Lake Cootharaba below is its largest lake, and the gateway to the upper river, known as the River of Mirrors. At the far southern end is Lake Weyba. It is often described as one of only two everglades in the world, the other being in Florida."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

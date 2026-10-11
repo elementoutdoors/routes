@@ -1,0 +1,31 @@
+{
+ "key": "emu-mountain",
+ "kind": "place",
+ "title": "Emu Mountain and the Peregian heath",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Emu Mountain and the Peregian heath",
+   "area": "coast",
+   "after": "peregian-beach",
+   "paras": [
+    "Between Peregian and Coolum the road crosses open wallum, the low, sandy heath that once covered much of this coast. Rising out of it is Emu Mountain, also known as Mount Peregian, an unusual rocky knoll of rhyolite left from a once larger volcanic mass. A short, steep walk (1.1 km return, about 45 minutes to an hour) climbs through montane and coastal heath to an old trig point with views from Noosa to Maroochydore, the Glass House Mountains and Mount Tuchekoi, and humpback whales offshore from June to November. The mountain shares its name with the endangered Mt Emu she-oak, a wiry shrub found only along a 55 km strip between Beerburrum and Noosa. The surrounding heath is home to the threatened ground parrot and wallum froglet, and the walk is known for its wildflowers."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Emu Mountain and the Peregian heath",
+    "text": "The rocky knoll nearby is Emu Mountain, also called Mount Peregian, a remnant of an ancient volcano. Its heath shelters the endangered Mt Emu she-oak, which grows only between Beerburrum and Noosa."
+   }
+  ]
+ },
+ "story": [
+  "Between Peregian and Coolum, the road crosses open wallum, the low, sandy heath that once covered much of this coast.",
+  "Rising out of it is Emu Mountain, also called Mount Peregian, a rocky knoll left from an ancient volcano. A short, steep walk of just over a kilometre return climbs to an old survey marker at the top, with views from Noosa to Maroochydore and the Glass House Mountains, and whales offshore in winter and spring.",
+  "The mountain shares its name with the endangered Mount Emu she-oak, a wiry shrub found only in a narrow strip between Beerburrum and Noosa. The heath around it is home to the threatened ground parrot and the wallum froglet, and it is known for its wildflowers."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

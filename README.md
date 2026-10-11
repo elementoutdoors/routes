@@ -32,6 +32,10 @@ phone's browser with the map, spoken and written directions, stops and partner o
 - An offer can be set to "finish" (`showAt`): it is not shown at the start, comes up in the last 1.5 km and sits on the
   finish card. Used for Land and Sea Brewery, over the road from the shop.
 
+## The Story Library
+
+Every story, blog section, pin line, kayak talking point and wildlife card is written once, in `library/`. The build reads it, publishes it as `library.json` (read by the EO Crew staff app) and `library.html` (to read), and lists any live blog section or Ride with GPS pin that differs from it. See `library/README.md`.
+
 ## Changing things
 
 | Change | Where |
@@ -39,8 +43,7 @@ phone's browser with the map, spoken and written directions, stops and partner o
 | Cue wording, stops, the route line | Ride with GPS. Live by the next morning, or run the workflow by hand. |
 | Add or remove a route | `config/routes.json`, plus the route's Ride with GPS privacy code in the `ROUTE_SECRETS` secret |
 | Partner offers | The Ride Guide Settings page (`config/offers.json` underneath; `validUntil` hides it after that date, `showAt` "finish" keeps it for the end of the ride) |
-| Full stories | `config/stories.json` (one per blog place, see `config/STORY_BRIEF.md`) |
-| Agreed place text | `config/place-record.json`, only through `scripts/place-record.mjs` (see `config/STORY_BRIEF.md`) |
+| Any story, blog section, pin line, kayak talking point or wildlife card | The Story Library, `library/` (read `library/README.md`). `config/stories.json` and `config/place-record.json` are generated from it. |
 | How a word or name is said aloud | `config/speech.json` |
 | When turns are announced, close-together turns, off-route sensitivity, stop pop-ups, screen defaults | The Ride Guide Settings page (https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18). Saving it starts the "Ride Guide settings apply" scheduled task, which writes `config/settings.json` here. Every value is range-checked and falls back to its default. |
 | Which brand each map uses (By Earth and Ocean or Bike On) | The Ride Guide Settings page; the task writes `brand` in `config/routes.json`. The map then shows that brand's logo and colours. |

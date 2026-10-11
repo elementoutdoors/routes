@@ -1,0 +1,54 @@
+{
+ "key": "australian-whipray",
+ "kind": "wildlife",
+ "title": "Australian Whipray",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Australian Whipray",
+  "scientific_name": "Himantura australis",
+  "group": "Ray",
+  "description": "The Australian Whipray has a broad, rhomboidal disc with a short, triangular snout. Its upper body is yellowish to pale brown with dark spots or a reticulated pattern, while the underside is mostly white with a dark margin. Juveniles have distinct spots, while adults develop a stronger reticulated pattern.",
+  "detail": [
+   {
+    "type": "text",
+    "text": "The tail is long and whip-like, without skin folds. It is dark beyond the sting but lacks the strong black-and-white banding seen in similar species. The eyes are moderately large and protrude, especially in young individuals. The back is covered in dermal denticles, with adults developing a well-defined denticle band and 1-2 heart-shaped denticles near the shoulders."
+   },
+   {
+    "type": "text",
+    "text": "This species grows up to 183 cm (6 ft) in disc width (DW) and 350 cm (11.5 ft) in total length (TL)."
+   },
+   {
+    "type": "text",
+    "text": "**Distribution and Habitat** - The Australian Whipray is found along northern Australia's coastline, from Shark Bay in Western Australia to Cook Island in northern New South Wales, as well as in Papua New Guinea. It prefers shallow coastal waters with sandy or muddy bottoms and is sometimes found near rocky reefs. This species inhabits estuaries and brackish waters and has been recorded at depths of up to 45 meters."
+   },
+   {
+    "type": "text",
+    "text": "**Feeding and Ecology** - The Australian Whipray primarily feeds on crustaceans, especially prawns and crabs, but also eats polychaete worms. It forages along the seafloor, using electroreception to detect prey and its flat teeth to crush food."
+   },
+   {
+    "type": "text",
+    "text": "**Reproduction and Lifecycle** - Like other stingrays, this species is aplacental viviparous. Embryos are initially nourished by yolk before receiving nutrients from the mother's \"uterine milk\" (histotrophy). Males mature at around 112 cm (44 in) DW, and females give birth to 2-4 pups, each measuring about 29-30 cm (11-12 in) DW at birth."
+   },
+   {
+    "type": "text",
+    "text": "**Similar Species** - The Australian Whipray was once classified as the Reticulate Whipray (*Himantura uarnak*). It can be distinguished from the Leopard Whipray (*Himantura leoparda*), which has larger, more widely spaced spots and a more pointed snout. It also differs from the Blackspotted Whipray (*Maculabatis astra*), which has a strongly banded tail."
+   },
+   {
+    "type": "text",
+    "text": "**Human Interactions and Conservation -** The Australian Whipray is sometimes caught as bycatch in commercial trawl fisheries. In Australia, most captured individuals are released, but in Papua New Guinea, they are often kept for food. Although not currently listed as threatened, population monitoring is important to assess potential risks from fishing and habitat degradation."
+   }
+  ],
+  "conservation": "Not currently listed as threatened",
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/c05244d08_australian-whipray.jpeg",
+  "photo_focus": {
+   "x": 50,
+   "y": 50
+  },
+  "photo_width": 600,
+  "photo_height": 399,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Sting Ray Talk"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df1e"
+}

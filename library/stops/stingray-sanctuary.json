@@ -1,0 +1,31 @@
+{
+ "key": "stingray-sanctuary",
+ "kind": "stop",
+ "title": "The stingray sanctuary",
+ "status": "live",
+ "updated": "2026-10-11",
+ "tours": {
+  "stingrays-everglades": 6
+ },
+ "talk": {
+  "points": [
+   "Estuary stingray (Hemitrygon fluviorum): diamond-shaped body, long tail, a row of thorns along the back; up to 93 cm wide, yellow-brown or olive. Shallow mangrove-lined rivers and estuaries of southern Queensland and NSW. Near threatened: bycatch, habitat loss and persecution by shellfish farmers.",
+   "Australian whipray (Himantura australis): broad disc with dark spots or a net pattern and a whip-like tail, up to 183 cm wide. Finds prawns and crabs by electroreception.",
+   "Cowtail stingray (Pastinachus sephen): light brown with dark spots and a black and white banded tail, up to 183 cm wide. Rests in small groups in murky water, likely to avoid predators."
+  ],
+  "detail": "",
+  "detail_blocks": [],
+  "stop_title": "Stingrays"
+ },
+ "story": [
+  "Weyba is understood to mean place of stingrays, and this lake has been a stingray sanctuary for as long as anyone knows. Rays come into the shallows to breed and give birth, and the young grow up here before heading out to deeper water.",
+  "The shallow water is their shield. Bigger predators coming in from the deep channels are exposed in water this shallow, so the young rays get a safe place to grow.",
+  "The ray seen most often is the cowtail. Many here are juveniles, but a cowtail can grow to about 1.8 metres across, with a tail twice as long as its body. The brown estuary stingray is special too. It lives only on the east coast of Queensland and New South Wales, and it is listed as near threatened.",
+  "Stingrays are wild animals, so they are often seen but never guaranteed. Give them space, never touch or chase them, and let them carry on with their day."
+ ],
+ "eocrew": {
+  "document_id": "6abbafe4990e468def4fe82f",
+  "section_id": "6abbafe6fa3dae8d630b0893"
+ },
+ "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
+}

@@ -1,0 +1,36 @@
+{
+ "key": "weyba-bridge",
+ "kind": "place",
+ "title": "Weyba Bridge",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Weyba Bridge",
+   "area": "noosaville",
+   "after": "munna-point",
+   "paras": [
+    "Weyba Creek winds from Lake Weyba, the southern gateway to the Noosa Everglades system, to meet the lower Noosa River. Bridging it has always been a saga. The first, the 61 m Alexandra Bridge, opened in 1886 and was soon ruined by shipworm. A timber pile bridge opened on 19 October 1929, the same day as the Doonella bridge, finally linking Tewantin, Noosaville and Noosa Heads by road. When a concrete bridge replaced it from 1969, locals kept the old one for walkers. It partly collapsed in 1991, and the Friends of the Old Weyba Bridge raised money for the replica you ride today, built in 1995. The creek is part of the Noosa River Fish Habitat Area, its mangroves a nursery for fish, crabs and prawns. Weyba is thought to come from an Aboriginal word for stingray, though some sources suggest flying squirrel."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Weyba Bridge",
+    "text": "You are crossing Weyba Bridge, a 1995 replica of the 1929 timber bridge that finally joined Tewantin, Noosaville and Noosa Heads by road. The mangroves below are a protected fish nursery."
+   },
+   {
+    "name": "Weyba Creek mangroves",
+    "text": "Weyba Creek links Lake Weyba, the southern end of the Noosa Everglades system, to the Noosa River. Its mangroves are part of the Noosa River Fish Habitat Area, a nursery for fish, crabs and prawns."
+   }
+  ]
+ },
+ "story": [
+  "Weyba Creek winds from Lake Weyba, the southern gateway to the Noosa Everglades system, down to the Noosa River. Bridging it has always been a saga.",
+  "The first bridge opened in 1886 and was soon ruined by shipworm. A timber bridge opened in October 1929, the same day as the Doonella bridge, and at last Tewantin, Noosaville and Noosa Heads were joined by road.",
+  "When a concrete bridge took over from 1969, locals kept the old one for walkers. It partly collapsed in 1991, and a community group raised the money for the replica you are riding on, built in 1995.",
+  "The mangroves here are a nursery for fish, crabs and prawns. And the name Weyba is thought to come from an Aboriginal word for stingray, though some sources say flying squirrel."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

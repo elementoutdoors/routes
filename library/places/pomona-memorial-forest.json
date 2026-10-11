@@ -1,0 +1,31 @@
+{
+ "key": "pomona-memorial-forest",
+ "kind": "place",
+ "title": "Pomona Memorial Forest",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Pomona Memorial Forest",
+   "area": "pomona-region",
+   "after": "majestic-theatre",
+   "paras": [
+    "On the site of the original Pinbarren State School, Pomona's school forestry club planted a memorial forest during the Second World War to honour local servicemen. A 1946 newspaper report counted 2,400 timber trees, including 1,725 hoop pines and 158 flooded gums, and Monument Australia lists hoop and kauri pines, Pinus taeda, silky oak and flooded gum. A plaque records a rededication ceremony on Sunday 22 October 1955, at the golden jubilee of the Pomona secondary department, as a joint project with the Cooroy Pomona RSL sub-branch. From here the Pomona Loop keeps climbing over the range at Pinbarren, the high point of the ride, before dropping into Kin Kin."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Pomona Memorial Forest",
+    "text": "Beside the road is the Pomona Memorial Forest, planted by local school students in the early 1940s to honour servicemen of the Second World War. They planted hoop and kauri pines, silky oaks and flooded gums."
+   }
+  ]
+ },
+ "story": [
+  "Beside the road is the Pomona Memorial Forest, on the site of the original Pinbarren State School.",
+  "During the Second World War, the students of Pomona's school forestry club planted it to honour local servicemen. A newspaper in 1946 counted 2,400 timber trees, including more than 1,700 hoop pines. Kauri pines, silky oaks and flooded gums were planted too.",
+  "A plaque records that the forest was rededicated in October 1955, together with the Cooroy Pomona RSL. From here the road keeps climbing over the range at Pinbarren, the high point of the ride, before dropping into Kin Kin."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

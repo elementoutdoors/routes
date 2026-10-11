@@ -1,0 +1,25 @@
+{
+ "key": "striated-heron",
+ "kind": "wildlife",
+ "title": "Striated Heron",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Striated Heron",
+  "other_names": "Mangrove Heron",
+  "scientific_name": "Butorides striata",
+  "group": "Bird",
+  "description": "Also known as the Mangrove Heron, this small heron species is about 44 cm tall and is commonly found in mangrove-lined coasts and estuaries. It feeds on fish, crustaceans, and insects.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/afd74f29a_striated-heron.jpeg",
+  "photo_focus": {
+   "x": 55,
+   "y": 45
+  },
+  "photo_width": 293,
+  "photo_height": 195,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df2a"
+}

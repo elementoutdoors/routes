@@ -1,0 +1,24 @@
+{
+ "key": "little-black-cormorant",
+ "kind": "wildlife",
+ "title": "Little Black Cormorant",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Little Black Cormorant",
+  "scientific_name": "Phalacrocorax sulcirostris",
+  "group": "Bird",
+  "description": "A member of the cormorant family, this all-black bird with blue-green eyes is common in smaller rivers and lakes throughout most areas of Australia. It feeds primarily on fish.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/9d5dd8b63_little-black-cormorant.jpeg",
+  "photo_focus": {
+   "x": 50,
+   "y": 35
+  },
+  "photo_width": 220,
+  "photo_height": 275,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df2d"
+}

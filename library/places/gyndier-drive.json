@@ -1,0 +1,49 @@
+{
+ "key": "gyndier-drive",
+ "kind": "place",
+ "title": "Gyndier Drive (Garmin Hill)",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Gyndier Drive (Garmin Hill) and the Noosa Triathlon",
+   "area": "tinbeerwah",
+   "after": "wooroi",
+   "paras": [
+    "Gyndier Drive follows the old Cooroy to Tewantin range road; Noosa Library holds photos of the \"Cooroy-Tewantin Range Road (Gyndier Drive)\" being built in the early twentieth century. The Cooroy to Tewantin road opened in December 1928 as the first main road built in Noosa Shire. Today Gyndier is closed to motor traffic, with bollards at each end, and climbs about 3 km through the forest to Sunrise Road. Two events made it famous. Since 1998 the Noosa Beach Classic Car Club has run the Noosa Hill Climb here, a not for profit motorsport event on a 1.5 km closed course with 14 tight corners.",
+    "The Noosa Triathlon began in October 1983, the idea of former Olympian Dave Power and all-round sportsman Joe Gilbert with the Noosa Heads Lions Club. They had planned a marathon but could not find enough sealed road, so they settled on a triathlon. About 180 athletes started; helmets were optional, wetsuits were banned and some cyclists got lost. Under Garth Prowd it grew into a five day multisport festival with more than 13,000 competitors, and it is billed as the largest Olympic distance triathlon in the world. The 40 km bike leg runs from Noosa along the river to Gyndier Drive, the quiet forest climb racers call <a href=\"https://www.bikeon.com.au/bike_rides/lakes-road-ride/\">Garmin Hill</a>, about 10 km in. After the top, the course turns onto Cooroy Noosa Road for an out and back before a fast descent home.",
+    "On race day the climb carries a King of the Mountain prize. The rest of the year it is a quiet forest road, so watch for walkers."
+   ]
+  },
+  "beo": {
+   "heading": "Gyndier Drive (Garmin Hill)",
+   "area": "tewantin-national-park",
+   "after": null,
+   "paras": [
+    "Gyndier Drive is the old range road between Cooroy and Tewantin. Noosa Library holds photos of the \"Cooroy-Tewantin Range Road (Gyndier Drive)\" being built in the early twentieth century, and the Cooroy to Tewantin road that opened in December 1928 was the first main road built in Noosa Shire. Traffic has long since moved to the newer road, and bollards now close Gyndier at each end, leaving about 3 km of forest road between Sunrise Road and the bottom of the range for bikes and walkers.",
+    "It has a racing pedigree. The Noosa Beach Classic Car Club has run the Noosa Hill Climb here since 1998, on a 1.5 km closed course with 14 tight corners. The Noosa Triathlon, first held in 1983 and now the Garmin Noosa Triathlon, billed as the world's largest Olympic distance triathlon, sends its bike leg up the same climb about 10 km in, which is why racers call it Garmin Hill. On a normal day it is quiet, so watch for walkers."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Gyndier Drive (Garmin Hill)",
+    "text": "You are on Gyndier Drive, the old Cooroy to Tewantin range road, now closed to cars. Triathletes know it as Garmin Hill, and since 1998 the Noosa Hill Climb has raced cars up its 14 corners."
+   }
+  ],
+  "bikeon": [
+   {
+    "name": "Gyndier Drive (Garmin Hill)",
+    "text": "You are on Gyndier Drive, the old Cooroy to Tewantin range road, now closed to cars. Triathletes know it as Garmin Hill, and since 1998 the Noosa Hill Climb has raced cars up its 14 corners."
+   }
+  ]
+ },
+ "story": [
+  "Gyndier Drive follows the old range road between Cooroy and Tewantin. The Cooroy to Tewantin road opened in December 1928, the first main road built in Noosa Shire.",
+  "Today it is closed to cars, with bollards at each end, and climbs about three kilometres through the forest to Sunrise Road.",
+  "Two events made it famous. Since 1998 the Noosa Hill Climb has raced cars up a closed course here, with fourteen tight corners.",
+  "And the Noosa Triathlon, first held in 1983 with about 180 athletes, sends its bike leg up this same climb. Racers call it Garmin Hill. The event has grown into a five day festival with more than 13,000 competitors, and is billed as the largest Olympic distance triathlon in the world. On a normal day it is a quiet forest road, so watch for walkers."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

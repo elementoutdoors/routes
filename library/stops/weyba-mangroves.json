@@ -1,0 +1,183 @@
+{
+ "key": "weyba-mangroves",
+ "kind": "stop",
+ "title": "The mangroves",
+ "status": "live",
+ "updated": "2026-10-11",
+ "tours": {
+  "stingrays-everglades": 5
+ },
+ "talk": {
+  "points": [
+   "Mangroves are nurseries for fish, crustaceans and invertebrates; their roots protect small creatures from predators.",
+   "They filter up to 90% of the salt from seawater, and push the rest into sacrificial yellow leaves that fall and feed the ecosystem.",
+   "Their roots stabilise shorelines and protect against erosion, waves and storm surge.",
+   "They store four times more carbon than rainforests; one mangrove absorbs about 308 kg of CO2 over 25 years.",
+   "Prop roots give stability; pneumatophores (breathing roots) let them take in oxygen in waterlogged soil.",
+   "Eight species here, including red, goat's horn, grey (most common), orange (tallest), yellow and white-flowered (least common). Noosa Council fully protects all mangrove areas."
+  ],
+  "detail": "",
+  "detail_blocks": [
+   {
+    "type": "text",
+    "text": "Mangroves are vital to the Noosa Everglades ecosystem, serving as a keystone species that supports biodiversity, stabilizes shorelines, and acts as a powerful carbon sink. Eight different species of mangroves thrive in the Noosa Everglades system, including:"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Red Mangrove",
+     "Goat's Horn Mangrove",
+     "Yellow Mangrove",
+     "Grey Mangrove",
+     "Orange Mangrove",
+     "White-Flowered Mangrove",
+     "Mangrove Fern",
+     "Milky Mangrove"
+    ]
+   },
+   {
+    "type": "heading",
+    "text": "Ecosystem Role & Importance"
+   },
+   {
+    "type": "text",
+    "text": "Mangroves provide critical habitat for a wide range of marine and terrestrial species. Their intricate root systems serve as nurseries for juvenile fish, crustaceans, and invertebrates, offering protection from predators. Larger species such as stingrays and predatory fish rely on the smaller creatures that shelter within the mangroves as a food source."
+   },
+   {
+    "type": "text",
+    "text": "These trees are also natural filtration systems. They trap sediments and pollutants from the land, improving water quality while helping to build and stabilize coastal and riverbank environments."
+   },
+   {
+    "type": "heading",
+    "text": "Salt Filtration & Adaptations"
+   },
+   {
+    "type": "text",
+    "text": "Mangroves possess a highly specialized salt filtration system that allows them to thrive in saline environments. They filter up to 90% of the salt from seawater through their roots, converting it into fresh water. The remaining salt is excreted through sacrificial yellow leaves, which eventually fall off, decomposing and returning nutrients to the ecosystem."
+   },
+   {
+    "type": "text",
+    "text": "To survive in low-oxygen, waterlogged soils, many mangrove species have evolved unique root structures:"
+   },
+   {
+    "type": "list",
+    "items": [
+     "**Prop roots** (or knee roots) provide stability in shifting tidal environments.",
+     "**Pneumatophores** (specialized aerial roots) project above the mud and contain lenticels, tiny openings that facilitate gas exchange."
+    ]
+   },
+   {
+    "type": "heading",
+    "text": "Coastal Protection & Climate Resilience"
+   },
+   {
+    "type": "text",
+    "text": "Mangroves form a natural barrier between marine and terrestrial ecosystems, reducing the impact of storm surges, coastal erosion, and flooding. Their dense root networks dissipate wave energy, protecting shorelines from damage caused by extreme weather events."
+   },
+   {
+    "type": "heading",
+    "text": "Carbon Storage Powerhouse"
+   },
+   {
+    "type": "text",
+    "text": "Mangroves are among the most efficient carbon sinks on the planet, capable of storing **four times more carbon** than rainforests. Most of this carbon is locked away in the soil beneath the trees. A single mangrove absorbs around **308 kg of CO₂ over its 25-year growth life**. This makes them critical in the fight against climate change."
+   },
+   {
+    "type": "heading",
+    "text": "Mangrove Species in the Noosa Everglades"
+   },
+   {
+    "type": "heading",
+    "text": "Red Mangrove"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Found in soft mud or sand in sheltered maritime areas",
+     "Grows up to 4 meters",
+     "Recognizable by its distinctive stilt-like prop roots and red-spotted leaf undersides"
+    ]
+   },
+   {
+    "type": "heading",
+    "text": "Goat's Horn Mangrove"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Found in dense thickets away from the water's edge",
+     "Shrub or small tree up to 3 meters",
+     "Features salt-excreting leaves and horn-shaped fruits"
+    ]
+   },
+   {
+    "type": "heading",
+    "text": "Grey Mangrove"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Most common mangrove along Australia's mainland coast",
+     "Can grow up to 10 meters",
+     "Recognizable by its pencil-shaped pneumatophores and greyish-white leaf undersides"
+    ]
+   },
+   {
+    "type": "heading",
+    "text": "Orange Mangrove"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Tallest mangrove in the Noosa Everglades, reaching up to 10 meters",
+     "Found in well-drained muddy soils, away from constant tidal immersion",
+     "Has bent-knee shaped pneumatophores"
+    ]
+   },
+   {
+    "type": "heading",
+    "text": "Yellow Mangrove"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Typically found on the edge of salt marshes",
+     "Grows up to 2 meters",
+     "Features papery bark and spurred propagules"
+    ]
+   },
+   {
+    "type": "heading",
+    "text": "White-Flowered Mangrove"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Least common mangrove in the Noosa region, at the southern end of its range",
+     "Grows up to 3 meters",
+     "Notched leaves and compressed woody fruit"
+    ]
+   },
+   {
+    "type": "heading",
+    "text": "Conservation & Protection"
+   },
+   {
+    "type": "text",
+    "text": "The Noosa Council has **fully protected all mangrove areas**, prohibiting any development that could damage these crucial ecosystems. By ensuring their preservation, the region safeguards the biodiversity and ecological balance of the Noosa Everglades."
+   }
+  ],
+  "stop_title": "Mangroves"
+ },
+ "story": [
+  "Mangroves are what make this southern end of the Noosa Everglades system special. They need salty, tidal water, so further north, where the water turns fresh, they disappear. Eight kinds grow here.",
+  "They live where few plants can. Their roots filter out up to 90 per cent of the salt in seawater, and they push the rest into yellow leaves that drop off. Roots that poke up out of the mud let them breathe in waterlogged ground.",
+  "They hold the banks together, and they filter pollution out of the water as it flows down the system. They are also a carbon sink, storing four to five times more carbon than a rainforest, most of it locked away in the mud.",
+  "Their roots give food and shelter to young fish, crabs and prawns. Three out of every four fish we eat in Australia use a mangrove at some point in their lives. Without mangroves, there would be far fewer fish in the sea."
+ ],
+ "eocrew": {
+  "document_id": "6abbafe4990e468def4fe82f",
+  "section_id": "6abbafe6fa3dae8d630b0892"
+ },
+ "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
+}

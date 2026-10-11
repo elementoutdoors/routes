@@ -1,0 +1,80 @@
+{
+ "key": "noosa-private-airport",
+ "kind": "stop",
+ "title": "Noosa's private airport",
+ "status": "live",
+ "updated": "2026-10-11",
+ "tours": {
+  "stingrays-everglades": 2
+ },
+ "talk": {
+  "points": [
+   "Noosa Private Airport was established in the early 1980s for private aviation and tourism, near Noosa Heads with quick access to beaches and hinterland.",
+   "56 hectares for airport operations, part of more than 400 hectares owned by Bob, who bought it in 2008.",
+   "Development is restricted because the area is part of a UNESCO Biosphere Reserve; any expansion must fit its environmental commitments."
+  ],
+  "detail": "",
+  "detail_blocks": [
+   {
+    "type": "text",
+    "text": "**Established**: Early 1980s, the airport was created in response to the burgeoning demand for private aviation services and increased tourism in Noosa, Queensland, catering to both local and international travelers seeking luxury experiences."
+   },
+   {
+    "type": "text",
+    "text": "**Location**: Conveniently situated near Noosa Heads, the airport offers seamless access to key attractions, including Noosa National Park and various beaches, as well as the scenic Hinterland. This prime location is pivotal for tourists and business travelers alike."
+   },
+   {
+    "type": "text",
+    "text": "**Land Area**: The airport encompasses 56 hectares dedicated to operational use. This is part of a larger 400+ hectare landholding owned by Bob, which presents potential for complementary development projects and regional travel enhancements."
+   },
+   {
+    "type": "text",
+    "text": "**Private Aviation Focus**: Noosa Private Airport primarily serves private flights, catering to luxury travelers and corporate clients, thereby positioning itself as a premium alternative to commercial airports. With personalized services and high-quality facilities, it attracts those seeking a tailored travel experience."
+   },
+   {
+    "type": "heading",
+    "text": "Bob's Involvement"
+   },
+   {
+    "type": "text",
+    "text": "**Ownership**: Bob acquired Noosa Private Airport in 2008 and has since played a critical role in its strategic development, focusing on expanding services and enhancing customer experience. His vision includes transforming the airport into a leading hub for private aviation in the region."
+   },
+   {
+    "type": "text",
+    "text": "**Other Projects**: Bob is also recognized for his involvement in regional aviation initiatives, such as expansions and upgrades at Sunshine Coast Airport, reinforcing his commitment to developing private aviation in Queensland."
+   },
+   {
+    "type": "text",
+    "text": "**Airport Infrastructure**: Significant investments have been made to improve facilities, including state-of-the-art hangars and terminals designed specifically for business jets and helicopters. This focus on infrastructure ensures the airport can accommodate evolving demands in private aviation while providing modern amenities for travelers."
+   },
+   {
+    "type": "heading",
+    "text": "Development Restrictions in Noosa Biosphere"
+   },
+   {
+    "type": "text",
+    "text": "**Biosphere Reserve**: As part of a UNESCO Biosphere Reserve, Noosa is subject to strict environmental stewardship guidelines that prioritize ecological balance and biodiversity conservation."
+   },
+   {
+    "type": "text",
+    "text": "**Development Limits**: Any proposed developments surrounding the airport must comply with regulations to safeguard the region's unique flora and fauna, promoting a sustainable coexistence between aviation operations and the environment."
+   },
+   {
+    "type": "text",
+    "text": "**Sustainability Focus**: Future expansion plans are rooted in Noosa's commitment to ecological preservation and environmental sustainability. The airport aims to implement eco-friendly initiatives, including energy-efficient operations and habitat conservation projects, reflecting a dedication to responsible growth."
+   }
+  ],
+  "stop_title": "Bob's Airport"
+ },
+ "story": [
+  "Across the water is Noosa's private airport. It was set up in the early 1980s, as more and more people flew in to holiday in Noosa. It sits close to Noosa Heads, the national park, the beaches and the hinterland.",
+  "It is used by private planes and helicopters, not airlines. The airfield takes up about 56 hectares, part of a much larger property of more than 400 hectares.",
+  "Guides call it Bob's Airport, after the owner who bought it in 2008.",
+  "Noosa sits inside a biosphere reserve, so anything built around the airport has to meet strict rules that protect the plants and animals of the area."
+ ],
+ "eocrew": {
+  "document_id": "6abbafe4990e468def4fe82f",
+  "section_id": "6abbafe6fa3dae8d630b088f"
+ },
+ "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog"
+}

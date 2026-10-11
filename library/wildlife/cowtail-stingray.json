@@ -1,0 +1,57 @@
+{
+ "key": "cowtail-stingray",
+ "kind": "wildlife",
+ "title": "Cowtail Stingray",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Cowtail Stingray",
+  "scientific_name": "Pastinachus sephen",
+  "group": "Ray",
+  "description": "This species has a diamond-shaped pectoral fin disc that is slightly wider than long, with a disc width of 1-1.1 times its length. The snout is relatively short with an obtusely angular point. The anterior margins of the disc are mildly concave, and the pectoral fin apexes are narrowly rounded or somewhat angular. The eyes are small and protruding, with a snout length 2.1-2.2 times the combined eye and spiracle length.",
+  "detail": [
+   {
+    "type": "text",
+    "text": "The cowtail stingray can reach a maximum disc width of 183 cm (6 ft) and a total length of up to 350 cm (11.5 ft)."
+   },
+   {
+    "type": "text",
+    "text": "The dorsal surface is light brown with conspicuous dark spots; in juveniles, these spots are well-spaced, while in adults, they become crowded to form a reticulated pattern. The ventral surface is white. The tail is marked with bands of black and white."
+   },
+   {
+    "type": "text",
+    "text": "Cowtail stingrays often form small groups when resting, particularly when visibility is poor, such as in turbid water or under low light conditions. The typical size of such groups is three individuals, arranged in a \"rosette\" formation with their tails pointing outward. This appears to be an anti-predator behavior, as the close circular arrangement allows them to see predators approaching from any direction."
+   },
+   {
+    "type": "text",
+    "text": "**Distribution and Habitat -** The cowtail stingray is found in the Indo-Pacific region, inhabiting coastal waters from the Red Sea and East Africa to northern Australia and Micronesia. It favors sandy or muddy substrates in shallow coastal areas, estuaries, and lagoons, typically at depths up to 60 meters."
+   },
+   {
+    "type": "text",
+    "text": "**Feeding and Ecology -** Cowtail stingrays are solitary foragers that feed on bony fishes (including leiognathids, Nemipterus, and soles), crustaceans, polychaete worms, sipunculids, and molluscs."
+   },
+   {
+    "type": "text",
+    "text": "**Reproduction and Lifecycle -** Reproduction in this species is ovoviviparous, with embryos sustained in late development by histotroph (\"uterine milk\") delivered via specialized structures. Females give birth to live young measuring 18 cm across or more."
+   },
+   {
+    "type": "text",
+    "text": "**Similar Species -** The reticulate whipray (Himantura uarnak), also known as the honeycomb stingray, is similar in appearance but can be distinguished by its ornate dorsal color pattern of many small, close-set dark spots or reticulations on a lighter background. However, the reticulate whipray is only one of several large spotted stingrays in the Indo-Pacific, which, coupled with the variability of its coloration with age and locality, has resulted in a great deal of taxonomic confusion."
+   },
+   {
+    "type": "text",
+    "text": "**Etymology -** The species name \"sephen\" is derived from the Arabic word for a type of stingray, reflecting the species' distribution in the Red Sea and surrounding regions."
+   }
+  ],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/f5bcb5aaa_cowtail-stingray.jpeg",
+  "photo_focus": {
+   "x": 50,
+   "y": 50
+  },
+  "photo_width": 220,
+  "photo_height": 165,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Sting Ray Talk"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df1f"
+}

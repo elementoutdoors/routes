@@ -1,0 +1,24 @@
+{
+ "key": "black-necked-stork",
+ "kind": "wildlife",
+ "title": "Black-Necked Stork",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Black-Necked Stork",
+  "scientific_name": "Ephippiorhynchus asiaticus",
+  "group": "Bird",
+  "description": "The only species of stork found in Australia, the Black-Necked Stork is a tall, long-necked wading bird with striking black and white plumage and a heavy bill. It inhabits wetlands and floodplains, feeding on fish, amphibians, and invertebrates.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/edd6d25f3_black-necked-stork.jpeg",
+  "photo_focus": {
+   "x": 45,
+   "y": 35
+  },
+  "photo_width": 220,
+  "photo_height": 330,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df27"
+}

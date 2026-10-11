@@ -1,0 +1,32 @@
+{
+ "key": "tewantin-wharves",
+ "kind": "place",
+ "title": "Tewantin's old wharves",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Tewantin's old wharves",
+   "area": "tewantin",
+   "after": null,
+   "paras": [
+    "Tewantin grew up around a timber wharf. In 1870 the Port Master, George Heath, mapped \"Nusa Harbour\" as a better outlet for timber than the Mary or Maroochy rivers. The town was proclaimed in 1871 and by November 1874 a wharf and goods shed holding 40 tons stood on this bank. Timber came down the river, including from the Mill Point sawmill on Lake Cootharaba, and coastal steamers took timber, fish and oysters to Brisbane. From 1878 Cobb and Co coaches linked the steamers with Gympie. The name Tewantin is usually traced to the Kabi Kabi word dauwadhan, often translated as \"dead trees or logs\". The railway to Gympie (1889) took much of the passenger trade, and the steamer Culgoa was wrecked on the Noosa bar in 1891. Tourism took over: the Parkyn family later ran a jetty, boat hire and bait business here, and one of their buildings still stands at today's Noosa Marina."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Tewantin's old wharves",
+    "text": "This riverbank was Tewantin's working port. From the 1870s timber, fish and oysters left here by steamer for Brisbane, and coaches carried passengers on to the Gympie goldfields."
+   }
+  ]
+ },
+ "story": [
+  "Tewantin grew up around a timber wharf right here on the riverbank.",
+  "In 1870 the Port Master mapped Nusa Harbour as a better way to ship timber than the Mary or Maroochy rivers. The town was proclaimed in 1871, and by 1874 a wharf and goods shed stood on this bank. Timber came down the river, including from the big sawmill on Lake Cootharaba, and steamers carried timber, fish and oysters to Brisbane.",
+  "From 1878 Cobb and Co coaches linked the steamers with the Gympie goldfields. The railway took much of the passenger trade in 1889.",
+  "The name Tewantin is usually traced to the Kabi Kabi word dauwadhan, often translated as dead trees or logs. Later, the Parkyn family ran a jetty, boat hire and bait business here, and one of their buildings still stands at today's Noosa Marina."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

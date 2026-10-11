@@ -1,0 +1,25 @@
+{
+ "key": "pied-cormorant",
+ "kind": "wildlife",
+ "title": "Pied Cormorant",
+ "status": "live",
+ "updated": "2026-10-11",
+ "card": {
+  "name": "Pied Cormorant",
+  "other_names": "Australian Pied Cormorant",
+  "scientific_name": "Phalacrocorax varius",
+  "group": "Bird",
+  "description": "Also known as the Australian Pied Cormorant, this medium-sized bird is native to Australian waters. It has a distinctive black and white plumage and is commonly found in coastal areas, where it feeds on fish and other marine life.",
+  "detail": [],
+  "photo_url": "https://media.base44.com/images/public/6abba75b48155c78238d4cba/f44dfe7da_pied-cormorant.jpeg",
+  "photo_focus": {
+   "x": 45,
+   "y": 50
+  },
+  "photo_width": 220,
+  "photo_height": 176,
+  "photo_credit": "From the Stingrays manual, source to confirm",
+  "source": "EO-TR-11 Stingrays manual, Bird Identification"
+ },
+ "eocrew_id": "6abc1efcaac041b626e8df21"
+}

@@ -1,0 +1,32 @@
+{
+ "key": "cooran",
+ "kind": "place",
+ "title": "Cooran",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "Cooran",
+   "area": "cooran-tablelands",
+   "after": "mckane-lookout",
+   "paras": [
+    "Cooran began as a stop on the road between the Gympie goldfields and Tewantin. By 1877 William Casey was licensed to sell drinks at his Halfway House and stables, and in 1889 the railway from Gympie reached the new station of Cooran. That December William Martin moved his hotel licence to a new hotel at the station, and Cooran stayed the end of the line until the track pushed south to Pomona and Cooroy in 1891. Timber cutters had been working here since the 1870s; dairy farmers followed, then bananas in the 1920s and 30s and pineapples after the Second World War. The name comes from guran or kuran, meaning tall in the Kabi Kabi language, which may refer to Mt Cooran or to the tall Moreton Bay ash trees. The community hall dates from 1906."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Cooran",
+    "text": "This is Cooran, a railway town that grew around its station when the line from Gympie arrived in 1889. Its name comes from the Kabi Kabi word for tall, perhaps for Mt Cooran beside town."
+   }
+  ]
+ },
+ "story": [
+  "Cooran began as a stop on the road between the Gympie goldfields and Tewantin. By 1877 William Casey was licensed to sell drinks at his Halfway House.",
+  "In 1889 the railway from Gympie arrived, and a new hotel opened at the station that December. Cooran stayed the end of the line until the track pushed on to Pomona and Cooroy in 1891.",
+  "Timber cutters had worked here since the 1870s. Dairy farmers followed, then bananas in the 1920s and 30s, and pineapples after the Second World War.",
+  "The name comes from guran or kuran, meaning tall in the Kabi Kabi language. It may refer to Mount Cooran, or to the tall Moreton Bay ash trees. The community hall dates from 1906."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

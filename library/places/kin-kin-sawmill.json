@@ -1,0 +1,32 @@
+{
+ "key": "kin-kin-sawmill",
+ "kind": "place",
+ "title": "Kin Kin Sawmill",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "beo": {
+   "heading": "Kin Kin Sawmill",
+   "area": "kin-kin-cootharaba",
+   "after": null,
+   "paras": [
+    "Just before the village, Sister Tree Creek Road passes one of the last working country sawmills of its era on the North Coast. Arthur Hempsall and his son Lionel set it up in 1948 to cut softwood for the wooden cases that carried the district's fruit to market. Case milling peaked the following year, and as cardboard cartons took over, the mill turned to pallet timber and hardwood for power pole cross-arms and railway sleepers. The Hempsall family ran it until 1991. It was added to the Queensland Heritage Register in 2008 because so much of its original layout and machinery survives."
+   ]
+  }
+ },
+ "pins": {
+  "beo": [
+   {
+    "name": "Kin Kin Sawmill",
+    "text": "Beside the road here is the Kin Kin Sawmill, set up in 1948 to cut wooden packing cases for local fruit growers. It is heritage listed and still working, with much of its original machinery."
+   }
+  ]
+ },
+ "story": [
+  "The Kin Kin Sawmill is one of the last working country sawmills of its kind on the North Coast.",
+  "Arthur Hempsall and his son Lionel set it up in 1948, to cut timber for the wooden cases that carried the district's fruit to market.",
+  "As cardboard boxes took over, the mill turned to pallet timber and hardwood for power pole cross arms and railway sleepers. The Hempsall family ran it until 1991.",
+  "It joined the Queensland Heritage Register in 2008, because so much of its original layout and machinery survives."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

@@ -1,0 +1,32 @@
+{
+ "key": "gympie-terrace",
+ "kind": "place",
+ "title": "Gympie Terrace",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Gympie Terrace",
+   "area": "noosaville",
+   "after": "lake-doonella",
+   "paras": [
+    "After gold was found at Gympie in 1867, miners and their families began building simple holiday houses on the riverbank downstream from Tewantin in the 1870s and 1880s. The settlement took the name of its owners' home town, Gympie Terrace. For nearly sixty years the river was the only way in, until the Lake Doonella bridge opened in 1929. By 1933 about 60 houses and shops lined the Terrace. During the Second World War troops trained in amphibious vehicles on the river and Lake Weyba, and after the war fishing, prawning and boat hire took over the waterfront. The suburb became Noosaville in the early 1920s, but when a renaming of the street was floated in 2009, long-time families pushed back and Gympie Terrace stayed. Road riders on the <a href=\"https://www.bikeon.com.au/bike_rides/noosa-tri-sampler/\">Noosa Triathlon bike leg</a> race along this same street."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Gympie Terrace",
+    "text": "Noosaville began as Gympie Terrace, a row of weekend shacks built by Gympie gold miners in the 1870s and 80s. The name Noosaville came in the early 1920s, but locals kept the street name."
+   }
+  ]
+ },
+ "story": [
+  "Gold was found at Gympie in 1867, and soon miners and their families were building simple holiday shacks along this riverbank. The settlement took the name of their home town, Gympie Terrace.",
+  "For nearly sixty years the river was the only way in. Then the Lake Doonella bridge opened in 1929, and by 1933 about sixty houses and shops lined the Terrace.",
+  "During the Second World War, troops trained in amphibious vehicles on the river and on Lake Weyba. After the war, fishing, prawning and boat hire took over the waterfront.",
+  "The suburb became Noosaville in the early 1920s. When renaming the street was suggested in 2009, long time families pushed back, and Gympie Terrace stayed. Noosa Triathlon cyclists still race along it every year."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}

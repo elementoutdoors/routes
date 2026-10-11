@@ -1,0 +1,32 @@
+{
+ "key": "laguna-lookout",
+ "kind": "place",
+ "title": "Laguna Lookout",
+ "status": "live",
+ "updated": "2026-10-11",
+ "blog": {
+  "bikeon": {
+   "heading": "Laguna Lookout",
+   "area": "noosa-heads",
+   "after": "halse-lodge",
+   "paras": [
+    "The climb up Viewland Drive is short and very steep, so this is where the <a href=\"https://www.bikeon.com.au/ebike-hire-noosa/\">e-assist</a> earns its keep. At the top, Laguna Lookout opens over the whole lower river: the mouth and Main Beach below, the Noosa River winding north towards Lake Cooroibah, the sand mass of Great Sandy National Park beyond, and to the west the old volcanic plugs of the hinterland, best at sunset. The bay itself was named Laguna Bay by surveyor James Charles Burnett on 25 July 1847. Nobody recorded why. \"Laguna\" is Spanish for lagoon, and an 1866 newspaper called it \"Nusa Bay, or as it is better known, Lagoona Bay\". The walk to the lookout passes grey gums, pink bloodwoods, ironbarks and tallowwoods; keep an eye out for kookaburras, lace monitors and koalas. Between June and November, scan the bay for humpback whales."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Laguna Lookout",
+    "text": "From Laguna Lookout you can see the river mouth, Main Beach, Laguna Bay and the hinterland's volcanic peaks. Laguna Bay was named by surveyor James Burnett in 1847, and whales pass from June to November."
+   }
+  ]
+ },
+ "story": [
+  "The climb up Viewland Drive is short and very steep, so this is where the e-assist earns its keep.",
+  "From the top you look over the whole lower river. Main Beach and the river mouth are below you, the Noosa River winds north towards Lake Cooroibah, and beyond it lies the sand mass of Great Sandy National Park. To the west are the old volcanic peaks of the hinterland. It is at its best at sunset.",
+  "Surveyor James Burnett named Laguna Bay in July 1847, and nobody recorded why. Laguna is Spanish for lagoon, and an 1866 newspaper called it Nusa Bay, or as it is better known, Lagoona Bay.",
+  "On the walk up, keep an eye out for kookaburras, lace monitors and koalas, and between June and November, scan the bay for humpback whales."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+}
