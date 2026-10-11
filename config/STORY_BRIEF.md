@@ -66,7 +66,7 @@ https://claude.ai/artifact/XSdaNvQMw8tYpaqSiBz7Tp (shared database, written with
   GPS app get it too.
   Blogs: edit through the WordPress REST API in a Chrome signed in to that site (change the same words in content and in the
   _elementor_data meta), then open the post in Elementor and save it once the editor has loaded every section. As of 11/10/2026
-  only the upstairs Chrome is signed in to bikeon.com.au, and none to byearthandocean.com.au; ask Ben to sign in. Then `accept` each
+  the upstairs Chrome is signed in to both bikeon.com.au and byearthandocean.com.au WordPress; if a site asks to log in, ask Ben to sign in. Then `accept` each
   id once the live text matches, set the card's status to "applied" with the date, and, if the ruling settles a fact that could
   come up again, add it to the Rulings list on the Places record tab. No Chrome on this run: leave the card decided and
   unapplied; it is applied on the next run. A decision older than two weeks still unapplied = Needs Ben.
