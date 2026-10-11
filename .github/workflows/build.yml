@@ -1,11 +1,13 @@
 name: Build and publish
 
-# Rebuilds the site from Ride with GPS every night, on every change, and on demand.
+# Rebuilds the site from Ride with GPS every hour from 6am to 8pm Brisbane (so a fix made in Ride with GPS reaches riders
+# within the hour), at 3am, on every change, and on demand.
 on:
   push:
     branches: [main]
   schedule:
-    - cron: '7 17 * * *'   # 3:07am Brisbane
+    - cron: '7 17 * * *'           # 3:07am Brisbane
+    - cron: '7 20-23,0-10 * * *'   # every hour, 6:07am to 8:07pm Brisbane
   workflow_dispatch:
 
 permissions:

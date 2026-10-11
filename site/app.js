@@ -1298,16 +1298,25 @@
     var hr = el('button', { class: 'btn outline', type: 'button', text: 'Hear it' });
     var nx = el('button', { class: 'btn primary', type: 'button', text: 'Next ›' });
     pv.disabled = i === 0; nx.disabled = i === items.length - 1;
-    pv.addEventListener('click', function () { stepCheck(chk.i - 1); });
-    nx.addEventListener('click', function () { stepCheck(chk.i + 1); });
+    // each step is spoken as soon as it is shown (a tap, so phones allow the sound); Hear it repeats it
+    pv.addEventListener('click', function () { stepCheck(chk.i - 1); hearCheck(chk.items[chk.i]); });
+    nx.addEventListener('click', function () { stepCheck(chk.i + 1); hearCheck(chk.items[chk.i]); });
     hr.addEventListener('click', function () { hearCheck(it); });
     nav.appendChild(pv); nav.appendChild(hr); nav.appendChild(nx);
     b.appendChild(nav);
+    // fixes are made in Ride with GPS (the master); the app picks them up within the hour
+    var links = el('div', { class: 'ck-links' });
     if (!it.cue) {
       var op = el('button', { class: 'ck-link', type: 'button', text: 'Open the stop card' });
       op.addEventListener('click', function () { openStop(it.stop); });
-      b.appendChild(op);
+      links.appendChild(op);
     }
+    var cueNo = it.cue ? R.cues.indexOf(it.cue) + 1 : 0;
+    var fix = el('a', { class: 'ck-link', target: '_blank', rel: 'noopener',
+      href: it.cue ? 'https://ridewithgps.com/routes/' + R.rwgps + '/edit' : 'https://ridewithgps.com/organizations/15663-by-earth-and-ocean/poi_library',
+      text: it.cue ? 'Fix in Ride with GPS (cue ' + cueNo + ')' : 'Fix in the POI Library' });
+    if (R.rwgps || !it.cue) links.appendChild(fix);
+    b.appendChild(links);
     map.easeTo({ center: p, zoom: Math.max(map.getZoom(), 17), duration: 500, offset: [0, -Math.round((b.offsetHeight || 240) / 2)] });
   }
 

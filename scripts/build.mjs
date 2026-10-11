@@ -296,7 +296,7 @@ function transform(entry, r) {
     slug: entry.slug, name: clean(r.name), description: clean(r.description), activity: entry.activity || 'ebike',
     distance, gain: Math.round(r.elevation_gain || 0), brand, version,
     hero: r.highlighted_photo_id ? photoUrl(r.highlighted_photo_id) : null,
-    track: T, cues, stops, offers, updated: r.updated_at || null
+    track: T, cues, stops, offers, updated: r.updated_at || null, rwgps: entry.rwgps
   };
   return { route, warnings, superseded };
 }
