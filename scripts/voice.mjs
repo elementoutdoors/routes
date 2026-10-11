@@ -194,7 +194,12 @@ async function synth(text, vc, key, depth = 0, prons = null, stat = null) {
   } catch (e) {
     // Google refused the pronunciation (it is a preview feature): say the respelling instead, and report it
     if (e.status === 400 && prons.length && !/too long/i.test(e.message)) {
-      if (stat) stat.pronRefused = (stat.pronRefused || 0) + 1, stat.pronError = e.message.slice(0, 200);
+      if (stat) {
+        stat.pronRefused = (stat.pronRefused || 0) + 1;
+        const by = stat.pronRefusedBy = stat.pronRefusedBy || {};
+        by[vc.lang] = by[vc.lang] || { lines: 0, error: e.message.replace(/\s+/g, ' ').replace(/^.*?"message": ?"/, '').slice(0, 160) };
+        by[vc.lang].lines++;
+      }
       const res = await api('https://texttospeech.googleapis.com/v1/text:synthesize',
         { input: { text: respelled(text, prons) }, voice: { languageCode: vc.code, name: vc.name }, audioConfig: { audioEncoding: 'MP3' } }, key);
       return Buffer.from(res.audioContent, 'base64');
@@ -268,7 +273,7 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   // recordings are keyed by what is actually said (and any exact pronunciation sent with it), so changing a speech rule
   // re-records only the lines it changes
   const fileFor = (l, text) => { const sp = speakable(l, text), pr = pronunciations(l, sp);
-    return path.join(cacheDir, voices[l].name, crypto.createHash('sha1').update(sp + (pr.length ? '|ipa:' + pr.map(p => p.phrase + '=' + p.ipa).join(';') : '')).digest('hex') + '.mp3'); };
+    return path.join(cacheDir, voices[l].name, crypto.createHash('sha1').update(sp + (pr.length ? '|ipa2:' + pr.map(p => p.phrase + '=' + p.ipa).join(';') : '')).digest('hex') + '.mp3'); };
   const todo = lines.filter(x => voices[x.lang] && !fs.existsSync(fileFor(x.lang, x.text)));
   const started = Date.now();
   let stop = !key || !Object.keys(voices).length;
@@ -300,7 +305,7 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   await Promise.all(Array.from({ length: 6 }, worker));
   fs.writeFileSync(ledgerFile, JSON.stringify(ledger, null, 1));
   v.charsThisMonth = ledger.months[month];
-  if (v.pronRefused) health.problems.push(`voice: Google refused ${v.pronRefused} exact pronunciations (config/speech.json "pronounce"); those lines used the respelling instead (${v.pronError})`);
+  for (const [l, x] of Object.entries(v.pronRefusedBy || {})) health.problems.push(`voice: Google refused the exact pronunciation on ${x.lines} ${l} lines (config/speech.json "pronounce"), so they use the respelling: ${x.error}`);
   v.pronounce = Object.keys(SPEECH.pronounce);
 
   // publish what exists: dist/v/<tag>/<hash>.mp3, a manifest of the general lines, and each route's own list

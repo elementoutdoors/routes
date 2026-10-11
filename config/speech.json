@@ -26,9 +26,8 @@
   ],
   "names": {},
   "pronounce": {
-    "_help": "Ben, 11/10/2026: the voice said Noosa as Nysa. Noosa is said NOO-suh (Australian English), in every language.",
+    "_help": "Ben, 11/10/2026: the voice said Noosa as Nysa. Noosa is said NOO-suh (Australian English), in every language. Google refuses a phrase with an apostrophe (Noosa's), so only the plain words are listed.",
     "Noosa": { "ipa": "ˈnuːsə", "respell": "Noo-sa" },
-    "Noosa's": { "ipa": "ˈnuːsəz", "respell": "Noo-sas" },
     "Noosaville": { "ipa": "ˈnuːsəvɪl", "respell": "Noo-sa-ville" }
   }
 }
