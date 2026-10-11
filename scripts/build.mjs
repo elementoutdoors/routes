@@ -413,7 +413,7 @@ async function main() {
     built.push({ key, route });   // written after the voice step adds its recordings
     Object.assign(h, { ok: true, name: route.name, version: route.version, distance: route.distance, gpx: !!route.gpx, cues: route.cues.length,
       stops: route.stops.length, offers: route.offers.map(o => o.id),
-      links: [...new Set(route.stops.map(s => s.url).filter(Boolean).concat(route.offers.map(o => o.url).filter(Boolean)))],
+      links: [...new Set(route.stops.map(s => s.url).filter(Boolean).concat(route.offers.map(o => o.url).filter(Boolean), Object.values((route.brand && route.brand.reviews) || {})))],
       photos: [...new Set(route.stops.flatMap(s => s.photos))],
       untranslated: Object.fromEntries(LANGS.map(l => [l, strings.filter(s => !i18n[l][s]).length])) });
     if (h.source !== 'ridewithgps') health.problems.push(`${entry.slug}: using last good copy (${h.warnings[0]})`);

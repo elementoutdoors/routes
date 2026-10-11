@@ -19,7 +19,12 @@
       "ink": "#292929",
       "muted": "#5B5F66"
     },
-    "logo": "assets/logo-beo.png"
+    "logo": "assets/logo-beo.png",
+    "reviews": {
+      "google": "https://g.page/r/CX8XWoKC3v9UEB0/review",
+      "tripadvisor": "https://www.tripadvisor.com.au/UserReviewEdit-g13138579-d17738336"
+    },
+    "email": "tours@elementoutdoors.com.au"
   },
   "bikeon": {
     "name": "Bike On",
@@ -41,6 +46,11 @@
       "ink": "#231F20",
       "muted": "#4D535A"
     },
-    "logo": "assets/logo-bikeon.png"
+    "logo": "assets/logo-bikeon.png",
+    "reviews": {
+      "google": "https://g.page/r/CVG124oVyt2SEAo/review",
+      "tripadvisor": "https://www.tripadvisor.com.au/UserReviewEdit-g1192212-d5556226"
+    },
+    "email": "hire@elementoutdoors.com.au"
   }
 }

@@ -959,20 +959,79 @@
       setTimeout(function () { addMiniMap(mbox, o); }, 30);
     });
   }
+  // Finish: how was your ride? Every rider can reach the review links (Google does not allow asking only happy
+  // customers); a rider who was not happy is first offered a direct way to tell us.
+  var FACES = {
+    good: '<circle cx="12" cy="12" r="9.5"/><path d="M8 14.5c1 1.4 2.4 2 4 2s3-.6 4-2"/><path d="M9 9.5v.5M15 9.5v.5"/>',
+    ok: '<circle cx="12" cy="12" r="9.5"/><path d="M8.5 15h7"/><path d="M9 9.5v.5M15 9.5v.5"/>',
+    bad: '<circle cx="12" cy="12" r="9.5"/><path d="M8 16.5c1-1.4 2.4-2 4-2s3 .6 4 2"/><path d="M9 9.5v.5M15 9.5v.5"/>'
+  };
+  function reviewLinks(box) {
+    var rv = (R.brand && R.brand.reviews) || {};
+    var g = safeUrl(rv.google), t = safeUrl(rv.tripadvisor);
+    if (g) box.appendChild(linkRow(g, tu('Review us on Google'), 'star'));
+    if (t) box.appendChild(linkRow(t, tu('Review us on Tripadvisor'), 'star'));
+    return !!(g || t);
+  }
   function openFinish(f) {
+    var key = 'rg.rating.' + R.key + '.' + R.version;
     openSheet(function (b) {
       b.appendChild(el('div', { class: 'kicker', text: tu('Finish') }));
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('You made it. Thanks for riding with us.') }));
-      if (f && f.name) b.appendChild(el('p', { text: tc(f.name) }));
-      var acts = el('div', { class: 'sheet-actions' });
       var fo = R.offers.filter(function (o) { return o.fin; });
+      var area = el('div', { class: 'rate' });
+      b.appendChild(area);
+      function ask() {
+        area.innerHTML = '';
+        area.appendChild(el('div', { class: 'rate-q', text: tu('How was your ride?') }));
+        var row = el('div', { class: 'rate-faces' });
+        [['good', tu('Loved it')], ['ok', tu('It was OK')], ['bad', tu('Not great')]].forEach(function (x) {
+          var bt = el('button', { class: 'face ' + x[0], type: 'button' }, '<svg viewBox="0 0 24 24" aria-hidden="true">' + FACES[x[0]] + '</svg><span></span>');
+          bt.querySelector('span').textContent = x[1];
+          bt.addEventListener('click', function () { lsSet(key, x[0]); answer(x[0]); });
+          row.appendChild(bt);
+        });
+        area.appendChild(row);
+      }
+      function answer(r) {
+        area.innerHTML = '';
+        if (r === 'good') {
+          area.appendChild(el('div', { class: 'rate-q', text: tu('Thanks, we are so glad you enjoyed it!') }));
+          area.appendChild(el('p', { text: tu('We would really love a review. It only takes a minute and helps other riders find us.') }));
+          var lk = el('div', { class: 'sheet-actions' }); reviewLinks(lk); area.appendChild(lk);
+        } else {
+          area.appendChild(el('div', { class: 'rate-q', text: tu('Thanks for telling us.') }));
+          area.appendChild(el('p', { text: tu('We would love to hear what we could do better, so we can put it right.') }));
+          var c = el('div', { class: 'sheet-actions' });
+          var em = R.brand && R.brand.email;
+          if (em) {
+            var subj = fmt(tu('Feedback on {ride}'), { ride: tc(R.name) });
+            var mail = el('a', { class: 'btn primary full', href: 'mailto:' + em + '?subject=' + encodeURIComponent(subj) }, svg('ext') + '<span></span>');
+            mail.querySelector('span').textContent = tu('Email us');
+            c.appendChild(mail);
+          }
+          if (R.brand && R.brand.phoneHref) {
+            var call = el('a', { class: 'btn outline full', href: R.brand.phoneHref }, svg('phone') + '<span></span>');
+            call.querySelector('span').textContent = fmt(tu('Call us on {phone}'), { phone: R.brand.phone });
+            c.appendChild(call);
+          }
+          area.appendChild(c);
+          var more = el('div', { class: 'rate-more' });
+          more.appendChild(el('div', { class: 'rate-small', text: tu('You can also leave a review.') }));
+          if (reviewLinks(more)) area.appendChild(more);
+        }
+        var again = el('button', { class: 'rate-change', type: 'button', text: tu('Change my answer') });
+        again.addEventListener('click', ask);
+        area.appendChild(again);
+      }
+      var prev = lsGet(key, null);
+      if (prev) answer(prev); else ask();
       if (fo.length) {
         b.appendChild(el('div', { class: 'kicker', text: tu('Before you go') }));
         fo.forEach(function (o) { b.appendChild(offerStrip(o)); });
       }
-      var u = f && safeUrl(f.url);
-      if (u) acts.appendChild(linkRow(u, tu('Leave us a review'), 'star'));
-      var end = el('button', { class: 'btn primary full', type: 'button', text: tu('End ride') });
+      var acts = el('div', { class: 'sheet-actions' });
+      var end = el('button', { class: 'btn outline full', type: 'button', text: tu('End ride') });
       end.addEventListener('click', function () { closeSheet(); endRide(); });
       acts.appendChild(end);
       b.appendChild(acts);

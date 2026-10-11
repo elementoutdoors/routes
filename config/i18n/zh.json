@@ -1078,5 +1078,20 @@
  "The ferry costs $2, paid to the ferry operator.\n\nBefore you cross: if you need us to come and get you or your bike from the North Shore, for any reason including a flat battery or a mechanical problem, recovery is charged from $75 per hour with a one hour minimum, and the North Shore costs more because of the vehicle ferry. Recovery depends on staff availability, so you may be waiting several hours.": "渡轮费用为$2，付给渡轮运营方。\n\n过河前请注意：如果您需要我们去 North Shore 接您或您的自行车，无论任何原因，包括电池没电或机械故障，救援费用为每小时$75起，最少按一小时计，而且由于需要乘车辆渡轮，North Shore 的费用更高。救援取决于工作人员是否有空，因此您可能需要等待数小时。",
  "Beach access": "海滩入口",
  "Only ride onto the sand on a fat tyre e-Bike, within about 2 hours of low tide, and on firm sand. If the sand is soft or the tide is up, turn back.\n\n4WDs use this beach, so keep an eye out for vehicles.\n\nKeep the bike out of the water. Saltwater and sand damage, including to the motor and battery, is charged to the card on file.\n\nThe beach isn't patrolled and has strong rips and currents. Please don't swim.": "只能骑胖胎电动自行车上沙滩，且须在低潮前后约2小时内、在坚实的沙子上骑行。如果沙子松软或潮水已涨，请掉头返回。\n\n这片海滩有四驱车行驶，请留意车辆。\n\n不要让自行车进水。海水和沙子造成的损坏，包括电机和电池的损坏，将从登记的银行卡中扣费。\n\n这片海滩没有救生员巡逻，有强烈的离岸流和水流。请勿游泳。",
- "Facilities": "设施"
+ "Facilities": "设施",
+ "How was your ride?": "这次骑行感觉如何？",
+ "Loved it": "很喜欢",
+ "It was OK": "还可以",
+ "Not great": "不太好",
+ "Thanks, we are so glad you enjoyed it!": "谢谢，很高兴你玩得开心！",
+ "We would really love a review. It only takes a minute and helps other riders find us.": "非常希望你能给我们写条评价，只需一分钟，还能帮助其他骑行者找到我们。",
+ "Thanks for telling us.": "谢谢你告诉我们。",
+ "We would love to hear what we could do better, so we can put it right.": "我们很想知道哪里可以做得更好，好让我们改进。",
+ "Email us": "给我们发邮件",
+ "Call us on {phone}": "致电 {phone}",
+ "Feedback on {ride}": "关于 {ride} 的反馈",
+ "You can also leave a review.": "你也可以留下评价。",
+ "Review us on Google": "在 Google 上评价我们",
+ "Review us on Tripadvisor": "在 Tripadvisor 上评价我们",
+ "Change my answer": "修改我的回答"
 }

@@ -1078,5 +1078,20 @@
  "The ferry costs $2, paid to the ferry operator.\n\nBefore you cross: if you need us to come and get you or your bike from the North Shore, for any reason including a flat battery or a mechanical problem, recovery is charged from $75 per hour with a one hour minimum, and the North Shore costs more because of the vehicle ferry. Recovery depends on staff availability, so you may be waiting several hours.": "Die Fähre kostet 2 $, zahlbar beim Fährbetreiber.\n\nBevor du übersetzt: Wenn wir dich oder dein Rad vom North Shore abholen müssen, aus welchem Grund auch immer, auch bei leerem Akku oder einem technischen Problem, kostet die Rückholung ab 75 $ pro Stunde, mindestens eine Stunde, und am North Shore kostet sie wegen der Autofähre mehr. Die Rückholung hängt davon ab, ob Personal verfügbar ist, daher musst du eventuell mehrere Stunden warten.",
  "Beach access": "Strandzugang",
  "Only ride onto the sand on a fat tyre e-Bike, within about 2 hours of low tide, and on firm sand. If the sand is soft or the tide is up, turn back.\n\n4WDs use this beach, so keep an eye out for vehicles.\n\nKeep the bike out of the water. Saltwater and sand damage, including to the motor and battery, is charged to the card on file.\n\nThe beach isn't patrolled and has strong rips and currents. Please don't swim.": "Fahre nur mit einem Fat-Tyre-E-Bike auf den Sand, nur etwa 2 Stunden vor oder nach Niedrigwasser und nur auf festem Sand. Ist der Sand weich oder das Wasser hoch, kehre um.\n\nAuf diesem Strand fahren Geländewagen, also achte auf Fahrzeuge.\n\nHalte das Rad aus dem Wasser. Schäden durch Salzwasser und Sand, auch an Motor und Akku, werden der hinterlegten Karte belastet.\n\nDer Strand wird nicht bewacht und hat starke Strömungen und Brandungsrückströme. Bitte nicht schwimmen.",
- "Facilities": "Einrichtungen"
+ "Facilities": "Einrichtungen",
+ "How was your ride?": "Wie war deine Fahrt?",
+ "Loved it": "Super",
+ "It was OK": "Ganz okay",
+ "Not great": "Nicht so gut",
+ "Thanks, we are so glad you enjoyed it!": "Danke, wir freuen uns sehr, dass es dir gefallen hat!",
+ "We would really love a review. It only takes a minute and helps other riders find us.": "Wir würden uns sehr über eine Bewertung freuen. Es dauert nur eine Minute und hilft anderen, uns zu finden.",
+ "Thanks for telling us.": "Danke für deine Rückmeldung.",
+ "We would love to hear what we could do better, so we can put it right.": "Wir würden gern hören, was wir besser machen können, damit wir es in Ordnung bringen.",
+ "Email us": "Schreib uns eine E-Mail",
+ "Call us on {phone}": "Ruf uns an: {phone}",
+ "Feedback on {ride}": "Rückmeldung zu {ride}",
+ "You can also leave a review.": "Du kannst auch eine Bewertung hinterlassen.",
+ "Review us on Google": "Bewerte uns auf Google",
+ "Review us on Tripadvisor": "Bewerte uns auf Tripadvisor",
+ "Change my answer": "Antwort ändern"
 }

@@ -1078,5 +1078,20 @@
  "The ferry costs $2, paid to the ferry operator.\n\nBefore you cross: if you need us to come and get you or your bike from the North Shore, for any reason including a flat battery or a mechanical problem, recovery is charged from $75 per hour with a one hour minimum, and the North Shore costs more because of the vehicle ferry. Recovery depends on staff availability, so you may be waiting several hours.": "페리 요금은 $2이며 페리 운영사에 지불합니다.\n\n건너기 전에: North Shore에서 저희가 고객님이나 자전거를 데리러 가야 하는 경우, 배터리 방전이나 기계 고장을 포함해 어떤 이유든 회수 요금은 시간당 $75부터이며 최소 1시간이 부과되고, 차량 페리를 이용해야 하므로 North Shore는 더 비쌉니다. 회수는 직원 사정에 따라 달라지므로 몇 시간을 기다려야 할 수도 있습니다.",
  "Beach access": "해변 진입로",
  "Only ride onto the sand on a fat tyre e-Bike, within about 2 hours of low tide, and on firm sand. If the sand is soft or the tide is up, turn back.\n\n4WDs use this beach, so keep an eye out for vehicles.\n\nKeep the bike out of the water. Saltwater and sand damage, including to the motor and battery, is charged to the card on file.\n\nThe beach isn't patrolled and has strong rips and currents. Please don't swim.": "팻타이어 전기자전거로만, 간조 전후 약 2시간 이내에, 단단한 모래 위에서만 모래사장에 들어가세요. 모래가 무르거나 물이 차 있으면 돌아가세요.\n\n이 해변에는 사륜구동 차량이 다니므로 차량을 잘 살피세요.\n\n자전거가 물에 들어가지 않게 하세요. 바닷물과 모래로 인한 손상은 모터와 배터리를 포함해 등록된 카드로 청구됩니다.\n\n이 해변은 안전요원이 없으며 강한 이안류와 해류가 있습니다. 수영하지 마세요.",
- "Facilities": "편의시설"
+ "Facilities": "편의시설",
+ "How was your ride?": "라이딩은 어떠셨나요?",
+ "Loved it": "최고였어요",
+ "It was OK": "괜찮았어요",
+ "Not great": "별로였어요",
+ "Thanks, we are so glad you enjoyed it!": "감사합니다. 즐거우셨다니 정말 기뻐요!",
+ "We would really love a review. It only takes a minute and helps other riders find us.": "리뷰를 남겨 주시면 정말 감사하겠습니다. 1분이면 충분하고, 다른 라이더들이 저희를 찾는 데 도움이 됩니다.",
+ "Thanks for telling us.": "말씀해 주셔서 감사합니다.",
+ "We would love to hear what we could do better, so we can put it right.": "어떤 점을 개선하면 좋을지 알려 주시면 바로잡겠습니다.",
+ "Email us": "이메일 보내기",
+ "Call us on {phone}": "전화하기 {phone}",
+ "Feedback on {ride}": "{ride}에 대한 의견",
+ "You can also leave a review.": "리뷰를 남기실 수도 있습니다.",
+ "Review us on Google": "Google에서 리뷰하기",
+ "Review us on Tripadvisor": "Tripadvisor에서 리뷰하기",
+ "Change my answer": "답변 바꾸기"
 }
