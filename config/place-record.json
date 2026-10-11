@@ -46,6 +46,11 @@
    "hash": "081b7fb35bc9",
    "agreed": "2026-10-11"
   },
+  "beo#koalas": {
+   "text": "Koalas share these hinterland forests with you, but the odds of seeing one are slim. They sleep through most of the day high in the eucalypts, and their grey coats disappear against the bark. Think of a sighting as a lucky extra, not something the ride promises.\nKoala is not a Kabi Kabi word. It came into English from the Dharug language around Sydney, from gula, which is often said to mean \"no water\". Koalas get most of their water from the leaves they eat.\nA century ago koalas were common across this country. Queensland officially traded about 4.5 million pelts between 1903 and 1927, including from the Noosa area, and its last open season, in August 1927, took close to 600,000. The public outcry ended the hunt for good, but by the 1960s so few were left that six koalas were moved from Caboolture into Noosa National Park. Koalas are now listed as endangered in Queensland.\nThe Yurol and Ringtail forests are where the comeback is happening. Bought back from plantation forestry in 2018, about 2,400 hectares are being added to Tewantin National Park. Noosa Landcare planted about 133,000 trees over 332 hectares between 2022 and 2024, focused on koala feed trees, and thermal drone surveys counted close to 300 koalas in the forest, with more than 500 expected as the replanting matures.\nKeep half an eye on the canopy along Gyndier Drive and through the Yurol and Ringtail forests. If you find one, stay back and stay quiet. Report a sick or injured koala on 1300 ANIMAL (1300 264 625).",
+   "hash": "cf8f492017fb",
+   "agreed": "2026-10-11"
+  },
   "beo#lake-doonella": {
    "text": "Lake Doonella is the last stretch of water before you roll back into Noosaville, and a sign that a long day in the hills is nearly done. It is a shallow tidal lake joined to the Noosa River between Tewantin and Noosaville, edged with mangroves and seagrass, and one of the named parts of the Noosa Everglades system. The first land sold on the river, 80 acres in 1871, lay on its shore opposite Tewantin. For decades the lake cut Tewantin off from the Gympie Terrace settlement, until a timber bridge opened across its mouth on 19 October 1929 and about 700 cars queued to cross. Since 1983 it has been protected as a fish habitat area, now part of the Noosa River Fish Habitat Area, a nursery for bream, whiting, flathead, mud crabs and prawns. Look for black swans, pelicans and cormorants on the last kilometres home.",
    "hash": "d42134d2a5d6",
@@ -351,6 +356,11 @@
   "beo#kin-kin|Kin Kin": {
    "text": "Welcome to Kin Kin. The two storey Kin Kin Hotel opened here in 1915 and has come through a tornado and record floods from Kin Kin Creek. The name is said to come from a Kabi word for red soil, though many locals say it means plenty of black ants.",
    "hash": "3ae8e5935532",
+   "agreed": "2026-10-11"
+  },
+  "beo#koalas|Koalas on Gyndier Drive": {
+   "text": "Koala country. The forest along Gyndier Drive is koala habitat, joined to the Yurol and Ringtail forests being replanted for them. Koalas are rarely seen, so count yourself lucky if you spot one.",
+   "hash": "99ac45ab2ff0",
    "agreed": "2026-10-11"
   },
   "beo#lake-doonella|Lake Doonella": {
