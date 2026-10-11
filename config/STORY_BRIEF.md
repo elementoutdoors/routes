@@ -16,7 +16,7 @@ A stop gets a story when its Ride with GPS link points at one of those pages wit
 - Facts only from the library entry (its blog section, and the sources in the ride stories doc). Never add a fact, date or number that is not there.
 - House rules: Australian spelling. No em or en dashes between words. Say "Noosa Everglades system" in full; Lake Weyba is its southern end ("southern gateway"); the "one of only two everglades in the world" line is always "often described as". Aboriginal place name meanings only as the sources give them ("is said to mean", "is often translated as" where they differ). Be respectful about Kabi Kabi sites and history.
 - No directions like "on your left": riders come from both ways.
-- Names the voice says wrongly are fixed in config/speech.json "names" (a respelling), not in the story text. listen.html on the site plays every name.
+- Names the voice says wrongly are fixed in config/speech.json, never in the story text: "pronounce" (the exact sound as IPA, for the natural voice, first choice; Noosa is there) or "names" (a respelling, also used by the phone voice). listen.html on the site plays every name.
 
 ## Keeping everything in step (from 11/10/2026)
 The library is the master. When a blog section changes in the library, its story and pin lines are rewritten in the same entry, in the same change. The nightly build compares the live blogs and Ride with GPS pins with the library (health.json "places", made from the generated config/place-record.json) and fingerprints each blog section against its story ("stories"):

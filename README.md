@@ -27,7 +27,9 @@ phone's browser with the map, spoken and written directions, stops and partner o
   change of fact goes to Ben on the Ride Story Review page, and until he rules the app keeps the agreed stop summary. Tool:
   `scripts/place-record.mjs`. Rules: `config/STORY_BRIEF.md`, "The places record".
 - How written text is said aloud (abbreviations such as St, Rd and Mt, units, and respellings for names the voice gets
-  wrong) is in `config/speech.json`, used by the natural voice and the phone voice. `listen.html` on the site plays every
+  wrong) is in `config/speech.json`, used by the natural voice and the phone voice. Its "pronounce" list gives the natural
+  voice the exact sound of a word as IPA (Noosa is NOO-suh), sent to Google with each line; the build reports it if Google
+  ever refuses one. `listen.html` on the site plays every
   place name so names can be checked by ear.
 - An offer can be set to "finish" (`showAt`): it is not shown at the start, comes up in the last 1.5 km and sits on the
   finish card. Used for Land and Sea Brewery, over the road from the shop.

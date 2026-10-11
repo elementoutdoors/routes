@@ -17,12 +17,24 @@ const MAX_BYTES = 4800;   // Google's limit is 5000 bytes of text per request
 
 // How written text is said aloud (config/speech.json): abbreviations, units and symbols, plus respellings for names
 // the voice gets wrong. The screen keeps the written text. The app applies the same rules to the phone voice.
-let SPEECH = { rules: [], names: {} };
+let SPEECH = { rules: [], names: {}, pronounce: {} };
 export function loadSpeech(root) {
-  try { SPEECH = JSON.parse(fs.readFileSync(path.join(root, 'config', 'speech.json'), 'utf8')); } catch (e) { SPEECH = { rules: [], names: {} }; }
+  try { SPEECH = JSON.parse(fs.readFileSync(path.join(root, 'config', 'speech.json'), 'utf8')); } catch (e) { SPEECH = { rules: [], names: {}, pronounce: {} }; }
   SPEECH.rules = (SPEECH.rules || []).filter(r => { try { new RegExp(r.find, 'g'); return true; } catch (e) { return false; } });
   SPEECH.names = SPEECH.names || {};
+  SPEECH.pronounce = Object.fromEntries(Object.entries(SPEECH.pronounce || {}).filter(([k, x]) => !k.startsWith('_') && x && typeof x.ipa === 'string' && x.ipa));
   return SPEECH;
+}
+// Exact pronunciations for the natural voice (speech.json "pronounce": a word, its IPA, the languages it applies to, and a
+// respelling used only if Google refuses the pronunciation). Sent to Google with each line that contains the word, so the
+// written text never changes. Version 1 (11/10/2026, Ben: the voice said Noosa as "Nysa").
+const wordRe = w => new RegExp('(^|[^\\p{L}])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\p{L}])', 'u');
+export function pronunciations(lang, spoken) {
+  return Object.entries(SPEECH.pronounce).filter(([w, x]) => (!x.langs || x.langs.includes(lang)) && wordRe(w).test(spoken)).map(([w, x]) => ({ phrase: w, ipa: x.ipa, respell: x.respell || null }));
+}
+function respelled(text, prons) {
+  for (const p of prons) if (p.respell) text = text.replace(new RegExp(wordRe(p.phrase).source, 'gu'), (m, pre) => pre + p.respell);
+  return text;
 }
 export function speakable(lang, text) {
   let t = String(text || '');
@@ -161,8 +173,9 @@ async function pickVoices(key, want, notes) {
       // The tag (the folder recordings are published under) also carries this language's speech rules, so when how a line
       // is said changes (a new rule or respelling, which re-records the line), its address changes too and phones fetch the
       // new recording instead of keeping the old one they saved (Ben heard old years read out, 11/10/2026).
-      const say = JSON.stringify({ rules: SPEECH.rules.filter(r => !r.langs || r.langs.includes(l)), names: SPEECH.names });
-      out[l] = { code, name: chosen, tag: crypto.createHash('sha1').update(chosen + '|' + say).digest('hex').slice(0, 6) };
+      const say = JSON.stringify({ rules: SPEECH.rules.filter(r => !r.langs || r.langs.includes(l)), names: SPEECH.names,
+        pronounce: Object.entries(SPEECH.pronounce).filter(([, x]) => !x.langs || x.langs.includes(l)) });
+      out[l] = { lang: l, code, name: chosen, tag: crypto.createHash('sha1').update(chosen + '|' + say).digest('hex').slice(0, 6) };
     } catch (e) { notes.push(`${l}: could not list voices (${e.message})`); if (e.status === 400 || e.status === 403) throw e; }
   }
   return out;
@@ -170,12 +183,22 @@ async function pickVoices(key, want, notes) {
 
 // One recording. Google refuses very long sentences in some languages; those are recorded a sentence (or clause) at a time
 // and the pieces joined, which MP3 allows.
-async function synth(text, vc, key, depth = 0) {
+async function synth(text, vc, key, depth = 0, prons = null, stat = null) {
+  prons = prons || pronunciations(vc.lang, text);
+  const input = { text };
+  if (prons.length) input.customPronunciations = { pronunciations: prons.map(p => ({ phrase: p.phrase, phoneticEncoding: 'PHONETIC_ENCODING_IPA', pronunciation: p.ipa })) };
   try {
     const res = await api('https://texttospeech.googleapis.com/v1/text:synthesize',
-      { input: { text }, voice: { languageCode: vc.code, name: vc.name }, audioConfig: { audioEncoding: 'MP3' } }, key);
+      { input, voice: { languageCode: vc.code, name: vc.name }, audioConfig: { audioEncoding: 'MP3' } }, key);
     return Buffer.from(res.audioContent, 'base64');
   } catch (e) {
+    // Google refused the pronunciation (it is a preview feature): say the respelling instead, and report it
+    if (e.status === 400 && prons.length && !/too long/i.test(e.message)) {
+      if (stat) stat.pronRefused = (stat.pronRefused || 0) + 1, stat.pronError = e.message.slice(0, 200);
+      const res = await api('https://texttospeech.googleapis.com/v1/text:synthesize',
+        { input: { text: respelled(text, prons) }, voice: { languageCode: vc.code, name: vc.name }, audioConfig: { audioEncoding: 'MP3' } }, key);
+      return Buffer.from(res.audioContent, 'base64');
+    }
     if (!(e.status === 400 && /too long/i.test(e.message)) || depth > 2) throw e;
     const re = depth === 0 ? /[^.!?\u3002\uff01\uff1f]+[.!?\u3002\uff01\uff1f]*/g : /[^,;:\uff0c\u3001\uff1b\uff1a]+[,;:\uff0c\u3001\uff1b\uff1a]*/g;
     const parts = (text.match(re) || [text]).map(x => x.trim()).filter(Boolean);
@@ -184,7 +207,7 @@ async function synth(text, vc, key, depth = 0) {
       const at = sp > 10 ? sp : mid; parts.splice(0, parts.length, text.slice(0, at).trim(), text.slice(at).trim());
     }
     const bufs = [];
-    for (const p of parts) bufs.push(await synth(p, vc, key, depth + 1));
+    for (const p of parts) bufs.push(await synth(p, vc, key, depth + 1, null, stat));
     return Buffer.concat(bufs);
   }
 }
@@ -242,8 +265,10 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   for (const l of Object.keys(VOICE_LANGS)) if (!voices[l] && known[l]) voices[l] = known[l];
   ledger.voices = Object.assign({}, known, voices);
 
-  // recordings are keyed by what is actually said, so changing a speech rule re-records only the lines it changes
-  const fileFor = (l, text) => path.join(cacheDir, voices[l].name, crypto.createHash('sha1').update(speakable(l, text)).digest('hex') + '.mp3');
+  // recordings are keyed by what is actually said (and any exact pronunciation sent with it), so changing a speech rule
+  // re-records only the lines it changes
+  const fileFor = (l, text) => { const sp = speakable(l, text), pr = pronunciations(l, sp);
+    return path.join(cacheDir, voices[l].name, crypto.createHash('sha1').update(sp + (pr.length ? '|ipa:' + pr.map(p => p.phrase + '=' + p.ipa).join(';') : '')).digest('hex') + '.mp3'); };
   const todo = lines.filter(x => voices[x.lang] && !fs.existsSync(fileFor(x.lang, x.text)));
   const started = Date.now();
   let stop = !key || !Object.keys(voices).length;
@@ -258,7 +283,7 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
       if (Date.now() - started > runMinutes * 60000) { stop = true; break; }
       ledger.months[month] += spoken.length;   // counted before the call so a crash never undercounts
       try {
-        const audio = await synth(spoken, voices[x.lang], key);
+        const audio = await synth(spoken, Object.assign({ lang: x.lang }, voices[x.lang]), key, 0, null, v);
         const f = fileFor(x.lang, x.text);
         fs.mkdirSync(path.dirname(f), { recursive: true });
         fs.writeFileSync(f, audio);
@@ -275,6 +300,8 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   await Promise.all(Array.from({ length: 6 }, worker));
   fs.writeFileSync(ledgerFile, JSON.stringify(ledger, null, 1));
   v.charsThisMonth = ledger.months[month];
+  if (v.pronRefused) health.problems.push(`voice: Google refused ${v.pronRefused} exact pronunciations (config/speech.json "pronounce"); those lines used the respelling instead (${v.pronError})`);
+  v.pronounce = Object.keys(SPEECH.pronounce);
 
   // publish what exists: dist/v/<tag>/<hash>.mp3, a manifest of the general lines, and each route's own list
   const have = new Map();   // lang -> Set(hash)
@@ -350,7 +377,7 @@ function storiesVoice({ stories, dist, voices, have }) {
 }
 
 // listen.html: every place name and the start of every full story in English, with its recording, so Ben can check how
-// names are said. Fixes go in config/speech.json "names". Not linked from the app and not indexed.
+// names are said. Fixes go in config/speech.json "pronounce" (IPA) or "names" (respelling). Not linked from the app and not indexed.
 function listenPage({ routes, dist, voices, have }) {
   const en = voices.en, set = have.get('en') || new Set();
   const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
