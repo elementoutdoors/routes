@@ -70,3 +70,9 @@ https://claude.ai/artifact/XSdaNvQMw8tYpaqSiBz7Tp (shared database, written with
   id once the live text matches, set the card's status to "applied" with the date, and, if the ruling settles a fact that could
   come up again, add it to the Rulings list on the Places record tab. No Chrome on this run: leave the card decided and
   unapplied; it is applied on the next run. A decision older than two weeks still unapplied = Needs Ben.
+
+## Stories with no blog (added 11/10/2026)
+Some stories are not on either blog: the Stingrays and Everglades Kayak Tour stops (kabi-kabi-country, noosa-private-airport, noosa-everglades, keyser-creek, weyba-mangroves, stingray-sanctuary). They carry "origin" (where the facts come from: the tour manual EO-TR-11 and the What's Up Down Under episode with guide Matt Smith) and an empty "src". The nightly fingerprint check only looks at blog sections, so these are never reported stale or unchecked. They follow the same writing rules, plus the Product Truth kayak wording ("Weyba is understood to mean place of stingrays", "often described as one of only two everglades systems", never "protected", stingrays often seen never guaranteed, bull sharks are guide knowledge only and stay out of stories). Change them only from their origin, with Ben.
+
+## Every story is recorded, and published for EO Crew
+Every story in this file is recorded in the natural voice (English), whether or not a ride stop links to it. The build publishes stories-voice.json on the site: each story's title, origin and paragraphs, with the recording for each paragraph (null until recorded). The EO Crew staff app (Know Noosa) reads that file nightly, so staff read and hear exactly what riders hear. Do not rename a story key without telling the EO Crew project: tours and quizzes there link to stories by key. scripts/check.mjs checks stories-voice.json each week.
