@@ -191,6 +191,10 @@ const POI_KINDS = {
   water: 'service', parking: 'service', gas: 'service', transit: 'service', atm: 'service', shopping: 'service', lodging: 'service',
   bike_shop: 'service', bike_parking: 'service', bikeshare: 'service', hospital: 'service', first_aid: 'service', aid_station: 'service', rest_stop: 'service'
 };
+// Name rules that back up the icon (see the Stops guide in the project doc)
+const WARN_NAME = /\b(caution|careful|take care|slippery|busy|crossing|dismount|steep|fast road|intersection|give way|hazard|warning)\b/i;
+const TOILET_NAME = /^(public )?(toilets?|restrooms?)$/i;
+const WELCOME_NAME = /^(welcome|before you ride)\b/i;
 const clean = s => (s || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 const photoUrl = id => `https://ridewithgps.com/photos/${id}/large.jpg`;
 
@@ -226,6 +230,11 @@ function transform(entry, r) {
     let kind = POI_KINDS[p.poi_type_name] || 'info';
     const isFinish = kind === 'finish' || /review|enjoyed|thank/i.test(name) || /g\.page\/r\//.test(p.url || '');
     if (isFinish) kind = 'finish';
+    // Pins whose name says what they are, whatever icon was picked in Ride with GPS (a warning on an "i" icon is still a warning)
+    let plain = 0;
+    if (!isFinish && kind !== 'caution' && WARN_NAME.test(name)) { kind = 'caution'; warnings.push(`stop "${name}" is a warning on a ${p.poi_type_name} icon; the app treats it as Caution (change the icon to Caution in the POI Library)`); }
+    else if (!isFinish && kind === 'info' && TOILET_NAME.test(name)) kind = 'toilet';
+    else if (!isFinish && WELCOME_NAME.test(name)) plain = 1;   // welcome or briefing pins are read out without "You have reached..."
     const { runs, nearest } = passes(T, p.lat, p.lng, 60);
     let d;
     if (runs.length) d = isFinish ? runs[runs.length - 1].d : runs[0].d;
@@ -237,6 +246,7 @@ function transform(entry, r) {
       lat: +p.lat.toFixed(6), lng: +p.lng.toFixed(6), d: Math.round(d), off,
       photos: (p.photo_ids || []).slice(0, 6).map(photoUrl), lib: p.parent_type === 'Club', upd: p.updated_at || ''
     });
+    if (plain) stops[stops.length - 1].plain = 1;
   }
   // A POI Library pin replaces the ride's own old copy of the same place (same name, within 400 m). The copy is left out
   // of the app and listed in health.json as safe to delete in Ride with GPS. A pin named "DELETE ME..." is always left out.

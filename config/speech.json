@@ -1,5 +1,5 @@
 {
-  "_about": "How written text is said aloud. The screen keeps the written text; these rules only change what the natural voice and the phone voice say. rules: find (a regular expression), say (what to say instead), langs (which languages it applies to). names: how to say a place name the voice gets wrong, as a respelling (for example \"Tinbeerwah\": \"Tin-beer-wah\"); used in every language. Changing a rule re-records only the lines it changes.",
+  "_about": "How written text is said aloud. Years from 1600 to 1999 are said the way people say them (1874 as eighteen seventy-four, 1905 as nineteen oh five, 1900 as nineteen hundred), in English. The screen keeps the written text; these rules only change what the natural voice and the phone voice say. rules: find (a regular expression), say (what to say instead), langs (which languages it applies to). names: how to say a place name the voice gets wrong, as a respelling (for example \"Tinbeerwah\": \"Tin-beer-wah\"); used in every language. Changing a rule re-records only the lines it changes.",
   "rules": [
     { "find": "\\bMt\\.? (?=[A-Z])", "say": "Mount ", "langs": ["en", "de", "fr", "es", "it", "nl"] },
     { "find": "\\bRd\\b", "say": "Road", "langs": ["en"] },
@@ -12,6 +12,9 @@
     { "find": "(\\d)\\s?km/h\\b", "say": "$1 kilometres an hour", "langs": ["en"] },
     { "find": "(\\d)\\s?km\\b", "say": "$1 kilometres", "langs": ["en"] },
     { "find": "(\\d)\\s?m\\b", "say": "$1 metres", "langs": ["en"] },
+    { "find": "(^|[^\\d,.$])(1[6-9])([1-9]\\d)(?!\\d|,\\d)(?!\\s?(?:metres|kilometres|tons|tonnes|people|per cent|%))", "say": "$1$2 $3", "langs": ["en"] },
+    { "find": "(^|[^\\d,.$])(1[6-9])0([1-9])(?!\\d|,\\d)(?!\\s?(?:metres|kilometres|tons|tonnes|people|per cent|%))", "say": "$1$2 oh $3", "langs": ["en"] },
+    { "find": "(^|[^\\d,.$])(1[6-9])00(?!\\d|,\\d)(?!\\s?(?:metres|kilometres|tons|tonnes|people|per cent|%))", "say": "$1$2 hundred", "langs": ["en"] },
     { "find": "\\bMTB\\b", "say": "mountain bike", "langs": ["en"] },
     { "find": " & ", "say": " and ", "langs": ["en"] },
     { "find": "\\b(\\d+)/(\\d+) (?=[A-Z])", "say": "$2 ", "langs": ["en", "de", "fr", "es", "it", "nl"] },

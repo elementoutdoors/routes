@@ -701,7 +701,8 @@
         if (S.stories && s.text) sayContent(s.text);
       } else {
         if (!sheetOpen()) openStop(s, true);
-        say(tu('You have reached a stop.'));
+        // welcome pins and turnarounds are read as they are; other stops get "You have reached a point of interest."
+        if (!s.plain && s.kind !== 'turn') say(tu('You have reached a point of interest.'));
         sayContent(s.name);
         if (S.stories && s.text) sayContent(s.text);
       }

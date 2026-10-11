@@ -44,7 +44,7 @@ export const PHRASES = [
   "You're off the route. Please use the map on your screen to make your way back to the route line. If you're taking a break, tap Pause.",
   'Caution.',
   'Then',
-  'You have reached a stop.',
+  'You have reached a point of interest.',
   'You have finished the ride. Thanks for riding with us.',
   'Voice on.'
 ];
