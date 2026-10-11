@@ -1,3 +1,4 @@
+// Version 1 (11/10/2026).
 // The Story Library: the one place every Element Outdoors story is written (library/, see library/README.md).
 // Everything else is a copy made from it:
 //   config/stories.json      spoken stories for the Ride Guide and EO Crew   (generate)
