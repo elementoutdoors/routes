@@ -7,12 +7,12 @@
  "card": {
   "name": "Koala",
   "scientific_name": "Phascolarctos cinereus",
-  "local_name": "GALI (Kabi Kabi)",
+  "local_name": "Goala (Kabi Kabi)",
   "group": "Mammal",
   "description": "Rarely seen. Koalas live in the forests our bike rides pass through, but they sleep most of the day high in the gums, grey fur against grey bark. Tell guests not to expect one; a sighting is a bonus.",
   "detail": [
    {
-    "text": "The name comes from the Dharug language of the Sydney region, from gula, often said to mean \"no water\", because koalas get most of the water they need from eucalyptus leaves. It is not a Kabi Kabi word.",
+    "text": "The English word koala comes from gula, the Dharug name for the animal around Sydney. It is often said to mean \"no water\", because koalas get most of the water they need from eucalyptus leaves, but language experts doubt that meaning; gula was most likely just its name. The Kabi Kabi word was almost the same: goala (also written koala or koadla), recorded in F.J. Watson's 1944 Kabi word list.",
     "type": "text"
    },
    {
@@ -30,7 +30,7 @@
   ],
   "how_to_spot": "Best chance is a quiet moment in the forest along Gyndier Drive or on the Wooroi trails. Look for a grey ball wedged in the fork of a tall gum. If you see one, keep guests back and quiet.",
   "conservation": "Endangered in Queensland. Very rarely seen on the Noosa headland. To report a sick or injured koala, call 1300 ANIMAL (1300 264 625).",
-  "source": "Bike On ride stories blog, Koalas section: https://bikeon.com.au/noosa-self-guided-rides-what-you-will-see/#koalas (also the Know Noosa story Koalas). Talking points set by Ben, 11 Oct 2026."
+  "source": "Bike On ride stories blog, Koalas section: https://bikeon.com.au/noosa-self-guided-rides-what-you-will-see/#koalas (also the Know Noosa story Koalas). Talking points set by Ben, 11 Oct 2026. Name: F.J. Watson, Vocabularies of Four Representative Tribes of South Eastern Queensland (1944), Kabi entry \"Goa'la or koa'la, or koa'dla, native bear\"; the doubt over \"no water\" from linguists' accounts of the Dharug word (Dixon and others, Australian Aboriginal Words in English)."
  },
  "eocrew_id": "6abc1efcaac041b626e8df31",
  "story_key": "koalas"
