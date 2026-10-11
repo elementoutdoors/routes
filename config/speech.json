@@ -26,12 +26,12 @@
   ],
   "names": {},
   "pronounce": {
-    "_help": "Ben, 11/10/2026: the voice said Noosa as Nysa. Noosa is said NOO-suh (Australian English), in every language. Google refuses a phrase with an apostrophe (Noosa's), so only the plain words are listed. lang: a language's own IPA (Google checks the sounds against each language and refused the English IPA in de, fr, es, it and ko) or, with ipa null, only a respelling (Chinese and Japanese need their own spelling systems).",
+    "_help": "Ben, 11/10/2026: the voice said Noosa as Nysa. Noosa is said NOO-suh (Australian English), in every language. Google refuses a phrase with an apostrophe (Noosa's), so only the plain words are listed. lang: a language's own IPA (Google checks the sounds against each language and refused the English IPA in de, fr, es, it and ko, and any IPA for Noosa in de, where the respelling Nusa reads the right way) or, with ipa null, only a respelling (Chinese and Japanese need their own spelling systems).",
     "Noosa": { "ipa": "ˈnuːsə", "respell": "Noo-sa", "lang": {
-      "de": { "ipa": "ˈnuːsa", "respell": "Nusa" }, "fr": { "ipa": "nusa", "respell": "Nousa" }, "es": { "ipa": "ˈnusa", "respell": "Nusa" },
+      "de": { "ipa": null, "respell": "Nusa" }, "fr": { "ipa": "nusa", "respell": "Nousa" }, "es": { "ipa": "ˈnusa", "respell": "Nusa" },
       "it": { "ipa": "ˈnusa", "respell": "Nusa" }, "ko": { "ipa": null, "respell": "누사" }, "ja": { "ipa": null, "respell": "ヌーサ" }, "zh": { "ipa": null, "respell": "努萨" } } },
     "Noosaville": { "ipa": "ˈnuːsəvɪl", "respell": "Noo-sa-ville", "lang": {
-      "de": { "ipa": "ˈnuːsavɪl", "respell": "Nusawil" }, "fr": { "ipa": "nusavil", "respell": "Nousaville" }, "es": { "ipa": "ˈnusabil", "respell": "Nusabil" },
+      "de": { "ipa": null, "respell": "Nusawil" }, "fr": { "ipa": "nusavil", "respell": "Nousaville" }, "es": { "ipa": "ˈnusabil", "respell": "Nusabil" },
       "it": { "ipa": "ˈnusavil", "respell": "Nusavil" }, "ko": { "ipa": null, "respell": "누사빌" }, "ja": { "ipa": null, "respell": "ヌーサビル" }, "zh": { "ipa": null, "respell": "努萨维尔" } } }
   }
 }
