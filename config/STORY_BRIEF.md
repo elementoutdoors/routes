@@ -61,7 +61,12 @@ https://claude.ai/artifact/XSdaNvQMw8tYpaqSiBz7Tp (shared database, written with
   what is right; apply that.
 - After a decision: make every change in the chosen option's `then` (or the note). Stories and the record: in the repo.
   Ride with GPS: edit the POI Library pin (it changes on every ride) in Ben's Ride with GPS session in Chrome on his laptop.
-  Blogs: edit through WordPress in Chrome on his laptop, then open the post in Elementor and press Update. Then `accept` each
+  After any pin edit, republish every Ride with GPS Experience whose publish_status is "updates" (GET /experiences.json?club_id=15663,
+  then POST /experiences/<id>/publish.json with the page's CSRF token, in Ben's Ride with GPS session), so riders on the Ride with
+  GPS app get it too.
+  Blogs: edit through the WordPress REST API in a Chrome signed in to that site (change the same words in content and in the
+  _elementor_data meta), then open the post in Elementor and save it once the editor has loaded every section. As of 11/10/2026
+  only the upstairs Chrome is signed in to bikeon.com.au, and none to byearthandocean.com.au; ask Ben to sign in. Then `accept` each
   id once the live text matches, set the card's status to "applied" with the date, and, if the ruling settles a fact that could
   come up again, add it to the Rulings list on the Places record tab. No Chrome on this run: leave the card decided and
   unapplied; it is applied on the next run. A decision older than two weeks still unapplied = Needs Ben.
