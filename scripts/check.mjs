@@ -64,6 +64,9 @@ else {
 }
 { const s = await status(BASE + 'listen.html', 'GET'); if (s.code !== 200) issues.push(`voice check page listen.html not loading (${s.code})`); }
 
+// old ride copies a POI Library pin has replaced: harmless (the app leaves them out), listed so they can be deleted in Ride with GPS
+{ const n = h.routes.reduce((a, r) => a + ((r.pinsToDelete || []).length), 0); if (n) notes.push(`${n} old Ride with GPS pins can be deleted (replaced by POI Library pins; list in the project doc "Ride Guide pins to delete")`); }
+
 const links = new Set(), photos = new Set();
 h.routes.forEach(r => { (r.links || []).forEach(u => links.add(u)); (r.photos || []).forEach(u => photos.add(u)); });
 for (const u of links) {
