@@ -3,7 +3,7 @@
  "kind": "place",
  "title": "Royal Mail Hotel and Parkyn's Hut",
  "status": "live",
- "updated": "2026-10-11",
+ "updated": "2026-10-12",
  "blog": {
   "bikeon": {
    "heading": "Royal Mail Hotel and Parkyn's Hut",
@@ -14,18 +14,11 @@
    ]
   }
  },
- "pins": {
-  "bikeon": [
-   {
-    "name": "Royal Mail Hotel and Parkyn's Hut",
-    "text": "Close by is the Royal Mail Hotel, on a site that has held a pub since 1882, and Parkyn's Hut, an old Gympie miner's cottage that is now Tewantin's heritage centre."
-   }
-  ]
- },
  "story": [
   "The first Royal Mail Hotel opened in May 1882, built for Ned Murdock, a Cobb and Co coach driver. Once the railway reached Cooroy in 1891, its coaches met the trains, and it became a holiday favourite for Gympie families.",
   "In March 1939 the two storey timber hotel burned down in a spectacular fire. The brick hotel you see now reopened in 1941, and it still carries its original Royal Mail lettering.",
   "At the same corner stands Parkyn's Hut, a hardwood miner's cottage from Gympie that was carted to Tewantin by bullock team around 1920. The Parkyn family used it for guests, and in 2001 it was moved here to become the Tewantin Heritage and Tourist Information Centre."
  ],
- "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558",
+ "note": "12/10/2026 Ben: taken off every ride. Neither the hotel nor Parkyn's Hut can be seen from any of our routes (the nearest ride line is 90 to 150 m away), so a stop there talked about buildings riders cannot see. The blog section and story stay; the library pin stays in the Ride with GPS POI Library, on no rides."
 }
