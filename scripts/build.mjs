@@ -234,6 +234,8 @@ function transform(entry, r) {
     let plain = 0;
     if (!isFinish && kind !== 'caution' && WARN_NAME.test(name)) { kind = 'caution'; warnings.push(`stop "${name}" is a warning on a ${p.poi_type_name} icon; the app treats it as Caution (change the icon to Caution in the POI Library)`); }
     else if (!isFinish && kind === 'info' && TOILET_NAME.test(name)) kind = 'toilet';
+    // Toilets are left out of the app altogether: not on the map, not in the Stops list, never spoken (Ben, 11/10/2026)
+    if (kind === 'toilet' || TOILET_NAME.test(name)) continue;
     else if (!isFinish && WELCOME_NAME.test(name)) plain = 1;   // welcome or briefing pins are read out without "You have reached..."
     const { runs, nearest } = passes(T, p.lat, p.lng, 60);
     let d;
