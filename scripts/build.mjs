@@ -257,23 +257,34 @@ function transform(entry, r) {
     stops.push({
       id: String(p.id), kind, name, text: clean(p.description), url: p.url || null,
       lat: +p.lat.toFixed(6), lng: +p.lng.toFixed(6), d: Math.round(d), off,
-      photos: (p.photo_ids || []).slice(0, 6).map(photoUrl), lib: p.parent_type === 'Club'
+      photos: (p.photo_ids || []).slice(0, 6).map(photoUrl), lib: p.parent_type === 'Club', upd: p.updated_at || ''
     });
   }
   // A POI Library pin replaces the ride's own old copy of the same place (same name, within 400 m). The copy is left out
   // of the app and listed in health.json as safe to delete in Ride with GPS. A pin named "DELETE ME..." is always left out.
   const superseded = [];
   const libPins = stops.filter(o => o.lib);
+  const staleLib = [];
   for (let i = stops.length - 1; i >= 0; i--) {   // first pass: old copies a library pin replaces, and DELETE ME pins
     const s = stops[i];
+    if (/^delete me/i.test(s.name)) { superseded.push({ id: s.id, name: s.name, reason: 'named DELETE ME' }); stops.splice(i, 1); continue; }
     const libTwin = !s.lib && libPins.find(o => o.name.toLowerCase() === s.name.toLowerCase() && hav(o.lat, o.lng, s.lat, s.lng) < 400);
-    if (/^delete me/i.test(s.name) || libTwin) { superseded.push({ id: s.id, name: s.name, reason: libTwin ? 'library pin ' + libTwin.id + ' replaces it' : 'named DELETE ME' }); stops.splice(i, 1); }
+    if (!libTwin) continue;
+    const differs = (s.text || '') !== (libTwin.text || '') || (s.url || '') !== (libTwin.url || '') || s.kind !== libTwin.kind;
+    if (differs && s.upd > libTwin.upd) {
+      // the ride's own pin was edited after the library pin: show the newer wording and flag the library pin as out of date
+      staleLib.push(libTwin.id);
+      warnings.push(`stop "${s.name}" was edited on the ride after its POI Library pin (${libTwin.id}); showing the ride's version, update the library pin to match`);
+      continue;
+    }
+    superseded.push({ id: s.id, name: s.name, reason: 'library pin ' + libTwin.id + ' replaces it' }); stops.splice(i, 1);
   }
+  for (let i = stops.length - 1; i >= 0; i--) if (staleLib.includes(stops[i].id)) stops.splice(i, 1);
   for (let i = stops.length - 1; i >= 0; i--) {   // second pass: the same pin twice
     const s = stops[i];
     if (stops.find((o, j) => j < i && o.name === s.name && hav(o.lat, o.lng, s.lat, s.lng) < 40)) stops.splice(i, 1);
   }
-  stops.forEach(s => { delete s.lib; });
+  stops.forEach(s => { delete s.lib; delete s.upd; });
   stops.sort((a, b) => a.d - b.d);
 
   const offers = offersFor(T, entry.slug);
@@ -402,7 +413,8 @@ async function main() {
         if (was >= 5 && now < was * 0.7 && !allow) throw new Error(`stops dropped from ${was} to ${now} in Ride with GPS; kept the last good copy (if this is meant, add ${entry.slug} to config/allow-stop-drop.json, then take it out after the next build)`);
       }
       route = t.route; h.warnings.push(...t.warnings); h.source = 'ridewithgps';
-      if (t.superseded.length) h.pinsToDelete = t.superseded;   // old copies the app now leaves out; safe to delete in Ride with GPS
+      if (t.superseded.length) h.pinsToDelete = t.superseded;
+      t.warnings.filter(w => /edited on the ride after/.test(w)).forEach(w => health.problems.push(`${entry.slug}: ${w}`));   // old copies the app now leaves out; safe to delete in Ride with GPS
     } catch (e) {
       h.warnings.push(String(e.message || e));
       const prev = OFFLINE ? null : await fetchLive(key);
