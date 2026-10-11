@@ -91,7 +91,7 @@ function distancePhrases(tr, range) {
 }
 
 // Lines to record, highest priority first, as { lang, text, group }
-export function wantedLines({ routes, i18n, langs }) {
+export function wantedLines({ routes, i18n, langs, stories }) {
   const tr = l => s => (l === 'en' ? s : (i18n[l] && i18n[l][s]) || s);
   const has = (l, s) => l === 'en' || !!(i18n[l] && i18n[l][s]);
   const groups = { phrases: [], common: [], cues: [], names: [], templates: [], stories: [], full: [] };
@@ -117,6 +117,11 @@ export function wantedLines({ routes, i18n, langs }) {
       r.stops.forEach(s => { const x = say(s.name); if (x) groups.names.push(x); const y = say(s.text); if (y) groups.stories.push(y);
         (s.story || []).forEach(p => { const z = say(p); if (z) groups.full.push(z); }); });
     }
+  }
+  // every full story in config/stories.json, in English, linked to a ride stop or not, so other apps (EO Crew staff app)
+  // can play the same recordings; published in stories-voice.json
+  for (const st of Object.values(stories || {})) for (const p of (st && Array.isArray(st.paras) ? st.paras : [])) {
+    const text = String(p || '').trim(); if (text) groups.full.push({ lang: 'en', text });
   }
   const out = [], seen = new Set();
   for (const g of ['phrases', 'common', 'cues', 'names', 'templates', 'stories', 'full']) {
@@ -180,7 +185,7 @@ async function synth(text, vc, key, depth = 0) {
   }
 }
 
-export async function buildVoice({ routes, i18n, langs, dist, appSource, health, allRoutesOk }) {
+export async function buildVoice({ routes, i18n, langs, dist, appSource, health, allRoutesOk, stories }) {
   loadSpeech(path.dirname(dist));
   const cfg = (() => { try { return JSON.parse(fs.readFileSync(path.join(path.dirname(dist), 'config', 'voice.json'), 'utf8')); } catch (e) { return {}; } })();
   const want = cfg.voice || 'Aoede';
@@ -220,7 +225,7 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   for (const s of spoken) if (!covered.has(s)) health.problems.push(`voice: spoken line "${s}" is not set up for recording (scripts/voice.mjs)`);
 
   const key = process.env.GOOGLE_TTS_KEY;
-  const lines = wantedLines({ routes, i18n, langs });
+  const lines = wantedLines({ routes, i18n, langs, stories });
   v.lines = lines.length;
   let voices = {};
   if (!key) v.notes.push('GOOGLE_TTS_KEY not set: nothing new recorded, existing recordings still published');
@@ -295,6 +300,7 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   general._say = { rules: SPEECH.rules.map(r => ({ find: r.find, say: r.say, langs: r.langs })), names: SPEECH.names };   // for the phone voice
   fs.writeFileSync(path.join(dist, 'voice.json'), JSON.stringify(general));
   listenPage({ routes, dist, voices, have });
+  storiesVoice({ stories, dist, voices, have });
   // per route: recordings for its own cues, stop names and stories
   for (const r of routes) {
     r.voice = {};
@@ -320,6 +326,23 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   v.pruned = pruned;
   if (v.waiting && key) v.notes.push(`${v.waiting} lines still to record; the phone voice covers them until then (monthly cap ${cap} characters)`);
   return v;
+}
+
+// stories-voice.json: every full story in config/stories.json with the English recording for each paragraph (null until
+// recorded), for other apps that play the same stories in the same voice (EO Crew's Know Noosa). Text and audio both come
+// from here, so nothing is copied by hand.
+function storiesVoice({ stories, dist, voices, have }) {
+  const en = voices.en, set = have.get('en') || new Set();
+  const out = { _about: 'Every full story from config/stories.json with its natural voice recording per paragraph (null until recorded). Paths are relative to the site. Built by scripts/voice.mjs.', voice: en ? en.name : null, built: new Date().toISOString(), stories: {} };
+  for (const [key, st] of Object.entries(stories || {})) {
+    if (!st || !Array.isArray(st.paras)) continue;
+    const paras = st.paras.map(p => String(p || '').trim()).filter(Boolean).map(t => {
+      const h = voiceHash('en|' + t);
+      return { t, a: en && set.has(h) ? `v/${en.tag}/${h}.mp3` : null };
+    });
+    out.stories[key] = { title: st.title || key, origin: st.origin || null, paras };
+  }
+  fs.writeFileSync(path.join(dist, 'stories-voice.json'), JSON.stringify(out));
 }
 
 // listen.html: every place name and the start of every full story in English, with its recording, so Ben can check how

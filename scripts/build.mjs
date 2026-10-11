@@ -476,7 +476,7 @@ async function main() {
   // natural voice recordings, then the route files
   try {
     await buildVoice({ routes: built.map(b => b.route), i18n, langs: LANGS, dist, appSource: fs.readFileSync(path.join(ROOT, 'site/app.js'), 'utf8'),
-      health, allRoutesOk: health.routes.every(r => r.ok && r.source === 'ridewithgps') });
+      health, allRoutesOk: health.routes.every(r => r.ok && r.source === 'ridewithgps'), stories: storiesCfg.stories || {} });
   } catch (e) { health.problems.push('voice step failed: ' + (e.message || e)); fs.writeFileSync(path.join(dist, 'voice.json'), '{}'); }
   for (const b of built) fs.writeFileSync(path.join(dist, 'r', `${b.key}.json`), JSON.stringify(b.route));
 
