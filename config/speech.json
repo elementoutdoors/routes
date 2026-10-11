@@ -257,8 +257,8 @@
    }
   },
   "Resume": {
-   "_note": "Ben, 12/10/2026: the Pause button's \"Tap Resume\" was said like a CV (résumé). Said as the verb, ri-ZYOOM. Capital R only, so it matches the button name; \"resumed\" is already said right. English only: other languages translate the word.",
-   "ipa": "rɪˈzjuːm",
+   "_note": "Ben, 12/10/2026: the Pause button's \"Tap Resume\" was said like a CV (résumé). Said as the verb, ri-ZYOOM. Capital R only, so it matches the button name; \"resumed\" is already said right. English only: other languages translate the word. Google's English phoneme set writes the r sound as ɹ (plain r is refused).",
+   "ipa": "ɹɪˈzjuːm",
    "respell": "re-zyoom",
    "langs": [
     "en"
