@@ -1,5 +1,5 @@
 {
- "_about": "Full stories, written to be heard, one per place on the ride story blogs. A stop whose link points at a place on one of the blogs below plays its story when the rider taps Hear the full story. Each story is a list of short paragraphs (each one is recorded on its own). src holds a fingerprint of the blog section the story was written from, per blog; the nightly build compares it with the live blog and reports a changed section in health.json so the weekly check rewrites the story (see config/STORY_BRIEF.md).",
+ "_about": "Full stories, written to be heard, one per place on the ride story blogs. A stop whose link points at a place on one of the blogs below plays its story when the rider taps Hear the full story. Each story is a list of short paragraphs (each one is recorded on its own). src holds a fingerprint of the blog section the story was written from, per blog; the nightly build compares it with the live blog and reports a changed section in health.json so the weekly check rewrites the story (see config/STORY_BRIEF.md). A story with an origin instead of a blog (the kayak tour stories) has no blog fingerprint and is kept by hand from that origin. Every story, linked to a ride or not, is recorded in the natural voice and published with its recordings in stories-voice.json for the EO Crew staff app.",
  "blogs": {
   "bikeon": "https://bikeon.com.au/noosa-self-guided-rides-what-you-will-see/",
   "beo": "https://byearthandocean.com.au/noosa-hinterland-self-guided-rides-places/"
@@ -615,6 +615,72 @@
    "src": {
     "bikeon": "056800237553"
    }
+  },
+  "kabi-kabi-country": {
+   "title": "Kabi Kabi Country",
+   "paras": [
+    "Wunya ngulum. In the Kabi Kabi language that means welcome everyone. Like many Aboriginal languages, Kabi Kabi is endangered, and people are working to keep it alive.",
+    "The Kabi Kabi people are the Traditional Custodians of this land. Their Country reaches from the Pine River near Caboolture in the south to the Burrum River near Maryborough in the north, and west to the Conondale Ranges. It takes in beaches, lakes, rivers, creeks, mountains and rainforest.",
+    "Many local names come from their language. Tewantin is said to mean place of dead logs. Cooroibah is said to mean place of possums. And Weyba is understood to mean place of stingrays.",
+    "These languages were spoken, not written, so early Europeans wrote the names down as they heard them. That is why spellings vary, and why the same name was once written Kabi, Kgabi or Gabi."
+   ],
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
+   "src": {}
+  },
+  "noosa-private-airport": {
+   "title": "Noosa's private airport",
+   "paras": [
+    "Across the water is Noosa's private airport. It was set up in the early 1980s, as more and more people flew in to holiday in Noosa. It sits close to Noosa Heads, the national park, the beaches and the hinterland.",
+    "It is used by private planes and helicopters, not airlines. The airfield takes up about 56 hectares, part of a much larger property of more than 400 hectares.",
+    "Guides call it Bob's Airport, after the owner who bought it in 2008.",
+    "Noosa sits inside a biosphere reserve, so anything built around the airport has to meet strict rules that protect the plants and animals of the area."
+   ],
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
+   "src": {}
+  },
+  "noosa-everglades": {
+   "title": "The Noosa Everglades system",
+   "paras": [
+    "Lake Weyba is the southern gateway to the Noosa Everglades system. The Noosa Everglades are often described as one of only two everglades systems in the world, the other being the Florida Everglades.",
+    "Instead of sawgrass marsh, this system is a chain of mirror-like waterways, wetlands and lakes, about 65 kilometres long, with a catchment of 85,000 hectares. It is part of the UNESCO Noosa Biosphere Reserve.",
+    "Down here at the southern end the water is salty and tidal, so mangroves line the creeks. Further north, as the water turns fresh, the mangroves disappear and paperbarks and rainforest take over.",
+    "Much of the catchment lies inside the Great Sandy National Park, so very little farm runoff reaches the water. The biosphere reserve is home to 343 bird species, about 44 per cent of all the bird species in Australia."
+   ],
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
+   "src": {}
+  },
+  "keyser-creek": {
+   "title": "Keyser Creek",
+   "paras": [
+    "The water in Keyser Creek is the colour of strong tea. That colour comes from tannins, natural compounds that leach out of leaves, bark and other plant matter as it breaks down.",
+    "The banks are lined with melaleucas, the paperbark trees, known for their peeling, papery bark. Their leaves hold an oil much like tea tree oil, with antiseptic properties, and a crushed leaf smells of it.",
+    "On a still day the dark water becomes a mirror. Trees, sky and clouds reflect so clearly it is hard to tell where the bank ends. That is why this part of the Noosa Everglades system is known for its reflections.",
+    "The paperbarks give shelter and nesting places to birds, reptiles and fish. Move slowly and quietly, and you may see more than you expect."
+   ],
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
+   "src": {}
+  },
+  "weyba-mangroves": {
+   "title": "The mangroves",
+   "paras": [
+    "Mangroves are what make this southern end of the Noosa Everglades system special. They need salty, tidal water, so further north, where the water turns fresh, they disappear. Eight kinds grow here.",
+    "They live where few plants can. Their roots filter out up to 90 per cent of the salt in seawater, and they push the rest into yellow leaves that drop off. Roots that poke up out of the mud let them breathe in waterlogged ground.",
+    "They hold the banks together, and they filter pollution out of the water as it flows down the system. They are also a carbon sink, storing four to five times more carbon than a rainforest, most of it locked away in the mud.",
+    "Their roots give food and shelter to young fish, crabs and prawns. Three out of every four fish we eat in Australia use a mangrove at some point in their lives. Without mangroves, there would be far fewer fish in the sea."
+   ],
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
+   "src": {}
+  },
+  "stingray-sanctuary": {
+   "title": "The stingray sanctuary",
+   "paras": [
+    "Weyba is understood to mean place of stingrays, and this lake has been a stingray sanctuary for as long as anyone knows. Rays come into the shallows to breed and give birth, and the young grow up here before heading out to deeper water.",
+    "The shallow water is their shield. Bigger predators coming in from the deep channels are exposed in water this shallow, so the young rays get a safe place to grow.",
+    "The ray seen most often is the cowtail. Many here are juveniles, but a cowtail can grow to about 1.8 metres across, with a tail twice as long as its body. The brown estuary stingray is special too. It lives only on the east coast of Queensland and New South Wales, and it is listed as near threatened.",
+    "Stingrays are wild animals, so they are often seen but never guaranteed. Give them space, never touch or chase them, and let them carry on with their day."
+   ],
+   "origin": "Stingrays and Everglades Kayak Tour manual (EO-TR-11) and the What's Up Down Under episode with guide Matt Smith; no blog",
+   "src": {}
   }
  }
 }
