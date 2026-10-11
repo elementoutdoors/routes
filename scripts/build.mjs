@@ -504,6 +504,27 @@ async function main() {
     if (o.active && !expired && !health.routes.some(r => (r.offers || []).includes(o.id))) health.problems.push(`offer ${o.id} is not near any route`);
     if (o.logo && !fs.existsSync(path.join(ROOT, 'site', o.logo))) health.problems.push(`offer ${o.id}: logo ${o.logo} is missing, card shows the name instead`);
   }
+  // Phones keep what they saved under an address (voice recordings, logos). A recording must never change at the same
+  // address, or riders who saved it keep hearing the old one (the recording folder tag carries the speech rules for this).
+  // Publish every such file's fingerprint and compare with the live site: a recording that changed in place is a problem.
+  {
+    const files = {};
+    const walk = (dir, rel) => { for (const f of fs.readdirSync(dir)) { const fp2 = path.join(dir, f), r = rel + '/' + f; if (fs.statSync(fp2).isDirectory()) walk(fp2, r); else files[r] = crypto.createHash('sha1').update(fs.readFileSync(fp2)).digest('hex').slice(0, 10); } };
+    for (const d of ['v', 'assets']) if (fs.existsSync(path.join(dist, d))) walk(path.join(dist, d), d);
+    fs.writeFileSync(path.join(dist, 'files.json'), JSON.stringify(files));
+    if (!OFFLINE) {
+      try {
+        const r = await fetch(LIVE_BASE + 'files.json', { cache: 'no-store' });
+        if (r.ok) {
+          const live = await r.json();
+          const changed = Object.keys(files).filter(k => live[k] && live[k] !== files[k]);
+          const rec = changed.filter(k => k.startsWith('v/'));
+          if (rec.length) health.problems.push(`${rec.length} voice recordings changed at the same address (for example ${rec[0]}); phones that saved them keep playing the old version. The recording folder tag must change when a recording does (scripts/voice.mjs)`);
+          health.assetsChanged = changed.filter(k => !k.startsWith('v/'));   // logos: phones pick these up on the next open
+        }
+      } catch (e) { /* first build with files.json, or the live site unreachable: nothing to compare */ }
+    }
+  }
   health.untranslatedTotal = Object.fromEntries(LANGS.map(l => [l, missing[l].size]));
   fs.writeFileSync(path.join(dist, 'health.json'), JSON.stringify(health, null, 1));
 

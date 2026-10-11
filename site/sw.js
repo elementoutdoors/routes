@@ -24,6 +24,15 @@ function cacheFirst(req, name) {
     });
   });
 }
+function staleWhileRevalidate(req, name) {
+  return caches.open(name).then(function (c) {
+    return c.match(req).then(function (own) { return own || caches.match(req); }).then(function (hit) {
+      var fresh = fetch(req).then(function (res) { if (res.ok) c.put(req, res.clone()).catch(function () {}); return res; });
+      if (hit) { fresh.catch(function () {}); return hit; }
+      return fresh;
+    });
+  });
+}
 function networkFirst(req, name) {
   return caches.open(name).then(function (c) {
     return fetch(req).then(function (res) { if (res.ok) c.put(req, res.clone()).catch(function () {}); return res; })
@@ -43,7 +52,7 @@ self.addEventListener('fetch', function (e) {
     if (/\/r\/[^/]+\.json$/.test(url.pathname) || /health\.json$/.test(url.pathname)) { e.respondWith(networkFirst(req, DATA)); return; }
     if (/(ui|voice)\.json$/.test(url.pathname)) { e.respondWith(networkFirst(req, SHELL)); return; }
     if (/\/v\/[0-9a-f]+\/[0-9a-f]+\.mp3$/.test(url.pathname)) { e.respondWith(caches.match(req).then(function (hit) { return hit || cacheFirst(req, DATA); })); return; }   // natural voice recordings
-    if (/\/assets\//.test(url.pathname)) { e.respondWith(caches.match(req).then(function (hit) { return hit || cacheFirst(req, DATA); })); return; }   // partner logos, kept for offline
+    if (/\/assets\//.test(url.pathname)) { e.respondWith(staleWhileRevalidate(req, DATA)); return; }   // logos: shown at once from the phone, refreshed in the background so a new logo arrives
     e.respondWith(caches.match(req).then(function (hit) { return hit || fetch(req); }));
     return;
   }

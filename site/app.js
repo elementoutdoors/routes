@@ -200,7 +200,7 @@
     var cached = lsGet('rg.ui', null);
     if (cached) UI = cached;
     var v = lsGet('rg.voice', null); if (v) setVoiceManifest(v);
-    fetchJson('voice.json?v=' + BUILD).then(function (m) { setVoiceManifest(m); lsSet('rg.voice', m); if (R) precacheVoice(); }).catch(function () {});
+    fetchJson('voice.json?v=' + BUILD).then(function (m) { setVoiceManifest(m); lsSet('rg.voice', m); pruneVoiceCache(); if (R) precacheVoice(); }).catch(function () {});
     return fetchJson('ui.json?v=' + BUILD).then(function (u) { UI = u; lsSet('rg.ui', u); }).catch(function () {});
   }
   function storeRoute(key, data) {
@@ -521,6 +521,54 @@
     if (lsGet(stamp, false)) return;
     fetchAll(urls).then(function (failed) { if (failed < 3) lsSet(stamp, true); });
   }
+
+  // ---------- keeping the phone up to date ----------
+  // Recordings live under a folder tag that changes whenever how they are said changes, so a recording saved under an
+  // old tag is never played again; clear those out so the phone does not fill up.
+  function pruneVoiceCache() {
+    if (!window.caches) return;
+    var keep = {}; Object.keys(VOICE).forEach(function (l) { keep[VOICE[l].tag] = 1; });
+    if (!Object.keys(keep).length) return;
+    caches.open('rg-data-v1').then(function (c) {
+      return c.keys().then(function (reqs) {
+        reqs.forEach(function (q) { var m = /\/v\/([0-9a-f]+)\/[0-9a-f]+\.mp3$/.exec(new URL(q.url).pathname); if (m && !keep[m[1]]) c.delete(q); });
+      });
+    }).catch(function () {});
+  }
+  // When the app comes back to the screen (a home screen app can sit in the background for days), and no ride is under
+  // way, fetch the latest route and recordings, and load a new version of the app if one has been published.
+  // Never during a ride: nothing changes under a rider.
+  var lastFresh = Date.now();
+  function refreshFromServer() {
+    if (!navigator.onLine || ride.active || Date.now() - lastFresh < 10 * 60 * 1000) return;
+    lastFresh = Date.now();
+    fetch('./', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (html) {
+      var m = /app\.js\?v=(\w+)/.exec(html);
+      if (m && m[1] !== BUILD && m[1] !== '__BUILD__' && !ride.active) {
+        try { sessionStorage.setItem('rg.reopen', R ? R.key : ''); } catch (e) {}
+        location.reload();
+        return true;
+      }
+    }).catch(function () {}).then(function (reloading) {
+      if (reloading) return;
+      fetchJson('voice.json?v=' + BUILD).then(function (m) { setVoiceManifest(m); lsSet('rg.voice', m); pruneVoiceCache(); }).catch(function () {}).then(function () {
+        if (!R || ride.active) return;
+        var key = R.key, before = JSON.stringify(lsGet('rg.route.' + key, null));
+        return fetchJson('r/' + key + '.json').then(function (data) {
+          if (ride.active || !R || R.key !== key) return;
+          var changed = JSON.stringify(data) !== before;
+          storeRoute(key, data);
+          if (changed) {
+            R = data; R.key = key;
+            setRouteClips(); applyRouteSettings(); applyBrand(); applyStaticText();
+            addRouteLayers(); addMarkers(); renderRoute(); saveOffline();
+          }
+          precacheVoice();
+        });
+      }).catch(function () {});
+    });
+  }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') refreshFromServer(); });
 
   // ---------- wake lock ----------
   var wakeLock = null;
@@ -1372,6 +1420,7 @@
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js?v=' + BUILD).catch(function () {});
     var key = keyFromUrl();
     if (key) scrubUrl();
+    if (!key) { try { var again = sessionStorage.getItem('rg.reopen'); sessionStorage.removeItem('rg.reopen'); if (again && routeIndex[again]) key = again; } catch (e) {} }
     loadUi().then(function () {
       applyStaticText();
       if (key) return openKey(key);
