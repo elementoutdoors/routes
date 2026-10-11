@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { buildVoice } from './voice.mjs';
+import { fp, blogList, placeOf, stopId, blogSections, readBlogs, comparePlaces, holdStops } from './places.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const OFFLINE = process.argv.includes('--offline');
@@ -22,6 +23,7 @@ const cfg = readJson('config/routes.json');
 const brands = readJson('config/brands.json');
 const offersCfg = readJson('config/offers.json');
 const storiesCfg = readJson('config/stories.json', { blogs: {}, stories: {} });
+const placeRecord = readJson('config/place-record.json', { sections: {}, stops: {} });
 const i18n = Object.fromEntries(LANGS.map(l => [l, readJson(`config/i18n/${l}.json`, {})]));
 
 // Behaviour settings: every value checked against a safe range; anything wrong falls back to the default.
@@ -140,58 +142,34 @@ function offersFor(T, slug) {
 // ---------- full stories ----------
 // A stop whose link points at a place on one of the ride story blogs gets that place's full story (written to be heard,
 // config/stories.json), played when the rider taps Hear the full story.
-const normUrl = u => { try { const x = new URL(u); return (x.host.replace(/^www\./, '') + x.pathname.replace(/\/+$/, '')).toLowerCase(); } catch (e) { return ''; } };
-const BLOGS = Object.entries(storiesCfg.blogs || {}).map(([brand, url]) => ({ brand, url, n: normUrl(url) }));
-function storyKey(url) {
-  if (!url || !url.includes('#')) return null;
-  const b = BLOGS.find(x => x.n === normUrl(url.split('#')[0]));
-  return b ? { brand: b.brand, key: url.split('#')[1] } : null;
-}
+const BLOGS = blogList(storiesCfg.blogs);
+export { blogSections };
 function attachStories(route, report) {
   for (const s of route.stops) {
     delete s.story;
-    const k = storyKey(s.url); if (!k) continue;
-    report.linked.add(k.brand + '#' + k.key);
+    const k = placeOf(BLOGS, s.url); if (!k) continue;
+    report.linked.add(k.place);
     const st = (storiesCfg.stories || {})[k.key];
     if (st && Array.isArray(st.paras) && st.paras.length) s.story = st.paras.map(p => String(p).trim()).filter(Boolean);
-    else report.missing.add(k.brand + '#' + k.key);
+    else report.missing.add(k.place);
   }
 }
-// Each blog section as plain text: the paragraphs between a place's heading and the next heading.
-const decode = t => t.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
-  .replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-const plain = t => decode(t.replace(/<[^>]+>/g, '')).replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"').replace(/\s+/g, ' ').trim();
-export function blogSections(html) {
-  const out = {};
-  const heads = [...html.matchAll(/<h([23])\b[^>]*>/gi)].map(m => ({ at: m.index, end: m.index + m[0].length, tag: m[0], level: m[1] }));
-  heads.forEach((h, i) => {
-    const id = (h.tag.match(/\bid=["']([^"']+)["']/) || [])[1];
-    if (!id || h.level !== '3') return;
-    const chunk = html.slice(h.end, i + 1 < heads.length ? heads[i + 1].at : html.length);
-    const paras = [...chunk.matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/gi)].filter(m => !/bo-eb/.test(m[1])).map(m => plain(m[2])).filter(Boolean);
-    out[id] = paras.join('\n');
-  });
-  return out;
-}
+// Fingerprint each blog section against the story written from it. Returns what was read, for the places record.
 async function watchBlogs(report) {
-  for (const b of BLOGS) {
-    try {
-      const r = await fetch(b.url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/141.0 Safari/537.36' } });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const secs = blogSections(await r.text());
-      report.sections[b.brand] = Object.keys(secs).length;
-      for (const [key, text] of Object.entries(secs)) {
-        const h = sha(text).slice(0, 12);
-        report.current[b.brand + '#' + key] = h;
-        const st = (storiesCfg.stories || {})[key];
-        if (!st) continue;
-        const was = (st.src || {})[b.brand];
-        if (!was) report.unchecked.push(b.brand + '#' + key);
-        else if (was !== h) report.stale.push(b.brand + '#' + key);
-      }
-      for (const lk of report.linked) if (lk.startsWith(b.brand + '#') && !secs[lk.split('#')[1]]) report.noSection.push(lk);
-    } catch (e) { report.unread.push(`${b.brand}: ${e.message || e}`); }
+  const blog = await readBlogs(BLOGS);
+  report.unread.push(...blog.unread);
+  Object.assign(report.sections, blog.counts);
+  for (const [place, text] of Object.entries(blog.sections)) {
+    const [brand, key] = place.split('#');
+    report.current[place] = fp(text);
+    const st = (storiesCfg.stories || {})[key];
+    if (!st) continue;
+    const was = (st.src || {})[brand];
+    if (!was) report.unchecked.push(place);
+    else if (was !== report.current[place]) report.stale.push(place);
   }
+  for (const lk of report.linked) if (blog.counts[lk.split('#')[0]] !== undefined && blog.sections[lk] === undefined) report.noSection.push(lk);
+  return blog;
 }
 
 // ---------- transform ----------
@@ -389,6 +367,9 @@ async function main() {
   fs.mkdirSync(path.join(dist, 'c'), { recursive: true });
   fs.mkdirSync(path.join(dist, 'g'), { recursive: true });
   const built = [];
+  // places record: each blog place's stop summary as Ride with GPS has it now, before any hold
+  const variants = (readJson('config/stop-variants.json', {}).variants) || {};
+  const placeStops = {}, heldPlaces = new Set();
   for (const entry of cfg.routes.filter(r => r.active)) {
     const key = routeKey(entry.slug, entry.rev);
     links[entry.slug] = `${SITE_BASE}#${key}`;
@@ -427,6 +408,17 @@ async function main() {
 
     attachStories(route, storyReport);
 
+    // places record: note the live stop summaries, then keep the agreed summary where a card is open
+    const isVariant = st => (variants[st.name.toLowerCase()] || []).includes(entry.slug);
+    if (h.source === 'ridewithgps') for (const st of route.stops) {
+      const p = placeOf(BLOGS, st.url);
+      if (!p || isVariant(st)) continue;
+      const id = stopId(p.place, st.name);
+      if (!placeStops[id]) placeStops[id] = { place: p.place, name: st.name, text: st.text || '', rides: [] };
+      placeStops[id].rides.push(entry.slug);
+    }
+    holdStops(route, placeRecord, BLOGS, isVariant).forEach(pl => heldPlaces.add(pl));
+
     // translations for this route
     const strings = routeStrings(route);
     route.i18n = {};
@@ -454,7 +446,6 @@ async function main() {
   }
   // Same place, different story: a story stop copied onto several rides instead of shared from the POI Library drifts apart.
   {
-    const variants = (readJson('config/stop-variants.json', {}).variants) || {};
     const byName = new Map();
     for (const b of built) for (const st of b.route.stops) {
       if (st.kind === 'caution' || st.kind === 'finish' || (!st.text && !st.url)) continue;
@@ -479,8 +470,19 @@ async function main() {
   } catch (e) { health.problems.push('voice step failed: ' + (e.message || e)); fs.writeFileSync(path.join(dist, 'voice.json'), '{}'); }
   for (const b of built) fs.writeFileSync(path.join(dist, 'r', `${b.key}.json`), JSON.stringify(b.route));
 
-  await watchBlogs(storyReport);
+  const blog = await watchBlogs(storyReport);
   health.stories = Object.assign({}, storyReport, { linked: [...storyReport.linked].sort(), missing: [...storyReport.missing].sort() });
+
+  // places record: every difference between the live blogs and stop summaries and the agreed text (decided by the weekly check)
+  {
+    const allLive = health.routes.every(r => r.source === 'ridewithgps');
+    const unreadBrands = blog.unread.map(u => u.split(':')[0]);
+    const rep = comparePlaces(placeRecord, blog.sections, placeStops, unreadBrands);
+    // a ride on its last good copy has no live stops this time, so a missing stop is not a removal
+    if (!allLive) rep.gone = rep.gone.filter(g => g.what !== 'stop');
+    rep.held = [...heldPlaces].sort();
+    health.places = rep;
+  }
 
   for (const o of offersCfg.offers) {
     const expired = o.validUntil && new Date(o.validUntil + 'T23:59:59+10:00') < now;

@@ -2,6 +2,7 @@
 // Reads the live health.json, then checks that the site was rebuilt recently, every route opens,
 // every stop and offer link still works, every photo loads, and nothing is untranslated.
 // Prints a JSON report. Exit code 0 = all good, 1 = something needs attention.
+// Version 6 (11/10/2026): also checks the places record (health.json "places"): every blog section and stop summary that differs from the agreed text, with before and after in "placeChanges" for the weekly check to decide; a story whose blog change is waiting on Ben is a note, not an issue.
 // Version 5 (11/10/2026): also checks the full stories (every linked place has one, none out of step with its blog section, the blogs can be read) and listen.html.
 // Version 4 (10/10/2026): also checks the natural voice (recording running, inside the monthly cap, recordings load). v3: every typed route code. v2: real browser user agent, redirects to another page count as broken, 403 noted not failed.
 // Usage: node scripts/check.mjs [siteBase]   (route links are read from qr/links.json when present)
@@ -57,10 +58,26 @@ const st = h.stories;
 if (!st) issues.push('full stories: no stories report in health.json');
 else {
   (st.missing || []).forEach(k => issues.push(`full stories: no story for ${k} (write one, see config/STORY_BRIEF.md)`));
-  (st.stale || []).forEach(k => issues.push(`full stories: blog section ${k} has changed, rewrite its story (config/STORY_BRIEF.md)`));
+  const waiting = new Set(((h.places || {}).changed || []).filter(c => c.what === 'section' && c.pending).map(c => c.id));
+  (st.stale || []).forEach(k => waiting.has(k) ? notes.push(`full stories: ${k} not rewritten, its blog change is waiting on Ben's ruling`)
+    : issues.push(`full stories: blog section ${k} has changed, rewrite its story (config/STORY_BRIEF.md)`));
   (st.unchecked || []).forEach(k => issues.push(`full stories: ${k} has no blog fingerprint yet (config/STORY_BRIEF.md)`));
   (st.noSection || []).forEach(k => issues.push(`full stories: a stop links to ${k} but the blog has no such section`));
   (st.unread || []).forEach(k => notes.push(`full stories: could not read blog (${k})`));
+}
+// places record: every blog section and stop summary that differs from the agreed text (config/STORY_BRIEF.md, "The places record")
+const placeChanges = [];
+const pl = h.places;
+if (!pl) issues.push('places record: no places report in health.json');
+else {
+  const name = w => w === 'section' ? 'blog section' : 'stop summary';
+  (pl.changed || []).forEach(c => {
+    if (c.pending) notes.push(`places record: ${name(c.what)} ${c.id} waiting on Ben's ruling (card ${c.pending})${c.what === 'stop' ? ', the app keeps the agreed summary' : ''}`);
+    else { issues.push(`places record: ${name(c.what)} ${c.id} has changed, decide it (wording only, or a change of fact for Ben)`); placeChanges.push(c); }
+  });
+  (pl.unrecorded || []).forEach(c => { issues.push(`places record: ${name(c.what)} ${c.id} is new, check it and record it`); placeChanges.push(Object.assign({ before: null, after: c.text }, c)); });
+  (pl.gone || []).forEach(c => issues.push(`places record: ${name(c.what)} ${c.id} is no longer there (removed from the blog or the rides?), drop it from the record or put it back`));
+  if ((pl.held || []).length) notes.push(`places record: the app is keeping the agreed stop summary for ${pl.held.join(', ')}`);
 }
 { const s = await status(BASE + 'listen.html', 'GET'); if (s.code !== 200) issues.push(`voice check page listen.html not loading (${s.code})`); }
 
@@ -101,5 +118,5 @@ if (fs.existsSync('qr/codes.json') && fs.existsSync('qr/links.json')) {
 }
 if (h.problems.some(p => /^settings:/.test(p))) notes.push('a value in config/settings.json was out of range and the default was used');
 
-console.log(JSON.stringify({ ok: !issues.length, built: h.built, routes: h.routes.map(r => `${r.slug}: ${r.source}, ${r.cues} cues, ${r.stops} stops`), issues, notes }, null, 1));
+console.log(JSON.stringify({ ok: !issues.length, built: h.built, routes: h.routes.map(r => `${r.slug}: ${r.source}, ${r.cues} cues, ${r.stops} stops`), issues, notes, placeChanges }, null, 1));
 process.exit(issues.length ? 1 : 0);

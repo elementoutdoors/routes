@@ -22,6 +22,10 @@ phone's browser with the map, spoken and written directions, stops and partner o
   about a minute on that place, written to be heard (`config/stories.json`), in the natural voice. Directions and the next
   stop cut in over it. The nightly build fingerprints each blog section and reports any story that is out of step in
   `health.json` ("stories"); the weekly check rewrites it. Brief: `config/STORY_BRIEF.md`.
+- The places record (`config/place-record.json`) holds the agreed text of every place's blog section and every stop summary that
+  links to it. The build lists every difference in `health.json` ("places"). Wording changes are agreed by the weekly check; a
+  change of fact goes to Ben on the Ride Story Review page, and until he rules the app keeps the agreed stop summary. Tool:
+  `scripts/place-record.mjs`. Rules: `config/STORY_BRIEF.md`, "The places record".
 - How written text is said aloud (abbreviations such as St, Rd and Mt, units, and respellings for names the voice gets
   wrong) is in `config/speech.json`, used by the natural voice and the phone voice. `listen.html` on the site plays every
   place name so names can be checked by ear.
@@ -36,6 +40,7 @@ phone's browser with the map, spoken and written directions, stops and partner o
 | Add or remove a route | `config/routes.json`, plus the route's Ride with GPS privacy code in the `ROUTE_SECRETS` secret |
 | Partner offers | The Ride Guide Settings page (`config/offers.json` underneath; `validUntil` hides it after that date, `showAt` "finish" keeps it for the end of the ride) |
 | Full stories | `config/stories.json` (one per blog place, see `config/STORY_BRIEF.md`) |
+| Agreed place text | `config/place-record.json`, only through `scripts/place-record.mjs` (see `config/STORY_BRIEF.md`) |
 | How a word or name is said aloud | `config/speech.json` |
 | When turns are announced, close-together turns, off-route sensitivity, stop pop-ups, screen defaults | The Ride Guide Settings page (https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18). Saving it starts the "Ride Guide settings apply" scheduled task, which writes `config/settings.json` here. Every value is range-checked and falls back to its default. |
 | Which brand each map uses (By Earth and Ocean or Bike On) | The Ride Guide Settings page; the task writes `brand` in `config/routes.json`. The map then shows that brand's logo and colours. |
@@ -48,7 +53,7 @@ phone's browser with the map, spoken and written directions, stops and partner o
 - `dist/health.json` (published as `health.json`) lists every route, where its data came from, broken stops,
   untranslated text and offers that are not near any route.
 - `scripts/check.mjs` runs from the Element Outdoors Drift Check Register each week: site rebuilt recently,
-  every QR code opens its route, links and photos work, nothing untranslated.
+  every QR code opens its route, links and photos work, nothing untranslated, stories and the places record in step.
 - A failed nightly build emails the GitHub account owner.
 
 ## Local work
