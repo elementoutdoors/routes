@@ -37,6 +37,7 @@ if (!v) issues.push('natural voice: no voice report in health.json (voice step n
 else {
   if ((v.notes || []).some(n => /GOOGLE_TTS_KEY not set/.test(n))) issues.push('natural voice: the Google key is missing from the build (GitHub secret GOOGLE_TTS_KEY)');
   if (v.charsThisMonth > v.cap) issues.push(`natural voice: ${v.charsThisMonth} characters used this month, over the ${v.cap} cap`);
+  if (v.credit && v.credit.usedUsd > v.credit.usd + 1) issues.push(`natural voice: about US$${v.credit.usedUsd} of Google Cloud credit used, over the US$${v.credit.usd} allowance`);
   if (v.waiting) notes.push(`natural voice: ${v.waiting} of ${v.lines} lines still to record (phone voice covers them until then)`);
   if (v.failed) notes.push(`natural voice: ${v.failed} recordings failed in the last build`);
   try {

@@ -184,7 +184,7 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   loadSpeech(path.dirname(dist));
   const cfg = (() => { try { return JSON.parse(fs.readFileSync(path.join(path.dirname(dist), 'config', 'voice.json'), 'utf8')); } catch (e) { return {}; } })();
   const want = cfg.voice || 'Aoede';
-  const cap = Math.min(Number(cfg.monthlyCharacterCap) || 900000, 980000);
+  const freeCap = Math.min(Number(cfg.monthlyCharacterCap) || 900000, 980000);
   const runMinutes = Number(cfg.maxMinutesPerBuild) || 35;
   const cacheDir = path.resolve(process.env.VOICE_CACHE || path.join(path.dirname(dist), '.voice-cache'));
   fs.mkdirSync(cacheDir, { recursive: true });
@@ -192,7 +192,22 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   const ledger = (() => { try { return JSON.parse(fs.readFileSync(ledgerFile, 'utf8')); } catch (e) { return { months: {} }; } })();
   const month = new Date().toISOString().slice(0, 7);
   ledger.months[month] = ledger.months[month] || 0;
-  const v = { voice: want, cap, month, charsThisMonth: ledger.months[month], recorded: 0, recordedChars: 0, waiting: 0, failed: 0, notes: [], langs: {} };
+  // Credit allowance (Ben, 11/10/2026): while Google Cloud trial credits last (creditAllowance.until, Brisbane date), the cap
+  // rises so a set amount of credit (creditAllowance.usd, at US$30 per million characters past the free million each month)
+  // finishes the recordings early. Once that amount is used, or the date passes, the cap drops back to the free cap by itself.
+  const ca = cfg.creditAllowance || {};
+  const today = new Date(Date.now() + 10 * 3600e3).toISOString().slice(0, 10);
+  const FREE = 1000000, PER_M = 30;
+  let cap = freeCap, credit;
+  if (ca.until && today <= ca.until && Number(ca.usd) > 0 && (!ca.from || month >= ca.from.slice(0, 7))) {
+    const allowChars = Math.min(Number(ca.usd), 100) / PER_M * 1e6;
+    const usedBefore = Object.entries(ledger.months).filter(([m]) => m !== month && (!ca.from || m >= ca.from.slice(0, 7))).reduce((t, [, c]) => t + Math.max(0, c - FREE), 0);
+    const left = Math.max(0, allowChars - usedBefore);
+    cap = Math.min(Math.max(freeCap, FREE + left), 3000000);
+    const usedNow = usedBefore + Math.max(0, ledger.months[month] - FREE);
+    credit = { usd: Number(ca.usd), until: ca.until, usedUsd: Math.round(usedNow * PER_M / 1e6 * 100) / 100 };
+  }
+  const v = { voice: want, cap, credit, month, charsThisMonth: ledger.months[month], recorded: 0, recordedChars: 0, waiting: 0, failed: 0, notes: [], langs: {} };
   health.voice = v;
 
   // every spoken UI line in the app must be covered

@@ -1,6 +1,11 @@
 {
-  "_about": "Natural voice for spoken directions and stories (Google Chirp 3 HD). voice is the Chirp 3 HD voice name used in every language. monthlyCharacterCap keeps use inside Google's free 1 million characters a month; lines over the cap wait for next month and the phone voice covers them. maxMinutesPerBuild stops a long first run from holding up the site.",
+  "_about": "Natural voice for spoken directions and stories (Google Chirp 3 HD). voice is the Chirp 3 HD voice name used in every language. monthlyCharacterCap keeps use inside Google's free 1 million characters a month; lines over the cap wait for next month and the phone voice covers them. maxMinutesPerBuild stops a long first run from holding up the site. creditAllowance: while Google Cloud trial credit lasts, up to creditAllowance.usd of credit (US$30 per million characters past the free million a month, hard limit US$100 and 3 million a month) is used to finish recordings early, from creditAllowance.from until creditAllowance.until; after that the cap returns to monthlyCharacterCap by itself. Ben approved US$50 on 11/10/2026 (credit A$427, expires 9 January 2027).",
   "voice": "Aoede",
   "monthlyCharacterCap": 900000,
-  "maxMinutesPerBuild": 35
+  "maxMinutesPerBuild": 35,
+  "creditAllowance": {
+    "usd": 50,
+    "from": "2026-10-11",
+    "until": "2027-01-05"
+  }
 }
