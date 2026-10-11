@@ -28,9 +28,15 @@ export function loadSpeech(root) {
 // Exact pronunciations for the natural voice (speech.json "pronounce": a word, its IPA, the languages it applies to, and a
 // respelling used only if Google refuses the pronunciation). Sent to Google with each line that contains the word, so the
 // written text never changes. Version 1 (11/10/2026, Ben: the voice said Noosa as "Nysa").
-const wordRe = w => new RegExp('(^|[^\\p{L}])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\p{L}])', 'u');
+// whole word in Latin script (Chinese, Japanese and Korean text runs straight on from a name, so only Latin letters count)
+const wordRe = w => new RegExp('(^|[^\\p{Script=Latin}])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\p{Script=Latin}])', 'u');
+// A language can have its own IPA (Google checks the sounds against that language) or only a respelling ("ipa": null),
+// where Google wants another spelling system (Chinese pinyin, Japanese kana) or refuses the sounds.
 export function pronunciations(lang, spoken) {
-  return Object.entries(SPEECH.pronounce).filter(([w, x]) => (!x.langs || x.langs.includes(lang)) && wordRe(w).test(spoken)).map(([w, x]) => ({ phrase: w, ipa: x.ipa, respell: x.respell || null }));
+  return Object.entries(SPEECH.pronounce).filter(([w, x]) => (!x.langs || x.langs.includes(lang)) && wordRe(w).test(spoken)).map(([w, x]) => {
+    const o = Object.assign({ ipa: x.ipa, respell: x.respell || null }, (x.lang || {})[lang] || {});
+    return { phrase: w, ipa: o.ipa || null, respell: o.respell || null };
+  });
 }
 function respelled(text, prons) {
   for (const p of prons) if (p.respell) text = text.replace(new RegExp(wordRe(p.phrase).source, 'gu'), (m, pre) => pre + p.respell);
@@ -184,7 +190,9 @@ async function pickVoices(key, want, notes) {
 // One recording. Google refuses very long sentences in some languages; those are recorded a sentence (or clause) at a time
 // and the pieces joined, which MP3 allows.
 async function synth(text, vc, key, depth = 0, prons = null, stat = null) {
-  prons = prons || pronunciations(vc.lang, text);
+  const all = prons || pronunciations(vc.lang, text);
+  text = respelled(text, all.filter(p => !p.ipa));   // respelling only, for this language
+  prons = all.filter(p => p.ipa);
   const input = { text };
   if (prons.length) input.customPronunciations = { pronunciations: prons.map(p => ({ phrase: p.phrase, phoneticEncoding: 'PHONETIC_ENCODING_IPA', pronunciation: p.ipa })) };
   try {
@@ -273,7 +281,7 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   // recordings are keyed by what is actually said (and any exact pronunciation sent with it), so changing a speech rule
   // re-records only the lines it changes
   const fileFor = (l, text) => { const sp = speakable(l, text), pr = pronunciations(l, sp);
-    return path.join(cacheDir, voices[l].name, crypto.createHash('sha1').update(sp + (pr.length ? '|ipa2:' + pr.map(p => p.phrase + '=' + p.ipa).join(';') : '')).digest('hex') + '.mp3'); };
+    return path.join(cacheDir, voices[l].name, crypto.createHash('sha1').update(sp + (pr.length ? '|ipa2:' + pr.map(p => p.phrase + '=' + (p.ipa || '~' + p.respell)).join(';') : '')).digest('hex') + '.mp3'); };
   const todo = lines.filter(x => voices[x.lang] && !fs.existsSync(fileFor(x.lang, x.text)));
   const started = Date.now();
   let stop = !key || !Object.keys(voices).length;
