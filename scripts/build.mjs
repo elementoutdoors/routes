@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { buildVoice } from './voice.mjs';
+import { planPasses } from './passes.mjs';
 import { fp, blogList, placeOf, stopId, blogSections, readBlogs, comparePlaces, holdStops } from './places.mjs';
 import { loadLibrary, storiesFrom, recordFrom, compiled, generatedDrift, lint } from './library.mjs';
 import { libraryPage } from './library-page.mjs';
@@ -253,7 +254,8 @@ function transform(entry, r) {
     stops.push({
       id: String(p.id), kind, name, text: clean(p.description), url: p.url || null,
       lat: +p.lat.toFixed(6), lng: +p.lng.toFixed(6), d: Math.round(d), off,
-      photos: (p.photo_ids || []).slice(0, 6).map(photoUrl), lib: p.parent_type === 'Club', upd: p.updated_at || ''
+      photos: (p.photo_ids || []).slice(0, 6).map(photoUrl), lib: p.parent_type === 'Club', upd: p.updated_at || '',
+      runs: isFinish ? null : runs.map(r => Math.round(r.d))
     });
     if (plain) stops[stops.length - 1].plain = 1;
   }
@@ -282,6 +284,7 @@ function transform(entry, r) {
     if (stops.find((o, j) => j < i && o.name === s.name && hav(o.lat, o.lng, s.lat, s.lng) < 40)) stops.splice(i, 1);
   }
   stops.forEach(s => { delete s.lib; delete s.upd; });
+  planPasses(T, stops);   // out and back rides: which pass each stop is read on (scripts/passes.mjs)
   stops.sort((a, b) => a.d - b.d);
 
   const offers = offersFor(T, entry.slug);

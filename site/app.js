@@ -732,15 +732,23 @@
   function checkStops() {
     if (!ride.fix) return;
     R.stops.forEach(function (s) {
-      if (ride.shown[s.id] || FACILITY[s.kind] || s.kind === 'finish') return;
+      if (FACILITY[s.kind] || s.kind === 'finish') return;
       var near = hav(ride.fix.lat, ride.fix.lng, s.lat, s.lng);
-      var along = Math.abs(s.d - ride.d);
       var cw = CFG.stops.cautionWarningMetres, tr = CFG.stops.triggerMetres;
-      var trigger = s.kind === 'caution' ? (s.d - ride.d < cw && s.d - ride.d > -30 && near < cw + 50)
-        : s.off ? (along < 40 && s.off < 1000)      // a stop off the route: show it as the rider passes the nearest point
-        : (near < tr && along < tr * 2);
+      var key = s.id, trigger = false;
+      if (s.kind === 'caution') {
+        // a caution is read on each pass the build chose (s.ds: every pass, or only the downhill ones for a hill warning)
+        (s.ds || [s.d]).forEach(function (d, k) {
+          var kk = k ? s.id + ':' + k : s.id;
+          if (!trigger && !ride.shown[kk] && d - ride.d < cw && d - ride.d > -30 && near < cw + 50) { trigger = true; key = kk; }
+        });
+      } else if (!ride.shown[s.id]) {
+        var along = Math.abs(s.d - ride.d);   // s.d is the one pass this stop is read on
+        trigger = s.off ? (along < 40 && s.off < 1000)      // a stop off the route: show it as the rider passes the nearest point
+          : (near < tr && along < tr * 2);
+      }
       if (!trigger) return;
-      ride.shown[s.id] = 1;
+      ride.shown[key] = 1;
       if (s.kind === 'caution') {
         // a caution with notes (ferry, beach access) opens its card so the notes are on screen, even over another stop
         banner(tc(s.name), 'caution', 12000, s.text ? function () { openStop(s); } : null);
