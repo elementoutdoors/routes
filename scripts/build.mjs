@@ -270,7 +270,7 @@ function transform(entry, r) {
     if (/^delete me/i.test(s.name)) { superseded.push({ id: s.id, name: s.name, reason: 'named DELETE ME' }); stops.splice(i, 1); continue; }
     const libTwin = !s.lib && libPins.find(o => o.name.toLowerCase() === s.name.toLowerCase() && hav(o.lat, o.lng, s.lat, s.lng) < 400);
     if (!libTwin) continue;
-    const differs = (s.text || '') !== (libTwin.text || '') || (s.url || '') !== (libTwin.url || '') || s.kind !== libTwin.kind;
+    const differs = (s.text || '') !== (libTwin.text || '') || (s.url || '') !== (libTwin.url || '');
     if (differs && s.upd > libTwin.upd) {
       // the ride's own pin was edited after the library pin: show the newer wording and flag the library pin as out of date
       staleLib.push(libTwin.id);
