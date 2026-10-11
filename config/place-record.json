@@ -171,6 +171,11 @@
    "hash": "ecce1213c0cb",
    "agreed": "2026-10-11"
   },
+  "bikeon#koalas": {
+   "text": "Koalas live in the forests our rides pass through, but please do not expect to see one. They spend most of the day asleep high in the gums, grey fur against grey bark, and Noosa's koalas are few and far between. A sighting is a rare bonus, not part of the ride.\nThe name is not from Kabi Kabi, the language of this Country. It comes from the Dharug language of the Sydney region, where the word gula is often said to mean \"no water\", because koalas get most of the water they need from eucalyptus leaves.\nKoalas were once common around Noosa. Between 1903 and 1927 about 4.5 million koala pelts were officially traded in Queensland, including from this area, and the state held open seasons on them. The last, in August 1927, took close to 600,000 pelts and caused such an outcry that it was never repeated. By the 1960s numbers here were so low that six koalas were brought from Caboolture to Noosa National Park to restock it. Today they are rarely seen on the headland, and koalas are listed as endangered in Queensland.\nThe good news is in the hinterland forests west of Tewantin. About 2,400 hectares of pine and hardwood plantation in the Yurol and Ringtail state forests are being added to Tewantin National Park. Between 2022 and 2024 Noosa Landcare planted about 133,000 trees over 332 hectares of logged land, chosen to bring back the eucalypts koalas feed on. Thermal drone surveys found about one koala for every five hectares of remnant forest, close to 300 koalas, with more than 500 expected once the new forest grows.\nYour best chance is a quiet moment in the forest along Gyndier Drive or on the Wooroi trails. Look for a grey ball wedged in the fork of a tall gum. If you spot one, keep your distance and your voice down. To report a sick or injured koala, call 1300 ANIMAL (1300 264 625).",
+   "hash": "056800237553",
+   "agreed": "2026-10-11"
+  },
   "bikeon#laguna-lookout": {
    "text": "The climb up Viewland Drive is short and very steep, so this is where the e-assist earns its keep. At the top, Laguna Lookout opens over the whole lower river: the mouth and Main Beach below, the Noosa River winding north towards Lake Cooroibah, the sand mass of Great Sandy National Park beyond, and to the west the old volcanic plugs of the hinterland, best at sunset. The bay itself was named Laguna Bay by surveyor James Charles Burnett on 25 July 1847. Nobody recorded why. \"Laguna\" is Spanish for lagoon, and an 1866 newspaper called it \"Nusa Bay, or as it is better known, Lagoona Bay\". The walk to the lookout passes grey gums, pink bloodwoods, ironbarks and tallowwoods; keep an eye out for kookaburras, lace monitors and koalas. Between June and November, scan the bay for humpback whales.",
    "hash": "b82d7da3c960",
@@ -471,6 +476,21 @@
   "bikeon#kin-kin|Kin Kin": {
    "text": "Welcome to Kin Kin. The two storey Kin Kin Hotel opened here in 1915 and has come through a tornado and record floods from Kin Kin Creek. The name is said to come from a Kabi word for red soil, though many locals say it means plenty of black ants.",
    "hash": "3ae8e5935532",
+   "agreed": "2026-10-11"
+  },
+  "bikeon#koalas|Koalas at Laguna Lookout": {
+   "text": "Koalas were once common around Noosa, but very few remain on this headland and sightings are now rare. If you walk up to the lookout, glance into the gums. A koala here is a real stroke of luck.",
+   "hash": "4dd4332091f3",
+   "agreed": "2026-10-11"
+  },
+  "bikeon#koalas|Koalas in Tewantin National Park": {
+   "text": "Koala country. Tewantin National Park is koala habitat, so glance up into the forks of the tall gums as you roll through. Sightings are rare, so count yourself lucky if you spot one.",
+   "hash": "2f23eb80cac1",
+   "agreed": "2026-10-11"
+  },
+  "bikeon#koalas|Koalas on Gyndier Drive": {
+   "text": "Koala country. The forest along Gyndier Drive is koala habitat, joined to the Yurol and Ringtail forests being replanted for them. Koalas are rarely seen, so count yourself lucky if you spot one.",
+   "hash": "99ac45ab2ff0",
    "agreed": "2026-10-11"
   },
   "bikeon#laguna-lookout|Laguna Lookout": {
