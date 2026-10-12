@@ -3,7 +3,7 @@
  "kind": "stop",
  "title": "The mangroves",
  "status": "live",
- "updated": "2026-10-11",
+ "updated": "2026-10-12",
  "tours": {
   "stingrays-everglades": 5
  },
@@ -20,7 +20,7 @@
   "detail_blocks": [
    {
     "type": "text",
-    "text": "Mangroves are vital to the Noosa Everglades ecosystem, serving as a keystone species that supports biodiversity, stabilizes shorelines, and acts as a powerful carbon sink. Eight different species of mangroves thrive in the Noosa Everglades system, including:"
+    "text": "Mangroves are vital to the Noosa Everglades system, serving as a keystone species that supports biodiversity, stabilizes shorelines, and acts as a powerful carbon sink. Eight different species of mangroves thrive in the Noosa Everglades system, including:"
    },
    {
     "type": "list",
@@ -84,7 +84,7 @@
    },
    {
     "type": "heading",
-    "text": "Mangrove Species in the Noosa Everglades"
+    "text": "Mangrove Species in the Noosa Everglades system"
    },
    {
     "type": "heading",
@@ -129,7 +129,7 @@
    {
     "type": "list",
     "items": [
-     "Tallest mangrove in the Noosa Everglades, reaching up to 10 meters",
+     "Tallest mangrove in the Noosa Everglades system, reaching up to 10 meters",
      "Found in well-drained muddy soils, away from constant tidal immersion",
      "Has bent-knee shaped pneumatophores"
     ]
@@ -164,7 +164,7 @@
    },
    {
     "type": "text",
-    "text": "Noosa Council **does not allow any development that could damage the mangroves**, keeping these crucial ecosystems intact. By ensuring their preservation, the region safeguards the biodiversity and ecological balance of the Noosa Everglades."
+    "text": "Noosa Council **does not allow any development that could damage the mangroves**, keeping these crucial ecosystems intact. By ensuring their preservation, the region safeguards the biodiversity and ecological balance of the Noosa Everglades system."
    }
   ],
   "stop_title": "Mangroves"

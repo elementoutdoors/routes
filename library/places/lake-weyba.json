@@ -3,14 +3,14 @@
  "kind": "place",
  "title": "Lake Weyba",
  "status": "live",
- "updated": "2026-10-11",
+ "updated": "2026-10-12",
  "blog": {
   "bikeon": {
    "heading": "Lake Weyba",
    "area": "lake-weyba-region",
    "after": null,
    "paras": [
-    "Lake Weyba is the southern gateway to the Noosa Everglades system: a large, shallow, tidal saltwater lake fringed by mangroves, saltpans and open forest, and linked to the lower Noosa River by Weyba Creek. It is listed in the Directory of Important Wetlands in Australia and is an important fish breeding habitat. The name, once spelt Weiba, is often said to come from a Gubbi Gubbi word for stingray; some sources suggest flying squirrel instead, and both feathertail gliders and stingrays are found here. For the Kabi Kabi people the lake was a rich source of food, and shell middens and scarred trees remain around its shores. Noosa's first professional fisherman, Joseph Keyser, settled on the north-west shore and is remembered for wheeling smoked mullet to the Gympie goldfields in a barrow. Today the whole eastern shore is national park."
+    "Lake Weyba is the southern gateway to the Noosa Everglades system: a large, shallow, tidal saltwater lake fringed by mangroves, saltpans and open forest, and linked to the lower Noosa River by Weyba Creek. It is listed in the Directory of Important Wetlands in Australia and is an important fish breeding habitat. Weyba is understood to mean place of stingrays in the Kabi Kabi language. It was once spelt Weiba. For the Kabi Kabi people the lake was a rich source of food, and shell middens and scarred trees remain around its shores. Noosa's first professional fisherman, Joseph Keyser, settled on the north-west shore and is remembered for wheeling smoked mullet to the Gympie goldfields in a barrow. Today the whole eastern shore is national park."
    ]
   }
  },
@@ -18,14 +18,14 @@
   "bikeon": [
    {
     "name": "Lake Weyba",
-    "text": "Lake Weyba is a large, shallow tidal saltwater lake and the southern end of the Noosa Everglades system. Its name is often said to mean stingray, and rays are common in the warm shallows."
+    "text": "Lake Weyba is a large, shallow tidal saltwater lake and the southern end of the Noosa Everglades system. Weyba is understood to mean place of stingrays in the Kabi Kabi language, and rays are common in the warm shallows."
    }
   ]
  },
  "story": [
   "Lake Weyba is the southern gateway to the Noosa Everglades system. It is a large, shallow, tidal saltwater lake, fringed by mangroves, salt pans and open forest, and joined to the Noosa River by Weyba Creek.",
   "It is listed as a wetland of national importance, and it is an important breeding ground for fish.",
-  "The name, once spelt Weiba, is often said to come from a Gubbi Gubbi word for stingray, though some say flying squirrel. Both live here. For the Kabi Kabi people the lake was a rich source of food, and shell middens and scarred trees remain around its shores.",
+  "Weyba is understood to mean place of stingrays in the Kabi Kabi language. It was once spelt Weiba. For the Kabi Kabi people the lake was a rich source of food, and shell middens and scarred trees remain around its shores.",
   "Noosa's first professional fisherman, Joseph Keyser, settled on the north west shore, and he is remembered for wheeling smoked mullet all the way to the Gympie goldfields in a barrow. Today the whole eastern shore is national park."
  ],
  "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"

@@ -3,7 +3,7 @@
  "kind": "stop",
  "title": "Keyser Creek",
  "status": "live",
- "updated": "2026-10-11",
+ "updated": "2026-10-12",
  "tours": {
   "stingrays-everglades": 4
  },
@@ -11,13 +11,13 @@
   "points": [
    "Tannins leach colour from organic matter and turn the water tea or Coca-Cola coloured.",
    "The melaleuca (paperbark) makes an oil much like tea tree oil: pull a few leaves and have guests crush and smell them.",
-   "Melaleuca oil in the water combined with the tannins creates the reflections that give the Everglades its tourist name, the River of Mirrors."
+   "Melaleuca oil and tannins in the water create the mirror-like reflections the Noosa Everglades system is known for. The name River of Mirrors belongs to the upper Noosa River, further north."
   ],
   "detail": "",
   "detail_blocks": [
    {
     "type": "text",
-    "text": "**Color of the Water**: The distinctive deep tea or Coca-Cola colour of the River of Mirrors is due to the presence of tannins, which are organic compounds released from decaying plant matter. As leaves, bark, and other organic materials decompose in the water, they leach color, resulting in the striking, dark hue that characterizes this unique waterway. This coloration not only adds to the river's aesthetic appeal but also provides a captivating environment for wildlife."
+    "text": "**Color of the Water**: The distinctive deep tea or Coca-Cola colour of Keyser Creek is due to the presence of tannins, which are organic compounds released from decaying plant matter. As leaves, bark, and other organic materials decompose in the water, they leach color, resulting in the striking, dark hue that characterizes this unique waterway. This coloration not only adds to the river's aesthetic appeal but also provides a captivating environment for wildlife."
    },
    {
     "type": "text",
@@ -25,18 +25,18 @@
    },
    {
     "type": "text",
-    "text": "**Reflective Effects and Scenic Beauty**: The combination of melaleuca oil leaching into the river and the presence of tannins creates a remarkable reflective quality on the water's surface. This stunning effect plays a vital role in the river's nickname, \"the River of Mirrors.\" The interplay of light, color, and surrounding foliage results in breathtaking reflections and scenic views, making it a prime location for photography and nature appreciation. The mirror-like surface enhances the beauty of the Everglades, drawing tourists and nature enthusiasts alike."
+    "text": "**Reflective Effects and Scenic Beauty**: The combination of melaleuca oil leaching into the creek and the presence of tannins creates a remarkable reflective quality on the water's surface. This is the mirror-like water the Noosa Everglades system is known for. The name River of Mirrors belongs to the upper Noosa River, further north. The interplay of light, color, and surrounding foliage results in breathtaking reflections and scenic views, making it a prime location for photography and nature appreciation. The mirror-like surface enhances the beauty of the Noosa Everglades system, drawing tourists and nature enthusiasts alike."
    },
    {
     "type": "text",
-    "text": "**Ecological Significance**: The unique characteristics of the River of Mirrors contribute to a rich ecosystem that supports various wildlife species, including birds, reptiles, and aquatic life. The melaleuca trees provide essential habitat and nesting sites, fostering biodiversity in this distinctive wetland environment. The combination of dark waters and lush vegetation offers a unique habitat that is both visually stunning and ecologically valuable."
+    "text": "**Ecological Significance**: The unique characteristics of this mirror-like water contribute to a rich ecosystem that supports various wildlife species, including birds, reptiles, and aquatic life. The melaleuca trees provide essential habitat and nesting sites, fostering biodiversity in this distinctive wetland environment. The combination of dark waters and lush vegetation offers a unique habitat that is both visually stunning and ecologically valuable."
    },
    {
     "type": "text",
-    "text": "**Tourism Appeal**: The natural beauty and unique features of the River of Mirrors have made it a popular destination for tourists. Activities such as kayaking, canoeing, and guided eco-tours allow visitors to explore the river's enchanting landscapes. The captivating reflections and rich biodiversity offer opportunities for birdwatching, photography, and connecting with nature, enhancing the overall visitor experience."
+    "text": "**Tourism Appeal**: The natural beauty and unique features of this mirror-like water have made it a popular destination for tourists. Activities such as kayaking, canoeing, and guided eco-tours allow visitors to explore the creek's enchanting landscapes. The captivating reflections and rich biodiversity offer opportunities for birdwatching, photography, and connecting with nature, enhancing the overall visitor experience."
    }
   ],
-  "stop_title": "River of Mirrors"
+  "stop_title": "Mirror-like water"
  },
  "story": [
   "The water in Keyser Creek is the colour of strong tea. That colour comes from tannins, natural compounds that leach out of leaves, bark and other plant matter as it breaks down.",

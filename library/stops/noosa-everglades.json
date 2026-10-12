@@ -3,7 +3,7 @@
  "kind": "stop",
  "title": "The Noosa Everglades system",
  "status": "live",
- "updated": "2026-10-11",
+ "updated": "2026-10-12",
  "tours": {
   "stingrays-everglades": 3
  },
@@ -20,11 +20,11 @@
   "detail_blocks": [
    {
     "type": "text",
-    "text": "**Overview** The Noosa Everglades system is often described as one of only two everglades systems in the world, the other being the Florida Everglades in the United States. Unlike Florida's sawgrass marshes, the Noosa Everglades are characterized by a network of mirrored waterways, wetlands, and lakes, lined with paperbark trees and surrounded by subtropical rainforest and eucalyptus woodlands. This unique environment supports a diverse range of wildlife and plays a crucial role in maintaining water quality within the Noosa River system."
+    "text": "**Overview** The Noosa Everglades system is often described as one of only two everglades systems in the world, the other being the Florida Everglades in the United States. Unlike Florida's sawgrass marshes, the Noosa Everglades system is characterized by a network of mirrored waterways, wetlands, and lakes, lined with paperbark trees and surrounded by subtropical rainforest and eucalyptus woodlands. This unique environment supports a diverse range of wildlife and plays a crucial role in maintaining water quality within the Noosa River system."
    },
    {
     "type": "text",
-    "text": "**Geography and Hydrology** The Noosa Everglades are part of a 67 km-long waterway system that extends from Rainbow Beach in the north to Lake Weyba in the south. This system includes six major lakes:"
+    "text": "**Geography and Hydrology** The Noosa Everglades system is a 67 km-long chain of waterways that extends from Rainbow Beach in the north to Lake Weyba in the south. This system includes six major lakes:"
    },
    {
     "type": "list",
@@ -39,11 +39,11 @@
    },
    {
     "type": "text",
-    "text": "The Noosa Everglades function as a natural filtration system, with over 65% of the total catchment area inside the Great Sandy National Park. Being national park ensures minimal agricultural runoff, helping to maintain water clarity, particularly in the lower reaches of the everglades. The slow movement of water through the system contributes to the formation of its mirrored waterways, making it one of the most pristine and unique ecosystems in Australia."
+    "text": "The Noosa Everglades system functions as a natural filter, with over 65% of the total catchment area inside the Great Sandy National Park. Being national park ensures minimal agricultural runoff, helping to maintain water clarity, particularly in the lower reaches of the everglades. The slow movement of water through the system contributes to the formation of its mirrored waterways, making it one of the most pristine and unique ecosystems in Australia."
    },
    {
     "type": "text",
-    "text": "**Wildlife and Ecology** The Noosa Everglades provide vital habitat for an abundance of wildlife, and the wider Noosa Biosphere has about 44% of Australia's bird species. Notable bird species include:"
+    "text": "**Wildlife and Ecology** The Noosa Everglades system provides vital habitat for an abundance of wildlife, and the wider Noosa Biosphere has about 44% of Australia's bird species. Notable bird species include:"
    },
    {
     "type": "list",
@@ -144,7 +144,7 @@
   "stop_title": "Everglades and Biosphere"
  },
  "story": [
-  "Lake Weyba is the southern gateway to the Noosa Everglades system. The Noosa Everglades are often described as one of only two everglades systems in the world, the other being the Florida Everglades.",
+  "Lake Weyba is the southern gateway to the Noosa Everglades system. The Noosa Everglades system is often described as one of only two everglades systems in the world, the other being the Florida Everglades.",
   "Instead of sawgrass marsh, this system is a chain of mirror-like waterways, wetlands and lakes, about 65 kilometres long, with a catchment of 85,000 hectares. It is part of the UNESCO Noosa Biosphere Reserve.",
   "Down here at the southern end the water is salty and tidal, so mangroves line the creeks. Further north, as the water turns fresh, the mangroves disappear and paperbarks and rainforest take over.",
   "Much of the catchment lies inside the Great Sandy National Park, so very little farm runoff reaches the water. The biosphere reserve is home to 343 bird species, about 44 per cent of all the bird species in Australia."
