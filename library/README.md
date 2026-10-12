@@ -35,6 +35,8 @@ Every entry has `key`, `kind`, `title`, `status` (live, draft or retired) and `u
    - A new pin (a new place on a ride) is still placed by hand in the POI Library and added to its rides (see the ride stories doc); then add it to the entry's `pins`.
 5. Update the ride stories doc if the change settles a ruling.
 
+No git push in the session (a scheduled task whose push is refused): save the changed files on github.com in Chrome on Ben's laptop instead, straight to main. Open https://github.com/elementoutdoors/routes/upload/main/<folder>, give the page's file input the changed files straight from the session's clone with the file_upload tool (it only accepts files inside the session's working directory), choose "Commit directly to the main branch" and commit (library/ first, the generated config/ files last). Then check each file on raw.githubusercontent.com matches byte for byte. Never type a file into the web editor: it adds brackets and indents as you type. Ben's Desk "laptop fixes" task does this for any Story Library card the cloud task could not save.
+
 No Chrome in the session: commit the library change anyway. The Ride Guide and EO Crew follow it, and the weekly Story Library check pushes the blogs and pins from Ben's laptop.
 
 ## Never
