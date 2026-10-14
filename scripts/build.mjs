@@ -204,6 +204,7 @@ const POI_KINDS = {
 const WARN_NAME = /\b(caution|careful|take care|slippery|busy|crossing|dismount|steep|fast road|intersection|give way|hazard|warning)\b/i;
 const TOILET_NAME = /^(public )?(toilets?|restrooms?)$/i;
 const WELCOME_NAME = /^(welcome|before you ride)\b/i;
+const TRAIL_CUE = /\bsingle[\s-]?(track|trail)\b/i;   // a direction onto single track starts a stretch with more off route room
 const clean = s => (s || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 const photoUrl = id => `https://ridewithgps.com/photos/${id}/large.jpg`;
 
@@ -290,6 +291,18 @@ function transform(entry, r) {
 
   const offers = offersFor(T, entry.slug);
 
+  // Single track stretches (15/10/2026): from a direction onto single track until the next direction that is not.
+  // Hand-drawn lines through twisty trails can sit well off the real trail, so the app allows more room there before
+  // calling "off route" and does not call "riding backwards" on switchbacks.
+  const loose = [];
+  for (let i = 0; i < cues.length; i++) {
+    if (!TRAIL_CUE.test(cues[i].n)) continue;
+    let j = i + 1;
+    while (j < cues.length && TRAIL_CUE.test(cues[j].n)) j++;
+    loose.push([Math.max(0, cues[i].d - 10), Math.min(distance, (j < cues.length ? cues[j].d : distance) + 80)]);
+    i = j - 1;
+  }
+
   const brandId = brands[entry.brand] ? entry.brand : 'beo';
   const brand = Object.assign({ id: brandId }, brands[brandId]);
   const version = sha(JSON.stringify([T.d, T.lat, cues.map(c => c.d), stops.map(s => s.d)])).slice(0, 8);
@@ -297,7 +310,7 @@ function transform(entry, r) {
     slug: entry.slug, name: clean(r.name), description: clean(r.description), activity: entry.activity || 'ebike',
     distance, gain: Math.round(r.elevation_gain || 0), brand, version,
     hero: r.highlighted_photo_id ? photoUrl(r.highlighted_photo_id) : null,
-    track: T, cues, stops, offers, updated: r.updated_at || null, rwgps: entry.rwgps
+    track: T, cues, stops, offers, loose, updated: r.updated_at || null, rwgps: entry.rwgps
   };
   return { route, warnings, superseded };
 }
@@ -462,6 +475,7 @@ async function main() {
     built.push({ key, route });   // written after the voice step adds its recordings
     Object.assign(h, { ok: true, name: route.name, version: route.version, distance: route.distance, gpx: !!route.gpx, cues: route.cues.length,
       stops: route.stops.length, offers: route.offers.map(o => o.id),
+      singleTrack: route.loose.map(([a, b]) => `${(a / 1000).toFixed(1)} to ${(b / 1000).toFixed(1)} km`),
       links: [...new Set(route.stops.map(s => s.url).filter(Boolean).concat(route.offers.map(o => o.url).filter(Boolean), Object.values((route.brand && route.brand.reviews) || {})))],
       photos: [...new Set(route.stops.flatMap(s => s.photos))],
       untranslated: Object.fromEntries(LANGS.map(l => [l, strings.filter(s => !i18n[l][s]).length])) });

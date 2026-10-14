@@ -655,7 +655,10 @@
     updateMe();
     if (ride.paused) { if (ride.follow && map) map.easeTo({ center: [c.longitude, c.latitude], zoom: ride.zoom, duration: 800 }); return; }
     if (acc > 80) return;   // too vague to use
-    var tol = Math.max(CFG.offRoute.metres * 0.7, Math.min(CFG.offRoute.metres, acc + 15));
+    // single track stretches (R.loose, from the build): hand-drawn lines through twisty trails can sit well off the
+    // real trail, so allow more room before "off route" and never call switchbacks "riding backwards"
+    var trail = ride.locked && (R.loose || []).some(function (s) { return ride.d >= s[0] && ride.d <= s[1]; });
+    var tol = trail ? TRAIL_ROOM : Math.max(CFG.offRoute.metres * 0.7, Math.min(CFG.offRoute.metres, acc + 15));
     var cand = candidates(c.latitude, c.longitude, tol);
     var pick = null;
     if (cand.list.length) {
@@ -668,7 +671,7 @@
       });
     }
     if (pick) {
-      if (pick.d < ride.d - 60) ride.backCount++; else ride.backCount = 0;
+      if (pick.d < ride.d - 60 && !trail) ride.backCount++; else ride.backCount = 0;
       ride.d = pick.d; ride.locked = true;
       ride.offCount = 0;
       if (ride.off) { ride.onCount++; if (ride.onCount >= 2) { ride.off = false; ride.onCount = 0; say(tu('Back on route.'), { interrupt: true }); } }
@@ -713,7 +716,9 @@
     R.cues.forEach(function (c, k) {
       if ((ride.cueState[k] || 0) >= 2 || c.d > ride.d - 8 || c.d < prev - 8) return;
       ride.cueState[k] = 2;
-      if (ride.d - c.d < 45) sayContent(c.n, c.t === 'danger' ? tu('Caution.') : null);
+      // on single track the position can jump forward when the rider comes back onto the drawn line: still say the turn
+      var late = (R.loose || []).some(function (s) { return c.d >= s[0] && c.d <= s[1]; }) ? 150 : 45;
+      if (ride.d - c.d < late) sayContent(c.n, c.t === 'danger' ? tu('Caution.') : null);
     });
     var i = nextCueIndex(); if (i < 0) return;
     var c = R.cues[i], dist = c.d - ride.d, st = ride.cueState[i] || 0;
@@ -732,6 +737,7 @@
     }
   }
   var FACILITY = { toilet: 1, food: 1, drink: 1, service: 1 };   // on the map and in the Stops list, never popped up or spoken
+  var TRAIL_ROOM = 150;   // metres from the line allowed on single track before "off route" (15/10/2026)
   function checkStops() {
     if (!ride.fix) return;
     R.stops.forEach(function (s) {
