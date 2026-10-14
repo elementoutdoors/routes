@@ -25,5 +25,5 @@ export function wordCue(text) {
   return out;
 }
 // cue sheet shorthand still left after the rules: a lower case thing with no "the" after a direction word
-const SHORT = /\b(along|onto|into|through|across|over|under|past|follow|following|cross|towards)\s+(?!the\b|a\b|an\b|your\b|this\b|that\b|it\b|all\b)[a-z]+/;
+const SHORT = /\b(along|onto|into|through|across|over|under|past|follow|following|cross|towards)\s+(?!the\b|a\b|an\b|your\b|this\b|that\b|it\b|all\b|to\b)[a-z]+/;
 export function looksShort(text) { return SHORT.test(text) || /^[a-z]/.test(text); }
