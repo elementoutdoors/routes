@@ -10,6 +10,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { buildVoice } from './voice.mjs';
 import { planPasses } from './passes.mjs';
+import { loadCueWording, wordCue, looksShort } from './cuewording.mjs';
 import { fp, blogList, placeOf, stopId, blogSections, readBlogs, comparePlaces, holdStops } from './places.mjs';
 import { loadLibrary, storiesFrom, recordFrom, compiled, generatedDrift, lint } from './library.mjs';
 import { libraryPage } from './library-page.mjs';
@@ -224,7 +225,7 @@ function transform(entry, r) {
   }
   const distance = T.d[T.d.length - 1];
   const cues = r.course_points
-    .map(c => ({ d: Math.round(c.d), t: CUE_TYPES[(c.t || 'generic').toLowerCase()] || 'generic', n: clean(c.n) }))
+    .map(c => ({ d: Math.round(c.d), t: CUE_TYPES[(c.t || 'generic').toLowerCase()] || 'generic', n: wordCue(clean(c.n)) }))   // full sentences, not cue sheet shorthand (config/cue-wording.json)
     .filter(c => c.n && c.d >= 0 && c.d <= distance + 50)
     .sort((a, b) => a.d - b.d);
 
@@ -382,6 +383,7 @@ async function main() {
   fs.writeFileSync(path.join(dist, 'ui.json'), JSON.stringify(uiOut));
 
   const health = { built: now.toISOString(), build, routes: [], offers: [], problems: [] };
+  loadCueWording(ROOT);
   const settings = loadSettings(health.problems);
   health.settings = settings;
   const links = {}, codes = {};
@@ -466,6 +468,8 @@ async function main() {
     if (h.source !== 'ridewithgps') health.problems.push(`${entry.slug}: using last good copy (${h.warnings[0]})`);
     health.routes.push(h);
   }
+  // Turn directions that still read like cue sheet shorthand after the wording rules: add a rule or fix for them
+  health.cueWording = [...new Set(built.flatMap(b => b.route.cues.map(c => c.n)).filter(looksShort))];
   // Same place, different story: a story stop copied onto several rides instead of shared from the POI Library drifts apart.
   {
     const byName = new Map();

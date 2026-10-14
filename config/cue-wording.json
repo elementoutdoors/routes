@@ -1,0 +1,152 @@
+{
+  "_about": "How the turn directions from Ride with GPS are worded in the Ride Guide (on screen and spoken). Ride with GPS keeps its own short cue sheet wording; the app reads them as full, natural sentences. fixes: a whole cue, exactly as written in Ride with GPS, and what the app says instead (if the cue is later changed in Ride with GPS, the new wording is used and tidied by the rules). rules: applied in order to every cue that has no fix (find is a regular expression, say the replacement). The build lists any cue that still reads like cue sheet shorthand in health.json (cueWording) so a rule or fix can be added. Ben, 15/10/2026: say 'the path', 'the car park' and so on.",
+  "fixes": {
+    "cross road and onto pat on the other side (slightly to your left)": "Cross the road onto the path on the other side, slightly to your left",
+    "Slight Right onto glossy": "Bear right onto Glossy",
+    "Take the second exit into murdering creek rd": "Take the second exit onto Murdering Creek Road",
+    "Head down mountain st, away from Pomona, to the gate on the opposite side of the road (marked as Cooroora Trail)": "Head down Mountain Street, away from Pomona, to the gate on the opposite side of the road, marked Cooroora Trail",
+    "Cross Walter Hay Drive and follow the part to your left": "Cross Walter Hay Drive and follow the path to your left",
+    "At the roundabout, go straight a head onto Kingfisher Drive": "At the roundabout, go straight ahead onto Kingfisher Drive",
+    "Turn left of main path towards the river and Hilton Esplanade": "Turn left off the main path towards the river and Hilton Esplanade",
+    "Turn right along onto the path at Eenie Creek Road": "Turn right onto the path at Eenie Creek Road",
+    "Use North Shore ferry to cross to Noosa North Shore. fees apply.": "Take the North Shore ferry across to Noosa North Shore. Fees apply.",
+    "Turn right, leaving the main rd and continue straight towards the beach": "Turn right, leaving the main road, and continue straight towards the beach",
+    "Mt Tinbeerwah Road is a steep and a public road. Stay to your left, obey all road rules and control your speed at all times": "Mt Tinbeerwah Road is a steep public road. Stay to your left, obey all road rules and control your speed at all times",
+    "Keep left do not cross Cooroy Noosa Road (the main road)": "Keep left. Do not cross Cooroy Noosa Road, the main road",
+    "Bridge Crossing. Please Dismount": "Bridge crossing. Please dismount",
+    "Cyclists Dismount when Crossing Bridge": "Please dismount when crossing the bridge",
+    "Straight Ahead Over the Road": "Go straight ahead over the road",
+    "Turn Right onto The Noosa Trail Network": "Turn right onto the Noosa Trail Network",
+    "Turn Right onto the Noosa Trail Network Through Gate": "Turn right through the gate onto the Noosa Trail Network",
+    "Turn right and follow the path Under Eenie Creek Road": "Turn right and follow the path under Eenie Creek Road",
+    "Left on Trail 5 (Cooroora Trail)": "Turn left onto Trail 5, the Cooroora Trail",
+    "Turn left in to gravel area": "Turn left into the gravel area",
+    "Turn left into gravel carpark area and follow Hilton Esplanade along the river": "Turn left into the gravel car park and follow Hilton Esplanade along the river",
+    "Turn sharp left onto Cooroy - Noosa Road": "Turn sharp left onto Cooroy Noosa Road",
+    "Cross Rd to path on the other side": "Cross the road to the path on the other side",
+    "Cross Road and turn right following the path on the other side": "Cross the road and turn right, following the path on the other side",
+    "Turn left into Main Beach Carpark": "Turn left into the Main Beach car park",
+    "Enter Hovea (Green marker with Number 1)": "Enter Hovea, the green number 1 marker",
+    "Enter the Hovea trail (Green number 1 marker)": "Enter the Hovea trail, the green number 1 marker",
+    "Continue across the street  along the path following Eenie Creek Road": "Continue across the street along the path beside Eenie Creek Road",
+    "The Noosa River path is very busy. Please make your presence known when passing other users. Keep speed below 12kmh": "The Noosa River path is very busy. Please make your presence known when passing other users. Keep your speed below 12 km/h",
+    "Turn left toward Yurol Forest Drive, then turn right onto Yurol Forest": "Turn left towards Yurol Forest Drive, then turn right onto Yurol Forest Drive",
+    "Follow path to left into the shopping precinct. Then cross Sunshine Beach Road at the pedestrian crossing": "Follow the path to the left into the shopping precinct, then cross Sunshine Beach Road at the pedestrian crossing",
+    "Continue left along Eumundi Road": "Bear left along Eumundi Road",
+    "Continue left on Lake Flat Road": "Bear left on Lake Flat Road",
+    "Continue left onto Indy": "Bear left onto Indy",
+    "Turn onto the Weyba Trail": "Turn onto the Weyba trail",
+    "Turn left onto Secrets (go down)": "Turn left onto Secrets, heading down",
+    "Turn sharp left onto Secrets (go down)": "Turn sharp left onto Secrets, heading down",
+    "Keep left (follow arrows)": "Keep left, following the arrows",
+    "cross McKinnon Drive and continue left": "Cross McKinnon Drive and bear left",
+    "Continue on trail 7 to your right": "Continue on Trail 7 to your right",
+    "Continue": "Continue straight on",
+    "Keep right to Cross Cooroy Noosa Road and continue along the path next to St Andrews Drive": "Keep right to cross Cooroy Noosa Road and continue along the path next to St Andrews Drive",
+    "To begin head right along the path on Venture Drive": "To begin, head right along the path on Venture Drive",
+    "To begin head right on the path along Venture Drive": "To begin, head right on the path along Venture Drive",
+    "To begin turn left down Venture Drive": "To begin, turn left down Venture Drive",
+    "To return to main route head back down Viewland Drive": "To return to the main route, head back down Viewland Drive",
+    "Cross Cooroy Noosa Road with care and turn right.\nThere is a pedestrian crossing 200 m further along the road if you wish": "Cross Cooroy Noosa Road with care and turn right.\nIf you prefer, there is a pedestrian crossing 200 m further along the road",
+    "Turn Right onto the Single Track": "Turn right onto the single track",
+    "Optional Detour to Noosa Spit. Turn left and follow the Hastings Street. Route can be very busy, please dismount as required.\nTo skip this section, continue across Hastings Street to Main Beach": "Optional detour to Noosa Spit. Turn left and follow Hastings Street. It can be very busy, so please dismount as needed.\nTo skip this section, continue across Hastings Street to Main Beach"
+  },
+  "rules": [
+    {
+      "find": "  +",
+      "say": " "
+    },
+    {
+      "find": "^\\s+|\\s+$",
+      "say": ""
+    },
+    {
+      "find": "\\bround about\\b",
+      "say": "roundabout"
+    },
+    {
+      "find": "\\bin to\\b",
+      "say": "into"
+    },
+    {
+      "find": "\\b[Cc]arpark\\b",
+      "say": "car park"
+    },
+    {
+      "find": "\\bmain rd\\b",
+      "say": "main road"
+    },
+    {
+      "find": "\\b([Oo]ptional) Detour\\b",
+      "say": "$1 detour"
+    },
+    {
+      "find": "^(Turn|Keep|Stay|Slight|Bear|Continue|Make|Go) (Left|Right|Straight|Ahead)\\b",
+      "say": "$1 \\l$2"
+    },
+    {
+      "find": "^At roundabout,",
+      "say": "At the roundabout,"
+    },
+    {
+      "find": "\\btake exit 1\\b",
+      "say": "take the first exit"
+    },
+    {
+      "find": "\\btake exit 2\\b",
+      "say": "take the second exit"
+    },
+    {
+      "find": "\\btake exit 3\\b",
+      "say": "take the third exit"
+    },
+    {
+      "find": "\\btake exit 4\\b",
+      "say": "take the fourth exit"
+    },
+    {
+      "find": "\\btake exit 5\\b",
+      "say": "take the fifth exit"
+    },
+    {
+      "find": "\\(2nd exit\\)",
+      "say": "(second exit)"
+    },
+    {
+      "find": "\\btake the 2nd exit\\b",
+      "say": "take the second exit"
+    },
+    {
+      "find": "\\btake the 3rd exit\\b",
+      "say": "take the third exit"
+    },
+    {
+      "find": "\\b([A-Z][a-z]+) Rd\\b",
+      "say": "$1 Road"
+    },
+    {
+      "find": "\\b([A-Z][a-z]+) St\\b(?! [A-Z])",
+      "say": "$1 Street"
+    },
+    {
+      "find": "\\b([A-Z][a-z]+) Dr\\b",
+      "say": "$1 Drive"
+    },
+    {
+      "find": "\\b(along|onto|on|into|through|across|over|under|past|follow|following|cross|crossing|towards|toward|to|down|up|beside|around|off|leave|join|enter) (?!the |a |an |your |this |that |each |every )((?:main |bike |shared |dirt |gravel |river |lakeside |walking |single |fire )?(?:path|footpath|track|trail|road|bridge|gate|car park|gravel area|area|single track|singletrack|park|beach|roundabout|route|lane|bike lane|boardwalk|crossing|junction|underpass|tunnel|river|lake)s?)\\b",
+      "say": "$1 the $2"
+    },
+    {
+      "find": "^(Cross|Follow|Enter|Leave|Join|Ride along|Continue along|Continue on) (?!the |a |an |your |this |that )((?:main |bike |shared |dirt |gravel |river |lakeside |walking |single |fire )?(?:path|footpath|track|trail|road|bridge|gate|car park|gravel area|area|single track|singletrack|park|beach|roundabout|route|lane|bike lane|boardwalk|crossing|junction|underpass|tunnel|river|lake)s?)\\b",
+      "say": "$1 the $2"
+    },
+    {
+      "find": "\\bto (left|right)\\b",
+      "say": "to the $1"
+    },
+    {
+      "find": "^([a-z])",
+      "say": "\\u$1"
+    }
+  ]
+}

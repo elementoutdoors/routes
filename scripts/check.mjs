@@ -34,6 +34,7 @@ if (ageH > 50) issues.push(`site last rebuilt ${Math.round(ageH)} hours ago (nig
 h.problems.forEach(p => issues.push(p));
 h.routes.forEach(r => r.warnings.filter(w => /from the route/.test(w)).forEach(w => notes.push(`${r.slug}: ${w}`)));
 Object.entries(h.untranslatedTotal || {}).forEach(([l, n]) => { if (n) issues.push(`${n} strings not yet translated into ${l}`); });
+(h.cueWording || []).forEach(c => issues.push(`direction still reads like cue sheet shorthand, add a rule or fix in config/cue-wording.json: "${c}"`));
 
 // natural voice: the build records new lines each night; check it is running, inside its cap, and the recordings load
 const v = h.voice;
