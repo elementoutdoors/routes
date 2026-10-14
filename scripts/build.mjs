@@ -488,6 +488,22 @@ async function main() {
       if (sigs.size > 1) health.problems.push(`stop "${label}" has a different story or link on ${list.map(x => x.slug).join(', ')}; make them match (ideally one POI Library pin added to each ride), or list the ride in config/stop-variants.json if it is meant to differ`);
     }
   }
+  // One pin per spot: separate pins with the same name, words and link within 150 m of each other are spare copies.
+  // Moving one would leave the others behind, so keep one, add it to every ride, and take the copies off (15/10/2026).
+  {
+    const seen = [];
+    for (const b of built) for (const st of b.route.stops) {
+      const sig = st.name.toLowerCase() + '|' + (st.text || '') + '|' + (st.url || '');
+      let g = seen.find(x => x.sig === sig && x.pins.some(p => p.id !== st.id && hav(p.lat, p.lng, st.lat, st.lng) < 150));
+      if (!g) { g = seen.find(x => x.sig === sig && x.pins.some(p => p.id === st.id)); }
+      if (!g) { g = { sig, name: st.name, pins: [] }; seen.push(g); }
+      let p = g.pins.find(x => x.id === st.id);
+      if (!p) { p = { id: st.id, lat: st.lat, lng: st.lng, rides: [] }; g.pins.push(p); }
+      p.rides.push(b.route.slug);
+    }
+    health.duplicatePins = seen.filter(g => g.pins.length > 1).map(g => ({ name: g.name, pins: g.pins.map(p => ({ id: p.id, rides: p.rides })) }));
+    for (const g of health.duplicatePins) health.problems.push(`"${g.name}" is ${g.pins.length} separate pins at the same spot (${g.pins.map(p => p.id + ' on ' + p.rides.join(', ')).join('; ')}); keep one POI Library pin, add it to every ride and take the copies off`);
+  }
 
   // natural voice recordings, then the route files
   try {
