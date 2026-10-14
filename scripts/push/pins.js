@@ -2,7 +2,7 @@
 // signed-in Ride with GPS session (By Earth and Ocean organisation 15663), with ITEMS set to the "pins" list from
 // `node scripts/library.mjs plan` (each item carries the Ride with GPS ids of rides that show the pin).
 // Changes only the pin's description (the line read aloud) and only on POI Library pins, then republishes every
-// Experience that has unpublished updates, so riders on the Ride with GPS app hear the same words as the Ride Guide.
+// Experience, so riders on the Ride with GPS app hear the same words as the Ride Guide.
 // Version 1 (11/10/2026).
 const ITEMS = [];   // <- paste the plan's pins list here
 const CLUB = 15663;
@@ -23,7 +23,8 @@ for (const it of ITEMS) {
 }
 const exps = await (await fetch(`/experiences.json?club_id=${CLUB}`)).json();
 const republished = [];
-for (const e of (exps.results || exps.experiences || exps).filter(e => e.publish_status === 'updates')) {
+// every Experience, not only those flagged: the flag does not always show pin changes on its rides (15/10/2026)
+for (const e of (exps.results || exps.experiences || exps)) {
   const r = await fetch(`/experiences/${e.id}/publish.json`, { method: 'POST', headers: H, body: '{}' });
   republished.push(`${e.id}:${r.status}`);
 }
