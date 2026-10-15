@@ -643,10 +643,15 @@
    "hash": "9ec5c0592cb9",
    "agreed": "2026-10-11"
   },
-  "bikeon#wooroi|Tewantin National Park, Wooroi": {
-   "text": "This is Wooroi, a historic picnic ground in Tewantin National Park. It was state forest until it became national park in 2010, and its mountain bike trails are managed with the Noosa Trailblazers club.",
-   "hash": "7e9b70a9260e",
-   "agreed": "2026-10-11"
+  "bikeon#wooroi|Tewantin National Park": {
+   "text": "You're riding through Tewantin National Park. This section of the park is known as the Wooroi section, named after its historic picnic ground. The park protects rainforest, open eucalypt forest and the last patches of wallum heath between Noosa and Cooroy, and was state forest until 2010.",
+   "hash": "ef0b473086db",
+   "agreed": "2026-10-15"
+  },
+  "bikeon#wooroi|Wooroi day use area": {
+   "text": "This is the Wooroi day use area, a historic picnic ground under she-oaks and bloodwoods in Tewantin National Park. It's the trailhead for eleven mountain bike trails, from the easy Hovea loop to the one-way Turn 10, looked after by Queensland Parks and Wildlife Service with the Noosa Trailblazers club.",
+   "hash": "d983eea5ab57",
+   "agreed": "2026-10-15"
   },
   "bikeon#yaroomba|Yaroomba and Point Arkwright": {
    "text": "Yaroomba is said to mean surf on the beach. The headland here, Point Arkwright, is the foot of Mount Coolum running into the sea, and Marcoola, to the south, is a blend of Maroochydore and Coolum.",

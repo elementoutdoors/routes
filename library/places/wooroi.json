@@ -3,7 +3,7 @@
  "kind": "place",
  "title": "Tewantin National Park, Wooroi",
  "status": "live",
- "updated": "2026-10-12",
+ "updated": "2026-10-15",
  "blog": {
   "bikeon": {
    "heading": "Tewantin National Park, Wooroi",
@@ -31,8 +31,19 @@
   ],
   "bikeon": [
    {
-    "name": "Tewantin National Park, Wooroi",
-    "text": "This is Wooroi, a historic picnic ground in Tewantin National Park. It was state forest until it became national park in 2010, and its mountain bike trails are managed with the Noosa Trailblazers club."
+    "name": "Wooroi day use area",
+    "text": "This is the Wooroi day use area, a historic picnic ground under she-oaks and bloodwoods in Tewantin National Park. It's the trailhead for eleven mountain bike trails, from the easy Hovea loop to the one-way Turn 10, looked after by Queensland Parks and Wildlife Service with the Noosa Trailblazers club."
+   },
+   {
+    "name": "Tewantin National Park",
+    "text": "You're riding through Tewantin National Park. This section of the park is known as the Wooroi section, named after its historic picnic ground. The park protects rainforest, open eucalypt forest and the last patches of wallum heath between Noosa and Cooroy, and was state forest until 2010.",
+    "story": [
+     "You're riding through Tewantin National Park. This section of the park is known as the Wooroi section, named after the historic Wooroi picnic ground, today the day use area and the trailhead for eleven mountain bike trails.",
+     "The park protects rainforest, open eucalypt forest and the last patches of wallum heath between Noosa and Cooroy, on the Country of the Kabi Kabi people.",
+     "Most of it was state forest until 2010, when years of lobbying by the Noosa Parks Association saw it declared a national park, and land from the Yurol and Ringtail forests has been added since. Along Gyndier Drive, a heritage site still holds traces of an old forestry camp.",
+     "The trails are managed by the Queensland Parks and Wildlife Service with the Noosa Trailblazers Mountain Bike Club. Listen for whipbirds, and watch for swamp wallabies, echidnas and glossy black cockatoos."
+    ],
+    "_note": "Pin on Gyndier Drive, away from the picnic ground (Ben 15/10/2026): never imply the rider is at the picnic ground. Spoken only; never on a blog."
    }
   ]
  },
