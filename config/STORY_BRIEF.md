@@ -35,7 +35,7 @@ https://claude.ai/artifact/XSdaNvQMw8tYpaqSiBz7Tp (shared database, written with
 - Collection "decisions", written by the page: `{ choice: "a"|"b"|"other", note, title, updatedAt }`. "other" means his note says
   what is right; apply that.
 - After a decision: make every change in the chosen option's `then` (or the note) in the Story Library entry, generate, commit and push, then push the blogs and pins (library/README.md).
-  Ride with GPS: edit the POI Library pin (it changes on every ride) in Ben's Ride with GPS session in Chrome on his laptop.
+  Ride with GPS: edit the POI Library pin (it changes on every ride) in Ben's Ride with GPS session in Chrome on bens-pc (his always-on Azure PC).
   After any pin edit, republish every Ride with GPS Experience whose publish_status is "updates" (GET /experiences.json?club_id=15663,
   then POST /experiences/<id>/publish.json with the page's CSRF token, in Ben's Ride with GPS session), so riders on the Ride with
   GPS app get it too.
