@@ -795,7 +795,7 @@
         banner(tc(s.name), 'caution', 12000, s.text ? function () { openStop(s); } : null);
         if (s.text) openStop(s, true);
         sayContent(s.name, tu('Caution.'));
-        if (S.stories && s.text) sayContent(s.text);
+        if (s.text) sayContent(s.text);   // a warning's details are always read, even with stop stories turned off
       } else {
         if (!sheetOpen()) openStop(s, true);
         // welcome pins and turnarounds are read as they are; other stops get "You have reached a point of interest."
@@ -1292,10 +1292,12 @@
     stopSpeech();
     var was = S.voice; S.voice = true;
     if (it.cue) sayContent(it.cue.n, it.cue.t === 'danger' ? tu('Caution.') : null, { interrupt: true });
-    else if (it.stop.kind === 'caution') sayContent(it.stop.name, tu('Caution.'), { interrupt: true });
+    else if (it.stop.kind === 'caution') { sayContent(it.stop.name, tu('Caution.'), { interrupt: true }); if (it.stop.text) sayContent(it.stop.text); }
     else {
+      // exactly what a rider hears on arrival (name, then the pin's words)
       if (!it.stop.plain && it.stop.kind !== 'turn') say(tu('You have reached a point of interest.'), { interrupt: true });
       sayContent(it.stop.name);
+      if (it.stop.text) sayContent(it.stop.text);
     }
     S.voice = was;
   }
