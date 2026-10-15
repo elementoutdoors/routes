@@ -1,5 +1,5 @@
 {
- "_about": "Ben's ruling, 15/10/2026: warnings (Caution stops) are only for the really dangerous spots, not every busy road, because warning about some busy roads and not others reads oddly. These are the warnings each ride has, as Ben set them. The build compares every ride against this list and reports any warning added or removed (health.json cautionDrift and problems). Never add, restore or remove a warning pin without Ben asking; when he changes one, update this list in the same session. 15/10/2026 (Ben): Steep Hill taken off Mt Tinbeerwah One Way, where the opening steep road direction already covers it. Busy Intersection Ahead also taken off One Way, where the steep descent direction covers it. cues: the caution directions (Danger type cues in Ride with GPS) each ride has, locked the same way (15/10/2026). 15/10/2026 (Ben): Fast road: Yurol Forest Drive taken off the Pomona Loop (we don't tell riders how to ride on roads, and that road is no more dangerous than others). 15/10/2026 (Ben): Fast road: Yurol Forest Drive taken off every ride (Yurol Forest Loop and 8 By Earth and Ocean rides).",
+ "_about": "Ben's ruling, 15/10/2026: warnings (Caution stops) are only for the really dangerous spots, not every busy road, because warning about some busy roads and not others reads oddly. These are the warnings each ride has, as Ben set them. The build compares every ride against this list and reports any warning added or removed (health.json cautionDrift and problems). Never add, restore or remove a warning pin without Ben asking; when he changes one, update this list in the same session. 15/10/2026 (Ben): Steep Hill taken off Mt Tinbeerwah One Way, where the opening steep road direction already covers it. Busy Intersection Ahead also taken off One Way, where the steep descent direction covers it. cues: the caution directions (Danger type cues in Ride with GPS) each ride has, locked the same way (15/10/2026). 15/10/2026 (Ben): Fast road: Yurol Forest Drive taken off the Pomona Loop (we don't tell riders how to ride on roads, and that road is no more dangerous than others). 15/10/2026 (Ben): Fast road: Yurol Forest Drive taken off every ride (Yurol Forest Loop and 8 By Earth and Ocean rides). 16/10/2026 (Ben): the bridge dismount warning taken off Mt Tinbeerwah One Way (and the same bridge direction off Kids and Family).",
  "rides": {
   "coolum-coast-ride": [],
   "country-towns-and-canopies": [
@@ -78,7 +78,6 @@
   "mt-tinbeerwah-one-way": [
    "Mt Tinbeerwah Road is a steep public road. Stay to your left, obey all road rules and control your speed at all times",
    "Steep descent ahead down to a busy, high speed road. Control your speed and prepare to cross safely",
-   "Please dismount when crossing the bridge",
    "The Noosa River path is very busy. Please make your presence known when passing other users. Keep your speed below 12 km/h"
   ],
   "noosa-tri-sampler": [],
