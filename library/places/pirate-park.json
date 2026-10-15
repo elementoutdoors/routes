@@ -1,0 +1,31 @@
+{
+ "key": "pirate-park",
+ "kind": "place",
+ "title": "Pirate Park",
+ "status": "live",
+ "updated": "2026-10-15",
+ "blog": {
+  "bikeon": {
+   "heading": "Pirate Park",
+   "area": "noosaville",
+   "after": "munna-point",
+   "paras": [
+    "Pirate Park, on Gympie Terrace beside the Noosa Yacht Club, is one of Noosa's favourite playgrounds, right on the river with its own calm little beach. Noosa Council rebuilt the playground in 2015 with open slides and a tunnel slide, climbing walls, a flying fox, monkey bars, a big climbing net and a swing basket, and kept the liberty swing for wheelchair users. Toilets, barbecues, picnic tables, shade and a big grassy area make it a good place for a break."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Pirate Park Adventure Playground",
+    "text": "Pirate Park is one of Noosa's favourite playgrounds, right on the river with its own calm little beach. It was rebuilt in 2015 with slides, climbing walls, a flying fox and a big climbing net, and it has a liberty swing for wheelchair users. Toilets, barbecues and shade make it a good place for a break."
+   }
+  ]
+ },
+ "story": [
+  "Pirate Park sits on the Noosa River beside the Noosa Yacht Club, with a calm little beach that suits small children.",
+  "Thousands of children play here every year. In 2015 the council rebuilt the playground with open slides and a tunnel slide, climbing walls, a flying fox, monkey bars, a big climbing net and a swing basket. The liberty swing, built for wheelchair users, stayed.",
+  "There are toilets, barbecues, picnic tables and shade, and a big grassy area, so it is a good place to stop for a break or a picnic."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558. Noosa Marina: Heritage Noosa, Parkyn Family (https://heritage.noosa.qld.gov.au/nodes/view/336). Pirate Park: Noosa Today 2015 (https://noosatoday.com.au/?p=8051), Playground Finder (https://www.playgroundfinder.com/node/3667). Scripts approved by Ben 15/10/2026."
+}

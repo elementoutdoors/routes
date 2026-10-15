@@ -236,6 +236,11 @@
    "hash": "7dd52e0b6a04",
    "agreed": "2026-10-11"
   },
+  "bikeon#noosa-marina": {
+   "text": "Noosa Marina sits on the Tewantin riverbank where the Parkyn family ran their jetty, boat hire and bait business, set up after the Doonella and Weyba bridges opened in 1929. One of their old buildings still stands here. From 1925 the family's launch, Miss Tewantin, carried up to 60 passengers between Tewantin and Noosa Heads, ran tourist trips to the lakes and the coloured sands, delivered the mail and took schoolchildren to school; in 1965 it carried the Duke and Duchess of Gloucester. The Parkyn Brothers' hire fleet grew to about thirty boats before the family sold the business in 1966. Howard Parkyn landed a 206 kg grouper in 1935, a Queensland record at the time, and his brother George, back from flying Catalina flying boats in the Second World War, helped start Noosa's prawning industry.",
+   "hash": "98b3cdaa2824",
+   "agreed": "2026-10-15"
+  },
   "bikeon#noosa-national-park": {
    "text": "The forested headland at the end of Hastings Street is the reason Noosa still looks the way it does. It was set aside as a reserve in 1879, and about 600 acres around the headland were declared a national park in 1939. Back then the park did not even reach the sea. In 1962 Dr Arthur Harrold and friends formed what became the Noosa Parks Association to stop a road being built around the cliffs, and over the following decades the park grew to take in the shoreline, Alexandria Bay and land as far south as Coolum. Today Queensland Parks and Wildlife Service manages about 3,000 ha across several sections. Bikes stop at the racks, but the Coastal Walk carries on past Boiling Pot, Tea Tree Bay and Dolphin Point to Hell's Gates. Look for dolphins and turtles below the cliffs, and humpback whales from June to November. Koalas live here too, but sightings are now rare.",
    "hash": "30d03bea4f7f",
@@ -260,6 +265,11 @@
    "text": "Peregian is thought to come from a First Nations word for emu, and Sunshine Coast place name records suggest emus were once plentiful in the district. Until the late 1950s this was Crown land. When the coast road came through, developer T M Burke and Co, working with Maroochy councillor David Low, took a 20 year lease with development rights in return for building it. The first house was built on Pelican Street in 1960 and is still there, and the first 120 lots were laid out around it. With no town plan until 1973, streets simply followed the easiest line. A community swimming pool opened in the middle of the shopping square in 1964. The surf club, founded in 1962, has had a rollercoaster life: closed after a cyclone in 1974, revived in 1984, folded in 2014 and back on patrol since 2022.",
    "hash": "f9fe6c302393",
    "agreed": "2026-10-11"
+  },
+  "bikeon#pirate-park": {
+   "text": "Pirate Park, on Gympie Terrace beside the Noosa Yacht Club, is one of Noosa's favourite playgrounds, right on the river with its own calm little beach. Noosa Council rebuilt the playground in 2015 with open slides and a tunnel slide, climbing walls, a flying fox, monkey bars, a big climbing net and a swing basket, and kept the liberty swing for wheelchair users. Toilets, barbecues, picnic tables, shade and a big grassy area make it a good place for a break.",
+   "hash": "f5a808706f15",
+   "agreed": "2026-10-15"
   },
   "bikeon#pomona": {
    "text": "Pomona began as a railway siding when the North Coast line opened through here in 1891. Timber getters cleared the land first; dairying, sugar cane and fruit growing followed. Railway and postal staff kept muddling Cooran, Cooroora and Cooroy, so the siding became Pinbarren, and in 1900 locals chose Pomona, after the Roman goddess of fruit. When Noosa Shire was created in 1910, Pomona was its largest town and became its administrative centre. The 1911 council chambers on Factory Street now house the Noosa Shire Museum; the council moved to Tewantin in 1980. Factory Street also keeps the former butter factory of 1919. The original station buildings closed in 1991 and were moved across the tracks in 2000 to become the volunteer run Pomona Railway Station Gallery, opened in 2001.",
@@ -563,6 +573,11 @@
    "hash": "a87e69d74b1b",
    "agreed": "2026-10-11"
   },
+  "bikeon#noosa-marina|Noosa Marina": {
+   "text": "Noosa Marina sits on the riverbank where the Parkyn family ran their jetty, boat hire and bait business, and one of their old buildings still stands here. From 1925 the family's launch, Miss Tewantin, carried passengers, mail and schoolchildren up and down the river, and their hire fleet grew to about thirty boats before it was sold in 1966.",
+   "hash": "0aa440c52653",
+   "agreed": "2026-10-15"
+  },
   "bikeon#noosa-national-park|Noosa National Park": {
    "text": "This headland was set aside as a reserve in 1879 and declared a national park in 1939. Lock your bike here and walk on; dolphins, turtles and, in winter and spring, whales are often seen. Koalas live here too, but sightings are now rare.",
    "hash": "02e0bf0904c2",
@@ -587,6 +602,11 @@
    "text": "Peregian is often translated as emu, a nod to the birds once common here. The first house went up in 1960 on Pelican Street, the year the coast road arrived, and it still stands.",
    "hash": "0ac82404838e",
    "agreed": "2026-10-11"
+  },
+  "bikeon#pirate-park|Pirate Park Adventure Playground": {
+   "text": "Pirate Park is one of Noosa's favourite playgrounds, right on the river with its own calm little beach. It was rebuilt in 2015 with slides, climbing walls, a flying fox and a big climbing net, and it has a liberty swing for wheelchair users. Toilets, barbecues and shade make it a good place for a break.",
+   "hash": "cc61d359c941",
+   "agreed": "2026-10-15"
   },
   "bikeon#pomona-memorial-forest|Pomona Memorial Forest": {
    "text": "Beside the road is the Pomona Memorial Forest, planted by local school students in the early 1940s to honour servicemen of the Second World War. They planted hoop and kauri pines, silky oaks and flooded gums.",

@@ -482,6 +482,21 @@ async function main() {
     if (h.source !== 'ridewithgps') health.problems.push(`${entry.slug}: using last good copy (${h.warnings[0]})`);
     health.routes.push(h);
   }
+  // Warnings are Ben's call (15/10/2026: only the really dangerous spots). Any warning added or removed against
+  // config/caution-baseline.json is reported so it can be put back or the list updated with his OK.
+  try {
+    const base = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'caution-baseline.json'), 'utf8')).rides || {};
+    health.cautionDrift = [];
+    for (const b of built) {
+      const want = base[b.route.slug]; if (!want) continue;
+      const have = b.route.stops.filter(s => s.kind === 'caution').map(s => s.name);
+      const added = [...new Set(have.filter(n => !want.includes(n)))], removed = [...new Set(want.filter(n => !have.includes(n)))];
+      if (added.length || removed.length) {
+        health.cautionDrift.push({ slug: b.route.slug, added, removed });
+        health.problems.push(`${b.route.slug}: warnings differ from Ben's set (config/caution-baseline.json)${added.length ? '; added: ' + added.join(', ') : ''}${removed.length ? '; removed: ' + removed.join(', ') : ''}. Warnings are only changed when Ben asks.`);
+      }
+    }
+  } catch (e) { health.problems.push('caution baseline could not be read: ' + e.message); }
   // Turn directions that still read like cue sheet shorthand after the wording rules: add a rule or fix for them
   health.cueWording = [...new Set(built.flatMap(b => b.route.cues.map(c => c.n)).filter(looksShort))];
   // Same place, different story: a story stop copied onto several rides instead of shared from the POI Library drifts apart.

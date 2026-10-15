@@ -392,6 +392,18 @@
     "bikeon": "7dd52e0b6a04"
    }
   },
+  "noosa-marina": {
+   "title": "Noosa Marina",
+   "paras": [
+    "Noosa Marina sits on the riverbank where the Parkyn family once ran their jetty, boat hire and bait business. One of their old buildings still stands here.",
+    "In 1925 Jack and Daisy Parkyn bought the launch Miss Tewantin. It carried up to 60 passengers between Tewantin and Noosa Heads, ran tourist trips to the lakes and the coloured sands, delivered the mail and took schoolchildren to school. In 1965 it even carried the Duke and Duchess of Gloucester.",
+    "When the new bridges opened in 1929 and cars arrived, the family set up their boat hire here. The fleet grew to about thirty boats before they sold the business in 1966.",
+    "The Parkyns were river people. Howard Parkyn caught a 206 kilogram grouper in 1935, a Queensland record at the time, and his brother George, back from flying Catalinas in the Second World War, helped start Noosa's prawning industry."
+   ],
+   "src": {
+    "bikeon": "98b3cdaa2824"
+   }
+  },
   "noosa-national-park": {
    "title": "Noosa National Park",
    "paras": [
@@ -449,6 +461,17 @@
    ],
    "src": {
     "bikeon": "f9fe6c302393"
+   }
+  },
+  "pirate-park": {
+   "title": "Pirate Park",
+   "paras": [
+    "Pirate Park sits on the Noosa River beside the Noosa Yacht Club, with a calm little beach that suits small children.",
+    "Thousands of children play here every year. In 2015 the council rebuilt the playground with open slides and a tunnel slide, climbing walls, a flying fox, monkey bars, a big climbing net and a swing basket. The liberty swing, built for wheelchair users, stayed.",
+    "There are toilets, barbecues, picnic tables and shade, and a big grassy area, so it is a good place to stop for a break or a picnic."
+   ],
+   "src": {
+    "bikeon": "f5a808706f15"
    }
   },
   "pomona-memorial-forest": {

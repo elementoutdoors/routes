@@ -1,0 +1,32 @@
+{
+ "key": "noosa-marina",
+ "kind": "place",
+ "title": "Noosa Marina",
+ "status": "live",
+ "updated": "2026-10-15",
+ "blog": {
+  "bikeon": {
+   "heading": "Noosa Marina",
+   "area": "tewantin",
+   "after": "tewantin-wharves",
+   "paras": [
+    "Noosa Marina sits on the Tewantin riverbank where the Parkyn family ran their jetty, boat hire and bait business, set up after the Doonella and Weyba bridges opened in 1929. One of their old buildings still stands here. From 1925 the family's launch, Miss Tewantin, carried up to 60 passengers between Tewantin and Noosa Heads, ran tourist trips to the lakes and the coloured sands, delivered the mail and took schoolchildren to school; in 1965 it carried the Duke and Duchess of Gloucester. The Parkyn Brothers' hire fleet grew to about thirty boats before the family sold the business in 1966. Howard Parkyn landed a 206 kg grouper in 1935, a Queensland record at the time, and his brother George, back from flying Catalina flying boats in the Second World War, helped start Noosa's prawning industry."
+   ]
+  }
+ },
+ "pins": {
+  "bikeon": [
+   {
+    "name": "Noosa Marina",
+    "text": "Noosa Marina sits on the riverbank where the Parkyn family ran their jetty, boat hire and bait business, and one of their old buildings still stands here. From 1925 the family's launch, Miss Tewantin, carried passengers, mail and schoolchildren up and down the river, and their hire fleet grew to about thirty boats before it was sold in 1966."
+   }
+  ]
+ },
+ "story": [
+  "Noosa Marina sits on the riverbank where the Parkyn family once ran their jetty, boat hire and bait business. One of their old buildings still stands here.",
+  "In 1925 Jack and Daisy Parkyn bought the launch Miss Tewantin. It carried up to 60 passengers between Tewantin and Noosa Heads, ran tourist trips to the lakes and the coloured sands, delivered the mail and took schoolchildren to school. In 1965 it even carried the Duke and Duchess of Gloucester.",
+  "When the new bridges opened in 1929 and cars arrived, the family set up their boat hire here. The fleet grew to about thirty boats before they sold the business in 1966.",
+  "The Parkyns were river people. Howard Parkyn caught a 206 kilogram grouper in 1935, a Queensland record at the time, and his brother George, back from flying Catalinas in the Second World War, helped start Noosa's prawning industry."
+ ],
+ "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558. Noosa Marina: Heritage Noosa, Parkyn Family (https://heritage.noosa.qld.gov.au/nodes/view/336). Pirate Park: Noosa Today 2015 (https://noosatoday.com.au/?p=8051), Playground Finder (https://www.playgroundfinder.com/node/3667). Scripts approved by Ben 15/10/2026."
+}
