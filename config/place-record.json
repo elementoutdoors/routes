@@ -498,11 +498,6 @@
    "hash": "3ae8e5935532",
    "agreed": "2026-10-11"
   },
-  "bikeon#koalas|Koalas at Laguna Lookout": {
-   "text": "Koalas were once common around Noosa, but very few remain on this headland and sightings are now rare. If you walk up to the lookout, glance into the gums. A koala here is a real stroke of luck.",
-   "hash": "4dd4332091f3",
-   "agreed": "2026-10-11"
-  },
   "bikeon#koalas|Koalas in Tewantin National Park": {
    "text": "Koala country. Tewantin National Park is koala habitat, so glance up into the forks of the tall gums as you roll through. Sightings are rare, so count yourself lucky if you spot one.",
    "hash": "2f23eb80cac1",
@@ -514,9 +509,9 @@
    "agreed": "2026-10-11"
   },
   "bikeon#laguna-lookout|Laguna Lookout": {
-   "text": "From Laguna Lookout you can see the river mouth, Main Beach, Laguna Bay and the hinterland's volcanic peaks. Laguna Bay was named by surveyor James Burnett in 1847, and whales pass from June to November.",
-   "hash": "7eed94e8c278",
-   "agreed": "2026-10-11"
+   "text": "From Laguna Lookout you can see the river mouth, Main Beach, Laguna Bay and the volcanic peaks of the hinterland. Surveyor James Burnett named Laguna Bay in 1847, and from June to November you might spot humpback whales out in the bay. Koalas were once common around Noosa, but very few remain on this headland now. Glance into the gums around the lookout. A koala here is a real stroke of luck.",
+   "hash": "270148801338",
+   "agreed": "2026-10-15"
   },
   "bikeon#lake-doonella|Lake Doonella": {
    "text": "Lake Doonella is a shallow tidal lake off the Noosa River, protected since 1983 as a fish habitat area. Look for black swans, pelicans and cormorants along the mangrove edge.",

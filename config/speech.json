@@ -105,6 +105,13 @@
    ]
   },
   {
+   "find": "(\\d),(?=\\d{3}\\b)",
+   "say": "$1",
+   "langs": [
+    "en"
+   ]
+  },
+  {
    "find": "\\bMTB\\b",
    "say": "mountain bike",
    "langs": [

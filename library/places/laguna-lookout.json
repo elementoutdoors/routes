@@ -3,7 +3,7 @@
  "kind": "place",
  "title": "Laguna Lookout",
  "status": "live",
- "updated": "2026-10-11",
+ "updated": "2026-10-15",
  "blog": {
   "bikeon": {
    "heading": "Laguna Lookout",
@@ -18,7 +18,7 @@
   "bikeon": [
    {
     "name": "Laguna Lookout",
-    "text": "From Laguna Lookout you can see the river mouth, Main Beach, Laguna Bay and the hinterland's volcanic peaks. Laguna Bay was named by surveyor James Burnett in 1847, and whales pass from June to November."
+    "text": "From Laguna Lookout you can see the river mouth, Main Beach, Laguna Bay and the volcanic peaks of the hinterland. Surveyor James Burnett named Laguna Bay in 1847, and from June to November you might spot humpback whales out in the bay. Koalas were once common around Noosa, but very few remain on this headland now. Glance into the gums around the lookout. A koala here is a real stroke of luck."
    }
   ]
  },
@@ -26,7 +26,8 @@
   "The climb up Viewland Drive is short and very steep, so this is where the e-assist earns its keep.",
   "From the top you look over the whole lower river. Main Beach and the river mouth are below you, the Noosa River winds north towards Lake Cooroibah, and beyond it lies the sand mass of Great Sandy National Park. To the west are the old volcanic peaks of the hinterland. It is at its best at sunset.",
   "Surveyor James Burnett named Laguna Bay in July 1847, and nobody recorded why. Laguna is Spanish for lagoon, and an 1866 newspaper called it Nusa Bay, or as it is better known, Lagoona Bay.",
-  "On the walk up, keep an eye out for kookaburras, lace monitors and koalas, and between June and November, scan the bay for humpback whales."
+  "The gums around the lookout are grey gums, pink bloodwoods, ironbarks and tallowwoods. Kookaburras and lace monitors live here, and between June and November, scan the bay for humpback whales.",
+  "Koalas were once common around Noosa too. Their fur was traded by the million, and Queensland's last open season, in August 1927, took close to 600,000 pelts. By the 1960s koalas here were so scarce that six were brought in from Caboolture to restock Noosa National Park. Today they are rarely seen on this headland, so if you spot one in the gums, it is a real stroke of luck."
  ],
  "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
 }
