@@ -263,6 +263,41 @@
    "langs": [
     "en"
    ]
+  },
+  "Cooran": {
+   "_note": "Ben, 15/10/2026: Cooran is said COO-ran, not CO-rin. Whole word only, so Cooroora and Cooroy are not touched. Languages follow the Noosa entry: own IPA where Google takes it, otherwise a respelling.",
+   "ipa": "ˈkuːɹæn",
+   "respell": "Coo-ran",
+   "lang": {
+    "de": {
+     "ipa": null,
+     "respell": "Kuran"
+    },
+    "fr": {
+     "ipa": "kuran",
+     "respell": "Kourane"
+    },
+    "es": {
+     "ipa": "ˈkuran",
+     "respell": "Curan"
+    },
+    "it": {
+     "ipa": "ˈkuran",
+     "respell": "Curan"
+    },
+    "ko": {
+     "ipa": null,
+     "respell": "쿠란"
+    },
+    "ja": {
+     "ipa": null,
+     "respell": "クーラン"
+    },
+    "zh": {
+     "ipa": null,
+     "respell": "库兰"
+    }
+   }
   }
  }
 }
