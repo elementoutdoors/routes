@@ -297,6 +297,14 @@ function transform(entry, r) {
   stops.forEach(s => { delete s.lib; delete s.upd; });
   planPasses(T, stops, CAUTION_PASSES);   // out and back rides: which pass each stop is read on (scripts/passes.mjs)
   stops.sort((a, b) => a.d - b.d);
+  // A turn around at a stop (the Spit, Lake Weyba, Laguna Lookout, the top of Mt Tinbeerwah): the stop is read first and
+  // the turn around straight after it, with no early warning (Ben, 15/10/2026). c.after names the stop.
+  for (const c of cues) {
+    if (!(c.t === 'uturn' || /\b(turn around|turnaround|u-turn|u turn)\b/i.test(c.n))) continue;
+    const near = stops.filter(s => ['info', 'view', 'park', 'turn'].includes(s.kind) && s.d >= c.d - 250 && s.d <= c.d + 40)
+      .sort((a, b) => Math.abs(a.d - c.d) - Math.abs(b.d - c.d))[0];
+    if (near) c.after = near.id;
+  }
 
   const offers = offersFor(T, entry.slug);
 

@@ -757,15 +757,18 @@
     var prevD = i > 0 ? R.cues[i - 1].d : -1000;
     var danger = c.t === 'danger';
     var A = CFG.announce, prepAt = danger ? A.cautionWarningMetres : A.firstWarningMetres;
+    if (c.after && st < 1 && dist <= prepAt && dist > A.turnMetres + 25) { ride.cueState[i] = 1; return; }   // a turn around at a stop: no early warning
     if (st < 1 && dist <= prepAt && dist > A.turnMetres + 25 && (c.d - prevD) > A.skipFirstWarningIfCuesCloserThanMetres) {
       ride.cueState[i] = 1;
       var pre = fmt(tu('In {dist},'), { dist: distParts(Math.max(dist, 20)).say });
       sayContent(c.n, danger ? [tu('Caution.'), pre] : pre);
     } else if (st < 2 && dist <= A.turnMetres) {
       ride.cueState[i] = 2;
+      // turning around at a stop: read the stop first, so the turn around is the next thing the rider hears
+      if (c.after && !ride.shown[c.after]) { var at = R.stops.filter(function (x) { return x.id === c.after; })[0]; if (at) announceStop(at); }
       sayContent(c.n, danger ? tu('Caution.') : null);
       var nx = R.cues[i + 1];
-      if (nx && nx.d - c.d < A.mergeNextCueWithinMetres) { ride.cueState[i + 1] = 1; sayContent(nx.n, tu('Then')); }
+      if (nx && !nx.after && nx.d - c.d < A.mergeNextCueWithinMetres) { ride.cueState[i + 1] = 1; sayContent(nx.n, tu('Then')); }
     }
   }
   var FACILITY = { toilet: 1, food: 1, drink: 1, service: 1 };   // on the map and in the Stops list, never popped up or spoken
@@ -796,14 +799,16 @@
         if (s.text) openStop(s, true);
         sayContent(s.name, tu('Caution.'));
         if (s.text) sayContent(s.text);   // a warning's details are always read, even with stop stories turned off
-      } else {
-        if (!sheetOpen()) openStop(s, true);
-        // welcome pins and turnarounds are read as they are; other stops get "You have reached a point of interest."
-        if (!s.plain && s.kind !== 'turn') say(tu('You have reached a point of interest.'));
-        sayContent(s.name);
-        if (S.stories && s.text) sayContent(s.text);
-      }
+      } else announceStop(s);
     });
+  }
+  function announceStop(s) {
+    ride.shown[s.id] = 1;
+    if (!sheetOpen()) openStop(s, true);
+    // welcome pins and turnarounds are read as they are; other stops get "You have reached a point of interest."
+    if (!s.plain && s.kind !== 'turn') say(tu('You have reached a point of interest.'));
+    sayContent(s.name);
+    if (S.stories && s.text) sayContent(s.text);
   }
   function checkOffers() {
     if (!ride.fix) return;
