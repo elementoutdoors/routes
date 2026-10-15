@@ -423,7 +423,7 @@
     if (!aud) {
       aud = new Audio(); aud.preload = 'auto';
       aud.addEventListener('ended', nextLine);
-      aud.addEventListener('error', function () { var it = aud._item; if (it && !it.fell) { it.fell = true; phoneLine(it); } });
+      aud.addEventListener('error', function () { var it = aud._item; if (it && !it.fell) clipFailed(it); });
     }
     return aud;
   }
@@ -432,6 +432,33 @@
     if (storyFor) { storyFor = null; updateStoryBtn(); }
     try { if (aud) { aud._item = null; aud.pause(); } } catch (e) {}
     try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) {}
+  }
+  // A recording that will not load usually means the site has just moved the recordings to a new address (a change to how
+  // lines are said). Fetch the current list once, then play the same line from its new address. Only if that fails too
+  // does the phone's own voice read it, so a ride never switches voice just because the site was updated mid ride.
+  var voiceRefresh = null, voiceRefreshAt = 0;
+  function refreshVoice() {
+    if (voiceRefresh) return voiceRefresh;
+    if (Date.now() - voiceRefreshAt < 60000 || !navigator.onLine) return Promise.resolve(false);
+    voiceRefreshAt = Date.now();
+    var before = JSON.stringify(Object.keys(VOICE).map(function (l) { return VOICE[l].tag; }));
+    voiceRefresh = fetch('voice.json?v=' + BUILD + '&t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (m) {
+      setVoiceManifest(m); lsSet('rg.voice', m);
+      var changed = JSON.stringify(Object.keys(VOICE).map(function (l) { return VOICE[l].tag; })) !== before;
+      if (changed && R) { pruneVoiceCache(); precacheVoice(); }
+      return changed;
+    }).catch(function () { return false; }).then(function (c) { voiceRefresh = null; return c; });
+    return voiceRefresh;
+  }
+  function clipFailed(it) {
+    if (it.retried) { it.fell = true; phoneLine(it); return; }
+    it.retried = true;
+    refreshVoice().then(function () {
+      if (aud && aud._item !== it) return;   // something else is playing now
+      var u = clipFor(it.lang, it.text);
+      if (u && u !== it.url) { it.url = u; var a = audioEl(); a.src = u; try { var p = a.play(); if (p && p.catch) p.catch(function () { it.fell = true; phoneLine(it); }); } catch (e) { it.fell = true; phoneLine(it); } }
+      else { it.fell = true; phoneLine(it); }
+    });
   }
   function phoneLine(it) {
     if (!window.speechSynthesis) { nextLine(); return; }
@@ -453,7 +480,7 @@
     if (it.url) {
       var a = audioEl(); a._item = it; a.src = it.url;
       var p; try { p = a.play(); } catch (e) { p = null; it.fell = true; phoneLine(it); return; }
-      if (p && p.catch) p.catch(function () { if (!it.fell) { it.fell = true; phoneLine(it); } });
+      if (p && p.catch) p.catch(function (e) { if (!it.fell && !(e && e.name === 'AbortError')) clipFailed(it); });
     } else phoneLine(it);
   }
   function enqueue(items, interrupt) {
