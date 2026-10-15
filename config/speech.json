@@ -309,6 +309,41 @@
      "respell": "Koeran"
     }
    }
+  },
+  "Gympie": {
+   "_note": "Ben, 15/10/2026: Gympie is said GIMP-ee (hard G), not GYM-pee. Languages follow the Noosa entry: own IPA where Google takes it, otherwise a respelling.",
+   "ipa": "ˈɡɪmpi",
+   "respell": "Gimpy",
+   "lang": {
+    "de": {
+     "ipa": null,
+     "respell": "Gimpi"
+    },
+    "fr": {
+     "ipa": "ɡimpi",
+     "respell": "Guimpi"
+    },
+    "es": {
+     "ipa": "ˈɡimpi",
+     "respell": "Guimpi"
+    },
+    "it": {
+     "ipa": "ˈɡimpi",
+     "respell": "Ghimpi"
+    },
+    "ko": {
+     "ipa": null,
+     "respell": "김피"
+    },
+    "ja": {
+     "ipa": null,
+     "respell": "ギンピー"
+    },
+    "zh": {
+     "ipa": null,
+     "respell": "金皮"
+    }
+   }
   }
  }
 }

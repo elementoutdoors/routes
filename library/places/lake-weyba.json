@@ -3,7 +3,7 @@
  "kind": "place",
  "title": "Lake Weyba",
  "status": "live",
- "updated": "2026-10-12",
+ "updated": "2026-10-15",
  "blog": {
   "bikeon": {
    "heading": "Lake Weyba",
@@ -18,7 +18,7 @@
   "bikeon": [
    {
     "name": "Lake Weyba",
-    "text": "Lake Weyba is a large, shallow tidal saltwater lake and the southern end of the Noosa Everglades system. Weyba is understood to mean place of stingrays in the Kabi Kabi language, and rays are common in the warm shallows."
+    "text": "Lake Weyba is a large, shallow tidal saltwater lake and the southern end of the Noosa Everglades system. Weyba is understood to mean place of stingrays in the Kabi Kabi language, and rays are common in the warm shallows. This is also the launch spot for our Everglades and stingrays kayak tours, and a nice place for a swim or a paddle, at your own risk, as it is not patrolled."
    }
   ]
  },
@@ -26,7 +26,8 @@
   "Lake Weyba is the southern gateway to the Noosa Everglades system. It is a large, shallow, tidal saltwater lake, fringed by mangroves, salt pans and open forest, and joined to the Noosa River by Weyba Creek.",
   "It is listed as a wetland of national importance, and it is an important breeding ground for fish.",
   "Weyba is understood to mean place of stingrays in the Kabi Kabi language. It was once spelt Weiba. For the Kabi Kabi people the lake was a rich source of food, and shell middens and scarred trees remain around its shores.",
-  "Noosa's first professional fisherman, Joseph Keyser, settled on the north west shore, and he is remembered for wheeling smoked mullet all the way to the Gympie goldfields in a barrow. Today the whole eastern shore is national park."
+  "Noosa's first professional fisherman, Joseph Keyser, settled on the north west shore, and he is remembered for wheeling smoked mullet all the way to the Gympie goldfields in a barrow. Today the whole eastern shore is national park.",
+  "This shore is also where our Everglades and stingrays kayak tours launch. It is a lovely spot for a swim or a paddle too, at your own risk, as it is not patrolled."
  ],
  "sources": "Research, sources and Ben's rulings: ride stories doc https://claude.ai/code/artifact/a698e78e-221d-4f1c-8658-d58461c85558"
 }

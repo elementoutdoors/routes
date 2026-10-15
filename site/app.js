@@ -22,7 +22,12 @@
     var l = ((navigator.language || 'en') + '').slice(0, 2).toLowerCase();
     return SPEECH_LANG[l] ? l : 'en';
   }
-  function defaultUnits() { return /^en-(US|GB|LR|MM)/i.test(navigator.language || '') ? 'imperial' : 'metric'; }
+  function defaultUnits() {
+    // phones in Australia and New Zealand often run US English; they still get kilometres
+    var tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+    if (/^(Australia|Pacific\/Auckland)/.test(tz)) return 'metric';
+    return /^en-(US|GB|LR|MM)/i.test(navigator.language || '') ? 'imperial' : 'metric';
+  }
   // Only the settings a rider changed are stored; everything else follows the business defaults in each route.
   var touched = lsGet('rg.touched', null);
   var savedS = lsGet('rg.settings', {});
