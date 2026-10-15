@@ -3,7 +3,7 @@
  "kind": "place",
  "title": "Lake Macdonald",
  "status": "live",
- "updated": "2026-10-11",
+ "updated": "2026-10-16",
  "blog": {
   "bikeon": {
    "heading": "Lake Macdonald",
@@ -33,6 +33,11 @@
    {
     "name": "Lake Macdonald",
     "text": "Lake Macdonald formed in 1965 when Six Mile Creek was dammed for Noosa's water supply. It is named after former shire chairman Ian MacDonald, and its waters are stocked with the endangered Mary River cod."
+   },
+   {
+    "name": "Near Lake Macdonald",
+    "text": "Lake Macdonald is close by, a little further along Lake Macdonald Drive. It formed in 1965 when Six Mile Creek was dammed for Noosa's water supply. It is named after former shire chairman Ian MacDonald, and its waters are stocked with the endangered Mary River cod.",
+    "_note": "Yurol Forest Loop pin at the Hamilton Road turn, short of the lake (Ben 16/10/2026): never implies the rider is at the lake."
    }
   ]
  },
