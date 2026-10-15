@@ -1,16 +1,14 @@
 {
- "_about": "Ben's ruling, 15/10/2026: warnings (Caution stops) are only for the really dangerous spots, not every busy road, because warning about some busy roads and not others reads oddly. These are the warnings each ride has, as Ben set them. The build compares every ride against this list and reports any warning added or removed (health.json cautionDrift and problems). Never add, restore or remove a warning pin without Ben asking; when he changes one, update this list in the same session. 15/10/2026 (Ben): Steep Hill taken off Mt Tinbeerwah One Way, where the opening steep road direction already covers it. Busy Intersection Ahead also taken off One Way, where the steep descent direction covers it. cues: the caution directions (Danger type cues in Ride with GPS) each ride has, locked the same way (15/10/2026). 15/10/2026 (Ben): Fast road: Yurol Forest Drive taken off the Pomona Loop (we don't tell riders how to ride on roads, and that road is no more dangerous than others).",
+ "_about": "Ben's ruling, 15/10/2026: warnings (Caution stops) are only for the really dangerous spots, not every busy road, because warning about some busy roads and not others reads oddly. These are the warnings each ride has, as Ben set them. The build compares every ride against this list and reports any warning added or removed (health.json cautionDrift and problems). Never add, restore or remove a warning pin without Ben asking; when he changes one, update this list in the same session. 15/10/2026 (Ben): Steep Hill taken off Mt Tinbeerwah One Way, where the opening steep road direction already covers it. Busy Intersection Ahead also taken off One Way, where the steep descent direction covers it. cues: the caution directions (Danger type cues in Ride with GPS) each ride has, locked the same way (15/10/2026). 15/10/2026 (Ben): Fast road: Yurol Forest Drive taken off the Pomona Loop (we don't tell riders how to ride on roads, and that road is no more dangerous than others). 15/10/2026 (Ben): Fast road: Yurol Forest Drive taken off every ride (Yurol Forest Loop and 8 By Earth and Ocean rides).",
  "rides": {
   "coolum-coast-ride": [],
   "country-towns-and-canopies": [
-   "Fast road: Yurol Forest Drive",
    "Steep descent to Cooran"
   ],
   "everglades-vistas": [
    "Steep descent to Cooran"
   ],
   "forest-farms-and-noosa": [
-   "Fast road: Yurol Forest Drive",
    "Steep descent to Cooran"
   ],
   "forests-farms-and-foreshore": [],
@@ -23,7 +21,6 @@
   "lake-weyba-tewantin-forest-loop": [],
   "lakes-ride-garmin-hill": [],
   "magic-mary": [
-   "Fast road: Yurol Forest Drive",
    "Steep descent to Cooran"
   ],
   "mary-valley-bound": [
@@ -40,39 +37,30 @@
    "Beach access",
    "Path can be slippery when wet"
   ],
-  "peak-to-peak": [
-   "Fast road: Yurol Forest Drive"
-  ],
+  "peak-to-peak": [],
   "pomona-loop": [],
-  "pomona-to-noosa": [
-   "Fast road: Yurol Forest Drive"
-  ],
+  "pomona-to-noosa": [],
   "ringtail-loop": [],
   "rockpools-and-ridgelines-gravel": [
-   "Fast road: Yurol Forest Drive",
    "Steep descent to Cooran"
   ],
   "rockpools-and-ridgelines-mtb": [],
   "surf-beaches": [],
   "tewantin-mtb-trails": [],
   "the-cooroora-traverse": [
-   "Fast road: Yurol Forest Drive",
    "Steep descent to Cooran"
   ],
   "through-lake-country": [
    "Steep descent to Cooran"
   ],
   "treetops-to-tewantin": [
-   "Fast road: Yurol Forest Drive",
    "Steep descent to Cooran"
   ],
   "valleys-and-vistas": [
    "Steep descent to Cooran"
   ],
   "wooroi-and-wetlands": [],
-  "yurol-forest-loop": [
-   "Fast road: Yurol Forest Drive"
-  ]
+  "yurol-forest-loop": []
  },
  "cues": {
   "coolum-coast-ride": [],
