@@ -32,6 +32,10 @@
   var touched = lsGet('rg.touched', null);
   var savedS = lsGet('rg.settings', {});
   if (!touched) touched = Object.keys(savedS);
+  // Point of interest stories are chosen per ride (Ben, 15/10/2026): each ride has its own default, and a rider's own
+  // switch is kept for that ride only. An older phone-wide choice no longer applies.
+  touched = touched.filter(function (k) { return k !== 'stories'; });
+  var storyPick = lsGet('rg.stories', {});
   var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, natural: true, stories: true, wake: true, saver: false, sat: false }, savedS);
   function saveSettings(key) {
     if (key && touched.indexOf(key) < 0) touched.push(key);
@@ -47,10 +51,13 @@
     ['announce', 'offRoute', 'stops', 'screen'].forEach(function (g) { if (rs[g]) Object.keys(CFG[g]).forEach(function (k) { if (typeof rs[g][k] === 'number') CFG[g][k] = rs[g][k]; }); });
     if (rs.speeds) Object.keys(rs.speeds).forEach(function (k) { SPEED[k] = rs.speeds[k] / 3.6; });
     var sc = rs.screen || {};
-    [['wake', 'keepScreenOn'], ['saver', 'batterySaver'], ['stories', 'readStoriesAloud']].forEach(function (p) {
+    [['wake', 'keepScreenOn'], ['saver', 'batterySaver']].forEach(function (p) {
       if (touched.indexOf(p[0]) < 0 && typeof sc[p[1]] === 'boolean') S[p[0]] = sc[p[1]];
     });
+    var def = typeof R.stories === 'boolean' ? R.stories : typeof sc.readStoriesAloud === 'boolean' ? sc.readStoriesAloud : true;
+    S.stories = typeof storyPick[R.slug] === 'boolean' ? storyPick[R.slug] : def;
   }
+  function saveStoryPick() { if (!R) return; storyPick[R.slug] = S.stories; lsSet('rg.stories', storyPick); }
 
   // ---------- translation ----------
   var UI = {};        // { lang: { english: translated } }
@@ -804,11 +811,40 @@
   }
   function announceStop(s) {
     ride.shown[s.id] = 1;
+    var poi = !s.plain && s.kind !== 'turn';
+    // Point of interest stories off: points of interest are not announced at all, no card and nothing spoken. They stay
+    // on the map and in the Stops list. Welcome or briefing pins and turnarounds are not points of interest and are
+    // always read; cautions never come here (Ben, 15/10/2026).
+    if (poi && !S.stories) return;
     if (!sheetOpen()) openStop(s, true);
     // welcome pins and turnarounds are read as they are; other stops get "You have reached a point of interest."
-    if (!s.plain && s.kind !== 'turn') say(tu('You have reached a point of interest.'));
+    if (poi) say(tu('You have reached a point of interest.'));
     sayContent(s.name);
-    if (S.stories && s.text) sayContent(s.text);
+    if (s.text) sayContent(s.text);
+  }
+  // A short pop-up over the current screen, closed with OK or a tap outside it
+  function notice(title, paras) {
+    var old = document.getElementById('notice'); if (old) old.remove();
+    var ov = el('div', { class: 'notice-scrim', id: 'notice' });
+    var card = el('div', { class: 'notice', role: 'alertdialog', 'aria-modal': 'true', 'aria-labelledby': 'notice-title' });
+    card.appendChild(el('h3', { id: 'notice-title', text: title }));
+    paras.forEach(function (p) { card.appendChild(el('p', { text: p })); });
+    var ok = el('button', { class: 'btn primary full', type: 'button', text: tu('OK') });
+    function close() { ov.remove(); }
+    ok.addEventListener('click', close);
+    ov.addEventListener('click', function (e) { if (e.target === ov) close(); });
+    card.appendChild(ok); ov.appendChild(card); document.body.appendChild(ov);
+    setTimeout(function () { ok.focus(); }, 50);
+  }
+  function explainStories() {
+    if (S.stories) notice(tu('Point of interest stories on'), [
+      tu('As you reach each point of interest, its card opens and you hear its name and a short overview.'),
+      tu('Want more? Tap Hear the full story on the card, where there is one, for the longer story of that place.'),
+      tu('Directions and safety warnings are always spoken.')]);
+    else notice(tu('Point of interest stories off'), [
+      tu('Points of interest are no longer announced: no card pops up and nothing is read out as you pass them.'),
+      tu('They stay on the map and in the Stops list. Tap one any time to read about it or hear its story.'),
+      tu('Directions and safety warnings are still spoken.')]);
   }
   function checkOffers() {
     if (!ride.fix) return;
@@ -1233,12 +1269,12 @@
         var row = el('div', { class: 'toggle-row' }), t = el('div');
         t.appendChild(el('div', { class: 'tr-t', text: title })); if (sub) t.appendChild(el('div', { class: 'tr-s', text: sub }));
         var sw = el('button', { class: 'switch', type: 'button', 'aria-pressed': String(!!S[key]), 'aria-label': title });
-        sw.addEventListener('click', function () { S[key] = !S[key]; saveSettings(key); sw.setAttribute('aria-pressed', String(S[key])); if (after) after(); });
+        sw.addEventListener('click', function () { S[key] = !S[key]; if (key === 'stories') saveStoryPick(); else saveSettings(key); sw.setAttribute('aria-pressed', String(S[key])); if (after) after(); });
         row.appendChild(t); row.appendChild(sw); cl.appendChild(row);
       }
       toggle(tu('Spoken directions'), null, 'voice', updateVoiceBtn);
       toggle(tu('Natural voice'), tu("Clearer recorded voice. Turn off to use your phone's own voice."), 'natural', function () { stopSpeech(); precacheVoice(); });
-      toggle(tu('Read stop stories aloud'), null, 'stories');
+      toggle(tu('Point of interest stories'), tu('Hear a short overview as you reach each point of interest'), 'stories', explainStories);
       toggle(tu('Keep screen on'), tu('Stops the phone locking while you ride'), 'wake', function () { if (S.wake) requestWake(); else releaseWake(); });
       toggle(tu('Battery saver'), tu('Blacks out the map between turns'), 'saver', saverTick);
       vg.appendChild(cl);

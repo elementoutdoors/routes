@@ -492,6 +492,10 @@ async function main() {
     }
     route.code = code;
     route.settings = settings;
+    // Point of interest stories, on or off by default for this ride (Ben, 15/10/2026): "stories" in config/routes.json,
+    // set on the Ride Guide Settings page. A ride without its own value uses screen.readStoriesAloud and is reported.
+    if (typeof entry.stories === 'boolean') route.stories = entry.stories;
+    else { route.stories = settings.screen.readStoriesAloud; if (entry.active !== false) health.problems.push(`${entry.slug}: no point of interest stories setting in config/routes.json, using ${route.stories ? 'on' : 'off'}`); }
     route.gpx = null;
     if (entry.gpx) {
       const gname = `g/${gpxKey(entry.slug, entry.rev)}.gpx`;
@@ -500,7 +504,7 @@ async function main() {
     }
     for (const x of [...route.stops, ...route.offers]) x.frame = await frameable(x.url);
     built.push({ key, route });   // written after the voice step adds its recordings
-    Object.assign(h, { ok: true, name: route.name, version: route.version, distance: route.distance, gpx: !!route.gpx, cues: route.cues.length,
+    Object.assign(h, { ok: true, name: route.name, version: route.version, distance: route.distance, gpx: !!route.gpx, stories: route.stories, cues: route.cues.length,
       stops: route.stops.length, offers: route.offers.map(o => o.id),
       singleTrack: route.loose.map(([a, b]) => `${(a / 1000).toFixed(1)} to ${(b / 1000).toFixed(1)} km`),
       links: [...new Set(route.stops.map(s => s.url).filter(Boolean).concat(route.offers.map(o => o.url).filter(Boolean), Object.values((route.brand && route.brand.reviews) || {})))],
