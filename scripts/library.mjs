@@ -57,7 +57,15 @@ export function storiesFrom(entries) {
     for (const [b, s] of Object.entries(e.blog || {})) if ((s.paras || []).length) src[b] = fp(blogText(s.paras));
     stories[e.key] = Object.assign({ title: e.title, paras: e.story }, Object.keys(src).length ? { src } : {}, e.origin ? { origin: e.origin } : {});
   }
+  // A pin can carry its own version of the full story (pins.<brand>[].story) for a spot where the entry's story would not
+  // make sense, such as a stop beside the bridge rather than on it. Pin stories are spoken only; they never go to a blog.
+  const pinStories = {};
+  for (const e of Object.values(entries)) {
+    if (!live(e)) continue;
+    for (const pins of Object.values(e.pins || {})) for (const p of pins || []) if (Array.isArray(p.story) && p.story.length) pinStories[p.name] = { key: e.key, paras: p.story };
+  }
   return {
+    pinStories,
     _about: 'GENERATED from the Story Library (library/, see library/README.md) by scripts/library.mjs. Never edit this file: change the library and run node scripts/library.mjs generate. Full stories, written to be heard; src is the fingerprint of the library blog text each story was written from; a story with an origin instead (the kayak tour stops) has no blog. Every story, linked to a ride or not, is recorded in the natural voice and published with its recordings in stories-voice.json for the EO Crew staff app.',
     blogs: BLOGS, stories
   };

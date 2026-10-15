@@ -1,4 +1,15 @@
 {
+ "pinStories": {
+  "Weyba Creek mangroves": {
+   "key": "weyba-bridge",
+   "paras": [
+    "Weyba Creek winds from Lake Weyba, the southern gateway to the Noosa Everglades system, down to the Noosa River. Bridging it has always been a saga.",
+    "The first bridge opened in 1886 and was soon ruined by shipworm. A timber bridge opened in October 1929, the same day as the Doonella bridge, and at last Tewantin, Noosaville and Noosa Heads were joined by road.",
+    "When a concrete bridge took over from 1969, locals kept the old one for walkers. It partly collapsed in 1991, and a community group raised the money for the timber replica that crosses the creek today, built in 1995.",
+    "The mangroves here are a nursery for fish, crabs and prawns. Weyba is understood to mean place of stingrays in the Kabi Kabi language."
+   ]
+  }
+ },
  "_about": "GENERATED from the Story Library (library/, see library/README.md) by scripts/library.mjs. Never edit this file: change the library and run node scripts/library.mjs generate. Full stories, written to be heard; src is the fingerprint of the library blog text each story was written from; a story with an origin instead (the kayak tour stops) has no blog. Every story, linked to a ride or not, is recorded in the natural voice and published with its recordings in stories-voice.json for the EO Crew staff app.",
  "blogs": {
   "bikeon": "https://bikeon.com.au/noosa-self-guided-rides-what-you-will-see/",

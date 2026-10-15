@@ -158,7 +158,7 @@ function attachStories(route, report) {
     delete s.story;
     const k = placeOf(BLOGS, s.url); if (!k) continue;
     report.linked.add(k.place);
-    const st = (storiesCfg.stories || {})[k.key];
+    const st = (storiesCfg.pinStories || {})[s.name] || (storiesCfg.stories || {})[k.key];   // a pin's own version first
     if (st && Array.isArray(st.paras) && st.paras.length) s.story = st.paras.map(p => String(p).trim()).filter(Boolean);
     else report.missing.add(k.place);
   }

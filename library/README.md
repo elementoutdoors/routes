@@ -17,7 +17,7 @@ Read it as a page: https://elementoutdoors.github.io/routes/library.html
 
 One JSON file per entry, named by its key.
 
-- `places/`: a place on our rides. `blog` holds each brand's blog section (heading, the area it sits in, the section it follows, paragraphs as HTML with links only). `pins` holds each brand's Ride with GPS POI Library pins (name, and the text read aloud on arrival). `story` is the full spoken story, about a minute, written to be heard (config/STORY_BRIEF.md).
+- `places/`: a place on our rides. `blog` holds each brand's blog section (heading, the area it sits in, the section it follows, paragraphs as HTML with links only). `pins` holds each brand's Ride with GPS POI Library pins (name, and the text read aloud on arrival). `story` is the full spoken story, about a minute, written to be heard (config/STORY_BRIEF.md). A pin can carry its own `story` when the entry's story would not make sense at that spot (Weyba Creek mangroves: beside the bridge, not on it). Ben, 15/10/2026: these spot versions are spoken only and never go on a blog; the blog keeps the one section in `blog`.
 - `stops/`: a stop on a guided or self guided tour that is not on a blog, such as the Stingrays and Everglades kayak stops. `tours` gives the tour and stop number, `talk` holds the guide talking points (points, detail, detail_blocks) shown in the EO Crew tour manual, `story` the spoken story, `origin` where it came from.
 - `wildlife/`: an animal. `card` holds the EO Crew wildlife card (name, scientific and local names, group, description, detail, how to spot, conservation, photo, source). `story_key` names the place or stop story its talking points come from.
 

@@ -3,7 +3,7 @@
  "kind": "place",
  "title": "Weyba Bridge",
  "status": "live",
- "updated": "2026-10-12",
+ "updated": "2026-10-15",
  "blog": {
   "bikeon": {
    "heading": "Weyba Bridge",
@@ -22,7 +22,13 @@
    },
    {
     "name": "Weyba Creek mangroves",
-    "text": "Weyba Creek links Lake Weyba, the southern end of the Noosa Everglades system, to the Noosa River. Its mangroves are part of the Noosa River Fish Habitat Area, a nursery for fish, crabs and prawns."
+    "text": "Weyba Creek links Lake Weyba, the southern end of the Noosa Everglades system, to the Noosa River. Its mangroves are part of the Noosa River Fish Habitat Area, a nursery for fish, crabs and prawns.",
+    "story": [
+     "Weyba Creek winds from Lake Weyba, the southern gateway to the Noosa Everglades system, down to the Noosa River. Bridging it has always been a saga.",
+     "The first bridge opened in 1886 and was soon ruined by shipworm. A timber bridge opened in October 1929, the same day as the Doonella bridge, and at last Tewantin, Noosaville and Noosa Heads were joined by road.",
+     "When a concrete bridge took over from 1969, locals kept the old one for walkers. It partly collapsed in 1991, and a community group raised the money for the timber replica that crosses the creek today, built in 1995.",
+     "The mangroves here are a nursery for fish, crabs and prawns. Weyba is understood to mean place of stingrays in the Kabi Kabi language."
+    ]
    }
   ]
  },
