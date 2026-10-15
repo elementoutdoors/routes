@@ -274,7 +274,7 @@
      "respell": "Kuran"
     },
     "fr": {
-     "ipa": "kuran",
+     "ipa": "kuʁan",
      "respell": "Kourane"
     },
     "es": {
@@ -296,6 +296,10 @@
     "zh": {
      "ipa": null,
      "respell": "库兰"
+    },
+    "nl": {
+     "ipa": null,
+     "respell": "Koeran"
     }
    }
   }
