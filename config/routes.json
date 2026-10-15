@@ -29,6 +29,7 @@
     {"rwgps": 55360460, "slug": "forests-farms-and-foreshore", "brand": "beo", "activity": "ebike", "rev": 1, "active": true, "gpx": true, "stories": false},
     {"rwgps": 55105004, "slug": "through-lake-country", "brand": "beo", "activity": "ebike", "rev": 1, "active": true, "gpx": true, "stories": false},
     {"rwgps": 54989036, "slug": "valleys-and-vistas", "brand": "beo", "activity": "ebike", "rev": 1, "active": true, "gpx": true, "stories": false},
-    {"rwgps": 54987451, "slug": "rockpools-and-ridgelines-gravel", "brand": "beo", "activity": "ebike", "rev": 1, "active": true, "gpx": true, "stories": false}
+    {"rwgps": 54987451, "slug": "rockpools-and-ridgelines-gravel", "brand": "beo", "activity": "ebike", "rev": 1, "active": true, "gpx": true, "stories": false},
+    {"rwgps": 57580390, "slug": "bens-test-route", "brand": "bikeon", "activity": "ebike", "rev": 1, "active": true, "gpx": true, "stories": true, "_note": "Temporary test loop in Gympie (Ben, 16/10/2026). Remove when testing is done."}
   ]
 }
