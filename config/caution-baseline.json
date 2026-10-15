@@ -1,5 +1,5 @@
 {
- "_about": "Ben's ruling, 15/10/2026: warnings (Caution stops) are only for the really dangerous spots, not every busy road, because warning about some busy roads and not others reads oddly. These are the warnings each ride has, as Ben set them. The build compares every ride against this list and reports any warning added or removed (health.json cautionDrift and problems). Never add, restore or remove a warning pin without Ben asking; when he changes one, update this list in the same session. 15/10/2026 (Ben): Steep Hill taken off Mt Tinbeerwah One Way, where the opening steep road direction already covers it.",
+ "_about": "Ben's ruling, 15/10/2026: warnings (Caution stops) are only for the really dangerous spots, not every busy road, because warning about some busy roads and not others reads oddly. These are the warnings each ride has, as Ben set them. The build compares every ride against this list and reports any warning added or removed (health.json cautionDrift and problems). Never add, restore or remove a warning pin without Ben asking; when he changes one, update this list in the same session. 15/10/2026 (Ben): Steep Hill taken off Mt Tinbeerwah One Way, where the opening steep road direction already covers it. Busy Intersection Ahead also taken off One Way, where the steep descent direction covers it.",
  "rides": {
   "coolum-coast-ride": [],
   "country-towns-and-canopies": [
@@ -34,9 +34,7 @@
    "Path can be slippery when wet",
    "Steep Hill"
   ],
-  "mt-tinbeerwah-one-way": [
-   "Busy Intersection Ahead. Slowdown and prepare to stop"
-  ],
+  "mt-tinbeerwah-one-way": [],
   "noosa-tri-sampler": [],
   "north-shore": [
    "Beach access",
