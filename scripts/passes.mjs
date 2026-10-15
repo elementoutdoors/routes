@@ -30,13 +30,25 @@ function distinct(runs) {
   return out;
 }
 
-export function planPasses(T, stops) {
+// downhill: the road drops into the warning (approach) or away from it (ahead)
+const dropAt = (T, d) => Math.max(eleAt(T, d - 200) - eleAt(T, d), eleAt(T, d) - eleAt(T, d + DOWNHILL_LOOK_METRES));
+const riseAt = (T, d) => Math.max(eleAt(T, d) - eleAt(T, d - 200), eleAt(T, d + DOWNHILL_LOOK_METRES) - eleAt(T, d));
+
+export function planPasses(T, stops, overrides = {}) {
   const notes = [];
   // cautions: every pass, or only the downhill passes for a hill or descent warning
   for (const s of stops) {
     if (s.kind !== 'caution' || !s.runs || !s.runs.length) continue;
     let ds = distinct(s.runs);
-    if (ds.length > 1 && DOWNHILL_NAME.test(s.name)) {
+    const mode = overrides[s.name];
+    if (mode && ds.length > 1) {
+      let pick = ds;
+      if (mode === 'downhill') { const best = Math.max(...ds.map(d => dropAt(T, d))); pick = ds.filter(d => dropAt(T, d) >= Math.min(DOWNHILL_DROP_METRES, best)); }
+      else if (mode === 'uphill') { const best = Math.max(...ds.map(d => riseAt(T, d))); pick = ds.filter(d => riseAt(T, d) >= Math.min(DOWNHILL_DROP_METRES, best)); }
+      else if (mode === 'first') pick = [ds[0]];
+      else if (mode === 'last') pick = [ds[ds.length - 1]];
+      if (pick.length) { ds = pick; notes.push(`caution "${s.name}" is read on the ${mode} pass only`); }
+    } else if (ds.length > 1 && DOWNHILL_NAME.test(s.name)) {
       const down = ds.filter(d => eleAt(T, d) - eleAt(T, d + DOWNHILL_LOOK_METRES) >= DOWNHILL_DROP_METRES);
       if (down.length && down.length < ds.length) { ds = down; notes.push(`caution "${s.name}" is read on the way down only`); }
     }

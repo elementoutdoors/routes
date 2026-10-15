@@ -205,6 +205,8 @@ const WARN_NAME = /\b(caution|careful|take care|slippery|busy|crossing|dismount|
 const TOILET_NAME = /^(public )?(toilets?|restrooms?)$/i;
 const WELCOME_NAME = /^(welcome|before you ride)\b/i;
 const TRAIL_CUE = /\bsingle[\s-]?(track|trail)\b/i;   // a direction onto single track starts a stretch with more off route room
+let CAUTION_PASSES = {};   // config/caution-passes.json: which pass a warning on a two-way road is read on
+try { CAUTION_PASSES = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'caution-passes.json'), 'utf8')).pins || {}; } catch (e) {}
 const clean = s => (s || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 const photoUrl = id => `https://ridewithgps.com/photos/${id}/large.jpg`;
 
@@ -293,7 +295,7 @@ function transform(entry, r) {
     if (stops.find((o, j) => j < i && o.name === s.name && hav(o.lat, o.lng, s.lat, s.lng) < 40)) stops.splice(i, 1);
   }
   stops.forEach(s => { delete s.lib; delete s.upd; });
-  planPasses(T, stops);   // out and back rides: which pass each stop is read on (scripts/passes.mjs)
+  planPasses(T, stops, CAUTION_PASSES);   // out and back rides: which pass each stop is read on (scripts/passes.mjs)
   stops.sort((a, b) => a.d - b.d);
 
   const offers = offersFor(T, entry.slug);

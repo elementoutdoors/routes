@@ -1,0 +1,6 @@
+{
+  "_about": "Which time past a warning it is read, for warnings on roads the ride uses both ways. Default: every pass, except a warning whose name says steep, descent, downhill or hill, which is read only where the route goes downhill. Here a warning (by its exact name) can be set to: downhill (only the pass coming down the hill), uphill, first, last or every. Ben, 15/10/2026: the Mt Tinbeerwah intersection warning matters only on the way down.",
+  "pins": {
+    "Busy Intersection Ahead. Slowdown and prepare to stop": "downhill"
+  }
+}
