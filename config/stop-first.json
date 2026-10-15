@@ -1,0 +1,6 @@
+{
+  "_about": "Stops (by exact name) that riders arrive at and leave by a direction given at the same spot. The app reads the stop as the rider arrives and the direction straight after it, with no early warning before the stop. Ben, 15/10/2026: the Wooroi day use area must be read on arrival, not after the direction leaving it. Turn arounds at a stop work this way already without being listed.",
+  "stops": [
+    "Wooroi day use area"
+  ]
+}

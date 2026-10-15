@@ -205,6 +205,8 @@ const WARN_NAME = /\b(caution|careful|take care|slippery|busy|crossing|dismount|
 const TOILET_NAME = /^(public )?(toilets?|restrooms?)$/i;
 const WELCOME_NAME = /^(welcome|before you ride)\b/i;
 const TRAIL_CUE = /\bsingle[\s-]?(track|trail)\b/i;   // a direction onto single track starts a stretch with more off route room
+let STOP_FIRST = [];   // config/stop-first.json: stops read on arrival, before the direction given at the same place
+try { STOP_FIRST = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'stop-first.json'), 'utf8')).stops || []; } catch (e) {}
 let CAUTION_PASSES = {};   // config/caution-passes.json: which pass a warning on a two-way road is read on
 try { CAUTION_PASSES = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'caution-passes.json'), 'utf8')).pins || {}; } catch (e) {}
 const clean = s => (s || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
@@ -304,6 +306,14 @@ function transform(entry, r) {
     const near = stops.filter(s => ['info', 'view', 'park', 'turn'].includes(s.kind) && s.d >= c.d - 250 && s.d <= c.d + 40)
       .sort((a, b) => Math.abs(a.d - c.d) - Math.abs(b.d - c.d))[0];
     if (near) c.after = near.id;
+  }
+  // Arrival stops (config/stop-first.json): a place riders arrive at and leave by a direction given right there, such as
+  // the Wooroi day use area. The stop is read on arrival and the direction straight after it, never the other way round
+  // (Ben, 15/10/2026).
+  for (const s of stops) {
+    if (!STOP_FIRST.includes(s.name) || !['info', 'view', 'park', 'turn'].includes(s.kind)) continue;
+    const c = cues.filter(c => !c.after && s.d >= c.d - 250 && s.d <= c.d + 40).sort((a, b) => Math.abs(a.d - s.d) - Math.abs(b.d - s.d))[0];
+    if (c) c.after = s.id;
   }
 
   const offers = offersFor(T, entry.slug);
