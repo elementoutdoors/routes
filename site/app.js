@@ -1308,7 +1308,10 @@
       if (s.kind === 'caution') (s.ds || [s.d]).forEach(function (d, k, all) { out.push({ d: d, stop: s, pass: all.length > 1 ? k + 1 : 0, of: all.length }); });
       else out.push({ d: s.d, stop: s });
     });
-    out.sort(function (a, b) { return a.d - b.d || (a.cue ? -1 : 1); });
+    // a direction given at a stop (turn around, or leaving an arrival stop) is heard after the stop, so list it after it
+    var at = {}; R.stops.forEach(function (s) { at[s.id] = s.d; });
+    out.forEach(function (it) { it.o = it.d; if (it.cue && it.cue.after && at[it.cue.after] !== undefined) it.o = Math.max(it.d, at[it.cue.after] + 0.01); });
+    out.sort(function (a, b) { return a.o - b.o || (a.cue ? -1 : 1); });
     return out;
   }
   function openCheck() {
