@@ -1,6 +1,7 @@
 {
-  "_about": "Which time past a warning it is read, for warnings on roads the ride uses both ways. Default: every pass, except a warning whose name says steep, descent, downhill or hill, which is read only where the route goes downhill. Here a warning (by its exact name) can be set to: downhill (only the pass coming down the hill), uphill, first, last or every. Ben, 15/10/2026: the Mt Tinbeerwah intersection warning matters only on the way down, which on the out and back Mt Tinbeerwah ride is the second (last) pass.",
+  "_about": "Which time past a warning it is read, for warnings on roads the ride uses both ways. Default: every pass, except a warning whose name says steep, descent, downhill or hill, which is read only where the route goes downhill. Here a warning (by its exact name) can be set to: downhill (only the pass coming down the hill), uphill, first, last or every. Ben, 15/10/2026: the Mt Tinbeerwah intersection warning matters only on the way down, which on the out and back Mt Tinbeerwah ride is the second (last) pass. Ben, 15/10/2026: Beach access on North Shore is read on the way onto the beach only (first pass), not on the way off.",
   "pins": {
-    "Busy Intersection Ahead. Slowdown and prepare to stop": "last"
+    "Busy Intersection Ahead. Slowdown and prepare to stop": "last",
+    "Beach access": "first"
   }
 }

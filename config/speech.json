@@ -2,6 +2,20 @@
  "_about": "How written text is said aloud. Years from 1600 to 1999 are said the way people say them (1874 as eighteen seventy-four, 1905 as nineteen oh five, 1900 as nineteen hundred), in English. The screen keeps the written text; these rules only change what the natural voice and the phone voice say. rules: find (a regular expression), say (what to say instead), langs (which languages it applies to). names: how to say a place name the voice gets wrong, as a respelling (for example \"Tinbeerwah\": \"Tin-beer-wah\"); used in every language. Changing a rule re-records only the lines it changes. pronounce: the exact way the natural voice says a word, as IPA, sent to Google with every line containing it (the written text never changes); respell is said instead only if Google refuses the pronunciation, and the build then reports it. Use pronounce first; names is for the phone voice or when pronounce cannot be used.",
  "rules": [
   {
+   "find": "\\b4WDs\\b",
+   "say": "four wheel drives",
+   "langs": [
+    "en"
+   ]
+  },
+  {
+   "find": "\\b4WD\\b",
+   "say": "four wheel drive",
+   "langs": [
+    "en"
+   ]
+  },
+  {
    "find": "\\bMt\\.? (?=[A-Z])",
    "say": "Mount ",
    "langs": [
