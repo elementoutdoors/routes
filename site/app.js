@@ -621,6 +621,16 @@
   }
   function releaseWake() { if (wakeLock) { try { wakeLock.release(); } catch (e) {} wakeLock = null; } }
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') requestWake(); });
+  // Back from a locked screen or another app mid ride: say plainly that directions stopped while it was away.
+  var hiddenAt = 0;
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') { hiddenAt = Date.now(); return; }
+    if (hiddenAt && ride.active && !ride.paused && Date.now() - hiddenAt > 15000) {
+      var t = tu('Directions stopped while your phone was locked. Keep this screen open while you ride.');
+      banner(t, 'caution', 12000); say(t, { interrupt: true });
+    }
+    hiddenAt = 0;
+  });
 
   // ---------- riding engine ----------
   var ride = { active: false, zoom: 16, d: 0, locked: false, off: false, offCount: 0, onCount: 0, lastOffSay: 0, follow: true,
@@ -640,6 +650,8 @@
     // Speaking once inside the tap unlocks speech on iPhone.
     say(ride.paused ? tu('Your ride is paused. Tap Resume when you are ready to keep going.')
       : tu(resume ? 'Welcome back. Picking up where you left off.' : "Let's ride. Follow the line on the map and listen for directions."), { interrupt: true });
+    // The browser stops GPS and speech when the phone locks (Ben, 16/10/2026: make this clear to riders)
+    if (!ride.paused) say(tu('Keep this screen open while you ride. Locking your phone stops the directions.'));
     updatePauseBtn();
     requestWake();
     startGps();

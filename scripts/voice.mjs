@@ -64,7 +64,9 @@ export const PHRASES = [
   'Then',
   'You have reached a point of interest.',
   'You have finished the ride. Thanks for riding with us.',
-  'Voice on.'
+  'Voice on.',
+  'Keep this screen open while you ride. Locking your phone stops the directions.',
+  'Directions stopped while your phone was locked. Keep this screen open while you ride.'
 ];
 // Lines with a distance in them. "full" is recorded for every distance the app can say; "near" only for distances up to 3 km / 2 miles.
 export const TEMPLATES = [
