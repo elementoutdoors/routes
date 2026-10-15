@@ -1,5 +1,5 @@
 {
- "_about": "Ben's ruling, 15/10/2026: warnings (Caution stops) are only for the really dangerous spots, not every busy road, because warning about some busy roads and not others reads oddly. These are the warnings each ride has, as Ben set them. The build compares every ride against this list and reports any warning added or removed (health.json cautionDrift and problems). Never add, restore or remove a warning pin without Ben asking; when he changes one, update this list in the same session. 15/10/2026 (Ben): Steep Hill taken off Mt Tinbeerwah One Way, where the opening steep road direction already covers it. Busy Intersection Ahead also taken off One Way, where the steep descent direction covers it. cues: the caution directions (Danger type cues in Ride with GPS) each ride has, locked the same way (15/10/2026).",
+ "_about": "Ben's ruling, 15/10/2026: warnings (Caution stops) are only for the really dangerous spots, not every busy road, because warning about some busy roads and not others reads oddly. These are the warnings each ride has, as Ben set them. The build compares every ride against this list and reports any warning added or removed (health.json cautionDrift and problems). Never add, restore or remove a warning pin without Ben asking; when he changes one, update this list in the same session. 15/10/2026 (Ben): Steep Hill taken off Mt Tinbeerwah One Way, where the opening steep road direction already covers it. Busy Intersection Ahead also taken off One Way, where the steep descent direction covers it. cues: the caution directions (Danger type cues in Ride with GPS) each ride has, locked the same way (15/10/2026). 15/10/2026 (Ben): Fast road: Yurol Forest Drive taken off the Pomona Loop (we don't tell riders how to ride on roads, and that road is no more dangerous than others).",
  "rides": {
   "coolum-coast-ride": [],
   "country-towns-and-canopies": [
@@ -43,9 +43,7 @@
   "peak-to-peak": [
    "Fast road: Yurol Forest Drive"
   ],
-  "pomona-loop": [
-   "Fast road: Yurol Forest Drive"
-  ],
+  "pomona-loop": [],
   "pomona-to-noosa": [
    "Fast road: Yurol Forest Drive"
   ],
