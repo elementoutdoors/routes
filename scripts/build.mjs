@@ -494,12 +494,14 @@ async function main() {
   // Warnings are Ben's call (15/10/2026: only the really dangerous spots). Any warning added or removed against
   // config/caution-baseline.json is reported so it can be put back or the list updated with his OK.
   try {
-    const base = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'caution-baseline.json'), 'utf8')).rides || {};
+    const baseFile = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'caution-baseline.json'), 'utf8')), base = baseFile.rides || {}, baseCues = baseFile.cues || {};
     health.cautionDrift = [];
     for (const b of built) {
       const want = base[b.route.slug]; if (!want) continue;
       const have = b.route.stops.filter(s => s.kind === 'caution').map(s => s.name);
-      const added = [...new Set(have.filter(n => !want.includes(n)))], removed = [...new Set(want.filter(n => !have.includes(n)))];
+      const wantCues = (baseCues[b.route.slug] || []), haveCues = b.route.cues.filter(c => c.t === 'danger').map(c => c.n);
+      const added = [...new Set(have.filter(n => !want.includes(n)).concat(haveCues.filter(n => !wantCues.includes(n))))],
+        removed = [...new Set(want.filter(n => !have.includes(n)).concat(wantCues.filter(n => !haveCues.includes(n))))];
       if (added.length || removed.length) {
         health.cautionDrift.push({ slug: b.route.slug, added, removed });
         health.problems.push(`${b.route.slug}: warnings differ from Ben's set (config/caution-baseline.json)${added.length ? '; added: ' + added.join(', ') : ''}${removed.length ? '; removed: ' + removed.join(', ') : ''}. Warnings are only changed when Ben asks.`);
