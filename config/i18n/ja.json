@@ -1650,5 +1650,7 @@
  "Points of interest are no longer announced: no card pops up and nothing is read out as you pass them.": "見どころは案内されなくなります。通過してもカードは開かず、何も読み上げられません。",
  "They stay on the map and in the Stops list. Tap one any time to read about it or hear its story.": "見どころは地図と「立ち寄りスポット」の一覧に残ります。いつでもタップして、説明を読んだり物語を聞いたりできます。",
  "Directions and safety warnings are still spoken.": "道案内と安全の注意は引き続き読み上げられます。",
- "OK": "OK"
+ "OK": "OK",
+ "Turn left onto Cardell Road and follow the path along the river": "左折して Cardell Road に入り、川沿いの遊歩道をたどってください",
+ "Cross Eumundi Noosa Road with care and turn right.\nIf you prefer, there is a pedestrian crossing 200 m further along the road": "Eumundi Noosa Road を注意して渡り、右折してください。\nご希望であれば、道路を200 m先に進んだところに横断歩道があります"
 }
