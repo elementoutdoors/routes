@@ -241,6 +241,13 @@ function transform(entry, r) {
     const isFinish = kind === 'finish' || /review|enjoyed|thank/i.test(name) || /g\.page\/r\//.test(p.url || '');
     if (isFinish) kind = 'finish';
     // Pins whose name says what they are, whatever icon was picked in Ride with GPS (a warning on an "i" icon is still a warning)
+    // a pin named "Turn around" is a direction, not a stop: it becomes a turn around direction (Ben, 15/10/2026)
+    if (!isFinish && /^turn[\s-]*around\b/i.test(name)) {
+      const tr = passes(T, p.lat, p.lng, 60).runs[0];
+      if (tr && !cues.some(c => c.t === 'uturn' && Math.abs(c.d - tr.d) < 80)) { cues.push({ d: Math.round(tr.d), t: 'uturn', n: 'Turn around here' }); cues.sort((a, b) => a.d - b.d); }
+      warnings.push(`pin "${name}" is a turn around: shown as a direction, not a stop (better as a U turn cue in Ride with GPS)`);
+      continue;
+    }
     let plain = 0;
     if (!isFinish && kind !== 'caution' && WARN_NAME.test(name)) { kind = 'caution'; warnings.push(`stop "${name}" is a warning on a ${p.poi_type_name} icon; the app treats it as Caution (change the icon to Caution in the POI Library)`); }
     else if (!isFinish && kind === 'info' && TOILET_NAME.test(name)) kind = 'toilet';
