@@ -1205,7 +1205,7 @@
     openSheet(function (b) {
       b.appendChild(el('div', { class: 'kicker', text: tu('Finish') }));
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('You made it. Thanks for riding with us.') }));
-      var fo = R.offers.filter(function (o) { return o.fin; });
+      var fo = R.offers.slice();   // every rider offer again at the finish (Ben, 16/10/2026)
       var area = el('div', { class: 'rate' });
       b.appendChild(area);
       function ask() {
@@ -1530,8 +1530,9 @@
     $('route-desc').textContent = desc;
     $('route-desc-wrap').hidden = !desc;
     $('route-desc-more').hidden = desc.length < 220;
-    var ow = $('route-offers'); ow.innerHTML = '';
-    R.offers.filter(function (o) { return !o.fin; }).forEach(function (o) { ow.appendChild(offerStrip(o)); });   // end-of-ride offers come up near the end
+    // Ben, 16/10/2026: no offer card on the ride page (it read like an ad). Offers live in the Offers list while
+    // riding, come up near partners, and are shown again on the finish card.
+    var ow = $('route-offers'); ow.innerHTML = ''; ow.hidden = true;
     $('b-offers-label').textContent = R.offers.length ? fmt(tu('Offers {n}'), { n: R.offers.length }) : tu('Offers');
     $('route-lang').textContent = S.lang.toUpperCase();
     $('route-units').textContent = S.units === 'imperial' ? 'mi' : 'km';
