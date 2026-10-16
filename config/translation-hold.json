@@ -1,0 +1,12 @@
+{
+ "_about": "English lines held back from translation until Ben has heard them in English and approved (Ben, 16/10/2026: test in English first, ask before translating). While held, these lines are left out of i18n-missing.json, so the weekly check does not translate them; other languages keep saying the direction as written at the turn. To release: ask Ben, then set turnHere to false and empty strings, push, and translate in the same session.",
+ "turnHere": true,
+ "strings": [
+  "Chime at turns",
+  "A short ding as you reach each turn",
+  "Needs mobile signal",
+  "No signal here. This page needs mobile signal. Your ride carries on.",
+  "No signal. This page needs mobile signal.",
+  "Checking for signal..."
+ ]
+}

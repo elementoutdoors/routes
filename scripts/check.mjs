@@ -35,6 +35,14 @@ h.problems.forEach(p => issues.push(p));
 h.routes.forEach(r => r.warnings.filter(w => /from the route/.test(w)).forEach(w => notes.push(`${r.slug}: ${w}`)));
 Object.entries(h.untranslatedTotal || {}).forEach(([l, n]) => { if (n) issues.push(`${n} strings not yet translated into ${l}`); });
 (h.cueWording || []).forEach(c => issues.push(`direction still reads like cue sheet shorthand, add a rule or fix in config/cue-wording.json: "${c}"`));
+// Version 9 (16/10/2026): direction check. Every flagged direction (away from the turn, a repeat, or bare) that Ben has not
+// ruled on goes to the Directions Review page as a card; "bare" ones only where a named road or path is there (the run
+// looks it up). Rulings he has made but Claude has not applied yet are listed as issues.
+const dirs = h.directions || [];
+const unruled = dirs.filter(x => !x.ruled);
+if (unruled.length) notes.push(`directions: ${unruled.length} flagged directions without a ruling (${['offTurn', 'noTurn', 'repeat', 'bare'].map(k => `${unruled.filter(x => x.issue === k).length} ${k}`).join(', ')}); add cards to the Directions Review page`);
+dirs.filter(x => x.ruled && x.ruled !== 'keep').forEach(x => issues.push(`direction ruled "${x.ruled}" but not applied yet: ${x.slug} at ${x.d} m, "${x.n}"`));
+const directionFlags = unruled;
 
 // natural voice: the build records new lines each night; check it is running, inside its cap, and the recordings load
 const v = h.voice;
@@ -133,5 +141,5 @@ if (fs.existsSync('qr/codes.json') && fs.existsSync('qr/links.json')) {
 }
 if (h.problems.some(p => /^settings:/.test(p))) notes.push('a value in config/settings.json was out of range and the default was used');
 
-console.log(JSON.stringify({ ok: !issues.length, built: h.built, routes: h.routes.map(r => `${r.slug}: ${r.source}, ${r.cues} cues, ${r.stops} stops`), issues, notes, push, houseRules, placeChanges }, null, 1));
+console.log(JSON.stringify({ ok: !issues.length, built: h.built, routes: h.routes.map(r => `${r.slug}: ${r.source}, ${r.cues} cues, ${r.stops} stops`), issues, notes, push, houseRules, placeChanges, directionFlags }, null, 1));
 process.exit(issues.length ? 1 : 0);

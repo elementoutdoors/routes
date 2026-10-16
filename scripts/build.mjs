@@ -10,7 +10,8 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { buildVoice } from './voice.mjs';
 import { planPasses } from './passes.mjs';
-import { loadCueWording, wordCue, looksShort } from './cuewording.mjs';
+import { loadCueWording, wordCue, looksShort, hereCue } from './cuewording.mjs';
+import { checkDirections } from './directions.mjs';
 import { fp, blogList, placeOf, stopId, blogSections, readBlogs, comparePlaces, holdStops } from './places.mjs';
 import { loadLibrary, storiesFrom, recordFrom, compiled, generatedDrift, lint } from './library.mjs';
 import { libraryPage } from './library-page.mjs';
@@ -26,6 +27,9 @@ const secrets = process.env.ROUTE_SECRETS ? JSON.parse(process.env.ROUTE_SECRETS
 const cfg = readJson('config/routes.json');
 const brands = readJson('config/brands.json');
 const offersCfg = readJson('config/offers.json');
+// New English lines Ben wants heard in English before they are translated (16/10/2026): kept out of i18n-missing.json, so
+// the weekly check does not translate them, until Ben approves and this hold is lifted (config/translation-hold.json).
+const HOLD = Object.assign({ turnHere: false, strings: [] }, readJson('config/translation-hold.json', {}));
 // The Story Library (library/) is the source of every story, blog section and pin line. The stories and the places record
 // are made from it here, so the site always follows the library; the committed copies in config/ are checked against it.
 let library = null, libraryProblems = [];
@@ -233,6 +237,7 @@ function transform(entry, r) {
     .map(c => ({ d: Math.round(c.d), t: CUE_TYPES[(c.t || 'generic').toLowerCase()] || 'generic', n: wordCue(clean(c.n)) }))   // full sentences, not cue sheet shorthand (config/cue-wording.json)
     .filter(c => c.n && c.d >= 0 && c.d <= distance + 50)
     .sort((a, b) => a.d - b.d);
+  cues.forEach((c, i) => { const h = hereCue(c, i === 0); if (h) c.h = h; });   // said at the turn itself (scripts/cuewording.mjs)
 
   const activeOffers = offersCfg.offers.filter(o => o.active && (!o.validUntil || new Date(o.validUntil + 'T23:59:59+10:00') >= new Date()));
   const offerNames = activeOffers.map(o => (o.matchPoi || '').toLowerCase()).filter(Boolean);
@@ -345,7 +350,7 @@ function transform(entry, r) {
 // strings in a route that need translating
 function routeStrings(route) {
   const s = new Set([route.name, route.description]);
-  route.cues.forEach(c => s.add(c.n));
+  route.cues.forEach(c => { s.add(c.n); if (c.h && !HOLD.turnHere) s.add(c.h); });
   route.stops.forEach(p => { s.add(p.name); s.add(p.text); (p.story || []).forEach(x => s.add(x)); });
   route.offers.forEach(o => { s.add(o.headline); s.add(o.alt); s.add(o.about); s.add(o.how); [].concat(o.conditions || []).forEach(c => s.add(c)); });
   s.delete(''); s.delete(null); s.delete(undefined);
@@ -418,7 +423,7 @@ async function main() {
   const missing = Object.fromEntries(LANGS.map(l => [l, new Set()]));
   for (const l of LANGS) {
     uiOut[l] = {};
-    for (const s of ui) { if (i18n[l][s]) uiOut[l][s] = i18n[l][s]; else missing[l].add(s); }
+    for (const s of ui) { if (i18n[l][s]) uiOut[l][s] = i18n[l][s]; else if (!HOLD.strings.includes(s)) missing[l].add(s); }
   }
   fs.writeFileSync(path.join(dist, 'ui.json'), JSON.stringify(uiOut));
 
@@ -531,6 +536,10 @@ async function main() {
     }
   } catch (e) { health.problems.push('caution baseline could not be read: ' + e.message); }
   // Turn directions that still read like cue sheet shorthand after the wording rules: add a rule or fix for them
+  // direction check (scripts/directions.mjs): directions away from the turn, repeats, bare ones. Ben rules on each on the
+  // Directions Review page; rulings live in config/direction-rulings.json.
+  const dirRulings = (readJson('config/direction-rulings.json', {}).rulings) || {};
+  health.directions = built.flatMap(b => checkDirections(b.route.slug, b.route, dirRulings));
   health.cueWording = [...new Set(built.flatMap(b => b.route.cues.map(c => c.n)).filter(looksShort))];
   // Same place, different story: a story stop copied onto several rides instead of shared from the POI Library drifts apart.
   {
@@ -627,6 +636,8 @@ async function main() {
     health.library = { entries: lib.entries.length, kinds, houseRules: lint(library) };
   }
   health.untranslatedTotal = Object.fromEntries(LANGS.map(l => [l, missing[l].size]));
+  health.translationHold = { turnHere: !!HOLD.turnHere, strings: HOLD.strings.length,
+    turnHereLines: HOLD.turnHere ? new Set(built.flatMap(b => b.route.cues.map(c => c.h).filter(Boolean))).size : 0 };
   fs.writeFileSync(path.join(dist, 'health.json'), JSON.stringify(health, null, 1));
 
   // for the translation step and QR codes (not published)

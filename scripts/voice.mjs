@@ -133,7 +133,7 @@ export function wantedLines({ routes, i18n, langs, stories }) {
   for (const r of routes) {
     for (const l of all) {
       const say = s => { if (!s) return null; return has(l, s) || l === 'en' ? { lang: l, text: tr(l)(s) } : null; };
-      r.cues.forEach(c => { const x = say(c.n); if (x) groups.cues.push(x); });
+      r.cues.forEach(c => { const x = say(c.n); if (x) groups.cues.push(x); const y = say(c.h); if (y) groups.cues.push(y); });   // c.h: said at the turn itself
       r.stops.forEach(s => { const x = say(s.name); if (x) groups.names.push(x); const y = say(s.text); if (y) groups.stories.push(y);
         (s.story || []).forEach(p => { const z = say(p); if (z) groups.full.push(z); }); });
     }
@@ -350,7 +350,7 @@ export async function buildVoice({ routes, i18n, langs, dist, appSource, health,
   // per route: recordings for its own cues, stop names and stories
   for (const r of routes) {
     r.voice = {};
-    const texts = new Set([...r.cues.map(c => c.n), ...r.stops.flatMap(s => [s.name, s.text, ...(s.story || [])])].filter(Boolean));
+    const texts = new Set([...r.cues.flatMap(c => [c.n, c.h]), ...r.stops.flatMap(s => [s.name, s.text, ...(s.story || [])])].filter(Boolean));
     for (const [l, set] of have) {
       const hs = [];
       for (const s of texts) {

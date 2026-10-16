@@ -36,7 +36,7 @@
   // switch is kept for that ride only. An older phone-wide choice no longer applies.
   touched = touched.filter(function (k) { return k !== 'stories'; });
   var storyPick = lsGet('rg.stories', {});
-  var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, natural: true, stories: true, wake: true, saver: false, sat: false }, savedS);
+  var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, natural: true, chime: true, stories: true, wake: true, saver: false, sat: false }, savedS);
   function saveSettings(key) {
     if (key && touched.indexOf(key) < 0) touched.push(key);
     var out = {}; touched.forEach(function (k) { out[k] = S[k]; });
@@ -458,6 +458,7 @@
     return voiceRefresh;
   }
   function clipFailed(it) {
+    if (it.chime) { it.fell = true; nextLine(); return; }
     if (it.retried) { it.fell = true; phoneLine(it); return; }
     it.retried = true;
     refreshVoice().then(function () {
@@ -481,6 +482,7 @@
   }
   function nextLine() {
     var it = queue.shift();
+    while (it && it.grp && it.grp.stale && it.grp.stale()) { var g = it.grp; it = queue.shift(); while (it && it.grp === g) it = queue.shift(); }
     curItem = it || null;
     if (!it) { speaking = false; if (storyFor) { storyFor = null; updateStoryBtn(); } return; }
     speaking = true;
@@ -490,33 +492,49 @@
       if (p && p.catch) p.catch(function (e) { if (!it.fell && !(e && e.name === 'AbortError')) clipFailed(it); });
     } else phoneLine(it);
   }
-  function enqueue(items, interrupt) {
+  function enqueue(items, interrupt, urgent) {
     // a full story gives way to anything else (a direction, a caution, the next stop): the rider can tap it again
     var storyOn = (curItem && curItem.story) || queue.some(function (q) { return q.story; });
     if (interrupt || (storyOn && !(items[0] && items[0].story))) stopSpeech();
-    items.forEach(function (it) { queue.push(it); });
+    // a direction or warning cuts in over a stop being read out; the stop's line starts again straight after it
+    if (urgent && speaking && curItem && curItem.stop) {
+      var rest = [curItem].concat(queue).filter(function (q) { return q.stop; }).map(function (q) { return Object.assign({}, q, { retried: false, fell: false }); });
+      var other = queue.filter(function (q) { return !q.stop; });
+      stopSpeech();
+      queue = other.concat(items, rest);
+      nextLine();
+      return;
+    }
+    if (urgent) {
+      // ahead of any stop lines still waiting
+      var at = queue.findIndex(function (q) { return q.stop; });
+      if (at < 0) items.forEach(function (it) { queue.push(it); });
+      else queue.splice.apply(queue, [at, 0].concat(items));
+    } else items.forEach(function (it) { queue.push(it); });
     if (!speaking) nextLine();
   }
   // parts: [{ text, lang }]. All recorded: play the recordings. Otherwise speak with the phone voice,
   // joining parts in the same language so it reads as one sentence.
+  var CHIME_URL = 'assets/ding.mp3';
   function speakParts(parts, opts) {
     opts = opts || {};
     parts = parts.filter(function (p) { return p && p.text; });
     if (!parts.length) return;
-    if (!S.voice && !opts.force) return;
+    var chime = opts.chime && S.chime ? [{ text: '', lang: S.lang, url: CHIME_URL, chime: true, grp: opts.grp }] : [];
+    if (!S.voice && !opts.force) { if (chime.length) enqueue(chime, false, true); return; }   // directions off: the ding still marks the turn
     lastSaid = parts.map(function (p) { return p.text; }).join(' ');
     var urls = S.natural ? parts.map(function (p) { return clipFor(p.lang, p.text); }) : [];
-    var items;
-    if (S.natural && urls.every(Boolean)) items = parts.map(function (p, i) { return { text: p.text, lang: p.lang, url: urls[i], story: !!opts.story }; });
+    var items, base = { story: !!opts.story, stop: !!opts.stop, grp: opts.grp };
+    if (S.natural && urls.every(Boolean)) items = parts.map(function (p, i) { return Object.assign({ text: p.text, lang: p.lang, url: urls[i] }, base); });
     else {
       items = [];
       parts.forEach(function (p) {
         var last = items[items.length - 1];
         if (last && last.lang === p.lang) last.text += (/^(zh|ja)$/.test(p.lang) ? '' : ' ') + p.text;
-        else items.push({ text: p.text, lang: p.lang, url: null, story: !!opts.story });
+        else items.push(Object.assign({ text: p.text, lang: p.lang, url: null }, base));
       });
     }
-    enqueue(items, opts.interrupt);
+    enqueue(chime.concat(items), opts.interrupt, opts.urgent);
   }
   var lastSaid = '';
   function say(text, opts) {
@@ -769,7 +787,7 @@
       ride.cueState[k] = 2;
       // on single track the position can jump forward when the rider comes back onto the drawn line: still say the turn
       var late = (R.loose || []).some(function (s) { return c.d >= s[0] && c.d <= s[1]; }) ? 150 : 45;
-      if (ride.d - c.d < late) sayContent(c.n, c.t === 'danger' ? tu('Caution.') : null);
+      if (ride.d - c.d < late) turnCall(c, k);
     });
     var i = nextCueIndex(); if (i < 0) return;
     var c = R.cues[i], dist = c.d - ride.d, st = ride.cueState[i] || 0;
@@ -779,16 +797,35 @@
     if (c.after && st < 1 && dist <= prepAt && dist > A.turnMetres + 25) { ride.cueState[i] = 1; return; }   // a turn around at a stop: no early warning
     if (st < 1 && dist <= prepAt && dist > A.turnMetres + 25 && (c.d - prevD) > A.skipFirstWarningIfCuesCloserThanMetres) {
       ride.cueState[i] = 1;
-      var pre = fmt(tu('In {dist},'), { dist: distParts(Math.max(dist, 20)).say });
-      sayContent(c.n, danger ? [tu('Caution.'), pre] : pre);
+      var said = Math.max(dist, 20);
+      var pre = fmt(tu('In {dist},'), { dist: distParts(said).say });
+      // dropped if, by the time it would be spoken, the distance is well out or the turn is close (the turn call covers it)
+      var grp = { stale: function () { var left = c.d - ride.d; return (ride.cueState[i] || 0) >= 2 || left <= A.turnMetres + 10 || Math.abs(said - left) > Math.max(40, said * 0.35); } };
+      sayContent(c.n, danger ? [tu('Caution.'), pre] : pre, { urgent: true, grp: grp });
     } else if (st < 2 && dist <= A.turnMetres) {
       ride.cueState[i] = 2;
       // turning around at a stop: read the stop first, so the turn around is the next thing the rider hears
       if (c.after && !ride.shown[c.after]) { var at = R.stops.filter(function (x) { return x.id === c.after; })[0]; if (at) announceStop(at); }
-      sayContent(c.n, danger ? tu('Caution.') : null);
+      turnCall(c, i);
       var nx = R.cues[i + 1];
-      if (nx && !nx.after && nx.d - c.d < A.mergeNextCueWithinMetres) { ride.cueState[i + 1] = 1; sayContent(nx.n, tu('Then')); }
+      if (nx && !nx.after && nx.d - c.d < A.mergeNextCueWithinMetres) { ride.cueState[i + 1] = 1; sayContent(nx.n, tu('Then'), { urgent: true }); }
     }
+  }
+  // At the turn: a soft ding, then the "here" version of the direction ("Turn right here onto Flynn Road."). A language
+  // without a translation of the "here" version says the direction as written. Dropped if the rider is already well past.
+  function turnLine(c) {
+    if (!c.h) return c.n;
+    if (S.lang === 'en') return c.h;
+    var m = R.i18n && R.i18n[S.lang];
+    return m && m[c.h] ? c.h : c.n;
+  }
+  function turnCall(c, i) {
+    var danger = c.t === 'danger';
+    var grp = { stale: function () { return ride.d - c.d > 40; } };
+    // the ding marks a turn: not the opening line, a finish line or a note
+    var turn = !danger && (!!c.h || (c.t && c.t !== 'generic'));
+    sayContent(danger ? c.n : turnLine(c), danger ? tu('Caution.') : null, { urgent: true, chime: turn, grp: grp });
+    return grp;
   }
   var FACILITY = { toilet: 1, food: 1, drink: 1, service: 1 };   // on the map and in the Stops list, never popped up or spoken
   var TRAIL_ROOM = 150;   // metres from the line allowed on single track before "off route" (15/10/2026)
@@ -816,8 +853,8 @@
         // a caution with notes (ferry, beach access) opens its card so the notes are on screen, even over another stop
         banner(tc(s.name), 'caution', 12000, s.text ? function () { openStop(s); } : null);
         if (s.text) openStop(s, true);
-        sayContent(s.name, tu('Caution.'));
-        if (s.text) sayContent(s.text);   // a warning's details are always read, even with stop stories turned off
+        sayContent(s.name, tu('Caution.'), { urgent: true });
+        if (s.text) sayContent(s.text, null, { stop: true });   // a warning's details are always read, even with stop stories turned off; a direction can cut in
       } else announceStop(s);
     });
   }
@@ -830,9 +867,9 @@
     if (poi && !S.stories) return;
     if (!sheetOpen()) openStop(s, true);
     // welcome pins and turnarounds are read as they are; other stops get "You have reached a point of interest."
-    if (poi) say(tu('You have reached a point of interest.'));
-    sayContent(s.name);
-    if (s.text) sayContent(s.text);
+    if (poi) say(tu('You have reached a point of interest.'), { stop: true });
+    sayContent(s.name, null, { stop: true });
+    if (s.text) sayContent(s.text, null, { stop: true });
   }
   // A short pop-up over the current screen, closed with OK or a tap outside it
   function notice(title, paras) {
@@ -961,8 +998,8 @@
   var bannerTimer = 0;
   function banner(text, kind, ms, onTap) {
     var b = $('banner');
-    b.className = 'banner' + (kind === 'offer' ? ' offer' : '');
-    b.innerHTML = svg(kind === 'offer' ? 'offer' : 'caution');
+    b.className = 'banner' + (kind === 'offer' ? ' offer' : kind === 'info' ? ' info' : '');
+    b.innerHTML = svg(kind === 'offer' ? 'offer' : kind === 'info' ? 'info' : 'caution');
     b.appendChild(el('span', { text: text }));
     b.hidden = false;
     b.onclick = function () { b.hidden = true; if (onTap) onTap(); };
@@ -1022,14 +1059,53 @@
   function closeSheet() { dropMiniMap(); $('sheet').hidden = true; $('scrim').hidden = true; if (ride.keepOpen) { ride.keepOpen = false; scrubUrl(); } }
 
   function linkRow(href, label, icon, frame) {
-    var a = el('a', { class: 'linkrow', href: href, target: '_blank', rel: 'noopener' });
+    var a = el('a', { class: 'linkrow needs-net', href: href, target: '_blank', rel: 'noopener' });
     if (frame) a.addEventListener('click', function (e) {
-      if (!navigator.onLine) return;   // let the browser show its own offline page in a new tab
-      e.preventDefault(); openViewer(href);
+      e.preventDefault();
+      if (a.dataset.checking) return;
+      // phones can say they are online with no real signal: check the page can be reached before opening it
+      a.dataset.checking = '1'; a.classList.add('checking');
+      canReach(href).then(function (ok) {
+        delete a.dataset.checking; a.classList.remove('checking');
+        if (ok) openViewer(href);
+        else { a.classList.add('no-net'); noSignal(); }
+      });
     });
-    a.appendChild(el('span', { text: label })); a.insertAdjacentHTML('beforeend', svg(icon || 'ext'));
+    var lab = el('span', { class: 'lr-label' });
+    lab.appendChild(el('span', { text: label }));
+    lab.appendChild(el('small', { class: 'net-note', text: tu('Needs mobile signal') }));
+    lab.appendChild(el('small', { class: 'net-check', text: tu('Checking for signal...') }));
+    a.appendChild(lab); a.insertAdjacentHTML('beforeend', svg(icon || 'ext'));
+    if (!navigator.onLine) a.classList.add('no-net');
     return a;
   }
+  // ---------- no signal (Ben, 16/10/2026): pages that need signal are greyed out, and nothing a rider taps ever
+  // takes them out of the ride ----------
+  function canReach(url) {
+    if (!navigator.onLine) return Promise.resolve(false);
+    return new Promise(function (resolve) {
+      var done = false, t = setTimeout(function () { if (!done) { done = true; resolve(false); } }, 4000);
+      try {
+        fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }).then(function () { if (!done) { done = true; clearTimeout(t); resolve(true); } })
+          .catch(function () { if (!done) { done = true; clearTimeout(t); resolve(false); } });
+      } catch (e) { done = true; clearTimeout(t); resolve(false); }
+    });
+  }
+  function noSignal() { banner(tu('No signal here. This page needs mobile signal. Your ride carries on.'), 'info', 6000); }
+  function markNet() {
+    var off = !navigator.onLine;
+    Array.prototype.forEach.call(document.querySelectorAll('.needs-net'), function (a) { a.classList.toggle('no-net', off); });
+    if (off && !$('viewer').hidden) viewerOffline(true);
+    if (!off) viewerOffline(false);
+  }
+  window.addEventListener('online', markNet);
+  window.addEventListener('offline', markNet);
+  // any web link tapped with no signal stays in the app instead of opening a browser error page
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="http"]') : null;
+    if (!a || navigator.onLine) return;
+    e.preventDefault(); e.stopPropagation(); a.classList.add('no-net'); noSignal();
+  }, true);
   function openStop(s, auto) {
     openSheet(function (b) {
       if (s.photos && s.photos.length) {
@@ -1286,6 +1362,7 @@
       }
       toggle(tu('Spoken directions'), null, 'voice', updateVoiceBtn);
       toggle(tu('Natural voice'), tu("Clearer recorded voice. Turn off to use your phone's own voice."), 'natural', function () { stopSpeech(); precacheVoice(); });
+      toggle(tu('Chime at turns'), tu('A short ding as you reach each turn'), 'chime', function () { if (S.chime) { var a = new Audio(CHIME_URL); try { var p = a.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} } });
       toggle(tu('Point of interest stories'), tu('Hear a short overview as you reach each point of interest'), 'stories', explainStories);
       toggle(tu('Keep screen on'), tu('Stops the phone locking while you ride'), 'wake', function () { if (S.wake) requestWake(); else releaseWake(); });
       toggle(tu('Battery saver'), tu('Blacks out the map between turns'), 'saver', saverTick);
@@ -1490,7 +1567,21 @@
   }
 
   // ---------- in-app page viewer (the ride keeps running underneath) ----------
+  function viewerOffline(on) {
+    var bar = document.getElementById('viewer-offline');
+    if (!on) { if (bar) bar.hidden = true; return; }
+    if (!bar) {
+      bar = el('div', { class: 'viewer-offline', id: 'viewer-offline', role: 'status' });
+      bar.appendChild(el('span', { text: tu('No signal. This page needs mobile signal.') }));
+      var bk = el('button', { class: 'btn accent small', type: 'button', text: tu(ride.active ? 'Back to my ride' : 'Back to the route') });
+      bk.addEventListener('click', function () { closeViewer(false); });
+      bar.appendChild(bk);
+      $('viewer').insertBefore(bar, $('viewer').children[1] || null);
+    }
+    bar.hidden = false;
+  }
   function openViewer(url) {
+    viewerOffline(false);
     closeSheet();
     $('viewer-frame').src = url;
     $('viewer-ext').href = url;

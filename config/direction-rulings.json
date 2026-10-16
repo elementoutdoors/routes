@@ -1,0 +1,4 @@
+{
+ "_about": "Ben's rulings on flagged directions from the Directions Review page (scripts/directions.mjs). Keyed by the flag key. ruling: keep (leave it as it is; not raised again while the wording stays the same), move (move it to the turn in the line), reword (use text), remove (delete the direction). Claude applies move, reword and remove in Ride with GPS, then sets applied.",
+ "rulings": {}
+}

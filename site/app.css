@@ -301,3 +301,13 @@ body.view-check #check-panel{display:block;position:fixed;left:0;right:0;bottom:
 .notice .btn{margin-top:8px}
 .lock-note{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 2px 4px;font-size:12.5px;line-height:1.3;font-weight:700;color:var(--muted)}
 .lock-note svg{flex:none;width:16px;height:16px;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* no signal (16/10/2026) */
+.lr-label{display:flex;flex-direction:column;gap:2px}
+.lr-label small{font-size:12.5px;font-weight:600;color:var(--muted,#667);display:none}
+.linkrow.no-net{opacity:.55}
+.linkrow.no-net .net-note{display:block}
+.linkrow.checking .net-check{display:block}
+.banner.info{background:#EEF2F7;color:#1F2A37}
+.banner.info svg{color:#1F2A37}
+.viewer-offline{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:#FFF4E5;color:#6B3200;font-weight:700;font-size:14px}
+.viewer-offline[hidden]{display:none}

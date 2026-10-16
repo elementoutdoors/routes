@@ -4,7 +4,7 @@ var SHELL = 'rg-shell-' + BUILD;
 var MAP = 'rg-map-v1';
 var DATA = 'rg-data-v1';
 var SHELL_FILES = ['./', 'index.html', 'app.js?v=' + BUILD, 'app.css?v=' + BUILD, 'ui.json?v=' + BUILD,
-  'manifest.webmanifest', 'icon.svg', 'icon-180.png', 'icon-512.png', 'assets/logo-beo.png', 'assets/logo-bikeon.png',
+  'manifest.webmanifest', 'icon.svg', 'icon-180.png', 'icon-512.png', 'assets/logo-beo.png', 'assets/logo-bikeon.png', 'assets/ding.mp3',
   'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js', 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css'];
 
 self.addEventListener('install', function (e) {

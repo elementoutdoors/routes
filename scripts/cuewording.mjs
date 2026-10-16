@@ -27,3 +27,19 @@ export function wordCue(text) {
 // cue sheet shorthand still left after the rules: a lower case thing with no "the" after a direction word
 const SHORT = /\b(along|onto|into|through|across|over|under|past|follow|following|cross|towards)\s+(?!the\b|a\b|an\b|your\b|this\b|that\b|it\b|all\b|to\b|safely\b|carefully\b|with\b|at\b|here\b)[a-z]+/;
 export function looksShort(text) { return SHORT.test(text) || /^[a-z]/.test(text); }
+
+// The "here" version of a direction, said at the turn itself after a soft ding (Ben, 16/10/2026):
+// "Turn right onto Flynn Road." -> "Turn right here onto Flynn Road."; "Cross Goodchap Street and ..." -> "Now, cross
+// Goodchap Street and ...". Returns null when the direction is said as written (a start or finish line, a caution, or a
+// direction that already says "here").
+const TURN_WORDS = /^((?:(?:turn|bear|keep|veer|fork|make a)\s+)?(?:(?:sharp|slight|hard)\s+)?(?:left|right|u[ -]?turn))\b/i;
+const ACTION = /^(cross|continue|follow|take|ride|go|head|enter|exit|join|leave|stay|use|walk|dismount|carry|pass|merge|climb|descend|roll|join|at|after|before|ignore|stick|swing|hop)\b/i;
+export function hereCue(c, isFirst) {
+  const t = String(c.n || '').trim();
+  if (!t || c.t === 'danger' || /\bhere\b/i.test(t)) return null;
+  if (isFirst && c.d < 40) return null;   // the opening line is said at the start
+  const m = TURN_WORDS.exec(t);
+  if (m) return m[1] + ' here' + t.slice(m[1].length);
+  if (ACTION.test(t)) return 'Now, ' + t.charAt(0).toLowerCase() + t.slice(1);
+  return null;
+}
