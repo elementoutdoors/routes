@@ -29,6 +29,12 @@ function turnAt(T, d) {
   const a = at(T, d - 15), b = at(T, d), c = at(T, d + 15);
   return turnDiff(bearing(a.lat, a.lng, b.lat, b.lng), bearing(b.lat, b.lng, c.lat, c.lng));
 }
+// the overall change of heading through a curved turn (a slip lane or sweeping corner): the line 50 to 15 m before
+// against the line 15 to 50 m after (Ben, 16/10/2026: Turn left onto Ocean Drive was flagged though it sits on the turn)
+function sweepAt(T, d) {
+  const a = at(T, d - 50), b = at(T, d - 15), c = at(T, d + 15), e = at(T, d + 50);
+  return turnDiff(bearing(a.lat, a.lng, b.lat, b.lng), bearing(c.lat, c.lng, e.lat, e.lng));
+}
 const SIDE = { left: -1, 'slight-left': -1, 'sharp-left': -1, right: 1, 'slight-right': 1, 'sharp-right': 1 };
 const BARE = /^(turn|bear|keep|veer)\s+((sharp|slight)\s+)?(left|right)\.?$/i;
 
@@ -57,7 +63,8 @@ export function checkDirections(slug, route, rulings = {}) {
         if (!best || a > best.a) best = { a, x };
       }
       const need = /slight/.test(c.t) ? 15 : 30;
-      if (!best || best.a < need) { if (!/^(keep|bear|stay|continue|follow|veer)\b/i.test(c.n) && !/roundabout/i.test(c.n)) push(c, i, 'noTurn', 'The line does not turn ' + (side < 0 ? 'left' : 'right') + ' within 50 m of this direction, so the "here" call may not match the real turn.'); }
+      const sweep = sweepAt(T, c.d) * side;
+      if ((!best || best.a < need) && sweep < need) { if (!/^(keep|bear|stay|continue|follow|veer)\b/i.test(c.n) && !/roundabout/i.test(c.n)) push(c, i, 'noTurn', 'The line does not turn ' + (side < 0 ? 'left' : 'right') + ' within 50 m of this direction, so the "here" call may not match the real turn.'); }
       // only a real turn ("Turn left/right ...", not slight) is checked for position, and only when the sharpest bend
       // found is a clear turn away from the edge of the search (otherwise it is likely a different bend)
       else if (!twin && /^turn\b/i.test(c.n) && !/slight/.test(c.t) && best.a >= 45 && Math.abs(best.x - c.d) < 42 && (best.x - c.d > 25 || c.d - best.x > 15)) {
