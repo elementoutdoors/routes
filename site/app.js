@@ -632,7 +632,8 @@
 
   // ---------- wake lock ----------
   var wakeLock = null;
-  function wantWake() { return ride.active && !ride.paused && S.wake; }
+  // The screen always stays on during a ride (Ben, 16/10/2026): a locked phone stops the directions, so there is no switch.
+  function wantWake() { return ride.active && !ride.paused; }
   function requestWake() {
     if (!wantWake() || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
     navigator.wakeLock.request('screen').then(function (l) { wakeLock = l; l.addEventListener('release', function () { wakeLock = null; }); }).catch(function () {});
@@ -655,14 +656,15 @@
     paused: false, cueState: {}, shown: {}, watch: null, fix: null, backCount: 0, lastTouch: Date.now(), sim: null, finished: false };
 
   function progressKey() { return 'rg.progress.' + R.key; }
-  function saveProgress() { lsSet(progressKey(), { d: ride.d, ts: Date.now(), shown: ride.shown, cueState: ride.cueState, version: R.version, paused: ride.paused }); }
+  function saveProgress() { if (ride.sim) return; lsSet(progressKey(), { d: ride.d, ts: Date.now(), shown: ride.shown, cueState: ride.cueState, version: R.version, paused: ride.paused, ridden: ride.ridden || 0 }); }
 
   function startRide(resume) {
     ride.active = true; ride.finished = false; ride.follow = true; ride.off = false; ride.offCount = 0; ride.onCount = 0; ride.backCount = 0;
     var p = resume ? lsGet(progressKey(), null) : null;
     ride.prevD = null; ride.saidStart = false; ride.paused = false;
-    if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; ride.paused = !!p.paused; }
-    else { ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.locked = false; }
+    if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; ride.paused = !!p.paused; ride.ridden = p.ridden || 0; ride.resumed = true; }
+    else { ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.locked = false; ride.ridden = 0; ride.resumed = false; }
+    ride.backRun = 0; ride.saidBack = false;
     show('ride');
     updateFollowBtn(); updateVoiceBtn();
     // Speaking once inside the tap unlocks speech on iPhone.
@@ -730,6 +732,11 @@
     var tol = trail ? TRAIL_ROOM : Math.max(CFG.offRoute.metres * 0.7, Math.min(CFG.offRoute.metres, acc + 15));
     var cand = candidates(c.latitude, c.longitude, tol);
     var pick = null;
+    // Resumed an earlier ride but standing at the start (a loop's start and finish are the same spot): start fresh,
+    // so an old ride left near the finish can never end the new one straight away (Ben, 16/10/2026).
+    if (cand.list.length && ride.resumed && !ride.locked && ride.d > R.distance * 0.5 && cand.list.some(function (p) { return p.d < 300; })) {
+      ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.ridden = 0; ride.resumed = false;
+    }
     if (cand.list.length) {
       var expect = ride.d + 15;
       cand.list.forEach(function (p) {
@@ -740,11 +747,16 @@
       });
     }
     if (pick) {
-      if (pick.d < ride.d - 60 && !trail) ride.backCount++; else ride.backCount = 0;
+      // riding backwards: the position along the route has gone down steadily for about 150 m. On out and back rides the
+      // way back is a later part of the route, so riding back the right way still counts as going forward.
+      if (ride.locked && !trail && pick.d < ride.d - 2) ride.backRun += ride.d - pick.d;
+      else if (pick.d > ride.d + 5) { ride.backRun = 0; ride.saidBack = false; }
+      // distance actually ridden on this phone: forward progress only, ignoring jumps
+      if (ride.locked && pick.d > ride.d && pick.d - ride.d < 250) ride.ridden = (ride.ridden || 0) + (pick.d - ride.d);
       ride.d = pick.d; ride.locked = true;
       ride.offCount = 0;
       if (ride.off) { ride.onCount++; if (ride.onCount >= 2) { ride.off = false; ride.onCount = 0; say(tu('Back on route.'), { interrupt: true }); } }
-      if (ride.backCount === 3) say(tu('You may be riding the route backwards. Check the arrows on the line.'));
+      if (ride.backRun >= 150 && !ride.saidBack) { ride.saidBack = true; say(tu('You may be riding the route backwards. Check the arrows on the line.'), { interrupt: true }); }
     } else if (!ride.locked) {
       // not on the route yet: guide to the start instead of calling it "off route"
       var toStart = hav(c.latitude, c.longitude, R.track.lat[0], R.track.lng[0]);
@@ -916,7 +928,9 @@
     });
   }
   function checkFinish() {
-    if (ride.finished || R.distance - ride.d > 40 || ride.d < R.distance * 0.6) return;
+    // only once most of the ride has actually been ridden on this phone (Ben, 16/10/2026): a loop's finish is at the start,
+    // and some finish points sit on the first few hundred metres
+    if (ride.finished || R.distance - ride.d > 40 || ride.d < R.distance * 0.6 || (ride.ridden || 0) < R.distance * 0.75) return;
     ride.finished = true;
     say(tu('You have finished the ride. Thanks for riding with us.'), { interrupt: true });
     var f = R.stops.filter(function (s) { return s.kind === 'finish'; })[0];
@@ -1242,10 +1256,7 @@
             call.querySelector('span').textContent = fmt(tu('Call us on {phone}'), { phone: R.brand.phone });
             c.appendChild(call);
           }
-          area.appendChild(c);
-          var more = el('div', { class: 'rate-more' });
-          more.appendChild(el('div', { class: 'rate-small', text: tu('You can also leave a review.') }));
-          if (reviewLinks(more)) area.appendChild(more);
+          area.appendChild(c);   // no review links here: only happy riders are asked for a review (Ben, 16/10/2026)
         }
         var again = el('button', { class: 'rate-change', type: 'button', text: tu('Change my answer') });
         again.addEventListener('click', ask);
@@ -1364,7 +1375,6 @@
       toggle(tu('Natural voice'), tu("Clearer recorded voice. Turn off to use your phone's own voice."), 'natural', function () { stopSpeech(); precacheVoice(); });
       toggle(tu('Chime at turns'), tu('A short ding as you reach each turn'), 'chime', function () { if (S.chime) { var a = new Audio(CHIME_URL); try { var p = a.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} } });
       toggle(tu('Point of interest stories'), tu('Hear a short overview as you reach each point of interest'), 'stories', explainStories);
-      toggle(tu('Keep screen on'), tu('Stops the phone locking while you ride'), 'wake', function () { if (S.wake) requestWake(); else releaseWake(); });
       toggle(tu('Battery saver'), tu('Blacks out the map between turns'), 'saver', saverTick);
       vg.appendChild(cl);
       seg(group(tu('Map')), [[false, tu('Standard')], [true, tu('Satellite')]], S.sat, function (v) { setSatellite(v); });
