@@ -40,7 +40,7 @@ Object.entries(h.untranslatedTotal || {}).forEach(([l, n]) => { if (n) issues.pu
 // looks it up). Rulings he has made but Claude has not applied yet are listed as issues.
 const dirs = h.directions || [];
 const unruled = dirs.filter(x => !x.ruled);
-if (unruled.length) notes.push(`directions: ${unruled.length} flagged directions without a ruling (${['offTurn', 'noTurn', 'repeat', 'bare'].map(k => `${unruled.filter(x => x.issue === k).length} ${k}`).join(', ')}); add cards to the Directions Review page`);
+if (unruled.length) notes.push(`directions: ${unruled.length} flagged directions without a ruling (${['offTurn', 'noTurn', 'repeat', 'bare'].map(k => `${unruled.filter(x => x.issue === k).length} ${k}`).join(', ')}); add cards to the Directions Review page, https://claude.ai/artifact/N62KfoVeKyuq4DLfZ114qw (cards collection; a map picture per card uploaded as an asset; bare ones only where a named road or path is there and it differs from the road before the turn), and apply Ben's rulings from its rulings collection: move, reword or remove in Ride with GPS through Ben's session, republish the Experiences, record keep rulings in config/direction-rulings.json, then set applied on the card`);
 dirs.filter(x => x.ruled && x.ruled !== 'keep').forEach(x => issues.push(`direction ruled "${x.ruled}" but not applied yet: ${x.slug} at ${x.d} m, "${x.n}"`));
 const directionFlags = unruled;
 

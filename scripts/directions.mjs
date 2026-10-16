@@ -1,6 +1,6 @@
 // Direction check (Ben, 16/10/2026). The app says each direction twice: a warning ahead and "Turn right here ..." at the
 // turn itself, so a direction has to sit where the line actually turns. The build flags, per route:
-//   offTurn   a left or right direction placed after the turn in the line by more than 10 m (the "here" call would come
+//   offTurn   a left or right direction placed after the turn in the line by more than 15 m (the "here" call would come
 //             as or after riders reach the turn), or before it by more than 25 m (the call would come well before it)
 //   noTurn    a turn left or right with no turn in the line within 50 m of it (keep, bear and stay directions excepted:
 //             a fork or a path beside the road need not bend the line)
@@ -60,7 +60,7 @@ export function checkDirections(slug, route, rulings = {}) {
       if (!best || best.a < need) { if (!/^(keep|bear|stay|continue|follow|veer)\b/i.test(c.n) && !/roundabout/i.test(c.n)) push(c, i, 'noTurn', 'The line does not turn ' + (side < 0 ? 'left' : 'right') + ' within 50 m of this direction, so the "here" call may not match the real turn.'); }
       // only a real turn ("Turn left/right ...", not slight) is checked for position, and only when the sharpest bend
       // found is a clear turn away from the edge of the search (otherwise it is likely a different bend)
-      else if (!twin && /^turn\b/i.test(c.n) && !/slight/.test(c.t) && best.a >= 45 && Math.abs(best.x - c.d) < 42 && (best.x - c.d > 25 || c.d - best.x > 10)) {
+      else if (!twin && /^turn\b/i.test(c.n) && !/slight/.test(c.t) && best.a >= 45 && Math.abs(best.x - c.d) < 42 && (best.x - c.d > 25 || c.d - best.x > 15)) {
         const off = Math.round(best.x - c.d), tp = at(T, best.x);
         push(c, i, 'offTurn', `This direction sits ${Math.abs(off)} m ${off > 0 ? 'before' : 'after'} the turn in the line, so riders would hear "here" ${off > 0 ? 'too early' : 'too late'}.`,
           { turn: { d: Math.round(best.x), lat: +tp.lat.toFixed(6), lng: +tp.lng.toFixed(6), off } });
