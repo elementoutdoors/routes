@@ -1,4 +1,278 @@
 {
- "_about": "Ben's rulings on flagged directions from the Directions Review page (scripts/directions.mjs). Keyed by the flag key. ruling: keep (leave it as it is; not raised again while the wording stays the same), move (move it to the turn in the line), reword (use text), remove (delete the direction). Claude applies move, reword and remove in Ride with GPS, then sets applied.",
- "rulings": {}
+ "_about": "Ben's rulings on flagged directions from the Directions Review page (scripts/directions.mjs). Keyed by the flag key (slug|issue|direction|distance to 25 m). Only keep rulings are stored here: a kept flag is not raised again while the wording stays the same. Changes Ben rules (move, reword, remove, script) are made in Ride with GPS, so they need no entry. If a ride's distances change, the keys of later directions change too; re-key by matching the card's position.",
+ "rulings": {
+  "full-noosa|bare|Turn right|4475": {
+   "ruling": "keep",
+   "n": "Turn right",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "daad24b06ee"
+  },
+  "full-noosa|noTurn|Turn left onto Cardell Road and follow the path along the river|8125": {
+   "ruling": "keep",
+   "n": "Turn left onto Cardell Road and follow the path along the river",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d3eae8f92cb",
+   "note": "this is correct and make sure all rides use this description at this point"
+  },
+  "full-noosa|offTurn|Turn right onto Selkirk Drive|32425": {
+   "ruling": "keep",
+   "n": "Turn right onto Selkirk Drive",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "da0381f62c0"
+  },
+  "kids-and-family|bare|Turn right|4450": {
+   "ruling": "keep",
+   "n": "Turn right",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "daad24b06ee"
+  },
+  "kids-and-family|noTurn|Turn left onto Cardell Road and follow the path along the river|8500": {
+   "ruling": "keep",
+   "n": "Turn left onto Cardell Road and follow the path along the river",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d3eae8f92cb",
+   "note": "this is correct and make sure all rides use this description at this point"
+  },
+  "kids-and-family|bare|Turn left|15800": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d3be044ab8f"
+  },
+  "surf-beaches|bare|Turn left|425": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d4f0e8390d7"
+  },
+  "surf-beaches|bare|Turn left|8050": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d8c5f5cffc9"
+  },
+  "surf-beaches|bare|Turn sharp left|26775": {
+   "ruling": "keep",
+   "n": "Turn sharp left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d8ba72090df"
+  },
+  "mt-tinbeerwah|bare|Turn right|4475": {
+   "ruling": "keep",
+   "n": "Turn right",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "daad24b06ee"
+  },
+  "mt-tinbeerwah|noTurn|Turn left onto Cardell Road and follow the path along the river|26225": {
+   "ruling": "keep",
+   "n": "Turn left onto Cardell Road and follow the path along the river",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d3eae8f92cb",
+   "note": "this is correct and make sure all rides use this description at this point"
+  },
+  "mt-tinbeerwah|offTurn|Turn right onto Selkirk Drive|38850": {
+   "ruling": "keep",
+   "n": "Turn right onto Selkirk Drive",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "da0381f62c0"
+  },
+  "mt-tinbeerwah-one-way|bare|Turn left|10750": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "de0e5596638"
+  },
+  "mt-tinbeerwah-one-way|bare|Turn right|14150": {
+   "ruling": "keep",
+   "n": "Turn right",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "daad24b06ee"
+  },
+  "mt-tinbeerwah-one-way|noTurn|Turn left onto Cardell Road and follow the path along the river|17775": {
+   "ruling": "keep",
+   "n": "Turn left onto Cardell Road and follow the path along the river",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d3eae8f92cb",
+   "note": "this is correct and make sure all rides use this description at this point"
+  },
+  "mt-tinbeerwah-one-way|bare|Turn left|31350": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d3be044ab8f"
+  },
+  "north-shore|bare|Turn right|4475": {
+   "ruling": "keep",
+   "n": "Turn right",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "daad24b06ee"
+  },
+  "north-shore|noTurn|Turn right, leaving the main road, and continue straight towards the beach|14075": {
+   "ruling": "keep",
+   "n": "Turn right, leaving the main road, and continue straight towards the beach",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d0c164c5085",
+   "note": "the description is correct. the road goes left and the required direction is to turn off the road right"
+  },
+  "north-shore|noTurn|Turn left onto Cardell Road and follow the path along the river|27275": {
+   "ruling": "keep",
+   "n": "Turn left onto Cardell Road and follow the path along the river",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d3eae8f92cb",
+   "note": "this is correct and make sure all rides use this description at this point"
+  },
+  "north-shore|bare|Turn left|29625": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d6d8642ab8d"
+  },
+  "wooroi-and-wetlands|noTurn|Turn left into the Cooroy Noosa Road bike lane.|9500": {
+   "ruling": "keep",
+   "n": "Turn left into the Cooroy Noosa Road bike lane.",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d1f8f716747"
+  },
+  "wooroi-and-wetlands|noTurn|Turn left off Gyndier Drive onto the short dirt connector track.|10700": {
+   "ruling": "keep",
+   "n": "Turn left off Gyndier Drive onto the short dirt connector track.",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d0e7f0c87db"
+  },
+  "country-towns-and-canopies|bare|Turn slight left|10575": {
+   "ruling": "keep",
+   "n": "Turn slight left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d60e11f612b"
+  },
+  "everglades-vistas|noTurn|Turn right onto the Noosa Trail Network (through the gate)|7025": {
+   "ruling": "keep",
+   "n": "Turn right onto the Noosa Trail Network (through the gate)",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "dc1b1b79f4d",
+   "note": "this is correct, the gate comes of the side of the road and is the official mapped road corridor, the obvious road becomes a private driveay not shown on maps. the driection may not be in the exact spot but it is very close"
+  },
+  "forest-farms-and-noosa|bare|Turn slight left|22225": {
+   "ruling": "keep",
+   "n": "Turn slight left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d60e11f612b"
+  },
+  "rockpools-and-ridgelines-mtb|noTurn|Turn right onto the Noosa Trail Network|26125": {
+   "ruling": "keep",
+   "n": "Turn right onto the Noosa Trail Network",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d1eeffb5936"
+  },
+  "pomona-to-noosa|bare|Turn left|28475": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "de0e5596638"
+  },
+  "treetops-to-tewantin|bare|Turn left|42650": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "de0e5596638"
+  },
+  "the-cooroora-traverse|bare|Turn slight left|10575": {
+   "ruling": "keep",
+   "n": "Turn slight left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d60e11f612b"
+  },
+  "the-cooroora-traverse|bare|Turn left|43475": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d9f849dabf3"
+  },
+  "mary-valley-bound|bare|Turn left|54950": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "de0e5596638"
+  },
+  "magic-mary|bare|Turn left|79975": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "de0e5596638"
+  },
+  "through-lake-country|bare|Keep right|106375": {
+   "ruling": "keep",
+   "n": "Keep right",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d2e3fd75ad5"
+  },
+  "through-lake-country|bare|Turn left|111225": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "de0e5596638"
+  },
+  "valleys-and-vistas|bare|Keep right|94700": {
+   "ruling": "keep",
+   "n": "Keep right",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d2e3fd75ad5"
+  },
+  "valleys-and-vistas|bare|Turn left|99575": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "de0e5596638"
+  },
+  "rockpools-and-ridgelines-gravel|noTurn|Turn right through the gate onto the Noosa Trail Network|7000": {
+   "ruling": "keep",
+   "n": "Turn right through the gate onto the Noosa Trail Network",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d83b9a570df"
+  },
+  "rockpools-and-ridgelines-gravel|bare|Turn left|99125": {
+   "ruling": "keep",
+   "n": "Turn left",
+   "by": "Ben",
+   "date": "2026-10-16",
+   "card": "d9f849dabf3"
+  }
+ }
 }
