@@ -1,5 +1,5 @@
 {
-  "_about": "Ride counts (17/10/2026). Phones send anonymous open and finish ticks here. Write only: the counts can only be read with the private read key, which is kept in the \"Ride Guide settings apply\" scheduled task, never in this repo. The counter is the Apps Script project \"Ride Guide ride counter\" bound to the Google Sheet \"Ride Guide ride counts\" (admin@elementoutdoors.com.au); its code is scripts/ride-counts.gs.",
+  "_about": "Ride counts (17/10/2026). Phones send anonymous open and finish ticks here. Opening the address gives the totals per route (open on purpose, Ben 17/10/2026: route names and numbers only); the sheet itself stays private. The counter is the Apps Script project \"Ride Guide ride counter\" bound to the Google Sheet \"Ride Guide ride counts\" (admin@elementoutdoors.com.au); its code is scripts/ride-counts.gs.",
   "url": "https://script.google.com/macros/s/AKfycbzw60LXSpFHTb4m22Fk_RkVdOZZWsVZ0opl0us4vQNNRD7BbA8vveND-6B4A4syWy5_8Q/exec",
   "sheet": "https://docs.google.com/spreadsheets/d/1vcfXT8p5yyErpdhGjN92gQmcWft9ElpMwNUCUsf-qy8/edit"
 }

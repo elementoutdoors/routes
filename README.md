@@ -41,8 +41,8 @@ anonymous tick the first time a route is opened on a phone, and one when a ride 
 ridden on that phone). A tick is the route, the event, the date and a random id: nothing about the rider. Ticks wait on
 the phone until there is signal; staff check links and test drives never count. They go to the Apps Script counter in
 `config/counter.json` (code: `scripts/ride-counts.gs`), which writes them to the Google Sheet "Ride Guide ride counts"
-and counts each id once. Reading the counts needs a private key held only by the "Ride Guide settings apply" task, which
-copies them to the settings page nightly. The weekly route check (`scripts/check.mjs`) confirms the counter is in the app
+and counts each id once. The counter's web address gives the totals per route (open on purpose, Ben 17/10/2026: route names
+and numbers only, the sheet stays private); the "Ride Guide settings apply" task copies them to the settings page nightly. The weekly route check (`scripts/check.mjs`) confirms the counter is in the app
 and answering.
 
 ## The Story Library

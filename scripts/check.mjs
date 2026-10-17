@@ -147,7 +147,8 @@ else {
     const cu = JSON.parse(fs.readFileSync('config/counter.json', 'utf8')).url;
     const r = await fetch(cu, { redirect: 'follow' });
     const j = r.ok ? await r.json().catch(() => null) : null;
-    if (!j || j.error !== 'not allowed') issues.push(`ride counts: the counter is not answering as expected (${r.status})`);
+    if (!j || typeof j.routes !== 'object') issues.push(`ride counts: the counter is not answering as expected (${r.status})`);
+    else notes.push(`ride counts: ${Object.values(j.routes).reduce((a, c) => a + (c.rides || 0), 0)} rides counted so far`);
   } catch (e) { issues.push('ride counts: the counter could not be reached (' + (e.message || e) + ')'); }
 }
 if (h.problems.some(p => /^settings:/.test(p))) notes.push('a value in config/settings.json was out of range and the default was used');

@@ -3,24 +3,16 @@
  *
  * Bound to the Google Sheet "Ride Guide ride counts" (admin@elementoutdoors.com.au) and deployed as a web app
  * (execute as me, anyone can call). This copy in the repo is for reference; the live code is in the sheet's
- * Extensions > Apps Script. The repo never holds the read key.
+ * Extensions > Apps Script.
  *
  * @OnlyCurrentDoc  (the script can reach this one sheet and nothing else in Drive)
  *
  * POST: phones send a JSON list of ticks {s: route slug, e: "open" | "finish", d: "YYYY-MM-DD", id}. Each valid tick is
  *       added as one row. Nothing else can be written, and nothing is ever read back through POST.
- * GET ?key=<read key>: the counts per route (unique ids only, so resent ticks never count twice). Without the key: nothing.
+ * GET: the totals per route only (unique ids only, so resent ticks never count twice). Open on purpose (Ben, 17/10/2026):
+ *      route names and ride numbers, nothing about any rider, and the sheet itself stays private.
  */
 var SHEET = 'Ticks';
-
-// Run once from the editor: makes the private read key (kept in Script Properties, never in code) and shows it in the log.
-function makeReadKey() {
-  var props = PropertiesService.getScriptProperties();
-  var key = props.getProperty('READ_KEY');
-  if (!key) { key = Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, ''); props.setProperty('READ_KEY', key); }
-  sheet_();
-  Logger.log(key);
-}
 
 function sheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -65,8 +57,6 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  var readKey = PropertiesService.getScriptProperties().getProperty('READ_KEY') || '';
-  if (!e || !e.parameter || readKey.length < 20 || e.parameter.key !== readKey) return out_({ error: 'not allowed' });
   var tz = 'Australia/Brisbane';
   var todayStr = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd');
   var since = Utilities.formatDate(new Date(Date.now() - 30 * 86400000), tz, 'yyyy-MM-dd');
