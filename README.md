@@ -34,6 +34,10 @@ phone's browser with the map, spoken and written directions, stops and partner o
 - An offer can be set to "finish" (`showAt`): it is not shown at the start, comes up in the last 1.5 km and sits on the
   finish card. Used for Land and Sea Brewery, over the road from the shop.
 
+## Staff ride list
+
+Each build also publishes `rides.json`: every live ride's name, description, brand, distance, climbing, stops, cautions and single track sections, with no keys, codes or route line. The EO Crew staff app reads it for the Ride Guide manual (EO-HI-10), so a ride added here shows up in the manual by itself. Who a ride suits is written in the ride's Ride with GPS description.
+
 ## Ride counts
 
 An indicative count of how often each map is used, shown on the Ride Guide Settings page (17/10/2026). The app sends one

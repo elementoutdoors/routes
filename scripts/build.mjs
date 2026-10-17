@@ -591,6 +591,20 @@ async function main() {
   } catch (e) { health.problems.push('voice step failed: ' + (e.message || e)); fs.writeFileSync(path.join(dist, 'voice.json'), '{}'); }
   for (const b of built) fs.writeFileSync(path.join(dist, 'r', `${b.key}.json`), JSON.stringify(b.route));
 
+  // rides.json: a public, staff facing list of every live ride (no keys, codes or track), read by the
+  // EO Crew staff app's Ride Guide manual (EO-HI-10) so a new ride shows up there by itself.
+  fs.writeFileSync(path.join(dist, 'rides.json'), JSON.stringify({
+    built: health.built,
+    rides: built.map(({ route: r }) => ({
+      slug: r.slug, name: r.name, description: r.description || '', brand: (r.brand && r.brand.id) || '',
+      activity: r.activity, distance_km: Math.round((r.distance || 0) / 100) / 10, gain_m: r.gain || 0,
+      stops: r.stops.filter(s => !['caution', 'finish', 'toilet'].includes(s.kind)).map(s => s.name),
+      cautions: r.stops.filter(s => s.kind === 'caution').map(s => s.name),
+      single_track: (r.loose || []).map(([a, b]) => `${(a / 1000).toFixed(1)} to ${(b / 1000).toFixed(1)} km`),
+      stories: !!r.stories, gpx: !!r.gpx, updated: r.updated || null,
+    })),
+  }, null, 1));
+
   const blog = await watchBlogs(storyReport);
   health.stories = Object.assign({}, storyReport, { linked: [...storyReport.linked].sort(), missing: [...storyReport.missing].sort() });
 
