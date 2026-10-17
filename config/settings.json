@@ -33,7 +33,13 @@
   },
 
   "speeds": {
-    "_help": "Average km/h used for riding time estimates (defaults: ebike 15, bike 13, walk 4.5, kayak 5).",
+    "_help": "Average km/h used for riding time estimates, by ride type (each route's type is in routes.json; Ben 17/10/2026: different rides need different speeds). Defaults: scenic 15, mtb 12, gravel 18, road 25, hinterlandMtb 15, hinterlandGravel 20, all 3 to 40. ebike 15 and bike 13 are only for a route with no type; walk 4.5 and kayak 5 for walking and paddle routes.",
+    "scenic": 15,
+    "mtb": 12,
+    "gravel": 18,
+    "road": 25,
+    "hinterlandMtb": 15,
+    "hinterlandGravel": 20,
     "ebike": 15,
     "bike": 13,
     "walk": 4.5,

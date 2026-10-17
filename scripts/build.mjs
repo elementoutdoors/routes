@@ -46,7 +46,8 @@ const SETTINGS_RULES = {
   offRoute: { metres: [50, 25, 150], readings: [3, 1, 10], repeatSeconds: [60, 20, 600] },
   stops: { triggerMetres: [60, 20, 200], cautionWarningMetres: [90, 30, 300] },
   screen: { keepScreenOn: [true], batterySaver: [false], readStoriesAloud: [true], wakeBeforeTurnMetres: [250, 80, 1000], blackoutAfterSeconds: [20, 5, 120] },
-  speeds: { ebike: [15, 3, 40], bike: [13, 3, 40], walk: [4.5, 1, 10], kayak: [5, 1, 15] }
+  speeds: { scenic: [15, 3, 40], mtb: [12, 3, 40], gravel: [18, 3, 40], road: [25, 3, 40], hinterlandMtb: [15, 3, 40], hinterlandGravel: [20, 3, 40],
+    ebike: [15, 3, 40], bike: [13, 3, 40], walk: [4.5, 1, 10], kayak: [5, 1, 15] }
 };
 function loadSettings(problems) {
   const raw = readJson('config/settings.json', {});
@@ -339,7 +340,7 @@ function transform(entry, r) {
   const brand = Object.assign({ id: brandId }, brands[brandId]);
   const version = sha(JSON.stringify([T.d, T.lat, cues.map(c => c.d), stops.map(s => s.d)])).slice(0, 8);
   const route = {
-    slug: entry.slug, name: clean(r.name), description: clean(r.description), activity: entry.activity || 'ebike',
+    slug: entry.slug, name: clean(r.name), description: clean(r.description), activity: entry.activity || 'ebike', type: entry.type || null,
     distance, gain: Math.round(r.elevation_gain || 0), brand, version,
     hero: r.highlighted_photo_id ? photoUrl(r.highlighted_photo_id) : null,
     track: T, cues, stops, offers, loose, updated: r.updated_at || null, rwgps: entry.rwgps
@@ -509,6 +510,8 @@ async function main() {
     // set on the Ride Guide Settings page. A ride without its own value uses screen.readStoriesAloud and is reported.
     if (typeof entry.stories === 'boolean') route.stories = entry.stories;
     else { route.stories = settings.screen.readStoriesAloud; if (entry.active !== false) health.problems.push(`${entry.slug}: no point of interest stories setting in config/routes.json, using ${route.stories ? 'on' : 'off'}`); }
+    // Ride type sets the speed behind the riding time (Ben, 17/10/2026). A ride without a known type is reported.
+    if (!(route.type && settings.speeds[route.type]) && entry.active !== false) health.problems.push(`${entry.slug}: no ride type in config/routes.json (scenic, mtb, gravel, road, hinterlandMtb or hinterlandGravel), riding time uses the ${route.activity} speed`);
     route.gpx = null;
     if (entry.gpx) {
       const gname = `g/${gpxKey(entry.slug, entry.rev)}.gpx`;
@@ -597,7 +600,7 @@ async function main() {
     built: health.built,
     rides: built.map(({ route: r }) => ({
       slug: r.slug, name: r.name, description: r.description || '', brand: (r.brand && r.brand.id) || '',
-      activity: r.activity, distance_km: Math.round((r.distance || 0) / 100) / 10, gain_m: r.gain || 0,
+      activity: r.activity, type: r.type || '', riding_minutes: Math.round(r.distance / 1000 / (r.settings.speeds[r.type] || r.settings.speeds[r.activity] || r.settings.speeds.ebike) * 60), distance_km: Math.round((r.distance || 0) / 100) / 10, gain_m: r.gain || 0,
       stops: r.stops.filter(s => !['caution', 'finish', 'toilet'].includes(s.kind)).map(s => s.name),
       cautions: r.stops.filter(s => s.kind === 'caution').map(s => s.name),
       single_track: (r.loose || []).map(([a, b]) => `${(a / 1000).toFixed(1)} to ${(b / 1000).toFixed(1)} km`),

@@ -95,6 +95,8 @@
     return fmt(tu('{h} h {m} min'), { h: h, m: mm });
   }
   var SPEED = { ebike: 15 / 3.6, bike: 13 / 3.6, walk: 4.5 / 3.6, kayak: 5 / 3.6 };
+  // riding speed for this ride's type (scenic, mtb, gravel, road, hinterlandMtb, hinterlandGravel; Ben 17/10/2026), then its activity
+  function rideSpeed() { return (R && R.type && SPEED[R.type]) || (R && SPEED[R.activity]) || SPEED.ebike; }
 
   // ---------- geo ----------
   var DEG = Math.PI / 180;
@@ -985,7 +987,7 @@
     $('remain').innerHTML = '';
     $('remain').appendChild(document.createTextNode(distText(rem) + ' '));
     $('remain').appendChild(el('span', { style: 'font-size:15px;font-weight:600;color:var(--muted)', text: tu('to go') }));
-    $('remain-sub').textContent = fmt(tu('About {time} at an easy pace'), { time: timeText(rem / (SPEED[R.activity] || SPEED.ebike)) });
+    $('remain-sub').textContent = fmt(tu('About {time} at an easy pace'), { time: timeText(rem / rideSpeed()) });
     $('progress-bar').style.width = Math.min(100, ride.d / R.distance * 100).toFixed(1) + '%';
     card.classList.remove('off', 'done');
     var i = nextCueIndex();
@@ -1572,7 +1574,7 @@
     $('route-name').textContent = tc(R.name);
     $('st-dist').textContent = S.units === 'imperial' ? (R.distance / 1609.344).toFixed(1) + ' mi' : (R.distance / 1000).toFixed(1) + ' km';
     $('st-gain').textContent = climbText(R.gain);
-    $('st-time').textContent = timeText(R.distance / (SPEED[R.activity] || SPEED.ebike));
+    $('st-time').textContent = timeText(R.distance / rideSpeed());
     var stops = R.stops.filter(function (s) { return (s.kind !== 'caution' || s.text) && s.kind !== 'finish'; }).length;
     $('route-stops-n').textContent = fmt(tu(stops === 1 ? '{n} stop' : '{n} stops'), { n: stops });
     var desc = tc(R.description || '');
