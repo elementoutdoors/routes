@@ -34,6 +34,17 @@ phone's browser with the map, spoken and written directions, stops and partner o
 - An offer can be set to "finish" (`showAt`): it is not shown at the start, comes up in the last 1.5 km and sits on the
   finish card. Used for Land and Sea Brewery, over the road from the shop.
 
+## Ride counts
+
+An indicative count of how often each map is used, shown on the Ride Guide Settings page (17/10/2026). The app sends one
+anonymous tick the first time a route is opened on a phone, and one when a ride reaches the finish card (75% of the ride
+ridden on that phone). A tick is the route, the event, the date and a random id: nothing about the rider. Ticks wait on
+the phone until there is signal; staff check links and test drives never count. They go to the Apps Script counter in
+`config/counter.json` (code: `scripts/ride-counts.gs`), which writes them to the Google Sheet "Ride Guide ride counts"
+and counts each id once. Reading the counts needs a private key held only by the "Ride Guide settings apply" task, which
+copies them to the settings page nightly. The weekly route check (`scripts/check.mjs`) confirms the counter is in the app
+and answering.
+
 ## The Story Library
 
 Every story, blog section, pin line, kayak talking point and wildlife card is written once, in `library/`. The build reads it, publishes it as `library.json` (read by the EO Crew staff app) and `library.html` (to read), and lists any live blog section or Ride with GPS pin that differs from it. See `library/README.md`.
