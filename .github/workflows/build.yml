@@ -52,6 +52,27 @@ jobs:
           git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:voice-cache
           echo "Saved $(find . -name '*.mp3' | wc -l) recordings"
 
+      # Staff screenshots for the EO Crew Ride Guide manual: taken on a phone-sized browser at 3am, on every change and on
+      # demand, locked with EO Crew's public key (scripts/staff_bundle.mjs) and kept on the staff-screens branch, so the
+      # hourly builds publish the last set without retaking them. A failure keeps the last set and never stops the build.
+      - name: Get staff screenshots
+        run: |
+          if git fetch --depth=1 origin staff-screens:staff-screens 2>/dev/null; then git worktree add .staff-screens staff-screens; else mkdir -p .staff-screens; fi
+          if [ -f .staff-screens/staff-screens.enc.json ]; then cp .staff-screens/staff-screens.enc.json dist/; fi
+      - name: Take staff screenshots
+        if: github.event_name != 'schedule' || github.event.schedule == '7 17 * * *' || hashFiles('.staff-screens/staff-screens.enc.json') == ''
+        continue-on-error: true
+        run: |
+          pip install -q playwright==1.47.0 && python3 -m playwright install --with-deps chromium > /dev/null
+          (python3 -m http.server 8765 -d dist > /dev/null 2>&1 &) && sleep 2
+          python3 scripts/staff_screens.py http://localhost:8765/ /tmp/screens
+          node scripts/staff_bundle.mjs screens /tmp/screens dist/staff-screens.enc.json
+          mkdir -p /tmp/ss && cp dist/staff-screens.enc.json /tmp/ss/ && cd /tmp/ss
+          git init -q -b staff-screens
+          git config user.name "Ride Guide build"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "Staff screenshots $(date -u +%FT%H:%MZ)"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:staff-screens
+
       - name: Check the build has every route
         run: |
           test -f dist/index.html

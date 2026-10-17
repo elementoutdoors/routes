@@ -15,6 +15,7 @@ import { checkDirections } from './directions.mjs';
 import { fp, blogList, placeOf, stopId, blogSections, readBlogs, comparePlaces, holdStops } from './places.mjs';
 import { loadLibrary, storiesFrom, recordFrom, compiled, generatedDrift, lint } from './library.mjs';
 import { libraryPage } from './library-page.mjs';
+import { writeStaffFile } from './staff_bundle.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const OFFLINE = process.argv.includes('--offline');
@@ -604,7 +605,7 @@ async function main() {
       stops: r.stops.filter(s => !['caution', 'finish', 'toilet'].includes(s.kind)).map(s => s.name),
       cautions: r.stops.filter(s => s.kind === 'caution').map(s => s.name),
       single_track: (r.loose || []).map(([a, b]) => `${(a / 1000).toFixed(1)} to ${(b / 1000).toFixed(1)} km`),
-      stories: !!r.stories, gpx: !!r.gpx, updated: r.updated || null,
+      stories: !!r.stories, gpx: !!r.gpx, updated: r.updated || null, test: /test/i.test(r.slug),
     })),
   }, null, 1));
 
@@ -672,6 +673,9 @@ async function main() {
   fs.mkdirSync(path.join(ROOT, 'qr'), { recursive: true });
   fs.writeFileSync(path.join(ROOT, 'qr', 'links.json'), JSON.stringify(links, null, 1));
   fs.writeFileSync(path.join(ROOT, 'qr', 'codes.json'), JSON.stringify(codes, null, 1));
+  // locked staff file for EO Crew (route codes and links; only EO Crew's server can open it, see staff_bundle.mjs)
+  { const why = writeStaffFile(dist, built, links, codes, health.built); if (why) console.warn(why); }
+  // (the locked staff screenshots are added to dist by the workflow, from the staff-screens branch)
 
   console.log(JSON.stringify({ build, routes: health.routes.map(r => [r.slug, r.ok, r.source, r.cues, r.stops, r.offers, r.warnings]), problems: health.problems, untranslated: health.untranslatedTotal }, null, 1));
   if (health.routes.some(r => !r.ok)) process.exitCode = 2;

@@ -36,7 +36,22 @@ phone's browser with the map, spoken and written directions, stops and partner o
 
 ## Staff ride list
 
-Each build also publishes `rides.json`: every live ride's name, description, brand, distance, climbing, stops, cautions and single track sections, with no keys, codes or route line. The EO Crew staff app reads it for the Ride Guide manual (EO-HI-10), so a ride added here shows up in the manual by itself. Who a ride suits is written in the ride's Ride with GPS description.
+Each build also publishes `rides.json`: every live ride's name, description, brand, type, riding time, distance, climbing, stops, cautions and single track sections (and `test` for a test route), with no keys, codes or route line. The EO Crew staff app reads it for the Ride Guide manual (EO-HI-10), so a ride added here shows up in the manual by itself. Who a ride suits is written in the ride's Ride with GPS description.
+
+## Staff file for EO Crew (codes, QR codes and screenshots)
+
+The EO Crew Ride Guide manual (EO-HI-10) shows every ride's QR code, route code and link, and six Ride Guide screenshots,
+kept up to date by themselves. Route codes are never public, so these go out locked:
+
+- Each build writes `staff.enc.json` (every live ride's name, brand, type, route code and link) and the workflow adds
+  `staff-screens.enc.json` (six phone screenshots of the Kids & Family ride, retaken at 3am, on every change and on
+  demand by `scripts/staff_screens.py`, kept on the `staff-screens` branch). Both are locked with EO Crew's public key,
+  `config/staff-key.pem` (`scripts/staff_bundle.mjs`): a public key can only lock, so only EO Crew's server can open them.
+- EO Crew makes the QR codes itself from the links. Its key lives only in EO Crew; to replace it, delete EO Crew's
+  RideGuideKey record and copy the new key from https://element-crew-connect.base44.app/functions/rideGuide into
+  `config/staff-key.pem`.
+- Check without opening anything: https://element-crew-connect.base44.app/functions/rideGuide?check=1 gives counts only.
+- A screenshot failure keeps the last set and never stops the build.
 
 ## Ride counts
 
