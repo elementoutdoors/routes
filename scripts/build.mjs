@@ -399,12 +399,18 @@ async function fetchLive(key) {
   try { const r = await fetch(`${LIVE_BASE}r/${key}.json`, { cache: 'no-store' }); return r.ok ? await r.json() : null; } catch (e) { return null; }
 }
 
+// Ride counts (17/10/2026): the address phones send their anonymous open and finish ticks to (config/counter.json).
+// It is a write-only address; reading the counts needs a key that is never in this repo.
+function countUrl() {
+  try { const u = JSON.parse(fs.readFileSync(path.join(ROOT, 'config/counter.json'), 'utf8')).url || ''; return /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(u) ? u : ''; } catch (e) { return ''; }
+}
+
 function copyDir(src, dst, build) {
   fs.mkdirSync(dst, { recursive: true });
   for (const f of fs.readdirSync(src)) {
     const s = path.join(src, f), d = path.join(dst, f);
     if (fs.statSync(s).isDirectory()) { copyDir(s, d, build); continue; }
-    if (/\.(html|js|css|webmanifest)$/.test(f)) fs.writeFileSync(d, fs.readFileSync(s, 'utf8').replaceAll('__BUILD__', build));
+    if (/\.(html|js|css|webmanifest)$/.test(f)) fs.writeFileSync(d, fs.readFileSync(s, 'utf8').replaceAll('__BUILD__', build).replaceAll('__COUNT_URL__', countUrl()));
     else fs.copyFileSync(s, d);
   }
 }
@@ -428,6 +434,8 @@ async function main() {
   fs.writeFileSync(path.join(dist, 'ui.json'), JSON.stringify(uiOut));
 
   const health = { built: now.toISOString(), build, routes: [], offers: [], problems: [] };
+  health.counter = { on: !!countUrl() };
+  if (!countUrl()) health.problems.push('ride counts: config/counter.json has no valid counter address, so rides are not being counted');
   loadCueWording(ROOT);
   const settings = loadSettings(health.problems);
   health.settings = settings;

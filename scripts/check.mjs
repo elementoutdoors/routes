@@ -7,6 +7,7 @@
 // Version 6 (11/10/2026): also checks the places record (health.json "places"): every blog section and stop summary that differs from the agreed text, with before and after in "placeChanges" for the weekly check to decide; a story whose blog change is waiting on Ben is a note, not an issue.
 // Version 5 (11/10/2026): also checks the full stories (every linked place has one, none out of step with its blog section, the blogs can be read) and listen.html.
 // Version 4 (10/10/2026): also checks the natural voice (recording running, inside the monthly cap, recordings load). v3: every typed route code. v2: real browser user agent, redirects to another page count as broken, 403 noted not failed.
+// Version 9 (17/10/2026): also checks the ride counter is built into the app and answering.
 // Usage: node scripts/check.mjs [siteBase]   (route links are read from qr/links.json when present)
 import fs from 'node:fs';
 import { loadLibrary, plan as libraryPlan } from './library.mjs';
@@ -138,6 +139,16 @@ if (fs.existsSync('qr/codes.json') && fs.existsSync('qr/links.json')) {
       if (!q[slug] || k !== q[slug].split('#')[1]) issues.push(`route code ${code} for ${slug} does not open its route`);
     } catch (e) { issues.push(`route code ${code} for ${slug} could not be checked`); }
   }
+}
+// ride counts (17/10/2026): the build put the counter address in the app, and the counter answers
+if (!(h.counter && h.counter.on)) issues.push('ride counts: the app has no counter address, so rides are not being counted (config/counter.json)');
+else {
+  try {
+    const cu = JSON.parse(fs.readFileSync('config/counter.json', 'utf8')).url;
+    const r = await fetch(cu, { redirect: 'follow' });
+    const j = r.ok ? await r.json().catch(() => null) : null;
+    if (!j || j.error !== 'not allowed') issues.push(`ride counts: the counter is not answering as expected (${r.status})`);
+  } catch (e) { issues.push('ride counts: the counter could not be reached (' + (e.message || e) + ')'); }
 }
 if (h.problems.some(p => /^settings:/.test(p))) notes.push('a value in config/settings.json was out of range and the default was used');
 

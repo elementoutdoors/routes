@@ -597,6 +597,44 @@
   }
   // When the app comes back to the screen (a home screen app can sit in the background for days), and no ride is under
   // way, fetch the latest route and recordings, and load a new version of the app if one has been published.
+  // ---------- ride counts (Ben, 17/10/2026) ----------
+  // An indicative count for the Ride Guide Settings page: one tick the first time a route is opened on a phone, and one
+  // when a ride reaches the finish card (75% ridden). Each tick is the route, the event, the date and a random id only:
+  // nothing about the rider. Ticks wait on the phone until there is signal. Staff check links and test drives never count.
+  // The counter (a Google Apps Script bound to one sheet) counts each id once, so a resent tick is harmless.
+  var COUNT_URL = '__COUNT_URL__';
+  function rid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+  function today() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  var countBusy = false;
+  function sendCounts() {
+    var q = lsGet('rg.countq', []);
+    if (countBusy || !q.length || !navigator.onLine || !/^https:/.test(COUNT_URL)) return;
+    countBusy = true;
+    var batch = q.slice(0, 20);
+    fetch(COUNT_URL, { method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify(batch) }).then(function () {
+      var ids = batch.map(function (t) { return t.id; });
+      lsSet('rg.countq', lsGet('rg.countq', []).filter(function (t) { return ids.indexOf(t.id) < 0; }));
+      countBusy = false;
+      if (q.length > batch.length) sendCounts();
+    }, function () { countBusy = false; });
+  }
+  function countTick(event, id) {
+    if (CHECK || ride.sim || !R || !R.slug) return;
+    var q = lsGet('rg.countq', []);
+    if (q.some(function (t) { return t.id === id; })) return;
+    q.push({ s: R.slug, e: event, d: today(), id: id });
+    lsSet('rg.countq', q.slice(-200));
+    sendCounts();
+  }
+  function countOpen() {
+    if (CHECK || !R) return;
+    var seen = lsGet('rg.counted', {});
+    if (seen[R.slug]) return;
+    seen[R.slug] = rid(); lsSet('rg.counted', seen);
+    countTick('open', 'o' + seen[R.slug]);
+  }
+  window.addEventListener('online', sendCounts);
+
   // Never during a ride: nothing changes under a rider.
   var lastFresh = Date.now();
   function refreshFromServer() {
@@ -656,14 +694,14 @@
     paused: false, cueState: {}, shown: {}, watch: null, fix: null, backCount: 0, lastTouch: Date.now(), sim: null, finished: false };
 
   function progressKey() { return 'rg.progress.' + R.key; }
-  function saveProgress() { if (ride.sim) return; lsSet(progressKey(), { d: ride.d, ts: Date.now(), shown: ride.shown, cueState: ride.cueState, version: R.version, paused: ride.paused, ridden: ride.ridden || 0 }); }
+  function saveProgress() { if (ride.sim) return; lsSet(progressKey(), { d: ride.d, ts: Date.now(), shown: ride.shown, cueState: ride.cueState, version: R.version, paused: ride.paused, ridden: ride.ridden || 0, rid: ride.rid }); }
 
   function startRide(resume) {
     ride.active = true; ride.finished = false; ride.follow = true; ride.off = false; ride.offCount = 0; ride.onCount = 0; ride.backCount = 0;
     var p = resume ? lsGet(progressKey(), null) : null;
     ride.prevD = null; ride.saidStart = false; ride.paused = false;
-    if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; ride.paused = !!p.paused; ride.ridden = p.ridden || 0; ride.resumed = true; }
-    else { ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.locked = false; ride.ridden = 0; ride.resumed = false; }
+    if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; ride.paused = !!p.paused; ride.ridden = p.ridden || 0; ride.resumed = true; ride.rid = p.rid || rid(); }
+    else { ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.locked = false; ride.ridden = 0; ride.resumed = false; ride.rid = rid(); }
     ride.backRun = 0; ride.saidBack = false;
     show('ride');
     updateFollowBtn(); updateVoiceBtn();
@@ -735,7 +773,7 @@
     // Resumed an earlier ride but standing at the start (a loop's start and finish are the same spot): start fresh,
     // so an old ride left near the finish can never end the new one straight away (Ben, 16/10/2026).
     if (cand.list.length && ride.resumed && !ride.locked && ride.d > R.distance * 0.5 && cand.list.some(function (p) { return p.d < 300; })) {
-      ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.ridden = 0; ride.resumed = false;
+      ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.ridden = 0; ride.resumed = false; ride.rid = rid();
     }
     if (cand.list.length) {
       var expect = ride.d + 15;
@@ -935,6 +973,7 @@
     say(tu('You have finished the ride. Thanks for riding with us.'), { interrupt: true });
     var f = R.stops.filter(function (s) { return s.kind === 'finish'; })[0];
     openFinish(f);
+    countTick('finish', 'f' + (ride.rid || rid()));
     lsDel(progressKey());
   }
 
@@ -1575,6 +1614,7 @@
     if (CHECK) openCheck();
     saveOffline();
     precacheVoice();
+    countOpen();
   }
 
   // ---------- in-app page viewer (the ride keeps running underneath) ----------
@@ -1731,6 +1771,7 @@
 
   function boot() {
     wire();
+    setTimeout(sendCounts, 3000);
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js?v=' + BUILD).catch(function () {});
     var key = keyFromUrl();
     if (key) scrubUrl();
