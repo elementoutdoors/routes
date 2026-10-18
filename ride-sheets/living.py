@@ -252,3 +252,17 @@ def seal_json(obj, out):
         env = json.load(open(tmp))
         assert env.get('v') == 1 and env.get('key') and env.get('data'), 'locked file looks wrong'
         os.replace(tmp, out)
+
+
+def seal_v2(pdf, meta, out_enc, out_key):
+    """Lock a big PDF in envelope v2 (scripts/staff_bundle.mjs): raw AES-256-GCM ciphertext plus a small key file. The
+    node step proves the round trip with a throwaway key pair before it writes anything."""
+    with tempfile.TemporaryDirectory() as td:
+        mp = os.path.join(td, 'meta.json'); json.dump(meta, open(mp, 'w'))
+        te, tk = out_enc + '.tmp', out_key + '.tmp'
+        subprocess.run(['node', os.path.join(ROOT, 'scripts', 'staff_bundle.mjs'), 'v2', pdf, mp, te, tk], check=True)
+        k = json.load(open(tk))
+        assert k.get('v') == 2 and k.get('key') and k.get('iv') and k.get('bytes') == os.path.getsize(pdf), 'key file looks wrong'
+        assert os.path.getsize(te) == os.path.getsize(pdf) + 16, 'ciphertext is the wrong size'
+        assert k['sha256'] == hashlib.sha256(open(pdf, 'rb').read()).hexdigest(), 'sha256 differs'
+        os.replace(te, out_enc); os.replace(tk, out_key)

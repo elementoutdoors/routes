@@ -87,7 +87,8 @@ It runs after every build and keeps itself up to date:
   place names are added to `ride-sheets/rides.py`.
 
 Route codes and links are never public, so the sheets are only published locked with EO Crew's public key:
-`booklet.enc.json` (the whole booklet, for printing), `ride-sheets/<slug>.enc.json` (one lighter sheet each, for the
+`booklet.pdf.enc` with `booklet.key.json` (the whole booklet, for printing; envelope v2: the PDF's raw AES-GCM
+ciphertext and a small key file, so EO Crew can open it without holding it twice in memory), `ride-sheets/<slug>.enc.json` (one lighter sheet each, for the
 iPad) and `ride-sheets/index.enc.json` (a small list for EO Crew: pages, dates, sizes, photos, sheets held back), next to
 `staff.enc.json`. A sheet that fails its checks (QR code, route code, a flat elevation profile on a ride that climbs) is
 held back and the ride keeps its previous sheet. The plain sheets are never published or committed. The 3D maps, photos, `manifest.json` (what each

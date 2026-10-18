@@ -75,7 +75,7 @@ jobs:
 
       # Ride sheets and rides booklet (ride-sheets/build.py): one A4 sheet per live ride with its 3D map, photo, riding time
       # and Ride Guide QR code, and the combined booklet, kept up to date by themselves. Published only locked with EO
-      # Crew's public key (booklet.enc.json, ride-sheets/<slug>.enc.json); the plain sheets never leave the runner. The 3D
+      # Crew's public key (booklet.pdf.enc with booklet.key.json, ride-sheets/<slug>.enc.json); the plain sheets never leave the runner. The 3D
       # maps, photos, manifest and last locked files are kept in the Actions cache (not public). Every step here is allowed
       # to fail: the last good booklet is kept and the site build carries on.
       - name: Restore ride sheet maps and photos

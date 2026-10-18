@@ -55,3 +55,35 @@ if (process.argv[2] === 'json') {
   fs.writeFileSync(outFile, JSON.stringify(seal(JSON.parse(fs.readFileSync(inFile, 'utf8')))));
   console.log(`sealed ${path.basename(inFile)} into ${outFile}`);
 }
+
+// Envelope v2 for big files (the rides booklet, ride-sheets/build.py): the PDF's raw AES-256-GCM ciphertext with the
+// 16 byte tag on the end (as WebCrypto gives it), no base64, plus a small key file with the AES key wrapped by EO Crew's
+// public key (RSA-OAEP, SHA-256). EO Crew can stream the file instead of holding base64 in base64 in memory.
+// Before anything is written it proves the round trip: the same AES key is also wrapped with a throwaway key pair,
+// unwrapped, and the published ciphertext decrypted; the SHA-256 must match the PDF's.
+// Usage: node scripts/staff_bundle.mjs v2 <in.pdf> <meta.json> <out.pdf.enc> <out.key.json>
+export function sealV2(bytes, meta, pubKey) {
+  const aes = crypto.randomBytes(32), iv = crypto.randomBytes(12);
+  const c = crypto.createCipheriv('aes-256-gcm', aes, iv);
+  const enc = Buffer.concat([c.update(bytes), c.final(), c.getAuthTag()]);
+  const wrap = (pub) => crypto.publicEncrypt({ key: pub, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha256' }, aes);
+  const sha256 = crypto.createHash('sha256').update(bytes).digest('hex');
+  // self check with a throwaway key pair
+  const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  const back = crypto.privateDecrypt({ key: privateKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha256' }, wrap(publicKey));
+  const d = crypto.createDecipheriv('aes-256-gcm', back, iv);
+  d.setAuthTag(enc.subarray(enc.length - 16));
+  const plain = Buffer.concat([d.update(enc.subarray(0, enc.length - 16)), d.final()]);
+  if (crypto.createHash('sha256').update(plain).digest('hex') !== sha256) throw new Error('v2 self check failed: decrypted bytes differ');
+  const key = { v: 2, alg: 'RSA-OAEP-256+A256GCM', for: 'EO Crew', key: wrap(pubKey).toString('base64'), iv: iv.toString('base64'),
+    bytes: bytes.length, sha256, ...meta };
+  return { enc, key };
+}
+
+if (process.argv[2] === 'v2') {
+  const [pdf, metaFile, outEnc, outKey] = process.argv.slice(3);
+  const { enc, key } = sealV2(fs.readFileSync(pdf), JSON.parse(fs.readFileSync(metaFile, 'utf8')), fs.readFileSync(KEY, 'utf8'));
+  fs.writeFileSync(outEnc, enc);
+  fs.writeFileSync(outKey, JSON.stringify(key));
+  console.log(`sealed ${path.basename(pdf)} (v2): ${enc.length} bytes, key file ${Buffer.byteLength(JSON.stringify(key))} bytes, self check passed`);
+}

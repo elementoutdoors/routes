@@ -2,7 +2,7 @@
 
 One A4 landscape sheet per live ride (both brands, from sheet.py) and the combined booklet (booklet.py), kept up to date
 by themselves. Route codes and links are never public, so they are only published locked with EO Crew's public key:
-dist/booklet.enc.json (the whole booklet, for printing), dist/ride-sheets/<slug>.enc.json (one sheet each, a lighter copy
+dist/booklet.pdf.enc with dist/booklet.key.json (the whole booklet, for printing, envelope v2: raw ciphertext and a key file), dist/ride-sheets/<slug>.enc.json (one sheet each, a lighter copy
 for the iPad) and dist/ride-sheets/index.enc.json (a small list for EO Crew: each ride's page, dates, sizes, holds).
 Each sheet is checked first (check.py). A sheet with a blocking problem (QR code, route code, a flat elevation profile on
 a ride that climbs) is held back: the ride keeps its previous sheet, kept encrypted in the cache, and the reason is logged.
@@ -31,6 +31,8 @@ import living as L
 TZ = ZoneInfo('Australia/Brisbane')
 BOOKLET = 'Ride sheets booklet.pdf'
 LOCKED = os.path.join(STATE, 'locked')
+BOOKLET_ENC = os.path.join(LOCKED, 'booklet.pdf.enc')     # envelope v2: raw ciphertext of the booklet PDF
+BOOKLET_KEY = os.path.join(LOCKED, 'booklet.key.json')    # envelope v2: the wrapped key, iv, size, sha256 and the rides
 CODE_FILES = ['sheet.py', 'booklet.py', 'rides.py', 'textfit.py', 'check.py', 'build.py']
 
 
@@ -118,7 +120,7 @@ class Build:
         if self.map_jobs():
             return 'maps'
         ins = {rid: self.inputs(rid) for rid in self.order}
-        if self.a.force or self.booklet_inputs(ins) != self.m.get('booklet_inputs') or not os.path.exists(os.path.join(LOCKED, 'booklet.enc.json')):
+        if self.a.force or self.booklet_inputs(ins) != self.m.get('booklet_inputs') or not os.path.exists(BOOKLET_KEY):
             return 'sheets'
         return 'none'
 
@@ -161,7 +163,7 @@ class Build:
             if e.get('inputs') != fp: e['updated'] = self.today
             e['inputs'] = fp
         bi = self.booklet_inputs(ins)
-        changed = self.a.force or bi != self.m.get('booklet_inputs') or not os.path.exists(os.path.join(LOCKED, 'booklet.enc.json'))
+        changed = self.a.force or bi != self.m.get('booklet_inputs') or not os.path.exists(BOOKLET_KEY)
         self.m['placeholders'] = {'photo': [M[r]['slug'] for r in self.order if (M[r].get('photo') or {}).get('source') in (None, 'placeholder')],
                                   'map': [M[r]['slug'] for r in self.order if not os.path.exists(self.map_file(r))]}
         self.m['generic'] = [M[r]['slug'] for r in self.order if M[r]['generic']]
@@ -304,9 +306,11 @@ class Build:
         for f in glob.glob(os.path.join(LOCKED, 'ride-sheets', '*.enc.json')):
             if os.path.basename(f)[:-9] not in live and os.path.basename(f) != 'index.enc.json' and not self.a.only:
                 os.remove(f)
-        L.seal(pdf, {'built': built, 'title': 'Bike On and By Earth and Ocean ride sheets', 'file': BOOKLET, 'pages': pages,
-                     'rides': rows, 'photo_placeholders': self.m['placeholders']['photo'], 'maps_to_come': self.m['placeholders']['map'],
-                     'held': held, 'changelog': self.m['changelog'][-200:]}, os.path.join(LOCKED, 'booklet.enc.json'))
+        L.seal_v2(pdf, {'built_at': built, 'title': 'Bike On and By Earth and Ocean ride sheets', 'file': BOOKLET, 'pages': pages,
+                        'rides': rows, 'photo_placeholders': self.m['placeholders']['photo'], 'maps_to_come': self.m['placeholders']['map'],
+                        'held': held, 'changelog': self.m['changelog'][-200:]}, BOOKLET_ENC, BOOKLET_KEY)
+        if os.path.exists(os.path.join(LOCKED, 'booklet.enc.json')):
+            os.remove(os.path.join(LOCKED, 'booklet.enc.json'))   # the v1 booklet: replaced by the v2 files (18/10/2026)
         self.write_index(built, rows, held)
         self.m['built'], self.m['pages'] = built, pages
         print(f'ride sheets: made {len(use)} sheets ({len(held)} held back) and a {pages} page booklet, locked', flush=True)
@@ -315,8 +319,9 @@ class Build:
                 print(f"ride sheets: size {r['slug']}: screen PDF {os.path.getsize(use[rid_of][1]) / 1e6:.2f} MB, locked {r['sheet_bytes'] / 1e6:.2f} MB")
                 if os.path.getsize(use[rid_of][1]) > 1_000_000:
                     print('ride sheets:   what fills it:', pdf_parts(use[rid_of][1]))
+        print('ride sheets: booklet.pdf.enc %d bytes, booklet.key.json %d bytes' % (os.path.getsize(BOOKLET_ENC), os.path.getsize(BOOKLET_KEY)))
         print('ride sheets: sizes: booklet PDF %.1f MB, locked %.1f MB; screen sheets %.2f to %.2f MB, locked %.2f to %.2f MB' % (
-            os.path.getsize(pdf) / 1e6, os.path.getsize(os.path.join(LOCKED, 'booklet.enc.json')) / 1e6,
+            os.path.getsize(pdf) / 1e6, os.path.getsize(BOOKLET_ENC) / 1e6,
             min(os.path.getsize(use[r][1]) for r in use) / 1e6, max(os.path.getsize(use[r][1]) for r in use) / 1e6,
             min(x['sheet_bytes'] for x in rows if x['sheet_bytes']) / 1e6, max(x['sheet_bytes'] for x in rows) / 1e6), flush=True)
         return not held
@@ -413,12 +418,17 @@ def publish(dist):
     """Copy the locked files into the site. A plain sheet or booklet never goes on the site."""
     if not os.path.isdir(dist):
         return
-    if os.path.exists(os.path.join(LOCKED, 'booklet.enc.json')):
+    if os.path.exists(BOOKLET_KEY) and os.path.exists(BOOKLET_ENC):
+        shutil.copyfile(BOOKLET_ENC, os.path.join(dist, 'booklet.pdf.enc'))
+        shutil.copyfile(BOOKLET_KEY, os.path.join(dist, 'booklet.key.json'))
+    elif os.path.exists(os.path.join(LOCKED, 'booklet.enc.json')):   # only until the first v2 booklet is made
         shutil.copyfile(os.path.join(LOCKED, 'booklet.enc.json'), os.path.join(dist, 'booklet.enc.json'))
+    if glob.glob(os.path.join(LOCKED, 'ride-sheets', '*.enc.json')):
         d = os.path.join(dist, 'ride-sheets'); shutil.rmtree(d, ignore_errors=True); os.makedirs(d)
         for f in glob.glob(os.path.join(LOCKED, 'ride-sheets', '*.enc.json')):
             shutil.copyfile(f, os.path.join(d, os.path.basename(f)))
-        print('ride sheets: published booklet.enc.json and', len(os.listdir(d)), 'locked sheets')
+        print('ride sheets: published', ', '.join(f for f in ('booklet.pdf.enc', 'booklet.key.json', 'booklet.enc.json') if os.path.exists(os.path.join(dist, f))),
+              'and', len(os.listdir(d)), 'locked sheets')
     for dp, _, fs in os.walk(dist):
         for f in fs:
             if f.lower().endswith('.pdf'):

@@ -25,16 +25,21 @@ Ride Guide edition (Ben, 18/10/2026): it runs after every site build and keeps i
 | Output | Where | Who sees it |
 | --- | --- | --- |
 | Sheet per ride: PNG (3x), A4 PDF for printing (map 2400 px) and a lighter A4 PDF for screens (map 1800 px) | `qr/ride-sheets/final/` on the runner | Only locked: `ride-sheets/<slug>.enc.json` on the site (the lighter copy, for the iPad) |
-| The booklet, both brands, covers and sheets (for printing) | `qr/ride-sheets/Ride sheets booklet.pdf` on the runner | Only locked: `booklet.enc.json` on the site |
+| The booklet, both brands, covers and sheets (for printing) | `qr/ride-sheets/Ride sheets booklet.pdf` on the runner | Only locked, envelope v2: `booklet.pdf.enc` (the PDF's raw AES-256-GCM ciphertext, 16 byte tag on the end) and `booklet.key.json` (v2, the AES key wrapped with EO Crew's public key by RSA-OAEP SHA-256, the iv, byte length, sha256, built_at and the rides) |
 | A small list for EO Crew (under 50 KB) | | Only locked: `ride-sheets/index.enc.json`: built_at, commit, and per ride its slug, title, brand, kind, booklet page, updated date, sheet file and bytes, has_photo, map_redrawn_at, details_changed_at; plus photo placeholders, maps to come, sheets held back with the reason, and the last 20 changelog entries |
 | The last good sheets | `qr/booklet/good/` | Kept in the Actions cache, locked with a key made from the route secrets, so a held back sheet keeps its previous version |
 | 3D map per ride | `qr/booklet/maps/<slug>/map.jpg` | Kept in the Actions cache, never committed |
 | Ride photos | `qr/booklet/photos/<slug>.jpg` | Kept in the Actions cache |
-| What each sheet was built from, changelog | `qr/booklet/manifest.json` | Kept in the Actions cache, and the changelog goes inside `booklet.enc.json` |
+| What each sheet was built from, changelog | `qr/booklet/manifest.json` | Kept in the Actions cache, and the changelog goes inside `booklet.key.json` |
 
-The locked files use EO Crew's public key and the same envelope as `staff.enc.json` (`scripts/staff_bundle.mjs`): only
-EO Crew's server can open them. Inside: `b64` (the PDF) and, for the booklet, `rides` (each ride's slug, title, brand,
-kind, page and the date its sheet last changed), `photo_placeholders`, `maps_to_come` and the latest `changelog`.
+Everything is locked with EO Crew's public key (`scripts/staff_bundle.mjs`), so only EO Crew's server can open it. The
+single sheets and the index use the same envelope as `staff.enc.json` (a sheet carries its PDF as `b64`). The booklet
+uses envelope v2 (18/10/2026), because base64 inside base64 made it too big to open: `booklet.pdf.enc` is the PDF's raw
+AES-256-GCM ciphertext with the 16 byte tag on the end, and `booklet.key.json` holds the wrapped AES key, the iv, the
+PDF's byte length and sha256, built_at, `rides` (each ride's slug, title, brand, kind, page and dates),
+`photo_placeholders`, `maps_to_come`, `held` and the latest `changelog`. Before anything is written, the build proves the
+round trip: the same AES key is wrapped with a throwaway key pair, unwrapped, the published ciphertext decrypted and its
+sha256 compared. The old `booklet.enc.json` is no longer published.
 
 ## How it keeps itself up to date (`build.py`)
 
