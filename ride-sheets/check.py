@@ -18,6 +18,27 @@ def decode_all(img):
     return [v for v in (vals if ok else []) if v]
 
 
+def read_qr(crop):
+    """Read the scan panel's QR code. OpenCV's reader misses some codes at one size and reads them at another, so try
+    a few sizes, with a white margin, and both of its readers."""
+    import cv2
+    readers = [cv2.QRCodeDetector()] + ([cv2.QRCodeDetectorAruco()] if hasattr(cv2, 'QRCodeDetectorAruco') else [])
+    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    for scale in (1.0, 0.5, 0.35, 0.7, 0.25):
+        im = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA) if scale != 1.0 else gray
+        _, bw = cv2.threshold(im, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        for cand in (im, bw):
+            pad = cv2.copyMakeBorder(cand, 40, 40, 40, 40, cv2.BORDER_CONSTANT, value=255)
+            for rd in readers:
+                try:
+                    val, *_ = rd.detectAndDecode(pad)
+                except Exception:
+                    val = ''
+                if val:
+                    return val
+    return ''
+
+
 def check_one(rid, png, html_path):
     import cv2
     probs = []
@@ -25,8 +46,7 @@ def check_one(rid, png, html_path):
     if img is None:
         return [f'{rid}: no sheet picture']
     h, w = img.shape[:2]
-    crop = img[int(h * .6):, int(w * .8):]
-    val, *_ = cv2.QRCodeDetector().detectAndDecode(crop)
+    val = read_qr(img[int(h * .6):, int(w * .8):])
     if val != R[rid]['link']:
         probs.append(f'{rid}: QR code does not open the ride ({"unreadable" if not val else "wrong link"})')
     others = [v for v in decode_all(img[:, :int(w * .78)]) if v]
