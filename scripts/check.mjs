@@ -8,9 +8,14 @@
 // Version 5 (11/10/2026): also checks the full stories (every linked place has one, none out of step with its blog section, the blogs can be read) and listen.html.
 // Version 4 (10/10/2026): also checks the natural voice (recording running, inside the monthly cap, recordings load). v3: every typed route code. v2: real browser user agent, redirects to another page count as broken, 403 noted not failed.
 // Version 9 (17/10/2026): also checks the ride counter is built into the app and answering.
+// Version 10 (18/10/2026): also checks the build could open the Ride Desk's sealed staff section and published desk.json. The
+// Ride Desk's own checks (empty fields, no photo, new rides left hidden, desk data the build did not publish) need the page's
+// data and run as `node scripts/ride-desk.mjs check <db dir>` (Drift Check Register, Ride Guide routes tab).
 // Usage: node scripts/check.mjs [siteBase]   (route links are read from qr/links.json when present)
 import fs from 'node:fs';
 import { loadLibrary, plan as libraryPlan } from './library.mjs';
+import { fileURLToPath } from 'node:url';
+import { loadDesk } from './ride-desk.mjs';
 
 const BASE = (process.argv[2] || 'https://elementoutdoors.github.io/routes/').replace(/\/?$/, '/');
 const issues = [], notes = [];
@@ -93,7 +98,7 @@ const pl = h.places;
 if (!pl) issues.push('story library: no places report in health.json');
 else {
   try {
-    push = libraryPlan(loadLibrary(), pl, JSON.parse(fs.readFileSync(new URL('../config/routes.json', import.meta.url), 'utf8')).routes);
+    push = libraryPlan(loadLibrary(), pl, loadDesk(fileURLToPath(new URL('..', import.meta.url))).entries);
     push.blog.forEach(b => issues.push(`story library: ${b.brand} blog section ${b.key} differs from the library, push it (scripts/push/blog.js)`));
     push.pins.forEach(p => issues.push(`story library: ${p.brand} pin "${p.name}" differs from the library, push it (scripts/push/pins.js)`));
     push.notInLibrary.forEach(n => issues.push(`story library: ${n.what} ${n.id} is live but not in the library (add it to the library if Ben meant it, else remove it)`));
@@ -139,6 +144,13 @@ if (fs.existsSync('qr/codes.json') && fs.existsSync('qr/links.json')) {
       if (!q[slug] || k !== q[slug].split('#')[1]) issues.push(`route code ${code} for ${slug} does not open its route`);
     } catch (e) { issues.push(`route code ${code} for ${slug} could not be checked`); }
   }
+}
+// Ride Desk (18/10/2026): the build opened the sealed staff section and published what the Ride Desk reads
+if (!h.desk) issues.push('ride desk: health.json has no Ride Desk report (the build is not reading config/ride-desk.json)');
+else {
+  if (h.desk.staffOk === false) issues.push('ride desk: the build could not open the staff section (config/ride-desk-private.enc.json): ' + (h.desk.problems || []).join('; '));
+  try { const d = await fetch(BASE + 'desk.json', { cache: 'no-store' }); if (!d.ok) issues.push(`ride desk: desk.json not published (${d.status})`); } catch (e) { issues.push('ride desk: desk.json could not be read'); }
+  const miss = Object.entries(h.desk.missing || {}); if (miss.length) notes.push(`ride desk: ${miss.length} live rides have empty fields on the Ride Desk (${miss.map(([s, m]) => s + ': ' + m.join(', ')).join('; ')})`);
 }
 // ride counts (17/10/2026): the build put the counter address in the app, and the counter answers
 if (!(h.counter && h.counter.on)) issues.push('ride counts: the app has no counter address, so rides are not being counted (config/counter.json)');

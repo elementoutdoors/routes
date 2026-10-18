@@ -21,11 +21,17 @@ export function seal(obj) {
   return { v: 1, alg: 'RSA-OAEP-256 + A256GCM', for: 'EO Crew', key: key.toString('base64'), iv: iv.toString('base64'), data: data.toString('base64') };
 }
 
-// Called by build.mjs: route codes and links for every live ride.
-export function writeStaffFile(dist, built, links, codes, builtAt) {
+// Called by build.mjs: route codes and links for every live ride, with each ride's Ride Desk staff section (who it suits,
+// not for, time to allow, sold as, bikes, start and finish, staff notes), its title and whether it is on the hire desk iPad
+// (18/10/2026). Every live ride is here, iPad or not; rides.json only lists the iPad ones.
+export function writeStaffFile(dist, built, links, codes, builtAt, deskOf = () => ({})) {
   if (!fs.existsSync(KEY)) return 'staff file not written: config/staff-key.pem is missing';
-  const rides = built.map(({ route: r }) => ({ slug: r.slug, name: r.name, brand: (r.brand && r.brand.id) || '', type: r.type || '',
-    code: codes[r.slug] || '', link: links[r.slug] || '', test: /test/i.test(r.slug) }));
+  const rides = built.map(({ route: r }) => {
+    const d = deskOf(r.slug) || {};
+    return { slug: r.slug, name: r.name, brand: (r.brand && r.brand.id) || '', type: r.type || '',
+      code: codes[r.slug] || '', link: links[r.slug] || '', test: /test/i.test(r.slug),
+      title: d.title || '', ipad: !!d.ipad, staff: d.staff || null };
+  });
   fs.writeFileSync(path.join(dist, 'staff.enc.json'), JSON.stringify(seal({ built: builtAt, rides })));
   return null;
 }

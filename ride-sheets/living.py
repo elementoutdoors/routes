@@ -183,7 +183,7 @@ def website_pages():
 
 
 def match_page(ride, pages, cfg_pages):
-    """the website ride page for a ride: config/booklet-photos.json "pages", then the same slug, then the same name"""
+    """the website ride page for a ride: the Ride Desk card's websitePage, then the same slug, then the same name"""
     if not pages: return None
     want = cfg_pages.get(ride['slug'])
     if want: return want if want in pages else None

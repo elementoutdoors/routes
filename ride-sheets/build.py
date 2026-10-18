@@ -13,7 +13,7 @@ Living rules (what each sheet was built from is kept in STATE/manifest.json, wit
                story edits, or a line nudged a few metres, keep the map.
   ride story   always the ride's current description in the Ride Guide; a change is logged.
   numbers      always the latest distance, climbing and riding time; a change of 0.5 km or 25 m climbing is logged.
-  photo        the ride's website photo (config/booklet-photos.json), fetched again only when it or the mapping changes.
+  photo        the ride's website photo, or the one picked on its Ride Desk card, fetched again only when it changes.
 The sheets and booklet are made again whenever anything on a sheet changed.
 
 python3 ride-sheets/build.py           build what changed and publish the locked files into dist/
@@ -33,7 +33,7 @@ BOOKLET = 'Ride sheets booklet.pdf'
 LOCKED = os.path.join(STATE, 'locked')
 BOOKLET_ENC = os.path.join(LOCKED, 'booklet.pdf.enc')     # envelope v2: raw ciphertext of the booklet PDF
 BOOKLET_KEY = os.path.join(LOCKED, 'booklet.key.json')    # envelope v2: the wrapped key, iv, size, sha256 and the rides
-CODE_FILES = ['sheet.py', 'booklet.py', 'rides.py', 'textfit.py', 'check.py', 'build.py']
+CODE_FILES = ['sheet.py', 'booklet.py', 'rides.py', 'desk.py', 'textfit.py', 'check.py', 'build.py']
 
 
 def now():
@@ -58,7 +58,8 @@ class Build:
         try: self.m = json.load(open(self.mpath))
         except Exception: self.m = {}
         self.m.setdefault('rides', {}); self.m.setdefault('changelog', [])
-        try: self.photo_cfg = json.load(open(os.path.join(ROOT, 'config', 'booklet-photos.json')))
+        import desk
+        try: self.photo_cfg = desk.photo_cfg(desk.cards())   # the photo on each Ride Desk card (website page by default)
         except Exception: self.photo_cfg = {}
         self.code_fp = jhash([open(os.path.join(HERE, f)).read() for f in CODE_FILES])
         self._pages = None
@@ -220,7 +221,7 @@ class Build:
             old = e.get('photo') or {}
             if src == 'placeholder':
                 if old.get('source') != 'placeholder':
-                    self.log(rid, 'no photo found: placeholder shown (set one in config/booklet-photos.json)')
+                    self.log(rid, 'no photo found: placeholder shown (pick one on its Ride Desk card)')
                 e['photo'] = {'source': 'placeholder', 'ref': None, 'key': 'placeholder|None'}
                 if os.path.exists(jpg): os.remove(jpg)
             elif old.get('key') != f'{src}|{refkey}' or not os.path.exists(jpg):
@@ -435,6 +436,21 @@ def publish(dist):
                 os.remove(os.path.join(dp, f)); print('ride sheets: removed a plain PDF from the site:', f)
 
 
+def publish_photos(dist):
+    """ride-sheets/photos.json (public): which photo each sheet uses, for the Ride Desk card and its weekly check. Web
+    addresses only (the website's featured image, a link picked on the card, or a Ride with GPS photo); never a route code."""
+    try: m = json.load(open(os.path.join(STATE, 'manifest.json')))
+    except Exception: return
+    out = {}
+    for rid, e in (m.get('rides') or {}).items():
+        p = e.get('photo') or {}
+        src = p.get('source') or 'placeholder'
+        ref = p.get('ref') if re.match(r'https://', str(p.get('ref') or '')) else None
+        out[e.get('slug') or rid] = {'source': {'override': 'picked'}.get(src, src), 'url': ref, 'page': p.get('page'), 'fetched': p.get('fetched')}
+    os.makedirs(os.path.join(dist, 'ride-sheets'), exist_ok=True)
+    L.write_json(os.path.join(dist, 'ride-sheets', 'photos.json'), {'checked': m.get('checked'), 'rides': out})
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--plan', action='store_true')
@@ -460,6 +476,10 @@ def main():
         publish(DIST)
     except Exception as e:
         print('ride sheets: could not publish:', e)
+    try:
+        publish_photos(DIST)
+    except Exception as e:
+        print('ride sheets: could not publish photos.json:', e)
     if os.environ.get('GITHUB_OUTPUT'):
         with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
             f.write(f'changed={"true" if changed else "false"}\n')

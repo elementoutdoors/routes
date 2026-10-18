@@ -5,6 +5,8 @@
 //
 // Usage: node scripts/build.mjs [--offline]   (--offline reads cache/<id>.json instead of Ride with GPS)
 // Secrets: env ROUTE_SECRETS (JSON) or .secrets.json: { keySalt, privacy: { <rwgpsId>: <privacy code> } }
+// Every ride's card (brand, type, name, description, the switches, the sheet text and the staff section) comes from the
+// Ride Desk (config/ride-desk.json and the sealed config/ride-desk-private.enc.json, see scripts/ride-desk.mjs).
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -16,6 +18,7 @@ import { fp, blogList, placeOf, stopId, blogSections, readBlogs, comparePlaces, 
 import { loadLibrary, storiesFrom, recordFrom, compiled, generatedDrift, lint } from './library.mjs';
 import { libraryPage } from './library-page.mjs';
 import { writeStaffFile } from './staff_bundle.mjs';
+import { loadDesk, fingerprints, missingFields, seal as deskSeal, isTest } from './ride-desk.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const OFFLINE = process.argv.includes('--offline');
@@ -25,7 +28,11 @@ const LANGS = ['de', 'fr', 'es', 'it', 'nl', 'zh', 'ja', 'ko'];
 
 const readJson = (p, d) => { try { return JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8')); } catch (e) { if (d !== undefined) return d; throw e; } };
 const secrets = process.env.ROUTE_SECRETS ? JSON.parse(process.env.ROUTE_SECRETS) : readJson('.secrets.json');
-const cfg = readJson('config/routes.json');
+// The Ride Desk (18/10/2026): one card per ride, copied into config/ by the settings task. A card switched on for the Ride
+// Guide is built; its sealed staff section and privacy code are opened with a key made from keySalt.
+const desk = loadDesk(ROOT, secrets.keySalt);
+const cfg = { routes: desk.entries };
+const PRIVACY = Object.assign({}, secrets.privacy || {}, desk.privacy || {});   // codes found on Ride with GPS by the Ride Desk scan come first
 const brands = readJson('config/brands.json');
 const offersCfg = readJson('config/offers.json');
 // New English lines Ben wants heard in English before they are translated (16/10/2026): kept out of i18n-missing.json, so
@@ -388,7 +395,7 @@ function uiStrings() {
 
 async function fetchRoute(entry) {
   if (OFFLINE) return readJson(`cache/${entry.rwgps}.json`);
-  const code = secrets.privacy[String(entry.rwgps)];
+  const code = PRIVACY[String(entry.rwgps)];
   const url = `https://ridewithgps.com/routes/${entry.rwgps}.json${code ? `?privacy_code=${code}` : ''}`;
   const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
   if (!res.ok) throw new Error(`Ride with GPS answered ${res.status}`);
@@ -482,6 +489,12 @@ async function main() {
     }
     if (!route) { h.ok = false; health.problems.push(`${entry.slug}: no route data`); health.routes.push(h); continue; }
 
+    // The Ride Desk is the master for the ride's name in the app and its description (18/10/2026). An empty one keeps what
+    // Ride with GPS has, and the weekly check asks for it.
+    if (entry.appName) route.name = entry.appName;
+    if (entry.description) route.description = entry.description;
+    route.type = entry.type || route.type || null; route.activity = entry.activity || route.activity;
+
     // offers always come from config/offers.json, even when the route itself is the last good copy
     route.offers = offersFor(route.track, entry.slug);
 
@@ -507,12 +520,12 @@ async function main() {
     }
     route.code = code;
     route.settings = settings;
-    // Point of interest stories, on or off by default for this ride (Ben, 15/10/2026): "stories" in config/routes.json,
+    // Point of interest stories, on or off by default for this ride (Ben, 15/10/2026): "stories" on the ride's Ride Desk card,
     // set on the Ride Guide Settings page. A ride without its own value uses screen.readStoriesAloud and is reported.
     if (typeof entry.stories === 'boolean') route.stories = entry.stories;
-    else { route.stories = settings.screen.readStoriesAloud; if (entry.active !== false) health.problems.push(`${entry.slug}: no point of interest stories setting in config/routes.json, using ${route.stories ? 'on' : 'off'}`); }
+    else { route.stories = settings.screen.readStoriesAloud; if (entry.active !== false) health.problems.push(`${entry.slug}: no point of interest stories setting on the Ride Desk, using ${route.stories ? 'on' : 'off'}`); }
     // Ride type sets the speed behind the riding time (Ben, 17/10/2026). A ride without a known type is reported.
-    if (!(route.type && settings.speeds[route.type]) && entry.active !== false) health.problems.push(`${entry.slug}: no ride type in config/routes.json (scenic, mtb, gravel, road, hinterlandMtb or hinterlandGravel), riding time uses the ${route.activity} speed`);
+    if (!(route.type && settings.speeds[route.type]) && entry.active !== false) health.problems.push(`${entry.slug}: no ride type on the Ride Desk (scenic, mtb, gravel, road, hinterlandMtb or hinterlandGravel), riding time uses the ${route.activity} speed`);
     route.gpx = null;
     if (entry.gpx) {
       const gname = `g/${gpxKey(entry.slug, entry.rev)}.gpx`;
@@ -597,17 +610,56 @@ async function main() {
 
   // rides.json: a public, staff facing list of every live ride (no keys, codes or track), read by the
   // EO Crew staff app's Ride Guide manual (EO-HI-10) so a new ride shows up there by itself.
+  // Only rides switched on for the hire desk iPad and the booklet on the Ride Desk (18/10/2026); every live ride stays in
+  // staff.enc.json. The card's sheet text rides along for EO Crew's customer lists.
+  const deskOf = Object.fromEntries(desk.entries.map(e => [e.slug, e]));
   fs.writeFileSync(path.join(dist, 'rides.json'), JSON.stringify({
     built: health.built,
-    rides: built.map(({ route: r }) => ({
+    rides: built.filter(({ route: r }) => (deskOf[r.slug] || {}).ipad).map(({ route: r }) => ({
       slug: r.slug, name: r.name, description: r.description || '', brand: (r.brand && r.brand.id) || '',
       activity: r.activity, type: r.type || '', riding_minutes: Math.round(r.distance / 1000 / (r.settings.speeds[r.type] || r.settings.speeds[r.activity] || r.settings.speeds.ebike) * 60), distance_km: Math.round((r.distance || 0) / 100) / 10, gain_m: r.gain || 0,
       stops: r.stops.filter(s => !['caution', 'finish', 'toilet'].includes(s.kind)).map(s => s.name),
       cautions: r.stops.filter(s => s.kind === 'caution').map(s => s.name),
       single_track: (r.loose || []).map(([a, b]) => `${(a / 1000).toFixed(1)} to ${(b / 1000).toFixed(1)} km`),
       stories: !!r.stories, gpx: !!r.gpx, updated: r.updated || null, test: /test/i.test(r.slug),
+      title: deskOf[r.slug].title, category: deskOf[r.slug].category, sell_line: deskOf[r.slug].sellLine, highlights: deskOf[r.slug].highlights,
+      level: deskOf[r.slug].level, surface: deskOf[r.slug].surface, terrain: deskOf[r.slug].terrain, bike: deskOf[r.slug].bike, bike_note: deskOf[r.slug].bikeNote,
     })),
   }, null, 1));
+
+  // The Ride Desk's view of this build (desk.json, public: no keys, codes or route line): what each card said when it was
+  // built (fingerprints, for the weekly check), and for each built ride its numbers, the places it passes in ride order
+  // with their Story Library entry, and stop photos to pick from. The settings task copies it onto the Ride Desk page.
+  {
+    const libIdx = {};
+    for (const e of Object.values(library || {})) for (const [b, pins] of Object.entries(e.pins || {})) for (const p of pins || []) {
+      libIdx[b + '|' + String(p.name).toLowerCase()] = e.key; libIdx['*|' + String(p.name).toLowerCase()] = libIdx['*|' + String(p.name).toLowerCase()] || e.key;
+    }
+    const stories = {}, rides = {}, cards = {};
+    for (const e of desk.entries) cards[e.slug] = { live: e.live, ipad: e.ipad, fp: fingerprints(e, desk.staff[e.slug]), missing: missingFields(e, desk.staff[e.slug]) };
+    for (const { route: r } of built) {
+      const b = (r.brand && r.brand.id) || '';
+      const places = r.stops.filter(s => ['info', 'view', 'park', 'caution', 'turn'].includes(s.kind)).map(s => {
+        const pl = placeOf(BLOGS, s.url);
+        const key = (pl && pl.key) || libIdx[b + '|' + s.name.toLowerCase()] || libIdx['*|' + s.name.toLowerCase()] || null;
+        if (key && library && library[key] && !stories[key]) stories[key] = { title: library[key].title, story: library[key].story || [] };
+        return { n: s.name, km: Math.round(s.d / 100) / 10, k: s.kind, key, line: s.text || '' };
+      });
+      const photos = [...new Set([r.hero, ...r.stops.flatMap(s => s.photos || [])].filter(Boolean))].slice(0, 12);
+      rides[r.slug] = { name: r.name, distance_km: Math.round((r.distance || 0) / 100) / 10, gain_m: r.gain || 0,
+        riding_minutes: Math.round(r.distance / 1000 / (r.settings.speeds[r.type] || r.settings.speeds[r.activity] || r.settings.speeds.ebike) * 60),
+        places, photos };
+    }
+    fs.writeFileSync(path.join(dist, 'desk.json'), JSON.stringify({ built: health.built, deskRev: desk.deskRev, staffOk: desk.sealedOk, cards, rides, stories,
+      library: SITE_BASE + 'library.html#' }));
+    if (desk.buildPub) fs.writeFileSync(path.join(dist, 'desk-key.json'), JSON.stringify({ v: 1, build: desk.buildPub }));
+    // every live ride's customer link, route code and staff check link, sealed to the Ride Desk's key, so the settings task
+    // can fill the page's routes/links record (a new ride's link appears there by itself)
+    if (desk.deskPub) fs.writeFileSync(path.join(dist, 'links.enc.json'), JSON.stringify(deskSeal({ built: health.built,
+      links: Object.fromEntries(built.map(({ route: r }) => [r.slug, { link: links[r.slug], code: codes[r.slug] }])) }, desk.deskPub)));
+    health.desk = { rev: desk.deskRev, staffOk: desk.sealedOk, problems: desk.problems,
+      missing: Object.fromEntries(Object.entries(cards).filter(([s, c]) => c.missing.length && c.live && !isTest(s)).map(([s, c]) => [s, c.missing])) };
+  }
 
   const blog = await watchBlogs(storyReport);
   health.stories = Object.assign({}, storyReport, { linked: [...storyReport.linked].sort(), missing: [...storyReport.missing].sort() });
@@ -674,7 +726,7 @@ async function main() {
   fs.writeFileSync(path.join(ROOT, 'qr', 'links.json'), JSON.stringify(links, null, 1));
   fs.writeFileSync(path.join(ROOT, 'qr', 'codes.json'), JSON.stringify(codes, null, 1));
   // locked staff file for EO Crew (route codes and links; only EO Crew's server can open it, see staff_bundle.mjs)
-  { const why = writeStaffFile(dist, built, links, codes, health.built); if (why) console.warn(why); }
+  { const why = writeStaffFile(dist, built, links, codes, health.built, slug => ({ ipad: !!(deskOf[slug] || {}).ipad, title: (deskOf[slug] || {}).title || '', staff: desk.staff[slug] || null })); if (why) console.warn(why); }
   // (the locked staff screenshots are added to dist by the workflow, from the staff-screens branch)
 
   console.log(JSON.stringify({ build, routes: health.routes.map(r => [r.slug, r.ok, r.source, r.cues, r.stops, r.offers, r.warnings]), problems: health.problems, untranslated: health.untranslatedTotal }, null, 1));

@@ -13,6 +13,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fp } from './places.mjs';
+import { loadDesk } from './ride-desk.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const LIB = path.join(ROOT, 'library');
@@ -274,7 +275,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   else if (cmd === 'plan') {
     const src = opt('--health', 'https://elementoutdoors.github.io/routes/health.json');
     const h = JSON.parse(/^https?:/.test(src) ? await (await fetch(src, { cache: 'no-store' })).text() : fs.readFileSync(src, 'utf8'));
-    const p = plan(loadLibrary(), h.places || {}, JSON.parse(fs.readFileSync(path.join(ROOT, 'config/routes.json'), 'utf8')).routes);
+    const p = plan(loadLibrary(), h.places || {}, loadDesk(ROOT).entries);
     console.log(JSON.stringify(Object.assign({ built: h.built, inStep: !p.blog.length && !p.pins.length && !p.notInLibrary.length && !p.gone.length }, p), null, 1));
   } else { console.error('usage: node scripts/library.mjs <generate [--check]|plan [--health f]|lint|import dir>'); process.exit(2); }
 }

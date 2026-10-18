@@ -17,7 +17,7 @@ links = json.load(open(f'{ROOT}/qr/links.json'))
 codes = json.load(open(f'{ROOT}/qr/codes.json'))
 health = json.load(open(f'{ROOT}/dist/health.json'))
 brands = json.load(open(f'{ROOT}/config/brands.json'))
-cfg = {r['slug']: r for r in json.load(open(f'{ROOT}/config/routes.json'))['routes']}
+cfg = json.load(open(f'{ROOT}/config/ride-desk.json'))['rides']   # the Ride Desk's cards (brand per ride)
 routes = [r for r in health['routes'] if r['ok'] and r['slug'] in links]
 
 W, H = A4

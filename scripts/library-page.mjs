@@ -41,5 +41,5 @@ summary span{font-weight:600}summary small{color:var(--muted)}.body{padding:0 14
 </style></head><body><main><h1>Story Library</h1>
 <p class="lead">Every Element Outdoors story in one place: the blog sections, the lines read out at each pin, the spoken stories, the kayak talking points and the wildlife cards. The blogs, the Ride Guide, Ride with GPS and EO Crew are all copies of this. ${lib.entries.length} entries, built ${esc(lib.built.slice(0, 10))}.</p>
 <input id="q" type="search" placeholder="Find a place or animal" aria-label="Find a place or animal">${groups}</main>
-<script>document.getElementById('q').addEventListener('input',e=>{const q=e.target.value.toLowerCase().trim();document.querySelectorAll('details').forEach(d=>{d.style.display=!q||d.dataset.k.includes(q)?'':'none'})})</script></body></html>`;
+<script>(function(){var h=decodeURIComponent(location.hash.slice(1));var d=h&&document.getElementById(h);if(d&&d.tagName==='DETAILS'){d.open=true;d.scrollIntoView();}})();document.getElementById('q').addEventListener('input',e=>{const q=e.target.value.toLowerCase().trim();document.querySelectorAll('details').forEach(d=>{d.style.display=!q||d.dataset.k.includes(q)?'':'none'})})</script></body></html>`;
 }

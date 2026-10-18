@@ -1,0 +1,5 @@
+{
+ "_about": "Public keys for the Ride Desk (scripts/ride-desk.mjs). build: the Ride Guide build's key, made from ROUTE_SECRETS keySalt and published at desk-key.json on the site; the settings task seals staff sections and privacy codes to it. desk: the Ride Desk page's key (its private half is in the page's private/keys record); the build seals each ride's link and route code to it. Public keys can only lock, never open.",
+ "build": null,
+ "desk": "U3jDam68tSofyG8AkIg5XTCeF33-1YNyb_dZ5sscjCU"
+}

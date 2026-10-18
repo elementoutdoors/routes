@@ -2,8 +2,8 @@
 
 The build (scripts/build.mjs) writes dist/health.json, dist/rides.json, dist/r/<key>.json and qr/links.json, qr/codes.json.
 It is rebuilt from Ride with GPS every hour, so a redrawn route reaches the sheets on the next build. Only live rides
-are here (the same set as the QR cards), without the test route. Route lines are never committed: the routes are a
-paid product and this repo is public.
+switched on for the hire desk iPad and the booklet on the Ride Desk are here (rides.json lists only those, 18/10/2026),
+without the test route. Route lines are never committed: the routes are a paid product and this repo is public.
 """
 import json, os, re
 from paths import ROOT, DIST, QR
@@ -26,13 +26,15 @@ def load_routes():
     codes = _read(os.path.join(QR, 'codes.json'))
     health = _read(os.path.join(DIST, 'health.json'))
     listed = {r['slug']: r for r in _read(os.path.join(DIST, 'rides.json'), {'rides': []})['rides']}
-    cfg = {r['slug']: r for r in _read(os.path.join(ROOT, 'config', 'routes.json'))['routes']}
+    cfg = _read(os.path.join(ROOT, 'config', 'ride-desk.json'))['rides']   # the Ride Desk's cards
     out = {}
     for h in health['routes']:
         s = h['slug']
         if not h.get('ok') or s not in links:
             continue
-        lr = listed.get(s, {})
+        if s not in listed:
+            continue   # not on the hire desk iPad (switched off on its Ride Desk card): no sheet, not in the booklet
+        lr = listed[s]
         if lr.get('test') or re.search(r'test', s, re.I):
             continue
         key = links[s].split('#', 1)[1]
