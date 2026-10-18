@@ -7,13 +7,17 @@ brand a cover listing its rides by kind with page numbers, then the sheets.
 
 Made 4 to 7 October 2026 in the Branding Bob project, moved here on 18 October 2026. The same day it became the living
 Ride Guide edition (Ben, 18/10/2026): it runs after every site build and keeps itself up to date from the Ride Guide.
+Also on 18/10/2026 every sheet's words and photo moved onto the ride's card on the Ride Desk
+(https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18), read through `desk.py` from `config/ride-desk.json`. Only rides
+switched on for "Show on the hire desk iPad and in the booklet" get a sheet (`routes_data.py` reads only rides in
+`rides.json`, which lists just those).
 
 ## What changed from the October sheets
 
 - A photo of the ride where the App Store and Google Play cards were. The app QR codes are gone.
 - The scan panel carries the ride's Ride Guide QR code (its private link) and 6 character route code, never Ride with
   GPS. "For riders on this ride only. Please don't share this code." is printed under it.
-- The ride story is the ride's current description in the Ride Guide data, so it follows Ride with GPS by itself.
+- The ride story is the ride's description on its Ride Desk card (the master since 18/10/2026), through the Ride Guide data.
 - Distance, climbing and riding time come from the Ride Guide build every time. The time shown is the Ride Guide's
   riding time (it changes with the ride and the speed for its type), so the note says to allow extra for stops.
 - The booklet covers no longer carry the "Please don't record your ride" warning: that was for the Ride with GPS app,
@@ -46,11 +50,11 @@ sha256 compared. The old `booklet.enc.json` is no longer published.
 | Part of a sheet | Rule |
 | --- | --- |
 | 3D map | Drawn again only when the route line changes a lot: its length by more than 2 percent, or any part more than 100 m from the line the map was drawn from (a simplified copy is kept in the manifest). Also when the ride's map settings or title in `rides.py` change, or `MAP_VERSION` in `living.py` is bumped. Cue, stop and story edits, or a line nudged a few metres, keep the map. |
-| Ride story | Always the ride's current Ride Guide description (a first line that only repeats the name is left out; at most two paragraphs, shortened a sentence at a time if it would not fit). House spellings are applied (e-Bike, Woondum, Mothar Mountain, no dashes between words). A new description is logged. |
+| Ride story | Always the ride's current description (its Ride Desk card) (a first line that only repeats the name is left out; at most two paragraphs, shortened a sentence at a time if it would not fit). House spellings are applied (e-Bike, Woondum, Mothar Mountain, no dashes between words). A new description is logged. |
 | Distance, climbing, riding time | Always the latest. A change of 0.5 km or 25 m climbing is logged. |
-| Photo | The featured image of the ride's Bike On website page (same slug or name, or `pages` in `config/booklet-photos.json`), else the ride's Ride with GPS highlighted photo, else a placeholder. `photos` in that file overrides any ride. Fetched again only when the choice or the website image changes. |
+| Photo | The photo picked on the ride's Ride Desk card (an upload, copied to `config/ride-photos/`; a link; or one of the ride's Ride with GPS stop photos), else the featured image of its Bike On website page (same slug or name, or the card's `websitePage`), else its Ride with GPS highlighted photo, else a placeholder. Fetched again only when the choice or the image changes. `ride-sheets/photos.json` on the site says which photo each sheet uses (the Ride Desk shows a preview and the weekly check flags a placeholder). |
 | QR and route code | Always the ride's current link and code. A change (after a `rev` bump) is logged. |
-| Everything else | Title, category, sell line, highlights, level, surface, bike, note and map place names, from `rides.py`. |
+| Everything else | Title, category, sell line, highlights, level, surface, terrain, bike and note from the Ride Desk card (`desk.py`); map place names and camera from `rides.py`. |
 
 The sheets and booklet are made again whenever anything on a sheet changes, or this folder's sheet code changes. A new
 map draws within a time budget (20 minutes a run); any left wait for the next hourly run and show "3D map to come".
@@ -70,14 +74,15 @@ about 1.8 times that, because the envelope holds the PDF as base64 inside base64
 
 | Change | File |
 | --- | --- |
-| A ride's title, sell line, highlights, level, surface, bike, note, category | `rides.py` (one block per ride). Levels follow the Product Truth. |
-| The ride story | The ride's description in Ride with GPS. It reaches the sheet on the next build. |
+| A ride's title, category, sell line, highlights, level, surface, terrain, bike, note, photo | Its card on the Ride Desk. Levels follow the Product Truth. |
+| The ride story | The description on its Ride Desk card. It reaches the sheet on the next build. |
+| Whether a ride has a sheet and is in the booklet | "Show on the hire desk iPad and in the booklet" on its Ride Desk card |
 | Place names on a map | `rides.py`: the ride's `labels` (curated pins, from the route's stops or a cited source), plus automatic names from the Queensland gazetteer (`places.json`); `skip` drops a gazetteer name that crowds a key pin |
 | Camera angle for a ride | `rides.py`: `yaw` (0 looks north, 90 east, 270 west) and optionally `pitch`; otherwise chosen automatically |
 | Mountain height | `rides.py` `ex`: 2 on every By Earth and Ocean map; shop maps scale with map size, capped at 3.2 (`mapgen.py`) |
-| A ride's photo | `config/booklet-photos.json` |
+| A ride's photo | Its card on the Ride Desk |
 | Colours, logos, fonts, layout | `sheet.py` (`THEMES`, CSS), `booklet.py` (covers), `assets/` |
-| A new live ride | Nothing at first: it gets a sheet from the Ride Guide data alone (listed as `generic` in the manifest). Add its block to `rides.py` for its title, highlights, level and place names. |
+| A new ride on the iPad | Nothing at first: it gets a sheet from its Ride Desk card, with gazetteer place names on the map (listed as `generic` in the manifest). Add a `shop(...)` or `hint(...)` line to `rides.py` for curated place names and camera; keep its map slug from then on, or the map is drawn again. |
 
 ## Run it locally
 
@@ -111,7 +116,7 @@ Ride Guide build (`dist/r/*.json`) and are never committed, because the routes a
 - Sharp imagery: the Queensland aerial photography, never 10 m satellite imagery.
 - The time is the Ride Guide riding time, and the note says to allow extra for stops (18/10/2026; it was
   "Experience time" on the October sheets).
-- The ride story follows the ride's description in the Ride Guide by itself (18/10/2026).
+- The ride story follows the ride's description by itself (18/10/2026); the description is set on the Ride Desk.
 - Every sheet shows its category pill (Scenic, Beach, Mountain bike, Gravel, Road from the shop; Hinterland gravel or
   mountain bike, point to point).
 - A good variety of place names. Named places are pinned from a source or the route's own stops, never guessed from

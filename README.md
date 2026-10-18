@@ -5,11 +5,13 @@ phone's browser with the map, spoken and written directions, stops and partner o
 
 ## How it works
 
-- Ride with GPS is the source of truth. The line, cues and stops are edited there, in the By Earth and Ocean
-  organisation account, exactly as before.
-- Every night (3:07am Brisbane), on every change here, and on demand, GitHub Actions runs `scripts/build.mjs`.
-  It pulls each route in `config/routes.json` from Ride with GPS, adds the offers, brand and translations,
-  and publishes the site to GitHub Pages.
+- Ride with GPS is the source of truth for the line, the cues and which places a ride passes (POI Library pins), in the
+  By Earth and Ocean organisation account.
+- The Ride Desk (below) is the master for everything else about a ride: whether it is live, its brand, type, name in the
+  app, description, ride sheet words, photo and staff notes.
+- Every night (3:07am Brisbane), every hour from 6am to 8pm, on every change here, and on demand, GitHub Actions runs
+  `scripts/build.mjs`. It pulls every ride switched on on the Ride Desk from Ride with GPS, adds the card, offers, brand
+  and translations, and publishes the site to GitHub Pages.
 - If Ride with GPS fails or returns broken data, the last good copy of that route stays live.
 - Each route lives at a secret address. The QR code carries the key; the app removes it from the address bar,
   so a copied link does not open the route. Search engines are told not to index the site.
@@ -34,16 +36,53 @@ phone's browser with the map, spoken and written directions, stops and partner o
 - An offer can be set to "finish" (`showAt`): it is not shown at the start, comes up in the last 1.5 km and sits on the
   finish card. Used for Land and Sea Brewery, over the road from the shop.
 
+## The Ride Desk (18/10/2026)
+
+The Ride Desk page (https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18, formerly the Ride Guide Settings page) holds one card
+per ride, plus the partner offers and rider settings. Where everything about a ride lives:
+
+| What | Master | How it gets here |
+| --- | --- | --- |
+| Route line, cues, which places a ride passes | Ride with GPS | The build reads it |
+| Place stories (spoken story, blog section, pin line) | The Story Library, `library/` | The build reads it |
+| Distance, climbing, riding time | Worked out from the line and the speed for the ride's type | The build |
+| Live in the Ride Guide; on the hire desk iPad and in the booklet; brand, type, stories, GPX; name in the app; description; title, category, sell line, four highlights, level, surface, terrain, recommended bike, sheet note; photo | The ride's Ride Desk card | `config/ride-desk.json` |
+| Who it suits, not for, time to allow, sold as, bikes to hire, start and finish, staff notes | The ride's Ride Desk card | `config/ride-desk-private.enc.json` (sealed) |
+| Map place names and camera angle on the ride sheets | Claude | `ride-sheets/rides.py` |
+
+- The page saves cards in its own data; the scheduled task "Ride Guide settings apply" copies them here with
+  `node scripts/ride-desk.mjs apply` (when Ben presses Save, and nightly at 2:41am). Never edit `config/ride-desk.json`
+  or the sealed file by hand: change the card.
+- The staff section and each route's Ride with GPS privacy code are sealed to the build's own key (made from
+  `ROUTE_SECRETS` keySalt, public half in `config/ride-desk-key.json` and at `desk-key.json`), so this public repo never
+  shows them and nothing new has to be pasted into GitHub when a ride is added. The build opens them; `health.json`
+  "desk" says whether it could.
+- New rides: once a day the "Ben's Desk Chrome fixes (bens-pc)" task runs `scripts/push/ride-desk-scan.js` in Ben's Ride
+  with GPS session and `node scripts/ride-desk.mjs scan`: a route in the organisation account with no card becomes a
+  "New, hidden" card, with its name, description and privacy code. Ben fills it in and switches it on.
+- Each build publishes, with no keys, codes or route line: `desk.json` (per card a fingerprint of what the build used and
+  any empty fields; per built ride its numbers, the places it passes in ride order with their Story Library entry, and stop
+  photos to pick from), `desk-key.json`, and `links.enc.json` (each live ride's link and route code, sealed to the Ride
+  Desk's key, so the settings task can fill the page's private routes/links record by itself). The settings task copies
+  these onto the page (`node scripts/ride-desk.mjs published` and `links`, and photo previews with
+  `scripts/ride_desk_thumbs.py`).
+- A ride switched off for the iPad is left out of `rides.json`, the ride sheets, the booklet and the locked index, and stays
+  in `staff.enc.json`.
+- Checks: `node scripts/ride-desk.mjs check <db dir>` (weekly, Drift Check Register, Ride Guide routes tab) lists a card
+  the build did not publish (it re-runs the settings task), a live ride with empty fields, an iPad ride with no photo, a new
+  ride left hidden more than 14 days, and a scan more than 3 days old.
+
 ## Staff ride list
 
-Each build also publishes `rides.json`: every live ride's name, description, brand, type, riding time, distance, climbing, stops, cautions and single track sections (and `test` for a test route), with no keys, codes or route line. The EO Crew staff app reads it for the Ride Guide manual (EO-HI-10), so a ride added here shows up in the manual by itself. Who a ride suits is written in the ride's Ride with GPS description.
+Each build also publishes `rides.json`: every ride switched on for the hire desk iPad, with its name, description, brand, type, riding time, distance, climbing, stops, cautions and single track sections (and `test` for a test route), and its Ride Desk sheet words (title, category, sell line, highlights, level, surface, terrain, bike), with no keys, codes or route line. The EO Crew staff app reads it for its customer lists and the Ride Guide manual (EO-HI-10), so a ride switched on shows up there by itself.
 
 ## Staff file for EO Crew (codes, QR codes and screenshots)
 
 The EO Crew Ride Guide manual (EO-HI-10) shows every ride's QR code, route code and link, and six Ride Guide screenshots,
 kept up to date by themselves. Route codes are never public, so these go out locked:
 
-- Each build writes `staff.enc.json` (every live ride's name, brand, type, route code and link) and the workflow adds
+- Each build writes `staff.enc.json` (every live ride's name, brand, type, route code and link, plus its Ride Desk title,
+  iPad switch and staff section: suits, notFor, timeToAllow, soldAs, bikes, startFinish, staffNotes) and the workflow adds
   `staff-screens.enc.json` (six phone screenshots of the Kids & Family ride, retaken at 3am, on every change and on
   demand by `scripts/staff_screens.py`, kept on the `staff-screens` branch). Both are locked with EO Crew's public key,
   `config/staff-key.pem` (`scripts/staff_bundle.mjs`): a public key can only lock, so only EO Crew's server can open them.
@@ -55,13 +94,13 @@ kept up to date by themselves. Route codes are never public, so these go out loc
 
 ## Ride counts
 
-An indicative count of how often each map is used, shown on the Ride Guide Settings page (17/10/2026). The app sends one
+An indicative count of how often each map is used, shown on the Ride Desk (17/10/2026). The app sends one
 anonymous tick the first time a route is opened on a phone, and one when a ride reaches the finish card (75% of the ride
 ridden on that phone). A tick is the route, the event, the date and a random id: nothing about the rider. Ticks wait on
 the phone until there is signal; staff check links and test drives never count. They go to the Apps Script counter in
 `config/counter.json` (code: `scripts/ride-counts.gs`), which writes them to the Google Sheet "Ride Guide ride counts"
 and counts each id once. The counter's web address gives the totals per route (open on purpose, Ben 17/10/2026: route names
-and numbers only, the sheet stays private); the "Ride Guide settings apply" task copies them to the settings page nightly. The weekly route check (`scripts/check.mjs`) confirms the counter is in the app
+and numbers only, the sheet stays private); the "Ride Guide settings apply" task copies them to the Ride Desk nightly. The weekly route check (`scripts/check.mjs`) confirms the counter is in the app
 and answering.
 
 ## Ride sheets and rides booklet
@@ -80,11 +119,13 @@ It runs after every build and keeps itself up to date:
 - The 3D map is drawn again only when the route line changes a lot: its length by more than 2 percent, or any part more
   than 100 m from the line the map was drawn from (or its map settings in `ride-sheets/rides.py` change). Cue, stop and
   story edits, or a line nudged a few metres, keep the map.
-- The photo is the ride's featured image on its Bike On website page, fetched again only when that image or
-  `config/booklet-photos.json` changes. To use a different photo, add the ride's slug and an image address (or a path
-  in this repo) to `photos` there. A ride with no photo shows a placeholder and is listed in the manifest.
-- A new live ride gets a sheet straight away from the Ride Guide data; its title, highlights, level, surface and map
-  place names are added to `ride-sheets/rides.py`.
+- The photo is the one on the ride's Ride Desk card: by default the featured image on its Bike On website page, or one
+  of the ride's own photos, an upload or a link picked on the card. Fetched again only when it changes. A ride with no
+  photo shows a placeholder and is flagged by the weekly check. `ride-sheets/photos.json` on the site says which photo
+  each sheet uses.
+- The sheet's words (title, category, sell line, highlights, level, surface, terrain, bike, note) come from the Ride Desk
+  card. A new ride on the iPad gets a sheet straight away; its map place names are added to `ride-sheets/rides.py`.
+- Only rides switched on for the hire desk iPad get a sheet and a place in the booklet.
 
 Route codes and links are never public, so the sheets are only published locked with EO Crew's public key:
 `booklet.pdf.enc` with `booklet.key.json` (the whole booklet, for printing; envelope v2: the PDF's raw AES-GCM
@@ -105,18 +146,20 @@ Every story, blog section, pin line, kayak talking point and wildlife card is wr
 | Change | Where |
 | --- | --- |
 | Cue wording, stops, the route line | Ride with GPS. Live by the next morning, or run the workflow by hand. |
-| Add or remove a route | `config/routes.json`, plus the route's Ride with GPS privacy code in the `ROUTE_SECRETS` secret |
-| Partner offers | The Ride Guide Settings page (`config/offers.json` underneath; `validUntil` hides it after that date, `showAt` "finish" keeps it for the end of the ride) |
+| Add a ride | Draw it in the By Earth and Ocean organisation account on Ride with GPS. It appears on the Ride Desk as New, hidden within a day; fill in its card and switch it on. |
+| Remove a ride | Switch it off on its Ride Desk card. Its link and code stop working. |
+| A ride's description, name in the app, brand, type, stories, GPX, sheet words, photo, staff notes | Its Ride Desk card |
+| Partner offers | The Ride Desk (`config/offers.json` underneath; `validUntil` hides it after that date, `showAt` "finish" keeps it for the end of the ride) |
 | Any story, blog section, pin line, kayak talking point or wildlife card | The Story Library, `library/` (read `library/README.md`). `config/stories.json` and `config/place-record.json` are generated from it. |
 | How a word or name is said aloud | `config/speech.json` |
-| When turns are announced, close-together turns, off-route sensitivity, stop pop-ups, screen defaults | The Ride Guide Settings page (https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18). Saving it starts the "Ride Guide settings apply" scheduled task, which writes `config/settings.json` here. Every value is range-checked and falls back to its default. |
-| Which brand each map uses (By Earth and Ocean or Bike On) | The Ride Guide Settings page; the task writes `brand` in `config/routes.json`. The map then shows that brand's logo and colours. |
-| Whether a ride announces its points of interest by default | The Ride Guide Settings page; the task writes `stories` in `config/routes.json` (Ben, 15/10/2026: scenic and mountain bike rides on, except Tewantin MTB Trails; road and gravel rides off). With stories on, a rider reaching a point of interest gets its card and a short spoken overview, with Hear the full story on the card. With stories off, points of interest are not announced at all (no card, nothing spoken); directions, cautions, welcome pins and turnarounds always are. Riders can switch it in the map's Settings; their choice is kept for that ride only. A ride with no `stories` value is reported in `health.json` and uses the screen default. |
-| Riding time on a ride page | Each route's `type` in `config/routes.json` (scenic, mtb, gravel, road, hinterlandMtb, hinterlandGravel) picks its average speed, set per type on the Ride Guide Settings page (`speeds` in `config/settings.json`; Ben, 17/10/2026: different rides need different speeds). Distance comes from the route line. A route with no `type` is reported in `health.json` and uses its activity speed. `rides.json` carries each ride's `type` and `riding_minutes` for the EO Crew manual. |
+| When turns are announced, close-together turns, off-route sensitivity, stop pop-ups, screen defaults | The Ride Desk (https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18). Saving it starts the "Ride Guide settings apply" scheduled task, which writes `config/settings.json` here. Every value is range-checked and falls back to its default. |
+| Which brand each map uses (By Earth and Ocean or Bike On) | The ride's Ride Desk card (`brand` in `config/ride-desk.json`). The map then shows that brand's logo and colours. |
+| Whether a ride announces its points of interest by default | The ride's Ride Desk card (`stories` in `config/ride-desk.json`; Ben, 15/10/2026: scenic and mountain bike rides on, except Tewantin MTB Trails; road and gravel rides off). With stories on, a rider reaching a point of interest gets its card and a short spoken overview, with Hear the full story on the card. With stories off, points of interest are not announced at all (no card, nothing spoken); directions, cautions, welcome pins and turnarounds always are. Riders can switch it in the map's Settings; their choice is kept for that ride only. A ride with no `stories` value is reported in `health.json` and uses the screen default. |
+| Riding time on a ride page | Each ride's type on its Ride Desk card (scenic, mtb, gravel, road, hinterlandMtb, hinterlandGravel) picks its average speed, set per type on the Ride Desk (`speeds` in `config/settings.json`; Ben, 17/10/2026: different rides need different speeds). Distance comes from the route line. A route with no `type` is reported in `health.json` and uses its activity speed. `rides.json` carries each ride's `type` and `riding_minutes` for the EO Crew manual. |
 | Brand colours, logos, phone numbers | `config/brands.json` and `site/assets/` (use the normal By Earth and Ocean header logo, not the reversed one) |
 | Translations | `config/i18n/<lang>.json`. New or changed English text is listed in `i18n-missing.json` after a build and in `health.json`; the weekly drift check fills the gaps. Brief: `config/TRANSLATION_BRIEF.md` |
-| Printed ride sheets and booklet (titles, highlights, level, surface, map place names, layout, ride photos) | `ride-sheets/` (read `ride-sheets/README.md`) and `config/booklet-photos.json`. The ride story and numbers follow Ride with GPS by themselves. |
-| A route's QR code needs replacing | Bump its `rev` in `config/routes.json`. The old code stops working. |
+| Printed ride sheets and booklet | Words and photo: the Ride Desk card. Map place names, layout: `ride-sheets/` (read `ride-sheets/README.md`). The story is the card's description; the numbers follow the route line. |
+| A route's QR code needs replacing | Bump its `rev` in `config/ride-desk.json` (Claude's field; the settings task keeps it). The old code stops working. |
 
 ## Checks
 
