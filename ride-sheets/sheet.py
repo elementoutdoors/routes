@@ -22,6 +22,8 @@ FONT_CSS = ''.join('@font-face{font-family:"Montserrat";src:url(data:font/ttf;ba
 IMG_Q = 82          # JPEG quality for the map and photo inside the sheets
 MAP_MAX_W = 2400    # the map is at most this many pixels wide in a sheet (297 mm, about 205 dpi)
 SCREEN_MAP_W = 1800  # the single sheets EO Crew shows on the iPad: a lighter map (about 155 dpi), same layout
+MAP_BYTES = {MAP_MAX_W: 760_000, SCREEN_MAP_W: 430_000}   # most a map may weigh in each copy
+PHOTO_BYTES = 110_000
 PHOTO_ASPECT = 58 / 73   # the photo box under the map: 58 mm wide, about 73 mm tall
 
 
@@ -66,11 +68,17 @@ def cover_crop(im, aspect, h):
     return im
 
 
-def b64img(im, q=86, max_w=None):
+def b64img(im, q=86, max_w=None, max_bytes=None):
+    """JPEG data URL. With max_bytes, the quality steps down from q (to 62 at most) until the picture fits: a busy
+    forest map compresses far less than a coastal one, and the sheet files must stay small."""
     im = im.convert('RGB')
     if max_w and im.width > max_w:
         im = im.resize((max_w, round(im.height * max_w / im.width)), Image.LANCZOS)
-    b = io.BytesIO(); im.save(b, 'JPEG', quality=q, optimize=True)
+    while True:
+        b = io.BytesIO(); im.save(b, 'JPEG', quality=q, optimize=True, progressive=True)
+        if not max_bytes or b.tell() <= max_bytes or q <= 62:
+            break
+        q -= 4
     return 'data:image/jpeg;base64,' + base64.b64encode(b.getvalue()).decode()
 
 
@@ -160,10 +168,10 @@ def build(rid, story_limit=640, map_q=IMG_Q, map_w=MAP_MAX_W):
     cfg = RIDES[rid]; T = THEMES[cfg['style']]; r = R[rid]
     out = os.path.join(OUT, cfg['slug']); os.makedirs(out, exist_ok=True)
     mp = map_path(cfg)
-    MAP = (f'<img src="{b64img(Image.open(mp), map_q, map_w)}" alt="3D map of the {cfg["title"]} route">' if os.path.exists(mp)
+    MAP = (f'<img src="{b64img(Image.open(mp), map_q, map_w, MAP_BYTES.get(map_w))}" alt="3D map of the {cfg["title"]} route">' if os.path.exists(mp)
            else '<div class="nomap">3D map to come</div>')
     pp = photo_path(cfg)
-    PHOTO = (f'<img src="{b64img(cover_crop(Image.open(pp), PHOTO_ASPECT, 600), IMG_Q)}" alt="Riding the {cfg["title"]}">' if os.path.exists(pp)
+    PHOTO = (f'<img src="{b64img(cover_crop(Image.open(pp), PHOTO_ASPECT, 600), IMG_Q, None, PHOTO_BYTES)}" alt="Riding the {cfg["title"]}">' if os.path.exists(pp)
              else f'<div class="nophoto">{LOGO_BIKEON if cfg["brand"] == "bikeon" else LOGO_BEO}<span>Photo to come</span></div>')
     url, code = r['link'], r['code']
     logo = LOGO_BIKEON if cfg['brand'] == 'bikeon' else LOGO_BEO

@@ -310,6 +310,9 @@ class Build:
         self.write_index(built, rows, held)
         self.m['built'], self.m['pages'] = built, pages
         print(f'ride sheets: made {len(use)} sheets ({len(held)} held back) and a {pages} page booklet, locked', flush=True)
+        for r in rows:
+            if rid_of := next((k for k in use if M[k]['slug'] == r['slug']), None):
+                print(f"ride sheets: size {r['slug']}: screen PDF {os.path.getsize(use[rid_of][1]) / 1e6:.2f} MB, locked {r['sheet_bytes'] / 1e6:.2f} MB")
         print('ride sheets: sizes: booklet PDF %.1f MB, locked %.1f MB; screen sheets %.2f to %.2f MB, locked %.2f to %.2f MB' % (
             os.path.getsize(pdf) / 1e6, os.path.getsize(os.path.join(LOCKED, 'booklet.enc.json')) / 1e6,
             min(os.path.getsize(use[r][1]) for r in use) / 1e6, max(os.path.getsize(use[r][1]) for r in use) / 1e6,
