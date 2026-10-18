@@ -57,8 +57,8 @@ per ride, plus the partner offers and rider settings. Where everything about a r
   `ROUTE_SECRETS` keySalt, public half in `config/ride-desk-key.json` and at `desk-key.json`), so this public repo never
   shows them and nothing new has to be pasted into GitHub when a ride is added. The build opens them; `health.json`
   "desk" says whether it could.
-- New rides: once a day the "Ben's Desk Chrome fixes (bens-pc)" task runs `scripts/push/ride-desk-scan.js` in Ben's Ride
-  with GPS session and `node scripts/ride-desk.mjs scan`: a route in the organisation account with no card becomes a
+- New rides: once a day the "Ride Guide settings apply" task (its nightly 2:41am run, step 10) runs
+  `scripts/push/ride-desk-scan.js` in Ben's Ride with GPS session in Chrome on bens-pc and `node scripts/ride-desk.mjs scan`: a route in the organisation account with no card becomes a
   "New, hidden" card, with its name, description and privacy code. Ben fills it in and switches it on.
 - Each build publishes, with no keys, codes or route line: `desk.json` (per card a fingerprint of what the build used and
   any empty fields; per built ride its numbers, the places it passes in ride order with their Story Library entry, and stop
