@@ -69,16 +69,19 @@ def cover_crop(im, aspect, h):
 
 
 def b64img(im, q=86, max_w=None, max_bytes=None):
-    """JPEG data URL. With max_bytes, the quality steps down from q (to 62 at most) until the picture fits: a busy
-    forest map compresses far less than a coastal one, and the sheet files must stay small."""
+    """JPEG data URL. With max_bytes, the quality steps down from q (to 62), then the picture gets a little smaller, until
+    it fits: a busy forest map compresses far less than a coastal one, and the sheet files must stay small."""
     im = im.convert('RGB')
     if max_w and im.width > max_w:
         im = im.resize((max_w, round(im.height * max_w / im.width)), Image.LANCZOS)
     while True:
         b = io.BytesIO(); im.save(b, 'JPEG', quality=q, optimize=True, progressive=True)
-        if not max_bytes or b.tell() <= max_bytes or q <= 62:
+        if not max_bytes or b.tell() <= max_bytes or im.width < 1000:
             break
-        q -= 4
+        if q > 62:
+            q -= 4
+        else:   # very busy pictures (dense forest seen close up) still too heavy: a little smaller, a little better quality
+            im = im.resize((round(im.width * .88), round(im.height * .88)), Image.LANCZOS); q = 72
     return 'data:image/jpeg;base64,' + base64.b64encode(b.getvalue()).decode()
 
 
