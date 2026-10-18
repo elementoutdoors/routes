@@ -47,3 +47,11 @@ if (process.argv[2] === 'booklet') {
   fs.writeFileSync(outFile, JSON.stringify(seal({ ...m, kind: m.kind || 'booklet', type: 'application/pdf', b64 })));
   console.log(`sealed the rides booklet (${Math.round(b64.length * 3 / 4 / 1024)} KB) into ${outFile}`);
 }
+
+// Any small JSON document (the ride sheets index, ride-sheets/build.py), locked as it is.
+// Usage: node scripts/staff_bundle.mjs json <in.json> <out.enc.json>
+if (process.argv[2] === 'json') {
+  const [inFile, outFile] = process.argv.slice(3);
+  fs.writeFileSync(outFile, JSON.stringify(seal(JSON.parse(fs.readFileSync(inFile, 'utf8')))));
+  console.log(`sealed ${path.basename(inFile)} into ${outFile}`);
+}

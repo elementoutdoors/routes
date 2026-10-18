@@ -241,3 +241,14 @@ def seal(pdf, meta, out):
         os.replace(tmp, out)
 
 
+
+
+def seal_json(obj, out):
+    """lock a small JSON document (the index) with EO Crew's public key, in the same envelope as staff.enc.json"""
+    with tempfile.TemporaryDirectory() as td:
+        src = os.path.join(td, 'in.json'); json.dump(obj, open(src, 'w'), separators=(',', ':'))
+        tmp = out + '.tmp'
+        subprocess.run(['node', os.path.join(ROOT, 'scripts', 'staff_bundle.mjs'), 'json', src, tmp], check=True)
+        env = json.load(open(tmp))
+        assert env.get('v') == 1 and env.get('key') and env.get('data'), 'locked file looks wrong'
+        os.replace(tmp, out)

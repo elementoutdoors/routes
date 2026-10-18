@@ -1,6 +1,7 @@
 """Check every finished sheet: its QR code opens that ride in the Ride Guide, there are no other QR codes (no app store
 or Ride with GPS codes), the route code is printed, and the words keep the house rules (no banned spellings, no dashes
-between words). check(results) -> list of problems; python3 check.py <rid> ... checks sheets already made."""
+between words), and the elevation profile is not flat on a ride that climbs. check(results) -> {rid: [(blocking, problem)]}:
+a blocking problem holds that sheet back and keeps its previous one. python3 check.py <rid> ... checks sheets already made."""
 import os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -39,33 +40,52 @@ def read_qr(crop):
     return ''
 
 
+FLAT_CLIMB_M, FLAT_RANGE_M = 40, 10   # a ride that climbs more than this must show at least this much on its profile
+
+
+def profile_range(rid):
+    """Lowest and highest point of the elevation profile as the sheet plots it (the same smoothing as sheet.profile)."""
+    es = [p[2] for p in R[rid]['pts']]
+    sm = [sum(es[max(0, i - 2):i + 3]) / len(es[max(0, i - 2):i + 3]) for i in range(len(es))]
+    return min(sm), max(sm)
+
+
 def check_one(rid, png, html_path):
+    """[(blocking, problem)] for one sheet. A blocking problem holds the sheet back and keeps the previous one."""
     import cv2
     probs = []
     img = cv2.imread(png)
     if img is None:
-        return [f'{rid}: no sheet picture']
+        return [(True, 'no sheet picture')]
     h, w = img.shape[:2]
     val = read_qr(img[int(h * .6):, int(w * .8):])
     if val != R[rid]['link']:
-        probs.append(f'{rid}: QR code does not open the ride ({"unreadable" if not val else "wrong link"})')
+        probs.append((True, f'QR code does not open the ride ({"unreadable" if not val else "wrong link"})'))
     others = [v for v in decode_all(img[:, :int(w * .78)]) if v]
     if others:
-        probs.append(f'{rid}: extra QR code on the sheet')
+        probs.append((True, 'extra QR code on the sheet'))
     txt = re.sub(r'data:[^"\')]+', '', open(html_path).read())
     if R[rid]['code'] and R[rid]['code'] not in txt:
-        probs.append(f'{rid}: route code missing')
+        probs.append((True, 'route code missing'))
+    lo, hi = profile_range(rid)
+    gain = R[rid]['gain'] or 0
+    print(f'profile {R[rid]["slug"]}: min {lo:.0f} m, max {hi:.0f} m, climbing {gain} m', flush=True)
+    if gain > FLAT_CLIMB_M and hi - lo < FLAT_RANGE_M:
+        probs.append((True, f'elevation profile is flat ({lo:.0f} to {hi:.0f} m) but the ride climbs {gain} m'))
     words = re.sub(r'<style>.*?</style>|<script>.*?</script>', '', txt, flags=re.S)
     hits = [b for b in BANNED if b in words]
     if hits:
-        probs.append(f'{rid}: house style: ' + ', '.join(hits))
+        probs.append((False, 'house style: ' + ', '.join(hits)))
     return probs
 
 
 def check(results):
-    out = []
+    """{rid: [(blocking, problem)]} for every sheet that has a problem."""
+    out = {}
     for rid, r in results.items():
-        out += check_one(rid, r['png'], os.path.join(OUT, RIDES[rid]['slug'], 'sheet.html'))
+        p = check_one(rid, r['png'], os.path.join(OUT, RIDES[rid]['slug'], 'sheet.html'))
+        if p:
+            out[rid] = p
     return out
 
 
@@ -73,5 +93,7 @@ if __name__ == '__main__':
     from sheet import fname
     res = {rid: dict(png=os.path.join(OUT, 'final', fname(rid) + '.png')) for rid in sys.argv[1:]}
     p = check(res)
-    print('\n'.join(p) or 'all good')
+    for rid, items in p.items():
+        for blocking, msg in items:
+            print(rid, 'HOLD' if blocking else 'note', msg)
     sys.exit(1 if p else 0)

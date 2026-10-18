@@ -87,8 +87,10 @@ It runs after every build and keeps itself up to date:
   place names are added to `ride-sheets/rides.py`.
 
 Route codes and links are never public, so the sheets are only published locked with EO Crew's public key:
-`booklet.enc.json` (the whole booklet, with each ride's page) and `ride-sheets/<slug>.enc.json` (one sheet each), next to
-`staff.enc.json`. The plain sheets are never published or committed. The 3D maps, photos, `manifest.json` (what each
+`booklet.enc.json` (the whole booklet, for printing), `ride-sheets/<slug>.enc.json` (one lighter sheet each, for the
+iPad) and `ride-sheets/index.enc.json` (a small list for EO Crew: pages, dates, sizes, photos, sheets held back), next to
+`staff.enc.json`. A sheet that fails its checks (QR code, route code, a flat elevation profile on a ride that climbs) is
+held back and the ride keeps its previous sheet. The plain sheets are never published or committed. The 3D maps, photos, `manifest.json` (what each
 sheet was built from, with a changelog) and the last locked files are kept in the Actions cache, never in the repo. A
 failure keeps the last good booklet and never stops the site build. How it works and what to edit:
 `ride-sheets/README.md`.

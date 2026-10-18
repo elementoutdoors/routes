@@ -8,7 +8,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from paths import ASSETS, OUT
 from rides import RIDES, ORDER_SHOP, ORDER_HINT
-from sheet import THEMES, FONT, LOGO_BIKEON, LOGO_BEO, b64img, stats_for, photo_path, map_path
+from sheet import THEMES, FONT_CSS, IMG_Q, MAP_MAX_W, LOGO_BIKEON, LOGO_BEO, b64img, stats_for, photo_path, map_path
 
 NUM = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen',
        'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty']
@@ -52,7 +52,7 @@ def cover(key, page_of):
     book = BOOKS[key]; T = THEMES[book['theme']]
     ids = [r for r in ordered(key) if r in page_of]
     pp = cover_photo(key, ids)
-    photo = f'<img src="{b64img(Image.open(pp), 86, 3000)}" alt="">' if pp else ''
+    photo = f'<img src="{b64img(Image.open(pp), IMG_Q, MAP_MAX_W)}" alt="">' if pp else ''
     groups = {}
     for rid in ids:
         groups.setdefault(group_of(rid), []).append(rid)
@@ -65,7 +65,7 @@ def cover(key, page_of):
     tab = ('.tab{top:0;right:10mm;padding:3.5mm 4mm 3mm}.logo{width:40mm}' if book['theme'] == 'bikeon'
            else '.tab{top:0;right:10mm;padding:3mm 3.5mm 3mm}.logo{width:30mm}')
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{book['h1']}</title><style>
-@font-face{{font-family:"Montserrat";src:url(data:font/woff2;base64,{FONT}) format("woff2");font-weight:100 900}}
+{FONT_CSS}
 :root{{--brand:{T['brand']};--ink:{T['ink']};--paper:{T['paper']};--tint:{T['tint']};--grey:{T['grey']};--f:"Montserrat",Arial,sans-serif}}
 *{{box-sizing:border-box}}body{{margin:0}}
 @page{{size:A4 landscape;margin:0}}

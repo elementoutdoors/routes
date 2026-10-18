@@ -14,10 +14,18 @@ from paths import ASSETS, ROOT, STATE, OUT
 from rides import RIDES, R, story, clean_title
 from textfit import h1pt
 
-FONT = base64.b64encode(open(os.path.join(ASSETS, 'montserrat.woff2'), 'rb').read()).decode()
+# Static Montserrat weights (Latin subset): PDFs embed these as small TrueType fonts, where the variable font
+# becomes a much larger Type 3 font on every page. montserrat.woff2 (variable) stays for the map labels.
+FONT_CSS = ''.join('@font-face{font-family:"Montserrat";src:url(data:font/ttf;base64,'
+                   + base64.b64encode(open(os.path.join(ASSETS, f'montserrat-{w}.ttf'), 'rb').read()).decode()
+                   + f') format("truetype");font-weight:{w};font-display:block}}' for w in (500, 600, 700, 800, 900))
+IMG_Q = 82          # JPEG quality for the map and photo inside the sheets
+MAP_MAX_W = 2400    # the map is at most this many pixels wide in a sheet (297 mm, about 205 dpi)
+SCREEN_MAP_W = 1800  # the single sheets EO Crew shows on the iPad: a lighter map (about 155 dpi), same layout
+PHOTO_ASPECT = 58 / 73   # the photo box under the map: 58 mm wide, about 73 mm tall
 
 
-def _img_tag(path, cls, alt, box=720):
+def _img_tag(path, cls, alt, box=380):   # the logos print at 30 to 40 mm wide: 380 px is about 250 dpi
     im = Image.open(path); im.thumbnail((box, box))
     b = io.BytesIO(); im.save(b, 'PNG', optimize=True)
     return f'<img class="{cls}" src="data:image/png;base64,{base64.b64encode(b.getvalue()).decode()}" alt="{alt}">'
@@ -44,6 +52,18 @@ THEMES = {
     'beo': dict(brand='#182B3D', ink='#292929', paper='#FAF8F4', tint='#F3EEE9', grey='#5E6266', kickbg='#F5CA3A', kickfg='#182B3D',
                 dot='#E26327', code='#F5CA3A', prof='#203B52', peak='#E26327', axis='#D9D2C8', grid='#E8E2D9'),
 }
+
+
+def cover_crop(im, aspect, h):
+    """The middle of the picture at the shape of its box (width / height), h pixels tall: what object-fit cover shows."""
+    w0, h0 = im.size
+    if w0 / h0 > aspect:
+        cw = round(h0 * aspect); im = im.crop(((w0 - cw) // 2, 0, (w0 - cw) // 2 + cw, h0))
+    else:
+        ch = round(w0 / aspect); im = im.crop((0, (h0 - ch) // 2, w0, (h0 - ch) // 2 + ch))
+    if im.height > h:
+        im = im.resize((round(h * aspect), h), Image.LANCZOS)
+    return im
 
 
 def b64img(im, q=86, max_w=None):
@@ -136,14 +156,14 @@ def photo_path(cfg):
     return os.path.join(STATE, 'photos', cfg['slug'] + '.jpg')
 
 
-def build(rid, story_limit=640, map_q=76, map_w=2400):
+def build(rid, story_limit=640, map_q=IMG_Q, map_w=MAP_MAX_W):
     cfg = RIDES[rid]; T = THEMES[cfg['style']]; r = R[rid]
     out = os.path.join(OUT, cfg['slug']); os.makedirs(out, exist_ok=True)
     mp = map_path(cfg)
     MAP = (f'<img src="{b64img(Image.open(mp), map_q, map_w)}" alt="3D map of the {cfg["title"]} route">' if os.path.exists(mp)
            else '<div class="nomap">3D map to come</div>')
     pp = photo_path(cfg)
-    PHOTO = (f'<img src="{b64img(Image.open(pp), 84, 900)}" alt="Riding the {cfg["title"]}">' if os.path.exists(pp)
+    PHOTO = (f'<img src="{b64img(cover_crop(Image.open(pp), PHOTO_ASPECT, 600), IMG_Q)}" alt="Riding the {cfg["title"]}">' if os.path.exists(pp)
              else f'<div class="nophoto">{LOGO_BIKEON if cfg["brand"] == "bikeon" else LOGO_BEO}<span>Photo to come</span></div>')
     url, code = r['link'], r['code']
     logo = LOGO_BIKEON if cfg['brand'] == 'bikeon' else LOGO_BEO
@@ -164,7 +184,7 @@ def build(rid, story_limit=640, map_q=76, map_w=2400):
     html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title} Ride Map</title>
 <style>
-@font-face{{font-family:"Montserrat";src:url(data:font/woff2;base64,{FONT}) format("woff2");font-weight:100 900;font-display:block}}
+{FONT_CSS}
 /* One A4 landscape ride sheet: 3D route map across the top, the ride story, numbers and scan code underneath. */
 :root{{--brand:{T['brand']};--ink:{T['ink']};--paper:{T['paper']};--tint:{T['tint']};--grey:{T['grey']};--dot:{T['dot']};--desk:#D9DEE4;--shadow:rgba(20,30,45,.18);--f:"Montserrat",Arial,sans-serif}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--desk:#16191D;--shadow:rgba(0,0,0,.55);color-scheme:dark}}}}
@@ -262,7 +282,7 @@ CHECK_JS = '''()=>{const s=document.querySelector('.sheet').getBoundingClientRec
 
 
 def shoot(rids, launch_args=None):
-    """Sheet PNG (3x) and A4 PDF per ride, in OUT/final. A ride story too long for its column is shortened a sentence
+    """Sheet PNG (3x), A4 PDF (for printing) and a lighter A4 PDF (for screens) per ride, in OUT/final. A ride story too long for its column is shortened a sentence
     at a time until it fits. Returns {rid: {png, pdf, check, story}}."""
     from playwright.sync_api import sync_playwright
     os.makedirs(os.path.join(OUT, 'final'), exist_ok=True)
@@ -283,8 +303,12 @@ def shoot(rids, launch_args=None):
             pg.locator('.sheet').screenshot(path=base + '.png')
             pg.emulate_media(media='print')
             pg.pdf(path=base + '.pdf', format='A4', landscape=True, print_background=True, prefer_css_page_size=True)
+            # the lighter copy for the iPad: the same sheet with the map at SCREEN_MAP_W
+            p, _ = build(rid, limit, map_w=SCREEN_MAP_W)
+            pg.goto('file://' + p); pg.wait_for_timeout(300)
+            pg.pdf(path=base + ' (screen).pdf', format='A4', landscape=True, print_background=True, prefer_css_page_size=True)
             pg.emulate_media(media='screen')
-            res[rid] = dict(png=base + '.png', pdf=base + '.pdf', check=chk, story=story_used)
+            res[rid] = dict(png=base + '.png', pdf=base + '.pdf', pdf_screen=base + ' (screen).pdf', check=chk, story=story_used)
             print(rid, chk, flush=True)
         b.close()
     return res

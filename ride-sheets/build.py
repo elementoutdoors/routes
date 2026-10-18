@@ -2,7 +2,10 @@
 
 One A4 landscape sheet per live ride (both brands, from sheet.py) and the combined booklet (booklet.py), kept up to date
 by themselves. Route codes and links are never public, so they are only published locked with EO Crew's public key:
-dist/booklet.enc.json (the whole booklet, with the page of each ride) and dist/ride-sheets/<slug>.enc.json (one sheet).
+dist/booklet.enc.json (the whole booklet, for printing), dist/ride-sheets/<slug>.enc.json (one sheet each, a lighter copy
+for the iPad) and dist/ride-sheets/index.enc.json (a small list for EO Crew: each ride's page, dates, sizes, holds).
+Each sheet is checked first (check.py). A sheet with a blocking problem (QR code, route code, a flat elevation profile on
+a ride that climbs) is held back: the ride keeps its previous sheet, kept encrypted in the cache, and the reason is logged.
 
 Living rules (what each sheet was built from is kept in STATE/manifest.json, with a changelog):
   3D map       drawn again only when the route line changes a lot (length by more than 2 percent, or any part more than
@@ -18,7 +21,7 @@ python3 ride-sheets/build.py --plan    print none, sheets or maps (what this run
 Options: --force (make every sheet again), --redraw-maps, --only <rid,...>, --map-budget SECONDS.
 A failure never stops the site build: the last good locked files are kept and published.
 """
-import argparse, datetime, glob, hashlib, json, os, re, shutil, sys, time, traceback
+import argparse, datetime, glob, hashlib, json, os, re, shutil, subprocess, sys, time, traceback
 from zoneinfo import ZoneInfo
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -145,6 +148,8 @@ class Build:
                 self.log(rid, f"numbers changed: distance {base['distance_km']} to {n['distance_km']} km, climbing {base['gain_m']} to {n['gain_m']} m")
                 e['numbers_logged'] = n
             if not base: e['numbers_logged'] = n
+            if e.get('numbers') and e['numbers'] != n: e['numbers_changed_at'] = self.today
+            e.setdefault('numbers_changed_at', e.get('added'))
             e['numbers'] = n
             if e.get('story') and e['story'] != i['story']:
                 self.log(rid, 'ride story updated' + (' from its Ride with GPS description' if e.get('story_from') == 'ride' else ' (website summary)' if e.get('story_from') == 'website' else ''))
@@ -245,41 +250,136 @@ class Build:
             e['story_from_was'] = e['story_from']
 
     def make(self):
+        """Make every sheet, check it, and lock what passed. A sheet with a blocking problem is held back: the ride keeps
+        its previous sheet (kept encrypted in the cache) and the reason is logged and listed in the index."""
         import sheet, booklet, check
         M = self.m['rides']
         args = ['--ignore-certificate-errors']
         res = sheet.shoot(self.order, launch_args=args)
-        problems = check.check(res)
-        self.m['problems'] = problems
-        for p in problems:
-            print('ride sheets: CHECK', p)
-        if any('QR code' in p or 'route code missing' in p for p in problems):
-            print('ride sheets: a QR code or route code check failed, so the last good booklet is kept')
-            return False
+        probs = check.check(res)
+        held, use = {}, {}
         for rid in self.order:
-            M[rid]['story_printed'] = res[rid]['story']
-            M[rid]['fit'] = res[rid]['check']
+            e = M[rid]; slug = e['slug']
+            for blocking, msg in probs.get(rid, []):
+                print(f'ride sheets: CHECK {slug}: {"HOLD " if blocking else ""}{msg}', flush=True)
+            block = [msg for blocking, msg in probs.get(rid, []) if blocking]
+            e['notes'] = [msg for blocking, msg in probs.get(rid, []) if not blocking]
+            if block:
+                prev = vault_get(slug)
+                if not e.get('held'):
+                    self.log(rid, 'sheet held back: ' + '; '.join(block) + (' (the previous sheet stays)' if prev else ' (no previous sheet to keep)'))
+                e['held'] = {'reason': '; '.join(block), 'since': (e.get('held') or {}).get('since') or self.today, 'previous_sheet': bool(prev)}
+                held[slug] = e['held']
+                if prev:
+                    use[rid] = (prev[0], prev[1], False)
+            else:
+                if e.pop('held', None):
+                    self.log(rid, 'sheet no longer held back')
+                vault_put(slug, res[rid]['pdf'], res[rid]['pdf_screen'])
+                use[rid] = (res[rid]['pdf'], res[rid]['pdf_screen'], True)
+                e['story_printed'], e['fit'] = res[rid]['story'], res[rid]['check']
+        self.m['held'] = held
+        if not use:
+            print('ride sheets: every sheet was held back, so the last good booklet is kept')
+            return False
         pdf = os.path.join(OUT, BOOKLET)
-        pages, page_of = booklet.make({rid: res[rid]['pdf'] for rid in self.order}, pdf, launch_args=args)
+        pages, page_of = booklet.make({rid: use[rid][0] for rid in self.order if rid in use}, pdf, launch_args=args)
         built = now().isoformat(timespec='seconds')
         os.makedirs(os.path.join(LOCKED, 'ride-sheets'), exist_ok=True)
-        index = []
+        rows = []
         for rid in self.order:
-            e = M[rid]; e['page'] = page_of[rid]
-            index.append({'slug': e['slug'], 'title': e['title'], 'brand': self.RIDES[rid]['brand'], 'kind': booklet.group_of(rid),
-                          'page': page_of[rid], 'updated': e.get('updated'), 'sheet': f'ride-sheets/{e["slug"]}.enc.json'})
-            L.seal(res[rid]['pdf'], {'built': built, 'kind': 'ride-sheet', 'slug': e['slug'], 'title': e['title'],
-                                     'file': sheet.fname(rid) + '.pdf', 'updated': e.get('updated')},
-                   os.path.join(LOCKED, 'ride-sheets', e['slug'] + '.enc.json'))
+            e = M[rid]; e['page'] = page_of.get(rid)
+            locked = os.path.join(LOCKED, 'ride-sheets', e['slug'] + '.enc.json')
+            if rid in use and (use[rid][2] or not os.path.exists(locked)):
+                L.seal(use[rid][1], {'built': built, 'kind': 'ride-sheet', 'slug': e['slug'], 'title': e['title'],
+                                     'file': sheet.fname(rid) + '.pdf', 'updated': e.get('updated')}, locked)
+            rows.append({'slug': e['slug'], 'title': e['title'], 'brand': self.RIDES[rid]['brand'], 'kind': booklet.group_of(rid),
+                         'page': page_of.get(rid), 'updated': e.get('updated'),
+                         'sheet': f'ride-sheets/{e["slug"]}.enc.json' if os.path.exists(locked) else None,
+                         'sheet_bytes': os.path.getsize(locked) if os.path.exists(locked) else 0,
+                         'has_photo': (e.get('photo') or {}).get('source') not in (None, 'placeholder'),
+                         'map_redrawn_at': (e.get('map') or {}).get('drawn'), 'details_changed_at': e.get('numbers_changed_at'),
+                         'held': bool(e.get('held'))})
+        live = {M[r]['slug'] for r in self.order}
         for f in glob.glob(os.path.join(LOCKED, 'ride-sheets', '*.enc.json')):
-            if os.path.basename(f)[:-9] not in {M[r]['slug'] for r in self.order} and not self.a.only:
+            if os.path.basename(f)[:-9] not in live and os.path.basename(f) != 'index.enc.json' and not self.a.only:
                 os.remove(f)
         L.seal(pdf, {'built': built, 'title': 'Bike On and By Earth and Ocean ride sheets', 'file': BOOKLET, 'pages': pages,
-                     'rides': index, 'photo_placeholders': self.m['placeholders']['photo'], 'maps_to_come': self.m['placeholders']['map'],
-                     'changelog': self.m['changelog'][-200:]}, os.path.join(LOCKED, 'booklet.enc.json'))
+                     'rides': rows, 'photo_placeholders': self.m['placeholders']['photo'], 'maps_to_come': self.m['placeholders']['map'],
+                     'held': held, 'changelog': self.m['changelog'][-200:]}, os.path.join(LOCKED, 'booklet.enc.json'))
+        self.write_index(built, rows, held)
         self.m['built'], self.m['pages'] = built, pages
-        print(f'ride sheets: made {len(self.order)} sheets and a {pages} page booklet, locked', flush=True)
-        return True
+        print(f'ride sheets: made {len(use)} sheets ({len(held)} held back) and a {pages} page booklet, locked', flush=True)
+        print('ride sheets: sizes: booklet PDF %.1f MB, locked %.1f MB; screen sheets %.2f to %.2f MB, locked %.2f to %.2f MB' % (
+            os.path.getsize(pdf) / 1e6, os.path.getsize(os.path.join(LOCKED, 'booklet.enc.json')) / 1e6,
+            min(os.path.getsize(use[r][1]) for r in use) / 1e6, max(os.path.getsize(use[r][1]) for r in use) / 1e6,
+            min(x['sheet_bytes'] for x in rows if x['sheet_bytes']) / 1e6, max(x['sheet_bytes'] for x in rows) / 1e6), flush=True)
+        return not held
+
+    def write_index(self, built, rows, held):
+        """ride-sheets/index.enc.json: a small locked list for EO Crew's sheet list and health checks."""
+        commit = os.environ.get('GITHUB_SHA') or ''
+        if not commit:
+            try: commit = subprocess.run(['git', '-C', ROOT, 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout.strip()
+            except Exception: commit = ''
+        idx = {'v': 1, 'built_at': built, 'commit': commit, 'rides': rows,
+               'photo_placeholders': self.m['placeholders']['photo'], 'maps_to_come': self.m['placeholders']['map'],
+               'held': [dict(slug=k, **v) for k, v in held.items()], 'changelog': self.m['changelog'][-20:]}
+        out = os.path.join(LOCKED, 'ride-sheets', 'index.enc.json')
+        L.seal_json(idx, out)
+        size = os.path.getsize(out)
+        print(f'ride sheets: index.enc.json {size / 1024:.1f} KB', flush=True)
+        if size > 50 * 1024:
+            print('ride sheets: index is over 50 KB; trimming the changelog')
+            idx['changelog'] = idx['changelog'][-5:]
+            L.seal_json(idx, out)
+
+
+# ---------- the last good sheets, kept encrypted in the cache so a held back sheet can keep its previous version ----------
+def vault_key():
+    salt = None
+    try: salt = json.loads(os.environ.get('ROUTE_SECRETS') or 'null')['keySalt']
+    except Exception: pass
+    if not salt:
+        try: salt = json.load(open(os.path.join(ROOT, '.secrets.json')))['keySalt']
+        except Exception: pass
+    if not salt and os.environ.get('RIDE_SHEETS_VAULT_KEY'):
+        salt = os.environ['RIDE_SHEETS_VAULT_KEY']   # for trying it out without the route secrets
+    if not salt:
+        return None
+    import hmac
+    return hmac.new(salt.encode(), b'ride-sheets last good sheets v1', hashlib.sha256).digest()
+
+
+def vault_put(slug, pdf, screen):
+    key = vault_key()
+    if not key:
+        return
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+    d = os.path.join(STATE, 'good'); os.makedirs(d, exist_ok=True)
+    for src, name in ((pdf, f'{slug}.pdf.enc'), (screen, f'{slug}.screen.pdf.enc')):
+        iv = os.urandom(12)
+        data = AESGCM(key).encrypt(iv, open(src, 'rb').read(), slug.encode())
+        tmp = os.path.join(d, name + '.tmp'); open(tmp, 'wb').write(iv + data); os.replace(tmp, os.path.join(d, name))
+
+
+def vault_get(slug):
+    key = vault_key()
+    d = os.path.join(STATE, 'good')
+    if not key or not os.path.exists(os.path.join(d, f'{slug}.pdf.enc')):
+        return None
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+    out = []
+    for name in (f'{slug}.pdf.enc', f'{slug}.screen.pdf.enc'):
+        try:
+            raw = open(os.path.join(d, name), 'rb').read()
+            plain = AESGCM(key).decrypt(raw[:12], raw[12:], slug.encode())
+        except Exception as ex:
+            print(f'ride sheets: previous sheet for {slug} could not be opened ({type(ex).__name__})')
+            return None
+        p = os.path.join(OUT, 'previous', name[:-4]); os.makedirs(os.path.dirname(p), exist_ok=True)
+        open(p, 'wb').write(plain); out.append(p)
+    return out
 
 
 def publish(dist):

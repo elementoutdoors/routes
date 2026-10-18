@@ -24,8 +24,10 @@ Ride Guide edition (Ben, 18/10/2026): it runs after every site build and keeps i
 
 | Output | Where | Who sees it |
 | --- | --- | --- |
-| Sheet per ride, PNG (3x) and A4 PDF | `qr/ride-sheets/final/` on the runner | Only locked: `ride-sheets/<slug>.enc.json` on the site |
-| The booklet, both brands, covers and sheets | `qr/ride-sheets/Ride sheets booklet.pdf` on the runner | Only locked: `booklet.enc.json` on the site |
+| Sheet per ride: PNG (3x), A4 PDF for printing (map 2400 px) and a lighter A4 PDF for screens (map 1800 px) | `qr/ride-sheets/final/` on the runner | Only locked: `ride-sheets/<slug>.enc.json` on the site (the lighter copy, for the iPad) |
+| The booklet, both brands, covers and sheets (for printing) | `qr/ride-sheets/Ride sheets booklet.pdf` on the runner | Only locked: `booklet.enc.json` on the site |
+| A small list for EO Crew (under 50 KB) | | Only locked: `ride-sheets/index.enc.json`: built_at, commit, and per ride its slug, title, brand, kind, booklet page, updated date, sheet file and bytes, has_photo, map_redrawn_at, details_changed_at; plus photo placeholders, maps to come, sheets held back with the reason, and the last 20 changelog entries |
+| The last good sheets | `qr/booklet/good/` | Kept in the Actions cache, locked with a key made from the route secrets, so a held back sheet keeps its previous version |
 | 3D map per ride | `qr/booklet/maps/<slug>/map.jpg` | Kept in the Actions cache, never committed |
 | Ride photos | `qr/booklet/photos/<slug>.jpg` | Kept in the Actions cache |
 | What each sheet was built from, changelog | `qr/booklet/manifest.json` | Kept in the Actions cache, and the changelog goes inside `booklet.enc.json` |
@@ -48,7 +50,16 @@ kind, page and the date its sheet last changed), `photo_placeholders`, `maps_to_
 The sheets and booklet are made again whenever anything on a sheet changes, or this folder's sheet code changes. A new
 map draws within a time budget (20 minutes a run); any left wait for the next hourly run and show "3D map to come".
 Every sheet is checked before anything is published (`check.py`): its QR code opens that ride, there is no other QR
-code, the route code is printed and the words keep the house rules. A wrong QR code keeps the last good booklet.
+code, the route code is printed, the elevation profile is not flat on a ride that climbs (over 40 m of climbing needs at
+least 10 m of range on the profile), and the words keep the house rules. A sheet that fails any of these except the house
+rules is held back: the ride keeps its previous sheet in the booklet and its own file, the reason goes in the changelog
+and the index, and it is tried again on the next run. House rule slips are noted only. The build log prints each ride's
+profile (lowest and highest point, climbing).
+
+Images: the map and photo go in as JPEG at quality 82; the map is 2400 px wide in the booklet and 1800 px in the single
+sheets; the photo is cut to its 58 x 73 mm box. Fonts are static Montserrat (Latin subset, `assets/montserrat-<weight>.ttf`)
+so the PDFs carry small TrueType fonts. About 0.6 to 0.8 MB a sheet and 28 MB for the booklet; the locked files are
+about 1.8 times that, because the envelope holds the PDF as base64 inside base64.
 
 ## What to edit
 
