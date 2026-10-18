@@ -1,0 +1,111 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:M;src:url(assets/montserrat.woff2) format("woff2");font-weight:100 900}
+html,body{margin:0;background:#000}
+#wrap{position:relative;overflow:hidden}
+canvas{display:block}
+.lab{position:absolute;pointer-events:none}
+.lab span{position:absolute;font:800 22px/1 M,Arial;padding:9px 14px;border-radius:8px;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.35);letter-spacing:.01em}
+.lab i{position:absolute;width:3px;margin-left:-1.5px;box-shadow:0 0 4px rgba(0,0,0,.5)}
+.lab b{position:absolute;width:16px;height:16px;margin:-12px 0 0 -12px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 6px rgba(0,0,0,.5)}
+/* Bike On */
+.bikeon .lab span{background:#fff;color:#231F20}
+.bikeon .lab span.key{background:#0C5AA9;color:#fff}
+.bikeon .lab i{background:#fff}
+.bikeon .lab b{background:#0C5AA9}
+/* By Earth and Ocean */
+.beo .lab span{background:#FAF8F4;color:#182B3D}
+.beo .lab span.key{background:#182B3D;color:#fff}
+.beo .lab i{background:#FAF8F4}
+.beo .lab b{background:#182B3D;border-color:#F5CA3A}
+/* hidden copy of the sheet title so labels keep clear of it (sheet is 8.0808 px per mm here) */
+#ttl{position:absolute;left:80.8px;bottom:40.4px;visibility:hidden;max-width:1616px}
+#ttl .kick{display:inline-block;margin:0 0 20.2px;padding:14.5px 25.9px;font:800 21.4px/1 M;letter-spacing:.14em;text-transform:uppercase}
+#ttl h1{margin:0;font:900 85.5px/1 M;text-transform:uppercase;letter-spacing:-.005em}
+#ttl p{margin:16.2px 0 0;font:600 31.4px/1.3 M}
+</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+</head><body><div id="wrap"></div>
+<script type="module">
+import * as THREE from 'three';
+const dir = new URLSearchParams(location.search).get('d');
+const D = await (await fetch(dir + '/scene.json')).json();
+await document.fonts.load('800 22px M'); await document.fonts.load('900 40px M');
+const W=D.rw,H=D.rh, wrap=document.getElementById('wrap'); wrap.style.width=W+'px'; wrap.style.height=H+'px'; wrap.className=D.style;
+const r=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true}); r.setPixelRatio(window.devicePixelRatio||1); r.setSize(W,H);
+r.outputColorSpace=THREE.SRGBColorSpace; wrap.appendChild(r.domElement);
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0xcfe2f1);
+scene.fog=new THREE.Fog(0xcfe2f1, D.fog[0], D.fog[1]);
+const geo=new THREE.PlaneGeometry(D.W,D.H,D.GX,D.GY); geo.rotateX(-Math.PI/2);
+const pos=geo.attributes.position; for(let i=0;i<pos.count;i++){pos.setY(i,D.h[i]);} geo.computeVertexNormals();
+const tex=await new THREE.TextureLoader().loadAsync(dir+'/sat.jpg'); tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=16; tex.minFilter=THREE.LinearMipmapLinearFilter;
+scene.add(new THREE.Mesh(geo,new THREE.MeshStandardMaterial({map:tex,roughness:1,metalness:0})));
+scene.add(new THREE.HemisphereLight(0xffffff,0x445533,1.25));
+const C=D.cam;
+const sun=new THREE.DirectionalLight(0xffffff,2.2); sun.position.set(-6,7,-3); scene.add(sun);
+const pts=D.route.map(p=>new THREE.Vector3(p[0],p[1],p[2]));
+const curve=new THREE.CatmullRomCurve3(pts,false,'catmullrom',0.3);
+const line=new THREE.Mesh(new THREE.TubeGeometry(curve,Math.min(6000,pts.length*6),D.radius,12,false),new THREE.MeshBasicMaterial({color:new THREE.Color(D.color)}));
+line.position.y=D.radius*0.6; scene.add(line);
+const cam=new THREE.PerspectiveCamera(C.fov,W/H,0.05,1000);
+cam.position.set(C.x,C.y,C.z); cam.lookAt(C.tx,C.ty,C.tz);
+r.render(scene,cam);
+
+// ---- keep-out zones: logo tab (top right), title (bottom left), credit (bottom right)
+const zones=[];
+const B=D.bleed||0, BIND=D.bind||0;
+const mm=W/(297+2*B);
+const tabTop=(B+BIND)*mm;
+zones.push(D.style==='beo'?[W-(B+10+38)*mm,0,W-(B+10)*mm+4,tabTop+31*mm]:[W-(B+10+49)*mm,0,W-(B+10)*mm+4,tabTop+28*mm]);
+zones.push([W-(B+150)*mm,H-5*mm,W,H]);
+const SX=B?(B+5)*mm:12, ST=B?(B+BIND+2)*mm:12;
+const t=document.createElement('div'); t.id='ttl'; t.innerHTML=`<p class="kick">${D.kick||''}</p><h1 style="font-size:${D.h1px}px">${D.title||''}</h1><p>${D.sub||''}</p>`; t.style.left=((B+10)*mm)+'px'; wrap.appendChild(t);
+const tb=t.getBoundingClientRect(); zones.push([tb.left-10,tb.top-10,tb.right+16,H]);
+for(const z of (D.zones||[])) zones.push(z);
+const hit=(a,b,p=0)=>a[0]-p<b[2]&&a[2]+p>b[0]&&a[1]-p<b[3]&&a[3]+p>b[1];
+const placed=[], dots=[];
+const labs=D.labels.slice().sort((a,b)=>(a.pri??5)-(b.pri??5));
+const out=[];
+// project all anchors first so every dot is a keep-out for other labels
+for(const l of labs){
+  const v=new THREE.Vector3(l.p[0],l.p[1]+D.radius,l.p[2]).project(cam);
+  l.sx=(v.x+1)/2*W; l.sy=(1-v.y)/2*H;
+  l.vis = v.z<1 && l.sx>Math.max(30,SX) && l.sx<W-Math.max(30,SX) && l.sy>Math.max(30,ST) && l.sy<H-30;
+}
+for(const l of labs){ if(l.vis && !zones.some(z=>hit([l.sx-12,l.sy-12,l.sx+12,l.sy+12],z))) dots.push([l.sx-14,l.sy-14,l.sx+14,l.sy+14,l]); }
+for(const l of labs){
+  if(!l.vis) continue;
+  const key = l.kind && l.kind!=='place';
+  const d=document.createElement('div'); d.className='lab';
+  const s=document.createElement('span'); s.textContent=l.n; if(key) s.className='key'; d.appendChild(s); wrap.appendChild(d);
+  const w=s.offsetWidth, h=s.offsetHeight;
+  const x=l.sx, y=l.sy;
+  if(!key && zones.some(z=>hit([x-10,y-10,x+10,y+10],z))){d.remove();continue;}
+  const Ls=l.L?[l.L]:[64,100,136,40,172];
+  const cands=[];
+  const prefDown=l.down;
+  for(const up of (prefDown?[false,true]:[true,false])) for(const L of Ls) for(const sh of [0,-0.36,0.36]){
+    const lx=x-w/2+sh*w, ly=up?y-L-h:y+L;
+    cands.push({up,L,lx,ly,box:[lx,ly,lx+w,ly+h],stem:up?[x-3,y-L,x+3,y]:[x-3,y,x+3,y+L]});
+  }
+  let pick=null;
+  for(const c of cands){
+    const b=c.box;
+    if(b[0]<SX||b[1]<ST||b[2]>W-SX||b[3]>H-12) continue;
+    if(zones.some(z=>hit(b,z,6)||hit(c.stem,z))) continue;
+    if(placed.some(p=>hit(b,p,12)||hit(c.stem,p,2))) continue;
+    if(dots.some(dd=>dd[4]!==l&&(hit(b,dd,4)||hit(c.stem,dd)))) continue;
+    pick=c;break;
+  }
+  if(!pick&&key) pick=cands.find(c=>c.box[0]>=SX&&c.box[2]<=W-SX&&c.box[1]>=ST&&c.box[3]<=H-12)||cands[0];
+  if(!pick){d.remove();continue;}
+  d.style.left='0px';d.style.top='0px';
+  s.style.left=pick.lx+'px'; s.style.top=pick.ly+'px';
+  const st=document.createElement('i'); st.style.left=x+'px'; st.style.top=(pick.up?y-pick.L:y)+'px'; st.style.height=pick.L+'px'; d.insertBefore(st,s);
+  const dot=document.createElement('b'); dot.style.left=x+'px'; dot.style.top=y+'px'; d.appendChild(dot);
+  placed.push(pick.box); placed.push(pick.stem);
+  out.push(l.n);
+}
+window.PLACED=out;
+window.DONE=true;
+</script></body></html>

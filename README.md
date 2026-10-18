@@ -64,6 +64,14 @@ and counts each id once. The counter's web address gives the totals per route (o
 and numbers only, the sheet stays private); the "Ride Guide settings apply" task copies them to the settings page nightly. The weekly route check (`scripts/check.mjs`) confirms the counter is in the app
 and answering.
 
+## Ride map sheets and flip books
+
+`ride-sheets/` builds the printed ride map sheets: a 3D map of each route with place names, the ride story, numbers
+and QR codes, one A4 landscape sheet per ride, plus the two print ready counter flip books (Bike On and By Earth and
+Ocean). Copies live in OneDrive under Digital Assets\Canva - Graphics Files\Map Files. How it is built, what to edit
+and the planned Ride Guide edition (ride photo and Ride Guide QR code in place of the app codes, kept current from
+the Ride Guide build) are in `ride-sheets/README.md`.
+
 ## The Story Library
 
 Every story, blog section, pin line, kayak talking point and wildlife card is written once, in `library/`. The build reads it, publishes it as `library.json` (read by the EO Crew staff app) and `library.html` (to read), and lists any live blog section or Ride with GPS pin that differs from it. See `library/README.md`.
@@ -83,6 +91,7 @@ Every story, blog section, pin line, kayak talking point and wildlife card is wr
 | Riding time on a ride page | Each route's `type` in `config/routes.json` (scenic, mtb, gravel, road, hinterlandMtb, hinterlandGravel) picks its average speed, set per type on the Ride Guide Settings page (`speeds` in `config/settings.json`; Ben, 17/10/2026: different rides need different speeds). Distance comes from the route line. A route with no `type` is reported in `health.json` and uses its activity speed. `rides.json` carries each ride's `type` and `riding_minutes` for the EO Crew manual. |
 | Brand colours, logos, phone numbers | `config/brands.json` and `site/assets/` (use the normal By Earth and Ocean header logo, not the reversed one) |
 | Translations | `config/i18n/<lang>.json`. New or changed English text is listed in `i18n-missing.json` after a build and in `health.json`; the weekly drift check fills the gaps. Brief: `config/TRANSLATION_BRIEF.md` |
+| Printed ride map sheets and flip books (3D maps, wording, layout) | `ride-sheets/` (read `ride-sheets/README.md`) |
 | A route's QR code needs replacing | Bump its `rev` in `config/routes.json`. The old code stops working. |
 
 ## Checks

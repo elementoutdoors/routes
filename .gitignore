@@ -6,3 +6,7 @@ qr/
 i18n-missing.json
 __pycache__/
 .voice-cache/
+ride-sheets/cache/
+ride-sheets/out/
+ride-sheets/node_modules/
+ride-sheets/package-lock.json
