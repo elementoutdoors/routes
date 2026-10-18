@@ -1,0 +1,9 @@
+{
+  "_about": "Photos for the ride sheets and booklet (ride-sheets/build.py). Each ride's photo is the featured image of its ride page on the Bike On website, found by the same slug or name. \"pages\" names the website page where a ride's name is different there. To use a different photo for a ride, add it to \"photos\": the ride's slug (as in config/routes.json) and an image web address, or a path in this repo such as \"site/assets/photo.jpg\". Take a line out to go back to the website photo. A ride with no photo shows a placeholder and is listed in the booklet manifest.",
+  "pages": {
+    "kids-and-family": "pirate-park-kids-ride",
+    "surf-beaches": "noosa-surf-beaches",
+    "north-shore": "noosa-north-shore"
+  },
+  "photos": {}
+}

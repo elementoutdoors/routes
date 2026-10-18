@@ -1,6 +1,0 @@
-{
-  "name": "ride-sheets",
-  "private": true,
-  "description": "Three.js for the 3D ride map renders (render.html). Install with: npm install",
-  "dependencies": { "three": "0.169.0" }
-}

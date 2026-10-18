@@ -1,21 +1,22 @@
-"""Build the 3D map scene for one ride and render it to PNG.
+"""Build the 3D map scene for one ride and render it to an image.
 
-python mapgen.py <route_id>   (reads rides.py for labels and style)
+python3 mapgen.py <route_id> ...   (reads rides.py for labels and style; writes STATE/maps/<slug>/map.jpg)
+
+Camera: tries every heading and three tilts and keeps the one that shows the route largest, preferring a view looking
+north, then east. Terrain: AWS Terrain Tiles. Imagery: Queensland Government aerial basemap; open ocean from
+Sentinel-2 cloudless 2016 by EOX (CC BY 4.0). Rendered with Three.js in headless Chromium (render.html, shot.py).
 """
 import json, math, os, sys, subprocess
 import numpy as np
 from PIL import Image, ImageEnhance, ImageFilter
-from sheet import h1pt
 from geo import merc, unmerc, mosaic, crop_box, dem, cam_basis, project, fit_camera, ground_hits
 
-from paths import HERE, OUT
-from routes_data import load_routes
-R = load_routes()
+from paths import HERE, STATE
+from textfit import h1pt
 Image.MAX_IMAGE_PIXELS = None
 
-PRINT = os.environ.get('MODE') == 'print'
-BLEED, BIND = (3, 12) if PRINT else (0, 0)   # print: 3 mm bleed, 12 mm wire binding zone along the top edge
-RW, RH = (2449, 1026) if PRINT else (2400, 1002)   # 297 x 124 mm map band (303 x 127 with bleed), 8.08 px per mm
+BLEED, BIND = 0, 0
+RW, RH = 2400, 1002   # 297 x 124 mm map band, 8.08 px per mm
 ASPECT = RW / RH
 PITCH, VFOV = 42.0, 40.0
 FITBOX = (-0.86, 0.86, -0.38, 0.50)
@@ -27,7 +28,7 @@ def yaw_penalty(yaw):
     return 1.0 + 0.18 * (1 - fn) + (0.06 * -fe if fe < 0 else 0)
 
 
-def build(rid, cfg, out):
+def build(rid, cfg, out, R):
     os.makedirs(out, exist_ok=True)
     r = R[rid]
     pts = np.array([p[:3] for p in r['pts']], float)
@@ -92,7 +93,6 @@ def build(rid, cfg, out):
         return float(hs[y0, x0] * (1 - fx) * (1 - fy) + hs[y0, x0 + 1] * fx * (1 - fy) + hs[y0 + 1, x0] * (1 - fx) * fy + hs[y0 + 1, x0 + 1] * fx * fy)
 
     # imagery
-    widthpx_at = lambda z: (mx1 - mx0) * 256 * 2 ** z
     zi = max(12, min(17, int(math.floor(math.log2(12000 / ((mx1 - mx0) * 256))))))
     TW = 8192 if Wkm >= Hkm else int(8192 * Wkm / Hkm)
     TH = int(TW * Hkm / Wkm)
@@ -146,15 +146,20 @@ def build(rid, cfg, out):
 
 
 def render(out):
-    rel = os.path.relpath(out, HERE)
-    subprocess.run([sys.executable, os.path.join(HERE, 'shot.py'), rel, os.path.join(out, 'map.png')], check=True)
+    """Render the scene in headless Chromium, keep the picture as a high quality JPEG and drop the working files."""
+    png = os.path.join(out, 'map.png')
+    subprocess.run([sys.executable, os.path.join(HERE, 'shot.py'), out, png], check=True)
+    Image.open(png).convert('RGB').save(os.path.join(out, 'map.jpg'), quality=93, optimize=True)
+    for f in ('map.png', 'sat.jpg', 'scene.json'):
+        try: os.remove(os.path.join(out, f))
+        except OSError: pass
 
 
 if __name__ == '__main__':
     sys.path.insert(0, HERE)
-    from rides import RIDES
+    from rides import RIDES, R
     for rid in sys.argv[1:]:
         cfg = RIDES[rid]
-        out = os.path.join(OUT, cfg['slug'], 'print') if PRINT else os.path.join(OUT, cfg['slug'])
-        print(rid, build(rid, cfg, out))
+        out = os.path.join(STATE, 'maps', cfg['slug'])
+        print(rid, build(rid, cfg, out, R))
         render(out)

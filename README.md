@@ -64,13 +64,34 @@ and counts each id once. The counter's web address gives the totals per route (o
 and numbers only, the sheet stays private); the "Ride Guide settings apply" task copies them to the settings page nightly. The weekly route check (`scripts/check.mjs`) confirms the counter is in the app
 and answering.
 
-## Ride map sheets and flip books
+## Ride sheets and rides booklet
 
-`ride-sheets/` builds the printed ride map sheets: a 3D map of each route with place names, the ride story, numbers
-and QR codes, one A4 landscape sheet per ride, plus the two print ready counter flip books (Bike On and By Earth and
-Ocean). Copies live in OneDrive under Digital Assets\Canva - Graphics Files\Map Files. How it is built, what to edit
-and the planned Ride Guide edition (ride photo and Ride Guide QR code in place of the app codes, kept current from
-the Ride Guide build) are in `ride-sheets/README.md`.
+`ride-sheets/` makes the printed ride sheets: one A4 landscape sheet per live ride, Bike On and By Earth and Ocean, with
+a 3D map of the route and its place names across the top, then a photo of the ride, the ride story, distance, climbing,
+riding time, level, surface, bike, an elevation profile and the ride's Ride Guide QR code with its route code. It also
+makes the combined booklet: for each brand a cover listing the rides by kind with page numbers, then that brand's sheets.
+The layout is the Branding Bob ride sheets (October 2026), with a ride photo where the app store codes were and the Ride
+Guide code in place of the Ride with GPS code (Ben, 18/10/2026).
+
+It runs after every build and keeps itself up to date:
+
+- The ride story, distance, climbing and riding time come from the Ride Guide data every time, so a change in Ride with
+  GPS reaches the sheets on the next build. A change of 0.5 km or 25 m climbing, or a new description, is logged.
+- The 3D map is drawn again only when the route line changes a lot: its length by more than 2 percent, or any part more
+  than 100 m from the line the map was drawn from (or its map settings in `ride-sheets/rides.py` change). Cue, stop and
+  story edits, or a line nudged a few metres, keep the map.
+- The photo is the ride's featured image on its Bike On website page, fetched again only when that image or
+  `config/booklet-photos.json` changes. To use a different photo, add the ride's slug and an image address (or a path
+  in this repo) to `photos` there. A ride with no photo shows a placeholder and is listed in the manifest.
+- A new live ride gets a sheet straight away from the Ride Guide data; its title, highlights, level, surface and map
+  place names are added to `ride-sheets/rides.py`.
+
+Route codes and links are never public, so the sheets are only published locked with EO Crew's public key:
+`booklet.enc.json` (the whole booklet, with each ride's page) and `ride-sheets/<slug>.enc.json` (one sheet each), next to
+`staff.enc.json`. The plain sheets are never published or committed. The 3D maps, photos, `manifest.json` (what each
+sheet was built from, with a changelog) and the last locked files are kept in the Actions cache, never in the repo. A
+failure keeps the last good booklet and never stops the site build. How it works and what to edit:
+`ride-sheets/README.md`.
 
 ## The Story Library
 
@@ -91,7 +112,7 @@ Every story, blog section, pin line, kayak talking point and wildlife card is wr
 | Riding time on a ride page | Each route's `type` in `config/routes.json` (scenic, mtb, gravel, road, hinterlandMtb, hinterlandGravel) picks its average speed, set per type on the Ride Guide Settings page (`speeds` in `config/settings.json`; Ben, 17/10/2026: different rides need different speeds). Distance comes from the route line. A route with no `type` is reported in `health.json` and uses its activity speed. `rides.json` carries each ride's `type` and `riding_minutes` for the EO Crew manual. |
 | Brand colours, logos, phone numbers | `config/brands.json` and `site/assets/` (use the normal By Earth and Ocean header logo, not the reversed one) |
 | Translations | `config/i18n/<lang>.json`. New or changed English text is listed in `i18n-missing.json` after a build and in `health.json`; the weekly drift check fills the gaps. Brief: `config/TRANSLATION_BRIEF.md` |
-| Printed ride map sheets and flip books (3D maps, wording, layout) | `ride-sheets/` (read `ride-sheets/README.md`) |
+| Printed ride sheets and booklet (titles, highlights, level, surface, map place names, layout, ride photos) | `ride-sheets/` (read `ride-sheets/README.md`) and `config/booklet-photos.json`. The ride story and numbers follow Ride with GPS by themselves. |
 | A route's QR code needs replacing | Bump its `rev` in `config/routes.json`. The old code stops working. |
 
 ## Checks

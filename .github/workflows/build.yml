@@ -73,6 +73,40 @@ jobs:
           git add -A && git commit -q -m "Staff screenshots $(date -u +%FT%H:%MZ)"
           git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:staff-screens
 
+      # Ride sheets and rides booklet (ride-sheets/build.py): one A4 sheet per live ride with its 3D map, photo, riding time
+      # and Ride Guide QR code, and the combined booklet, kept up to date by themselves. Published only locked with EO
+      # Crew's public key (booklet.enc.json, ride-sheets/<slug>.enc.json); the plain sheets never leave the runner. The 3D
+      # maps, photos, manifest and last locked files are kept in the Actions cache (not public). Every step here is allowed
+      # to fail: the last good booklet is kept and the site build carries on.
+      - name: Restore ride sheet maps and photos
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: qr/booklet
+          key: ride-sheets-v1-${{ github.run_id }}
+          restore-keys: ride-sheets-v1-
+      - name: Make the ride sheets and booklet
+        id: booklet
+        continue-on-error: true
+        timeout-minutes: 45
+        env:
+          BOOKLET_MAP_BUDGET: 1200
+        run: |
+          PLAN=$(python3 ride-sheets/build.py --plan | tail -1)
+          echo "Ride sheets: $PLAN"
+          if [ "$PLAN" != "none" ]; then
+            pip install -q playwright==1.47.0 qrcode==7.4.2 pillow numpy scipy requests pypdf opencv-python-headless
+            python3 -m playwright install --with-deps chromium > /dev/null
+          fi
+          python3 ride-sheets/build.py
+      - name: Save ride sheet maps and photos
+        if: always() && steps.booklet.outputs.changed == 'true'
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: qr/booklet
+          key: ride-sheets-v1-${{ github.run_id }}-${{ github.run_attempt }}
+
       - name: Check the build has every route
         run: |
           test -f dist/index.html

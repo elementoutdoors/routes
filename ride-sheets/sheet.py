@@ -1,21 +1,42 @@
-"""Build the A4 landscape ride sheet (HTML, PNG, PDF) for one ride from rides.py and its rendered map."""
-import base64, io, json, math, os, sys
+"""Build the A4 landscape ride sheet (HTML, PNG, PDF) for one ride from rides.py, the Ride Guide data and its 3D map.
+
+Ride Guide edition (18/10/2026): where the App Store and Google Play cards were there is now a photo of the ride, and the
+scan panel carries the ride's own Ride Guide QR code with its 6 character route code (never Ride with GPS). The ride
+story, distance, climbing and riding time come from the Ride Guide build every time.
+"""
+import base64, io, json, math, os, re, sys
+from html import escape as html_escape
 import qrcode
 from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
-from paths import ASSETS, OUT
 sys.path.insert(0, HERE)
-from rides import RIDES, R
+from paths import ASSETS, ROOT, STATE, OUT
+from rides import RIDES, R, story, clean_title
+from textfit import h1pt
 
 FONT = base64.b64encode(open(os.path.join(ASSETS, 'montserrat.woff2'), 'rb').read()).decode()
-_logo = open(os.path.join(ASSETS, 'bikeon-logo.svg')).read()
-LOGO_BIKEON = _logo[_logo.index('<svg'):].replace('<svg ', '<svg class="logo" role="img" aria-label="Bike On Bike Hire" ', 1)
-_b = Image.open(os.path.join(ASSETS, 'beo-badge.png'))
-_b.thumbnail((720, 720)); _bb = io.BytesIO(); _b.save(_bb, 'PNG', optimize=True)
-LOGO_BEO = f'<img class="logo badge" src="data:image/png;base64,{base64.b64encode(_bb.getvalue()).decode()}" alt="By Earth and Ocean">'
 
-APPSTORE = 'https://apps.apple.com/au/app/id893687399'
-PLAY = 'https://play.google.com/store/apps/details?id=com.ridewithgps.mobile'
+
+def _img_tag(path, cls, alt, box=720):
+    im = Image.open(path); im.thumbnail((box, box))
+    b = io.BytesIO(); im.save(b, 'PNG', optimize=True)
+    return f'<img class="{cls}" src="data:image/png;base64,{base64.b64encode(b.getvalue()).decode()}" alt="{alt}">'
+
+
+def _first(*paths):
+    return next(p for p in paths if os.path.exists(p))
+
+
+# Logos: the original artwork if it is in assets/ (bikeon-logo.svg, beo-badge.png), otherwise the web versions.
+if os.path.exists(os.path.join(ASSETS, 'bikeon-logo.svg')):
+    _logo = open(os.path.join(ASSETS, 'bikeon-logo.svg')).read()
+    LOGO_BIKEON = _logo[_logo.index('<svg'):].replace('<svg ', '<svg class="logo" role="img" aria-label="Bike On Bike Hire" ', 1)
+else:
+    LOGO_BIKEON = _img_tag(_first(os.path.join(ASSETS, 'bikeon-logo.png'), os.path.join(ROOT, 'site', 'assets', 'logo-bikeon.png')), 'logo', 'Bike On')
+LOGO_BEO = _img_tag(_first(os.path.join(ASSETS, 'beo-badge.png'), os.path.join(ROOT, 'site', 'assets', 'logo-beo.png')), 'logo badge', 'By Earth and Ocean')
+
+SITE = 'elementoutdoors.github.io/routes'
+PRIVACY = "For riders on this ride only. Please don't share this code."
 
 THEMES = {
     'bikeon': dict(brand='#0C5AA9', ink='#231F20', paper='#FFFFFF', tint='#EEF3FA', grey='#5B6168', kickbg='#0C5AA9', kickfg='#FFFFFF',
@@ -25,17 +46,12 @@ THEMES = {
 }
 
 
-def h1pt(title):
-    return round(min(30, 200 / (len(title) * 0.8 * 0.3528)), 1)
-
-
-def b64img(im, q=86):
-    b = io.BytesIO(); im.convert('RGB').save(b, 'JPEG', quality=q, optimize=True)
+def b64img(im, q=86, max_w=None):
+    im = im.convert('RGB')
+    if max_w and im.width > max_w:
+        im = im.resize((max_w, round(im.height * max_w / im.width)), Image.LANCZOS)
+    b = io.BytesIO(); im.save(b, 'JPEG', quality=q, optimize=True)
     return 'data:image/jpeg;base64,' + base64.b64encode(b.getvalue()).decode()
-
-
-def photo(p, w=900):
-    im = Image.open(p); im.thumbnail((w, w)); return b64img(im)
 
 
 def qr(data, ink):
@@ -50,6 +66,29 @@ def nice_step(total, n=4):
         if total / s <= n:
             return s
     return 100
+
+
+def riding_time(minutes):
+    if not minutes:
+        return ''
+    h, m = divmod(int(round(minutes)), 60)
+    return f'{m} min' if not h else f'{h} h {m} min'
+
+
+def stats_for(rid):
+    """Distance, climbing and riding time from the Ride Guide build; the rest as written in rides.py."""
+    c, r = RIDES[rid], R[rid]
+    live = [(f"{round(r['dist'] / 1000)} km", 'Distance'), (f"{round(r['gain'] / 10) * 10:,} m", 'Climbing'),
+            (riding_time(r['riding_minutes']) or '-', 'Riding time')]
+    out, k = [], 0
+    for s in c['stats']:
+        if s is None:
+            out.append(live[k]); k += 1
+        else:
+            out.append(s)
+            if s[1] == 'Terrain':
+                k += 1   # a flat ride shows "Flat" where the climbing would be
+    return out
 
 
 def profile(rid, cfg, T):
@@ -89,23 +128,37 @@ def profile(rid, cfg, T):
 </svg>'''
 
 
-def build(rid, print_=False, page=None):
-    cfg = RIDES[rid]; T = THEMES[cfg['style']]
-    out = os.path.join(OUT, cfg['slug'])
-    MAP = b64img(Image.open(os.path.join(out, 'print', 'map.png') if print_ else os.path.join(out, 'map.png')), 82 if print_ else 80)
-    url, code, glabel = cfg['qr']
+def map_path(cfg):
+    return os.path.join(STATE, 'maps', cfg['slug'], 'map.jpg')
+
+
+def photo_path(cfg):
+    return os.path.join(STATE, 'photos', cfg['slug'] + '.jpg')
+
+
+def build(rid, story_limit=640, map_q=76, map_w=2400):
+    cfg = RIDES[rid]; T = THEMES[cfg['style']]; r = R[rid]
+    out = os.path.join(OUT, cfg['slug']); os.makedirs(out, exist_ok=True)
+    mp = map_path(cfg)
+    MAP = (f'<img src="{b64img(Image.open(mp), map_q, map_w)}" alt="3D map of the {cfg["title"]} route">' if os.path.exists(mp)
+           else '<div class="nomap">3D map to come</div>')
+    pp = photo_path(cfg)
+    PHOTO = (f'<img src="{b64img(Image.open(pp), 84, 900)}" alt="Riding the {cfg["title"]}">' if os.path.exists(pp)
+             else f'<div class="nophoto">{LOGO_BIKEON if cfg["brand"] == "bikeon" else LOGO_BEO}<span>Photo to come</span></div>')
+    url, code = r['link'], r['code']
     logo = LOGO_BIKEON if cfg['brand'] == 'bikeon' else LOGO_BEO
+
     def sz(b):
         w = 22.4 / (len(b) * 0.229)
         return '' if ' ' in b or w >= 10.5 else f' style="font-size:{w:.1f}pt"'
-    stats = ''.join(f'<div class="stat"><b{sz(b)}>{b}</b><span>{s}</span></div>' for b, s in cfg['stats'])
+    stats = ''.join(f'<div class="stat"><b{sz(b)}>{b}</b><span>{s}</span></div>' for b, s in stats_for(rid))
     hl = ''.join(f'<li>{h}</li>' for h in cfg['hl'])
-    import re
-    paras = ''.join(f'<p>{re.sub(r"(\d) (km|m|hrs|degree)", r"\1&nbsp;\2", p)}</p>' for p in cfg['paras'])
+    paras_list = story(r['desc'], [r['name'], cfg['title'], clean_title(r['name'])], story_limit)
+    nb = lambda p: re.sub(r'(\d) (km|m|hrs|degree)', r'\1&nbsp;\2', html_escape(p))
+    paras = ''.join('<p>' + nb(p) + '</p>' for p in paras_list)
     credit = ('Imagery &copy; State of Queensland (Queensland Spatial Imagery). Ocean: Sentinel-2 cloudless 2016 by EOX '
               '(Copernicus Sentinel data 2016). Terrain: AWS Terrain Tiles. Height exaggerated.')
     title = cfg['title']
-    alt = f'3D map of the {title} route'
     tabcss = ('.tab{top:0;right:10mm;padding:3.5mm 4mm 3mm}.logo{width:40mm}' if cfg['brand'] == 'bikeon'
               else '.tab{top:0;right:10mm;padding:3mm 3.5mm 3mm}.logo{width:30mm}')
     html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -121,8 +174,9 @@ body{{margin:0;background:var(--desk);color:var(--ink);font-family:var(--f);padd
 .desk{{display:flex;justify-content:center}}
 .wrapS{{width:calc(297mm * var(--s,1));height:calc(210mm * var(--s,1));max-width:100%}}
 .sheet{{width:297mm;height:210mm;background:var(--paper);transform:scale(var(--s,1));transform-origin:0 0;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 1px 2px var(--shadow),0 12px 36px var(--shadow)}}
-.map{{position:relative;height:124mm;flex:none;overflow:hidden}}
+.map{{position:relative;height:124mm;flex:none;overflow:hidden;background:var(--tint)}}
 .map>img{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}}
+.nomap{{position:absolute;inset:0;display:grid;place-items:center;font:700 10pt/1 var(--f);color:var(--grey);letter-spacing:.08em;text-transform:uppercase}}
 .tab{{position:absolute;background:var(--paper);border-radius:0 0 2.5mm 2.5mm;z-index:2}}
 .logo{{display:block;height:auto}}
 {tabcss}
@@ -132,16 +186,10 @@ body{{margin:0;background:var(--desk);color:var(--ink);font-family:var(--f);padd
 .title p{{margin:2mm 0 0;font:600 11pt/1.3 var(--f)}}
 .credit{{position:absolute;right:3mm;bottom:1.6mm;z-index:2;color:rgba(255,255,255,.85);text-shadow:0 1px 2px rgba(0,0,0,.8);font:500 4.6pt/1 var(--f)}}
 .below{{flex:1;display:grid;grid-template-columns:58mm minmax(0,1fr) 86mm 40mm;gap:6mm;padding:6mm 10mm 7mm;min-height:0}}
-.apps{{display:flex;flex-direction:column;gap:2.4mm;min-height:0}}
-.step{{display:flex;align-items:center;gap:2mm;font:800 7pt/1.25 var(--f);letter-spacing:.1em;text-transform:uppercase;color:var(--brand);margin:0}}
-.step b{{display:inline-grid;place-items:center;width:4.2mm;height:4.2mm;border-radius:50%;background:var(--brand);color:#fff;font:900 7pt/1 var(--f);letter-spacing:0;flex:none}}
-.app{{flex:1;display:flex;align-items:center;gap:3mm;background:var(--tint);border-radius:2mm;padding:2.2mm;text-decoration:none;color:var(--ink);min-height:0}}
-.app.right{{flex-direction:row-reverse;text-align:right}}
-.app .qbox{{background:#fff;padding:1.6mm;border-radius:1.2mm;flex:none}}
-.app .qr{{width:21mm;height:21mm}}
-.app .os{{display:block;font:900 12pt/1 var(--f);color:var(--brand)}}
-.app .st{{display:block;margin-top:1.2mm;font:700 7pt/1.2 var(--f)}}
-.app .hint{{display:block;margin-top:1mm;font:500 6pt/1.25 var(--f);color:var(--grey)}}
+.photo{{border-radius:2mm;overflow:hidden;background:var(--tint);min-height:0;position:relative}}
+.photo>img{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}}
+.nophoto{{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3mm;color:var(--grey);font:700 7pt/1 var(--f);letter-spacing:.08em;text-transform:uppercase}}
+.nophoto .logo{{width:26mm;opacity:.75}}
 .story{{display:flex;flex-direction:column;gap:2.4mm;min-width:0}}
 .eyebrow{{font:800 7pt/1 var(--f);letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin:0}}
 .story p{{margin:0;font:500 8.4pt/1.48 var(--f)}}
@@ -161,25 +209,22 @@ body{{margin:0;background:var(--desk);color:var(--ink);font-family:var(--f);padd
 .scan .t{{font:800 6.8pt/1.25 var(--f);text-transform:uppercase;letter-spacing:.04em}}
 .qbox{{background:#fff;padding:2mm;border-radius:1.4mm}}
 .qr{{width:24mm;height:24mm;display:block}}
-.scan .sn{{display:grid;place-items:center;width:4.6mm;height:4.6mm;margin:0 auto 1.4mm;border-radius:50%;background:#fff;color:var(--brand);font:900 7.5pt/1 var(--f)}}
 .scan small{{font:500 6pt/1 var(--f);opacity:.85}}
 .scan .code{{font:900 12pt/1 var(--f);letter-spacing:.14em;color:{T['code']}}}
+.scan .site{{font:600 5.2pt/1.2 var(--f);opacity:.85}}
+.scan .priv{{font:500 4.8pt/1.25 var(--f);opacity:.75}}
 @page{{size:A4 landscape;margin:0}}
 @media print{{body{{background:#fff;padding:0}}.wrapS{{width:297mm;height:210mm;max-width:none}}.sheet{{transform:none;box-shadow:none}}*{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}}}
 </style></head><body>
 <main class="desk" id="desk"><div class="wrapS"><section class="sheet" aria-label="{title} ride map sheet">
   <div class="map">
-    <img src="{MAP}" alt="{alt}">
+    {MAP}
     <div class="tab">{logo}</div>
     <div class="title"><p class="kick">{cfg['kick']}</p><h1>{title}</h1><p>{cfg['sub']}</p></div>
     <span class="credit">{credit}</span>
   </div>
   <div class="below">
-    <div class="apps">
-      <p class="step"><b>1</b><span>Get the free<br>Ride with GPS app</span></p>
-      <a class="app" href="{APPSTORE}" target="_blank" rel="noopener"><span class="qbox">{qr(APPSTORE, '#231F20')}</span><span><span class="os">iPhone</span><span class="st">App Store</span><span class="hint">Scan this code with your iPhone camera</span></span></a>
-      <a class="app right" href="{PLAY}" target="_blank" rel="noopener"><span class="qbox">{qr(PLAY, '#231F20')}</span><span><span class="os">Android</span><span class="st">Google Play</span><span class="hint">Scan this code with your Android camera</span></span></a>
-    </div>
+    <div class="photo">{PHOTO}</div>
     <div class="story">
       <p class="eyebrow">The ride</p>
       {paras}
@@ -190,41 +235,14 @@ body{{margin:0;background:var(--desk);color:var(--ink);font-family:var(--f);padd
       <p class="note">{cfg['note']}</p>
       {profile(rid, cfg, T)}
     </div>
-    <a class="scan" href="{url}" target="_blank" rel="noopener"><span class="t"><span class="sn">2</span>Scan for the<br>{glabel} maps</span><span class="qbox">{qr(url, '#231F20')}</span><small>or enter code</small><span class="code">{code}</span></a>
+    <a class="scan" href="{url}" target="_blank" rel="noopener"><span class="t">Scan to open<br>this ride</span><span class="qbox">{qr(url, '#231F20')}</span><small>or enter route code</small><span class="code">{code}</span><span class="site">at {SITE}</span><span class="priv">{PRIVACY}</span></a>
   </div>
 </section></div></main>
 <script>(function(){{var d=document.getElementById('desk');function f(){{var w=297*96/25.4;var s=Math.min(1,Math.min(d.clientWidth,1200)/w);document.documentElement.style.setProperty('--s',s.toFixed(4))}}f();addEventListener('resize',f)}})();</script>
 </body></html>'''
-    if print_:
-        html = to_print(html, page)
-        p = os.path.join(out, 'print', 'sheet.html')
-    else:
-        p = os.path.join(out, 'sheet.html')
+    p = os.path.join(out, 'sheet.html')
     open(p, 'w').write(html)
-    return p
-
-
-PRINT_CSS = ('.tab{top:15mm;right:13mm;border-radius:2.5mm}.title{left:13mm}.credit{right:6mm}'
-             '.below{padding:6mm 13mm 10mm}'
-             '.pg{position:absolute;right:13mm;bottom:4.5mm;font:600 6.5pt/1 var(--f);color:var(--grey);letter-spacing:.04em}')
-
-
-def to_print(html, page=None):
-    """Print master: A4 landscape plus 3 mm bleed (303 x 216 mm). 12 mm wire binding zone along the top edge
-    kept clear of text and logos; everything else at least 5 mm inside the trim."""
-    reps = [('width:calc(297mm * var(--s,1));height:calc(210mm * var(--s,1))', 'width:calc(303mm * var(--s,1));height:calc(216mm * var(--s,1))'),
-            ('.sheet{width:297mm;height:210mm;', '.sheet{width:303mm;height:216mm;'),
-            ('.map{position:relative;height:124mm;', '.map{position:relative;height:127mm;'),
-            ('@page{size:A4 landscape;margin:0}', '@page{size:303mm 216mm;margin:0}'),
-            ('.wrapS{width:297mm;height:210mm;max-width:none}', '.wrapS{width:303mm;height:216mm;max-width:none}'),
-            ('var w=297*96/25.4', 'var w=303*96/25.4')]
-    for a, b in reps:
-        assert a in html, a
-        html = html.replace(a, b)
-    html = html.replace('</style>', PRINT_CSS + '</style>', 1)
-    if page:
-        html = html.replace('</section></div></main>', f'<span class="pg">{page}</span></section></div></main>', 1)
-    return html
+    return p, paras_list
 
 
 def fname(rid):
@@ -236,27 +254,37 @@ def fname(rid):
     return t + ' Ride Map'
 
 
-def shoot(rids):
+CHECK_JS = '''()=>{const s=document.querySelector('.sheet').getBoundingClientRect();const bad=[];
+  document.querySelectorAll('.below *').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>s.bottom-2||r.right>s.right+0.5)bad.push(e.className||e.tagName)});
+  const st=[...document.querySelectorAll('.stat b')].filter(e=>e.scrollWidth>e.clientWidth+1).map(e=>e.textContent);
+  const h1=document.querySelector('.title h1');const t=document.querySelector('.title').getBoundingClientRect();
+  return {overflow:bad.slice(0,5),stat:st,h1lines:Math.round(h1.getBoundingClientRect().height/parseFloat(getComputedStyle(h1).fontSize)),titleTop:Math.round(t.top-s.top)}}'''
+
+
+def shoot(rids, launch_args=None):
+    """Sheet PNG (3x) and A4 PDF per ride, in OUT/final. A ride story too long for its column is shortened a sentence
+    at a time until it fits. Returns {rid: {png, pdf, check, story}}."""
     from playwright.sync_api import sync_playwright
     os.makedirs(os.path.join(OUT, 'final'), exist_ok=True)
     res = {}
     with sync_playwright() as pw:
-        b = pw.chromium.launch()
+        b = pw.chromium.launch(args=launch_args or [])
         pg = b.new_page(viewport={'width': 1200, 'height': 900}, device_scale_factor=3)
         for rid in rids:
-            p = build(rid)
-            pg.goto('file://' + p); pg.wait_for_timeout(400)
-            chk = pg.evaluate('''()=>{const s=document.querySelector('.sheet').getBoundingClientRect();const bad=[];
-              document.querySelectorAll('.below *').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>s.bottom-2||r.right>s.right+0.5)bad.push(e.className||e.tagName)});
-              const st=[...document.querySelectorAll('.stat b')].filter(e=>e.scrollWidth>e.clientWidth+1).map(e=>e.textContent);
-              const h1=document.querySelector('.title h1');const t=document.querySelector('.title').getBoundingClientRect();
-              return {overflow:bad.slice(0,5),stat:st,h1lines:Math.round(h1.getBoundingClientRect().height/parseFloat(getComputedStyle(h1).fontSize)),titleTop:Math.round(t.top-s.top)}}''')
+            limit = 640
+            while True:
+                p, story_used = build(rid, limit)
+                pg.goto('file://' + p); pg.wait_for_timeout(400)
+                chk = pg.evaluate(CHECK_JS)
+                if not chk['overflow'] or limit <= 240:
+                    break
+                limit -= 80
             base = os.path.join(OUT, 'final', fname(rid))
             pg.locator('.sheet').screenshot(path=base + '.png')
             pg.emulate_media(media='print')
             pg.pdf(path=base + '.pdf', format='A4', landscape=True, print_background=True, prefer_css_page_size=True)
             pg.emulate_media(media='screen')
-            res[rid] = chk
+            res[rid] = dict(png=base + '.png', pdf=base + '.pdf', check=chk, story=story_used)
             print(rid, chk, flush=True)
         b.close()
     return res

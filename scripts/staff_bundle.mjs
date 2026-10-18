@@ -3,6 +3,7 @@
 // https://element-crew-connect.base44.app/functions/rideGuide), so the published files can only be opened by EO Crew's
 // server. A public key can only lock, never open, so it is safe in this repo. Nothing here is readable on the site.
 // Usage: node scripts/staff_bundle.mjs screens <dir> <out.enc.json>   (seal the screenshots taken by staff_screens.py)
+//        node scripts/staff_bundle.mjs booklet <booklet.pdf> <meta.json> <out.enc.json>   (seal a ride sheet or the booklet, ride-sheets/build.py)
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -35,4 +36,14 @@ if (process.argv[2] === 'screens') {
   m.screens = m.screens.map((s) => ({ ...s, type: 'jpeg', b64: fs.readFileSync(path.join(dir, s.file)).toString('base64') }));
   fs.writeFileSync(outFile, JSON.stringify(seal(m)));
   console.log(`sealed ${m.screens.length} screenshots into ${outFile}`);
+}
+
+// The ride sheets and booklet (ride-sheets/build.py): the PDF as base64 with what it was built from, in the same envelope.
+// Usage: node scripts/staff_bundle.mjs booklet <booklet.pdf> <meta.json> <out.enc.json>
+if (process.argv[2] === 'booklet') {
+  const [pdf, metaFile, outFile] = process.argv.slice(3);
+  const m = JSON.parse(fs.readFileSync(metaFile, 'utf8'));
+  const b64 = fs.readFileSync(pdf).toString('base64');
+  fs.writeFileSync(outFile, JSON.stringify(seal({ ...m, kind: m.kind || 'booklet', type: 'application/pdf', b64 })));
+  console.log(`sealed the rides booklet (${Math.round(b64.length * 3 / 4 / 1024)} KB) into ${outFile}`);
 }

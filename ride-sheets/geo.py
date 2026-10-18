@@ -3,15 +3,15 @@ import io, math, os, json
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np, requests
 from PIL import Image
+from paths import CACHE
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-CACHE = os.path.join(HERE, 'cache')
 URLS = {
     'dem': 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png',
     'qld': 'https://spatial-img.information.qld.gov.au/arcgis/rest/services/Basemaps/LatestStateProgram_AllUsers/ImageServer/tile/{z}/{y}/{x}',
     'eox': 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg',  # 2016, CC BY 4.0
 }
 S = requests.Session()
+S.headers['User-Agent'] = 'Element Outdoors ride sheets (+https://elementoutdoors.github.io/routes/)'
 
 
 def merc(lat, lon):
