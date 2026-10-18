@@ -24,7 +24,7 @@
   },
 
   "screen": {
-    "_help": "Starting settings for riders who have not changed them. keepScreenOn (default true), batterySaver (default false), readStoriesAloud (default true): point of interest stories for a ride that has no stories value of its own in routes.json; each ride sets its own on the Ride Guide Settings page. wakeBeforeTurnMetres: battery saver lights the screen this far before a turn (default 250, 80 to 1000). blackoutAfterSeconds: battery saver blacks out after this long with no taps (default 20, 5 to 120).",
+    "_help": "Starting settings for riders who have not changed them. keepScreenOn is no longer used (16/10/2026: the screen always stays on during a ride, so the Ride Desk has no switch for it). batterySaver (default false), readStoriesAloud (default true): point of interest stories for a ride that has no stories value of its own in routes.json; each ride sets its own on the Ride Guide Settings page. wakeBeforeTurnMetres: battery saver lights the screen this far before a turn (default 250, 80 to 1000). blackoutAfterSeconds: battery saver blacks out after this long with no taps (default 20, 5 to 120).",
     "keepScreenOn": true,
     "batterySaver": false,
     "readStoriesAloud": true,

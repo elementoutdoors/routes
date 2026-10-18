@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;600&display=swap">
+
+<div class="wrap" id="app">
+  <header>
+    <h1>Ride Desk</h1>
+    <p class="lead">Every self guided ride in one place. Each card is the master for its ride: the description, the ride sheet and iPad words, the photo, what staff are told, and whether it is live. Routes, directions and the places a ride passes stay in Ride with GPS; place stories stay in the Story Library. Change anything, then press Save. The Ride Guide updates a few minutes later.</p>
+    <span class="status" id="status">Loading the Ride Desk</span>
+    <p class="note" id="statusNote"></p>
+  </header>
+  <section class="rides" aria-labelledby="h-rides">
+    <h2 id="h-rides">Rides</h2>
+    <p class="sect">A new route in the By Earth and Ocean account on Ride with GPS appears here as New by itself, hidden until you switch it on. Open a card to change it.</p>
+    <p class="sect counts" id="countsTotal" hidden></p>
+    <div class="tools" id="rideTools">
+      <button class="chip" type="button" data-f="all" data-label="All" aria-pressed="true">All</button>
+      <button class="chip" type="button" data-f="new" data-label="New" aria-pressed="false">New</button>
+      <button class="chip" type="button" data-f="live" data-label="Live" aria-pressed="false">Live</button>
+      <button class="chip" type="button" data-f="hidden" data-label="Hidden" aria-pressed="false">Hidden</button>
+      <button class="chip" type="button" data-f="todo" data-label="To fill in" aria-pressed="false">To fill in</button>
+      <input type="search" id="rideSearch" placeholder="Find a ride" aria-label="Find a ride">
+    </div>
+    <div id="cards"><p class="empty">Loading the rides.</p></div>
+  </section>
+  <section class="offers" aria-labelledby="h-offers">
+    <h2 id="h-offers">Partner offers</h2>
+    <p class="sect">An offer card pops up when a rider gets close to the partner, and its pin shows on every map that passes nearby. Type where the partner is (an address or a Google Maps link) and the location is worked out for you.</p>
+    <div id="offers"><p class="empty">Loading the offers.</p></div>
+    <button class="btn ghost addoffer" id="addOffer" type="button">Add an offer</button>
+  </section>
+  <div id="groups"></div>
+  <footer>Rider settings examples use the Full Noosa route (34.1 km) at the scenic riding speed. Every value has a safe range, so nothing here can break the maps.</footer>
+</div>
+<datalist id="levels"><option value="Family"></option><option value="Relaxed"></option><option value="Moderate"></option><option value="Intermediate"></option><option value="Challenging"></option><option value="Advanced"></option></datalist>
+
+<div class="bar" id="bar">
+  <div class="in">
+    <div class="msg" id="barMsg">No changes yet.</div>
+    <button class="btn ghost" id="undo" type="button">Undo changes</button>
+    <button class="btn ghost" id="reset" type="button">Recommended rider settings</button>
+    <button class="btn primary" id="save" type="button" disabled>Save</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+(function () {
+  var TRIGGER_SERVER = "Claude Code Remote";
+/*GROUPS*/
+  var BRANDS = [
+/*BRANDS*/  ];
+/*CODE*/</script>

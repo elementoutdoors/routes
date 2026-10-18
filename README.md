@@ -78,19 +78,42 @@ Each build also publishes `rides.json`: every ride switched on for the hire desk
 
 ## Staff file for EO Crew (codes, QR codes and screenshots)
 
-The EO Crew Ride Guide manual (EO-HI-10) shows every ride's QR code, route code and link, and six Ride Guide screenshots,
-kept up to date by themselves. Route codes are never public, so these go out locked:
+The EO Crew Ride Guide manual (EO-HI-10) shows every ride's QR code, route code and link, and numbered screenshots of
+every Ride Guide screen and of the Ride Desk, kept up to date by themselves. Route codes are never public, so these go out locked:
 
 - Each build writes `staff.enc.json` (every live ride's name, brand, type, route code and link, plus its Ride Desk title,
   iPad switch and staff section: suits, notFor, timeToAllow, soldAs, bikes, startFinish, staffNotes) and the workflow adds
-  `staff-screens.enc.json` (six phone screenshots of the Kids & Family ride, retaken at 3am, on every change and on
-  demand by `scripts/staff_screens.py`, kept on the `staff-screens` branch). Both are locked with EO Crew's public key,
+  `staff-screens.enc.json` (about 30 screenshots, retaken at 3am, on every change and on demand by
+  `scripts/staff_screens.py`, kept on the `staff-screens` branch: every app screen on the Kids & Family ride with a
+  simulated GPS, and the Ride Desk built from `ride-desk/` with made-up data; each has numbered markers, a `group`
+  (setup, riding, stops, finish, settings, desk) and `keys` saying what each number is). Both are locked with EO Crew's public key,
   `config/staff-key.pem` (`scripts/staff_bundle.mjs`): a public key can only lock, so only EO Crew's server can open them.
 - EO Crew makes the QR codes itself from the links. Its key lives only in EO Crew; to replace it, delete EO Crew's
   RideGuideKey record and copy the new key from https://element-crew-connect.base44.app/functions/rideGuide into
   `config/staff-key.pem`.
 - Check without opening anything: https://element-crew-connect.base44.app/functions/rideGuide?check=1 gives counts only.
 - A screenshot failure keeps the last set and never stops the build.
+
+## The Ride Guide manuals (EO Crew)
+
+Three documents in EO Crew (Base44 app 6abba75b48155c78238d4cba): EO-HI-10 "Ride Guide: the app and our rides" (all
+staff), EO-HI-10.1 "Ride Guide: managing rides on the Ride Desk" and EO-HI-10.2 "Ride Guide: technical appendix" (managers
+only). EO Crew holds the words (managers can edit them); `manual/build_manual.py` is the version Claude wrote. They stay
+right by themselves:
+
+- Pictures: `{"type": "ride_screens", "group": "<group>"}` blocks show the screenshots above, retaken every night.
+- QR codes, route codes, the ride list and staff notes are live blocks (`ride_qr`, `ride_list`).
+- Words: `node scripts/manual_facts.mjs --check` compares what the manuals describe (phone settings, languages, app
+  controls and wording, Ride Desk sections, fields and settings, setting keys, build schedule and steps, the screenshot
+  list) with `manual/written.json`, which also says which EO Crew sections each fact feeds. The weekly check
+  (`scripts/check.mjs`, "manual") lists any change; the drift check rewrites those sections in EO Crew, then runs
+  `--accept` and pushes. Change the app, the Ride Desk or the build in any session and the next weekly check catches it.
+
+## The Ride Desk page source
+
+`ride-desk/page/` holds the Ride Desk page in parts; `python3 ride-desk/build.py` joins them into `ride-desk/ride-desk.html`,
+which Claude publishes to https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18. `ride-desk/mock.js` stands in for the page's
+database when the screenshots are taken.
 
 ## Ride counts
 

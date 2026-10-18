@@ -11,11 +11,15 @@
 // Version 10 (18/10/2026): also checks the build could open the Ride Desk's sealed staff section and published desk.json. The
 // Ride Desk's own checks (empty fields, no photo, new rides left hidden, desk data the build did not publish) need the page's
 // data and run as `node scripts/ride-desk.mjs check <db dir>` (Drift Check Register, Ride Guide routes tab).
+// Version 11 (19/10/2026): the Ride Guide manuals in EO Crew (EO-HI-10, 10.1, 10.2). Their pictures retake themselves, so
+// this checks the screenshots are fresh and that the code still matches what the words were written against
+// (scripts/manual_facts.mjs); "manual" in the output lists what changed and the EO Crew sections to rewrite.
 // Usage: node scripts/check.mjs [siteBase]   (route links are read from qr/links.json when present)
 import fs from 'node:fs';
 import { loadLibrary, plan as libraryPlan } from './library.mjs';
 import { fileURLToPath } from 'node:url';
 import { loadDesk } from './ride-desk.mjs';
+import { execFileSync } from 'node:child_process';
 
 const BASE = (process.argv[2] || 'https://elementoutdoors.github.io/routes/').replace(/\/?$/, '/');
 const issues = [], notes = [];
@@ -165,5 +169,17 @@ else {
 }
 if (h.problems.some(p => /^settings:/.test(p))) notes.push('a value in config/settings.json was out of range and the default was used');
 
-console.log(JSON.stringify({ ok: !issues.length, built: h.built, routes: h.routes.map(r => `${r.slug}: ${r.source}, ${r.cues} cues, ${r.stops} stops`), issues, notes, push, houseRules, placeChanges, directionFlags }, null, 1));
+// the manuals (19/10/2026): the words were written against the code as it was; anything changed since is listed with the
+// EO Crew sections it feeds, to be rewritten and then accepted (node scripts/manual_facts.mjs --accept)
+let manual = null;
+try {
+  manual = JSON.parse(execFileSync(process.execPath, [fileURLToPath(new URL('./manual_facts.mjs', import.meta.url)), '--check'], { encoding: 'utf8' }));
+  manual.changed.forEach(c => issues.push(`manual: ${c.fact} changed since the Ride Guide manuals were written (${c.added.length} added, ${c.removed.length} removed); rewrite ${c.sections.join('; ')}`));
+} catch (e) { issues.push('manual: could not compare the code with the manuals (' + (e.message || e).toString().slice(0, 200) + ')'); }
+try {
+  const sh = await fetch(BASE + 'staff-screens.enc.json', { method: 'HEAD', cache: 'no-store' });
+  if (!sh.ok) issues.push(`manual: the screenshots for EO Crew are not published (${sh.status})`);
+} catch (e) { issues.push('manual: the screenshots for EO Crew could not be checked'); }
+
+console.log(JSON.stringify({ ok: !issues.length, built: h.built, routes: h.routes.map(r => `${r.slug}: ${r.source}, ${r.cues} cues, ${r.stops} stops`), issues, notes, push, houseRules, placeChanges, directionFlags, manual }, null, 1));
 process.exit(issues.length ? 1 : 0);
