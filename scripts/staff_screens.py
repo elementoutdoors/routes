@@ -6,7 +6,7 @@ manual's pictures and words always match the app as it is. Retaken by the build,
 shows in the manual the next morning.
 
 Usage: python3 scripts/staff_screens.py <base_url> <outdir>   (after a build; reads qr/links.json and dist/)
-Writes JPEGs and screens.json ({ride, taken, screens: [{file, group, title, caption, keys: [[n, text]]}]}) to <outdir>.
+Writes JPEGs and screens.json ({ride, taken, screens: [{file, group, title, caption, lead, keys: [[n, text]]}]}) to <outdir>.
 They show a live ride, so they are only ever published locked (scripts/staff_bundle.mjs).
 Groups: setup (getting a customer going), riding, stops, finish, settings (the phone's settings), desk (the Ride Desk).
 The list of screens is also what the manual's drift check fingerprints (scripts/manual_facts.mjs).
@@ -79,7 +79,8 @@ def shot(page, f, group, title, caption, keys=(), marks=None, element=None, qual
     page.evaluate("() => document.querySelectorAll('.zz-mark').forEach(e => e.remove())")
     k = [[n, text] for n, _, text, _ in keys if n in found]
     full = caption + (' ' + ' '.join(f'{n} {t}' for n, t in k) if k else '')
-    taken.append({'file': f, 'group': group, 'title': title, 'caption': full, 'keys': k})
+    # caption: the lead line and the key in one (what EO Crew showed before groups); lead and keys: the two apart
+    taken.append({'file': f, 'group': group, 'title': title, 'caption': full, 'lead': caption, 'keys': k})
     missing = [n for n, *_ in keys if n not in found]
     print('took', f, f'(markers not found: {missing})' if missing else '')
 
