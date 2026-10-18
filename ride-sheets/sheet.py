@@ -167,14 +167,14 @@ def photo_path(cfg):
     return os.path.join(STATE, 'photos', cfg['slug'] + '.jpg')
 
 
-def build(rid, story_limit=640, map_q=IMG_Q, map_w=MAP_MAX_W):
+def build(rid, story_limit=640, map_q=IMG_Q, map_w=MAP_MAX_W, photo_aspect=PHOTO_ASPECT):
     cfg = RIDES[rid]; T = THEMES[cfg['style']]; r = R[rid]
     out = os.path.join(OUT, cfg['slug']); os.makedirs(out, exist_ok=True)
     mp = map_path(cfg)
     MAP = (f'<img src="{b64img(Image.open(mp), map_q, map_w, MAP_BYTES.get(map_w))}" alt="3D map of the {cfg["title"]} route">' if os.path.exists(mp)
            else '<div class="nomap">3D map to come</div>')
     pp = photo_path(cfg)
-    PHOTO = (f'<img src="{b64img(cover_crop(Image.open(pp), PHOTO_ASPECT, 600), IMG_Q, None, PHOTO_BYTES)}" alt="Riding the {cfg["title"]}">' if os.path.exists(pp)
+    PHOTO = (f'<img src="{b64img(cover_crop(Image.open(pp), photo_aspect, 600), IMG_Q, None, PHOTO_BYTES)}" alt="Riding the {cfg["title"]}">' if os.path.exists(pp)
              else f'<div class="nophoto">{LOGO_BIKEON if cfg["brand"] == "bikeon" else LOGO_BEO}<span>Photo to come</span></div>')
     url, code = r['link'], r['code']
     logo = LOGO_BIKEON if cfg['brand'] == 'bikeon' else LOGO_BEO
@@ -218,7 +218,7 @@ body{{margin:0;background:var(--desk);color:var(--ink);font-family:var(--f);padd
 .credit{{position:absolute;right:3mm;bottom:1.6mm;z-index:2;color:rgba(255,255,255,.85);text-shadow:0 1px 2px rgba(0,0,0,.8);font:500 4.6pt/1 var(--f)}}
 .below{{flex:1;display:grid;grid-template-columns:58mm minmax(0,1fr) 86mm 40mm;gap:6mm;padding:6mm 10mm 7mm;min-height:0}}
 .photo{{border-radius:2mm;overflow:hidden;background:var(--tint);min-height:0;position:relative}}
-.photo>img{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}}
+.photo>img{{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}}
 .nophoto{{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3mm;color:var(--grey);font:700 7pt/1 var(--f);letter-spacing:.08em;text-transform:uppercase}}
 .nophoto .logo{{width:26mm;opacity:.75}}
 .story{{display:flex;flex-direction:column;gap:2.4mm;min-width:0}}
@@ -310,12 +310,19 @@ def shoot(rids, launch_args=None):
                 if not chk['overflow'] or limit <= 240:
                     break
                 limit -= 80
+            # The photo box grows a little when the words beside it are long. Cut the photo to the box's exact shape, so
+            # the PDF can carry the JPEG as it is (a photo cropped by the page is stored again, uncompressed, and is heavy).
+            aspect = pg.evaluate("(()=>{const r=document.querySelector('.photo').getBoundingClientRect();return r.width/r.height})()")
+            if abs(aspect - PHOTO_ASPECT) > 0.002:
+                p, story_used = build(rid, limit, photo_aspect=aspect)
+                pg.goto('file://' + p); pg.wait_for_timeout(400)
+                chk = pg.evaluate(CHECK_JS)
             base = os.path.join(OUT, 'final', fname(rid))
             pg.locator('.sheet').screenshot(path=base + '.png')
             pg.emulate_media(media='print')
             pg.pdf(path=base + '.pdf', format='A4', landscape=True, print_background=True, prefer_css_page_size=True)
             # the lighter copy for the iPad: the same sheet with the map at SCREEN_MAP_W
-            p, _ = build(rid, limit, map_w=SCREEN_MAP_W)
+            p, _ = build(rid, limit, map_w=SCREEN_MAP_W, photo_aspect=aspect)
             pg.goto('file://' + p); pg.wait_for_timeout(300)
             pg.pdf(path=base + ' (screen).pdf', format='A4', landscape=True, print_background=True, prefer_css_page_size=True)
             pg.emulate_media(media='screen')

@@ -21,7 +21,12 @@ def house_style(text):
 def story(desc, names, limit=640):
     """The ride's description as up to two paragraphs: a first line that only repeats the ride's name is left out."""
     norm_ = lambda s: re.sub(r'[^a-z0-9]+', ' ', s.lower()).strip()
-    paras = [re.sub(r'\s+', ' ', p).strip() for p in re.split(r'\n\s*\n', (desc or '').replace('\r', '').strip()) if p.strip()]
+    def body(p):   # a short heading line on top of a paragraph ("The route", "At a glance") is left out
+        lines = [l.strip() for l in p.strip().split('\n') if l.strip()]
+        if len(lines) > 1 and len(lines[0]) < 30 and not re.search(r'[.!?:]$', lines[0]):
+            lines = lines[1:]
+        return re.sub(r'\s+', ' ', ' '.join(lines)).strip()
+    paras = [body(p) for p in re.split(r'\n\s*\n', (desc or '').replace('\r', '').strip()) if p.strip()]
     while paras and len(paras[0]) < 90 and (norm_(paras[0]) in [norm_(n) for n in names] or not re.search(r'[.!?]$', paras[0]) and len(paras) > 1 and len(paras[0].split()) < 12):
         paras = paras[1:]
     for i, p in enumerate(paras):   # a lead in to a list ("Before you roll:") ends the story
