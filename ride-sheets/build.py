@@ -31,7 +31,7 @@ import living as L
 TZ = ZoneInfo('Australia/Brisbane')
 BOOKLET = 'Ride sheets booklet.pdf'
 LOCKED = os.path.join(STATE, 'locked')
-CODE_FILES = ['sheet.py', 'booklet.py', 'rides.py', 'textfit.py', 'check.py']
+CODE_FILES = ['sheet.py', 'booklet.py', 'rides.py', 'textfit.py', 'check.py', 'build.py']
 
 
 def now():
@@ -313,6 +313,8 @@ class Build:
         for r in rows:
             if rid_of := next((k for k in use if M[k]['slug'] == r['slug']), None):
                 print(f"ride sheets: size {r['slug']}: screen PDF {os.path.getsize(use[rid_of][1]) / 1e6:.2f} MB, locked {r['sheet_bytes'] / 1e6:.2f} MB")
+                if os.path.getsize(use[rid_of][1]) > 1_000_000:
+                    print('ride sheets:   what fills it:', pdf_parts(use[rid_of][1]))
         print('ride sheets: sizes: booklet PDF %.1f MB, locked %.1f MB; screen sheets %.2f to %.2f MB, locked %.2f to %.2f MB' % (
             os.path.getsize(pdf) / 1e6, os.path.getsize(os.path.join(LOCKED, 'booklet.enc.json')) / 1e6,
             min(os.path.getsize(use[r][1]) for r in use) / 1e6, max(os.path.getsize(use[r][1]) for r in use) / 1e6,
@@ -336,6 +338,28 @@ class Build:
             print('ride sheets: index is over 50 KB; trimming the changelog')
             idx['changelog'] = idx['changelog'][-5:]
             L.seal_json(idx, out)
+
+
+def pdf_parts(path):
+    """The biggest things inside a PDF (for the build log when a sheet is heavier than expected)."""
+    try:
+        from pypdf import PdfReader
+        r = PdfReader(path); parts = []
+        for page in r.pages:
+            res = page['/Resources']
+            for name, ref in (res.get('/XObject') or {}).items():
+                o = ref.get_object()
+                parts.append((len(o._data or b''), f"{name} {o.get('/Subtype')} {o.get('/Width')}x{o.get('/Height')} {o.get('/Filter')}"))
+            for name, ref in (res.get('/Font') or {}).items():
+                o = ref.get_object(); fd = None
+                for d in (o.get('/DescendantFonts') or []):
+                    fd = d.get_object().get('/FontDescriptor')
+                ff = (fd.get_object() if fd else {}).get('/FontFile2') if fd else None
+                parts.append((len(ff.get_object()._data) if ff else 0, f"{name} {o.get('/BaseFont')} {o.get('/Subtype')}"))
+            parts.append((len(page.get_contents().get_data()) if page.get_contents() else 0, 'page content'))
+        return '; '.join(f'{d} {b // 1024} KB' for b, d in sorted(parts, reverse=True)[:6])
+    except Exception as ex:
+        return f'could not read ({ex})'
 
 
 # ---------- the last good sheets, kept encrypted in the cache so a held back sheet can keep its previous version ----------
