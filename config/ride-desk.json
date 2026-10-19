@@ -1,7 +1,7 @@
 {
  "_about": "The Ride Desk's cards (https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18), copied here by the \"Ride Guide settings apply\" scheduled task. Never edit by hand: change the card on the Ride Desk. The build and ride-sheets/ read every ride's fields from here (staff sections and privacy codes are in config/ride-desk-private.enc.json). Claude's fields per ride: rwgps, rev (bump to replace a ride's link, route code and QR code), activity, websitePage (the Bike On website page whose photo is the default), found and rwgpsName. Read scripts/ride-desk.mjs.",
- "deskRev": 1,
- "updated": "2026-10-18T00:00:00Z",
+ "deskRev": 10,
+ "updated": "2026-10-19T04:03:19.140Z",
  "rides": {
   "full-noosa": {
    "rwgps": 52186029,
@@ -138,7 +138,7 @@
    "rev": 1,
    "activity": "ebike",
    "live": true,
-   "ipad": true,
+   "ipad": false,
    "status": "ready",
    "brand": "bikeon",
    "type": "scenic",
