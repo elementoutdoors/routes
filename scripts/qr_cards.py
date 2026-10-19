@@ -87,7 +87,7 @@ for n, r in enumerate(routes):
     c.setFont('M700', 9); c.setFillColor(line)
     c.drawString(tx, ty - 1, f"{r['distance'] / 1000:.1f} km"); ty -= 16
     paras = ['Scan with your phone camera to open the map and directions.',
-             'Turn your sound up for spoken directions and keep the screen facing you on the handlebar mount.']
+             'Turn your sound up and keep the Ride Guide open on screen. Don\'t lock your phone: a locked phone can\'t give directions.']
     floor = y + pad + 6 * mm   # keep clear of the route code bar
     fs = 7.6
     while fs > 6 and sum(len(wrap(pa, 'M500', fs, tw)) * fs * 1.29 + 3 for pa in paras) > ty - floor: fs -= 0.2
