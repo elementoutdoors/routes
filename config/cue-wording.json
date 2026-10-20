@@ -1,5 +1,5 @@
 {
-  "_about": "How the turn directions from Ride with GPS are worded in the Ride Guide (on screen and spoken). Ride with GPS keeps its own short cue sheet wording; the app reads them as full, natural sentences. fixes: a whole cue, exactly as written in Ride with GPS, and what the app says instead (if the cue is later changed in Ride with GPS, the new wording is used and tidied by the rules). rules: applied in order to every cue that has no fix (find is a regular expression, say the replacement). The build lists any cue that still reads like cue sheet shorthand in health.json (cueWording) so a rule or fix can be added. Ben, 15/10/2026: say 'the path', 'the car park' and so on.",
+  "_about": "How the turn directions from Ride with GPS are worded in the Ride Guide (on screen and spoken). Ride with GPS keeps its own short cue sheet wording; the app reads them as full, natural sentences. fixes: a whole cue, exactly as written in Ride with GPS, and what the app says instead (if the cue is later changed in Ride with GPS, the new wording is used and tidied by the rules). rules: applied in order to every cue that has no fix (find is a regular expression, say the replacement). The build lists any cue that still reads like cue sheet shorthand in health.json (cueWording) so a rule or fix can be added. Ben, 15/10/2026: say 'the path', 'the car park' and so on. fine: whole directions, exactly as the app says them, that are already full sentences even though the shorthand check flags them (Ben, 21/10/2026: the Old Coach Way flood line).",
   "fixes": {
     "cross road and onto pat on the other side (slightly to your left)": "Cross the road onto the path on the other side, slightly to your left",
     "Slight Right onto glossy": "Bear right onto Glossy",
@@ -149,5 +149,8 @@
       "find": "^([a-z])",
       "say": "\\u$1"
     }
+  ],
+  "fine": [
+    "At the Old Coach Way junction, bear left onto the track. It is rough, so walk if needed. This section can flood after rain. Do not cross if it is flooded."
   ]
 }
