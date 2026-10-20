@@ -1,61 +1,59 @@
 {
- "_about": "What the Ride Guide manuals in EO Crew were last checked against. node scripts/manual_facts.mjs --check compares the code with \"facts\"; each changed fact lists the EO Crew sections (DocSection ids) to rewrite under \"feeds\". After rewriting them, run --accept and push. Written by Claude; see scripts/manual_facts.mjs.",
+ "_about": "What the Ride Guide manual in EO Crew (EO-HI-10, one document in three parts) was last checked against. node scripts/manual_facts.mjs --check compares the code with \"facts\"; each changed fact lists the EO Crew sections (DocSection ids) to rewrite under \"feeds\". After rewriting them, run --accept and push. Written by Claude; see scripts/manual_facts.mjs.",
  "documents": {
-  "EO-HI-10": "6ad34fdda43df9de8b01d96d",
-  "EO-HI-10.1": "6ad541db59b83f5fd0286651",
-  "EO-HI-10.2": "6ad541db59b83f5fd0286652"
+  "EO-HI-10": "6ad34fdda43df9de8b01d96d"
  },
  "eoCrewApp": "6abba75b48155c78238d4cba",
  "feeds": {
   "phoneSettings": [
-   "EO-HI-10 Settings on the phone (6ad542c846dcb0667cc26beb)",
-   "EO-HI-10 Setting a customer up (6ad350231b96842a13df854a)"
+   "EO-HI-10 Part 1, Settings on the phone (6ad542c846dcb0667cc26beb)",
+   "EO-HI-10 Part 1, Setting a customer up (6ad350231b96842a13df854a)"
   ],
   "languages": [
-   "EO-HI-10 What the Ride Guide is (6ad350231b96842a13df8549)",
-   "EO-HI-10 Settings on the phone (6ad542c846dcb0667cc26beb)"
+   "EO-HI-10 Part 1, What the Ride Guide is (6ad350231b96842a13df8549)",
+   "EO-HI-10 Part 1, Settings on the phone (6ad542c846dcb0667cc26beb)"
   ],
   "appControls": [
-   "EO-HI-10 The app, screen by screen (6ad542c846dcb0667cc26bea)",
-   "EO-HI-10 When something goes wrong (6ad350231b96842a13df854c)"
+   "EO-HI-10 Part 1, The app, screen by screen (6ad542c846dcb0667cc26bea)",
+   "EO-HI-10 Part 1, When something goes wrong (6ad350231b96842a13df854c)"
   ],
   "appWords": [
-   "EO-HI-10 The app, screen by screen (6ad542c846dcb0667cc26bea)",
-   "EO-HI-10 What to tell every customer (6ad542c846dcb0667cc26bec)",
-   "EO-HI-10 When something goes wrong (6ad350231b96842a13df854c)",
-   "EO-HI-10.1 What the Ride Guide can't do (6ad5423912b603374066a0fe)"
+   "EO-HI-10 Part 1, The app, screen by screen (6ad542c846dcb0667cc26bea)",
+   "EO-HI-10 Part 1, What to tell every customer (6ad542c846dcb0667cc26bec)",
+   "EO-HI-10 Part 1, When something goes wrong (6ad350231b96842a13df854c)",
+   "EO-HI-10 Part 2, What the Ride Guide can't do (6ad5423912b603374066a0fe)"
   ],
   "deskCardSections": [
-   "EO-HI-10.1 The Ride Desk (6ad5423912b603374066a0f5)",
-   "EO-HI-10.1 Changing a ride (6ad5423912b603374066a0f6)"
+   "EO-HI-10 Part 2, The Ride Desk (6ad5423912b603374066a0f5)",
+   "EO-HI-10 Part 2, Changing a ride (6ad5423912b603374066a0f6)"
   ],
   "deskSettings": [
-   "EO-HI-10.1 Rider settings the phone can't change (6ad5423912b603374066a0fb)"
+   "EO-HI-10 Part 2, Rider settings the phone can't change (6ad5423912b603374066a0fb)"
   ],
   "deskFields": [
-   "EO-HI-10.1 Who changes what (6ad5423912b603374066a0f4)",
-   "EO-HI-10.1 The Ride Desk (6ad5423912b603374066a0f5)",
-   "EO-HI-10.2 Where every piece of information lives (6ad542878976c802e8204438)"
+   "EO-HI-10 Part 2, Who changes what (6ad5423912b603374066a0f4)",
+   "EO-HI-10 Part 2, The Ride Desk (6ad5423912b603374066a0f5)",
+   "EO-HI-10 Part 3, Where every piece of information lives (6ad542878976c802e8204438)"
   ],
   "settingKeys": [
-   "EO-HI-10.1 Rider settings the phone can't change (6ad5423912b603374066a0fb)"
+   "EO-HI-10 Part 2, Rider settings the phone can't change (6ad5423912b603374066a0fb)"
   ],
   "buildSchedule": [
-   "EO-HI-10.2 The build (6ad542878976c802e820443a)",
-   "EO-HI-10.2 Scheduled tasks and Ben's Desk (6ad542878976c802e8204440)",
-   "EO-HI-10.1 Checks that run by themselves (6ad5423912b603374066a0ff)"
+   "EO-HI-10 Part 3, The build (6ad542878976c802e820443a)",
+   "EO-HI-10 Part 3, Scheduled tasks and Ben's Desk (6ad542878976c802e8204440)",
+   "EO-HI-10 Part 2, Checks that run by themselves (6ad5423912b603374066a0ff)"
   ],
   "buildSteps": [
-   "EO-HI-10.2 The build (6ad542878976c802e820443a)",
-   "EO-HI-10.2 How it fits together (6ad542878976c802e8204437)"
+   "EO-HI-10 Part 3, The build (6ad542878976c802e820443a)",
+   "EO-HI-10 Part 3, How it fits together (6ad542878976c802e8204437)"
   ],
   "screens": [
-   "EO-HI-10 The app, screen by screen (6ad542c846dcb0667cc26bea)",
-   "EO-HI-10.1 The Ride Desk (6ad5423912b603374066a0f5)"
+   "EO-HI-10 Part 1, The app, screen by screen (6ad542c846dcb0667cc26bea)",
+   "EO-HI-10 Part 2, The Ride Desk (6ad5423912b603374066a0f5)"
   ]
  },
  "sections": {
-  "EO-HI-10": {
+  "EO-HI-10 Part 1": {
    "what": "6ad350231b96842a13df8549",
    "setup": "6ad350231b96842a13df854a",
    "screens": "6ad542c846dcb0667cc26bea",
@@ -64,7 +62,7 @@
    "rides": "6ad350231b96842a13df854b",
    "wrong": "6ad350231b96842a13df854c"
   },
-  "EO-HI-10.1": {
+  "EO-HI-10 Part 2": {
    "who": "6ad5423912b603374066a0f4",
    "desk": "6ad5423912b603374066a0f5",
    "change": "6ad5423912b603374066a0f6",
@@ -78,7 +76,7 @@
    "limits": "6ad5423912b603374066a0fe",
    "checks": "6ad5423912b603374066a0ff"
   },
-  "EO-HI-10.2": {
+  "EO-HI-10 Part 3": {
    "fits": "6ad542878976c802e8204437",
    "where": "6ad542878976c802e8204438",
    "code": "6ad542878976c802e8204439",
@@ -514,5 +512,10 @@
    "27-desk-offers.jpg",
    "28-desk-settings.jpg"
   ]
+ },
+ "parts": {
+  "Part 1 For everyone: the app and our rides": "6ad6c26ca0c8e0f3082e4a5a",
+  "Part 2 For managers: the Ride Desk": "6ad6c26ca0c8e0f3082e4a5b",
+  "Part 3 Technical appendix": "6ad6c26ca0c8e0f3082e4a5c"
  }
 }

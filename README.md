@@ -94,16 +94,17 @@ every Ride Guide screen and of the Ride Desk, kept up to date by themselves. Rou
 - Check without opening anything: https://element-crew-connect.base44.app/functions/rideGuide?check=1 gives counts only.
 - A screenshot failure keeps the last set and never stops the build.
 
-## The Ride Guide manuals (EO Crew)
+## The Ride Guide manual (EO Crew)
 
-Three documents in EO Crew (Base44 app 6abba75b48155c78238d4cba): EO-HI-10 "Ride Guide: the app and our rides" (all
-staff), EO-HI-10.1 "Ride Guide: managing rides on the Ride Desk" and EO-HI-10.2 "Ride Guide: technical appendix" (managers
-only). EO Crew holds the words (managers can edit them); `manual/build_manual.py` is the version Claude wrote. They stay
+One document in EO Crew (Base44 app 6abba75b48155c78238d4cba): EO-HI-10 "Ride Guide: the app, our rides and the Ride
+Desk", in three parts: Part 1 for everyone, Part 2 for managers (the Ride Desk) and Part 3 the technical appendix (Ben,
+20 Oct 2026: one manual; EO-HI-10.1 and 10.2 are superseded). Each part is a level 1 section with its sections under it
+at level 2. EO Crew holds the words (managers can edit them); `manual/build_manual.py` is the version Claude wrote. They stay
 right by themselves:
 
 - Pictures: `{"type": "ride_screens", "group": "<group>"}` blocks show the screenshots above, retaken every night.
 - QR codes, route codes, the ride list and staff notes are live blocks (`ride_qr`, `ride_list`).
-- Words: `node scripts/manual_facts.mjs --check` compares what the manuals describe (phone settings, languages, app
+- Words: `node scripts/manual_facts.mjs --check` compares what the manual describes (phone settings, languages, app
   controls and wording, Ride Desk sections, fields and settings, setting keys, build schedule and steps, the screenshot
   list) with `manual/written.json`, which also says which EO Crew sections each fact feeds. The weekly check
   (`scripts/check.mjs`, "manual") lists any change; the drift check rewrites those sections in EO Crew, then runs

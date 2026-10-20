@@ -1,4 +1,4 @@
-"""Screenshots for the Ride Guide manuals in EO Crew (EO-HI-10 for staff, EO-HI-10.1 for managers), taken every night.
+"""Screenshots for the Ride Guide manual in EO Crew (EO-HI-10, Parts 1 and 2), taken every night.
 
 Every screen of the app on a phone-sized browser, ridden on a real ride with a simulated GPS, and the Ride Desk with
 made-up data. Each screenshot has numbered markers (Bike On colours) and a key saying what each number is, so the

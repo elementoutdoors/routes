@@ -1,14 +1,14 @@
-// The facts the Ride Guide manuals in EO Crew are written against (EO-HI-10 for staff, EO-HI-10.1 for managers and
-// EO-HI-10.2, the technical appendix), read straight from the code, so a change to the app, the Ride Desk or the build
-// that the manuals describe is noticed. The pictures in the manuals retake themselves every night
+// The facts the Ride Guide manual in EO Crew is written against (EO-HI-10, one document: Part 1 for staff, Part 2 for
+// managers, Part 3 the technical appendix), read straight from the code, so a change to the app, the Ride Desk or the
+// build that the manual describes is noticed. The pictures in the manual retake themselves every night
 // (scripts/staff_screens.py); the words do not, so this is how the words are kept honest.
 //
 //   node scripts/manual_facts.mjs            print the facts as they are now
 //   node scripts/manual_facts.mjs --check    compare with manual/written.json: {ok, changed: [{fact, added, removed, sections}]}
-//   node scripts/manual_facts.mjs --accept   after the manuals have been brought into line: record today's facts
+//   node scripts/manual_facts.mjs --accept   after the manual has been brought into line: record today's facts
 //
-// manual/written.json holds the facts the manuals were last checked against, which manual sections each fact feeds,
-// and the EO Crew document ids. The weekly drift check (Drift Check Register, Ride Guide routes tab, Manual step) runs
+// manual/written.json holds the facts the manual was last checked against, which manual sections each fact feeds,
+// and the EO Crew document, part and section ids. The weekly drift check (Drift Check Register, Ride Guide routes tab, Manual step) runs
 // --check; for each changed fact it rewrites the named sections in EO Crew, then runs --accept and pushes.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -34,16 +34,16 @@ export function facts() {
     appControls: uniq(all(/id="([\w-]+)"/g, html)),
     // everything the app says or shows in its own words (wording changes a manual may quote)
     appWords: uniq(all(/tu\(['"]((?:[^'"\\]|\\.)+)['"]\)/g, app)).sort(),
-    // the Ride Desk (EO-HI-10.1)
+    // the Ride Desk (EO-HI-10 Part 2)
     deskCardSections: all(/el\("h3", null, "([^"]+)"\)/g, main),
     deskSettings: all(/label: "([^"]+)"/g, groups),
     deskFields: { public: listOf('PUBLIC_FIELDS'), staff: listOf('STAFF_FIELDS') },
     // rider settings that exist (not their values: those are Ben's to change any day and are shown live on the Ride Desk)
     settingKeys: Object.fromEntries(Object.entries(settings).filter(([k]) => !k.startsWith('_')).map(([g, v]) => [g, Object.keys(v).filter((k) => !k.startsWith('_'))])),
-    // how and when the site is built (EO-HI-10.2)
+    // how and when the site is built (EO-HI-10 Part 3)
     buildSchedule: all(/cron: '([^']+)'/g, wf),
     buildSteps: all(/- name: (.+)/g, wf).map((s) => s.trim()),
-    // the manuals' pictures
+    // the manual's pictures
     screens: uniq(all(/'(\d\d\w?-[\w-]+\.jpg)'/g, screens)),
   };
 }
