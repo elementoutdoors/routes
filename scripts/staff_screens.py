@@ -8,7 +8,7 @@ shows in the manual the next morning.
 Usage: python3 scripts/staff_screens.py <base_url> <outdir>   (after a build; reads qr/links.json and dist/)
 Writes JPEGs and screens.json ({ride, taken, screens: [{file, group, title, caption, lead, keys: [[n, text]]}]}) to <outdir>.
 They show a live ride, so they are only ever published locked (scripts/staff_bundle.mjs).
-Groups: setup (getting a customer going), riding, stops, finish, settings (the phone's settings), desk (the Ride Desk).
+Groups: setup (getting a customer going), getthere (directions to the route), riding, stops, finish, settings (the phone's settings), desk (the Ride Desk).
 The list of screens is also what the manual's drift check fingerprints (scripts/manual_facts.mjs).
 """
 import json, os, subprocess, sys, tempfile, time
@@ -163,6 +163,42 @@ def app_screens(p):
           (3, 'text:Add it to your home screen', 'Add the ride to the home screen, so it opens like an app.', 'tl')])
     close_sheet(page)
 
+    # Getting to the route from somewhere else (20/10/2026): the directions sheet, the maps app links, and what the ride
+    # page shows when the rider comes back from the maps app
+    T0 = route['track']
+    page.click('#getthere-btn'); time.sleep(1)
+    shot(page, '04b-directions.jpg', 'getthere', 'Directions to the route',
+         'Directions to the route, under Start riding, for riders starting somewhere else.',
+         [(1, 'text:To the nearest point on the route', 'The nearest point on the ride, from where they are now.', 'tl'),
+          (2, 'text:To the start of the route', 'The start of the ride.', 'tl')])
+    page.click('text=To the start of the route'); time.sleep(1)
+    shot(page, '04c-directions-open.jpg', 'getthere', 'Opening the maps app',
+         'Their maps app opens with the directions set. On an iPhone there is an Apple Maps button above this one.',
+         [(1, 'text:Your maps app opens', 'Come back to this page when the maps app says they have arrived.', 'tl'),
+          (2, 'text:Open in Google Maps', 'Opens the maps app with the directions.', 'tl')])
+    close_sheet(page)
+    far = off_point(T0, 0, 1500)
+    ctx.set_geolocation({'latitude': far[0], 'longitude': far[1], 'accuracy': 8})
+    page.evaluate("""(a) => { localStorage.setItem('rg.approach', JSON.stringify({ key: a.key, kind: 'start', lat: a.lat, lng: a.lng, ts: Date.now() - 300000 }));
+        document.dispatchEvent(new Event('visibilitychange')); }""", {'key': key, 'lat': T0['lat'][0], 'lng': T0['lng'][0]})
+    wait_visible(page, '#sheet'); time.sleep(1)
+    shot(page, '04d-on-the-way.jpg', 'getthere', 'Back from the maps app, not there yet',
+         'Came back to the ride before reaching it.',
+         [(1, '#sheet-title', 'Still on your way, and how far the route is.', 'tl'),
+          (2, 'text:Open the directions again', 'The directions again.', 'tl')])
+    close_sheet(page)
+    j = min(len(T0['d']) - 1, 25)
+    ctx.set_geolocation({'latitude': T0['lat'][j], 'longitude': T0['lng'][j], 'accuracy': 8})
+    page.evaluate("() => document.dispatchEvent(new Event('visibilitychange'))")
+    wait_visible(page, '#sheet'); time.sleep(1)
+    shot(page, '04e-on-the-route.jpg', 'getthere', 'Back from the maps app, on the route',
+         'Came back to the ride once they reached it.',
+         [(1, '#sheet-title', "You're on the route.", 'tl'),
+          (2, 'text:Start riding from here', 'Start riding from here. On a loop they finish back where they joined.', 'tl')])
+    close_sheet(page)
+    page.evaluate("() => localStorage.removeItem('rg.approach')")
+    ctx.set_geolocation({'latitude': -26.4078, 'longitude': 153.0434, 'accuracy': 10})
+
     page.click('#route-settings'); time.sleep(1)
     shot(page, '05-settings.jpg', 'settings', 'Settings, top',
          'Settings, from the ride page or the menu button while riding.',
@@ -189,7 +225,7 @@ def app_screens(p):
     ctx.set_geolocation({'latitude': la + 0.00001, 'longitude': ln, 'accuracy': 8}); time.sleep(1.5)
     shot(page, '07-to-start.jpg', 'riding', 'Before reaching the route',
          'Started away from the route. Nothing is wrong: directions start once they reach the line.',
-         [(1, '#cue-card', 'How far to the start. Head for the green marker.', 'tl')])
+         [(1, '#cue-card', 'How far to the route. On a loop they can join the line anywhere; on a one way ride, head for the green marker at the start.', 'tl')])
 
     # ride along to just before a turn, a few hundred metres in
     step = max(1, n // 220)
