@@ -148,6 +148,8 @@ def app_screens(p):
          [(1, '#route-desc-wrap', 'The ride description.', 'tl'),
           (2, '#offline-note', 'Wait for "Saved to your phone. Works with no signal." before they leave.', 'tl'),
           (3, '#start-btn', 'Start riding: tap it at the shop, then allow location.', 'tl'),
+          (8, '#getthere-btn', 'Directions to the route, for riders starting somewhere else.', 'tl'),
+          (9, '#risk-btn', 'You ride at your own risk: opens the Before you ride card.', 'l'),
           (4, '#lock-note', 'Locking the phone stops the directions.', 'l'),
           (5, '#keep-btn', 'Getting back to this route: the route code and adding the ride to the home screen.', 'tl'),
           (6, '#call-link', 'Need help? Call us: rings the shop.', 'tl'),
@@ -220,7 +222,17 @@ def app_screens(p):
     T = route['track']; n = len(T['d'])
     la, ln = off_point(T, 0, 350)
     ctx.set_geolocation({'latitude': la, 'longitude': ln, 'accuracy': 8})
-    page.click('#start-btn'); time.sleep(3)
+    page.click('#start-btn'); time.sleep(1)
+    # the first Start riding on a phone shows the Before you ride card (20/10/2026); I understand starts the ride
+    if wait_visible(page, 'text=I understand', 4):
+        shot(page, '06b-before-you-ride.jpg', 'setup', 'Before you ride',
+             'The first time a ride is started on a phone. I understand starts the ride; it is not shown again for that ride.',
+             [(1, '#sheet-title', 'Riding is at their own risk.', 'tl'),
+              (2, 'text:Never ride through flood water', 'Never ride through flood water; turn back if it looks unsafe.', 'tl'),
+              (3, 'text:Follow the road rules', 'Road rules, helmet, and the phone in a mount.', 'tl'),
+              (4, 'text:I understand', 'I understand: starts the ride.', 'tl')])
+        page.click('text=I understand')
+    time.sleep(3)
     close_sheet(page)
     ctx.set_geolocation({'latitude': la + 0.00001, 'longitude': ln, 'accuracy': 8}); time.sleep(1.5)
     shot(page, '07-to-start.jpg', 'riding', 'Before reaching the route',

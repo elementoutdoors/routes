@@ -1739,5 +1739,12 @@
  "Still on your way?": "Ancora in viaggio?",
  "The route is {dist} away.": "Il percorso è a {dist}.",
  "Open the directions again": "Riapri le indicazioni",
- "Stop showing this": "Non mostrare più"
+ "Stop showing this": "Non mostrare più",
+ "Before you ride": "Prima di partire",
+ "You ride at your own risk": "Pedali a tuo rischio",
+ "Check the conditions on the day, including weather, tracks and traffic, and choose a ride that suits your fitness and riding ability.": "Controlla le condizioni del giorno, compresi meteo, sentieri e traffico, e scegli un percorso adatto alla tua forma fisica e alla tua capacità di guida.",
+ "Never ride through flood water or flooded creeks. If conditions look unsafe or beyond your ability, turn back and use your phone's maps app to find a safe way back.": "Non attraversare mai acque alluvionali o torrenti in piena. Se le condizioni sembrano pericolose o superiori alle tue capacità, torna indietro e usa l'app di mappe del telefono per trovare una strada sicura per il ritorno.",
+ "Follow the road rules and wear your helmet. Queensland law says your phone must be in a phone mount while you ride. Never hold it or rest it on your body.": "Rispetta il codice della strada e indossa il casco. La legge del Queensland prevede che il telefono sia in un supporto mentre pedali. Non tenerlo mai in mano e non appoggiarlo mai sul corpo.",
+ "I understand": "Ho capito",
+ "You ride at your own risk. Read before you ride.": "Pedali a tuo rischio. Da leggere prima di partire."
 }

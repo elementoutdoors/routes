@@ -40,7 +40,9 @@ with sync_playwright() as p:
     page.click('#route-offers .offer-strip'); time.sleep(0.6)
     page.screenshot(path=f'{out}/2-offer.png')
     page.click('#sheet-close'); time.sleep(0.3)
-    page.click('#start-btn'); time.sleep(2)
+    page.click('#start-btn'); time.sleep(1)
+    if page.is_visible('text=I understand'): page.click('text=I understand')
+    time.sleep(1)
     page.screenshot(path=f'{out}/3-ride-start.png')
 
     T = route['track']

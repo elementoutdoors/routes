@@ -116,6 +116,16 @@ right by themselves:
 which Claude publishes to https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18. `ride-desk/mock.js` stands in for the page's
 database when the screenshots are taken.
 
+## Before you ride (risk card)
+
+Added 20/10/2026 (Ben's wording, checked against the Checkfront waiver "Risk Warning and Acknowledgement" and the
+Product Truth). The first time a ride is started on a phone, a "Before you ride" card comes up: own risk, check
+conditions and choose a ride to suit fitness and ability, never ride through flood water or flooded creeks (turn back
+and use the phone's maps app to find a safe way back), road rules, helmet, and the Queensland rule that the phone is in a
+mount while riding. "I understand" starts the ride and is kept per ride on the phone (`rg.risk`). The line "You ride at
+your own risk. Read before you ride." under Start riding opens it any time. Resumed rides, Test drive and staff check
+links skip it. Safety text: translated in full into every language the same day; change the wording only with Ben.
+
 ## Directions to the route and joining a loop part way
 
 Added 20/10/2026 for riders staying somewhere else. "Directions to the route" on the route page offers the nearest point

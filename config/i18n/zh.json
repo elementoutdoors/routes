@@ -1739,5 +1739,12 @@
  "Still on your way?": "还在路上？",
  "The route is {dist} away.": "路线在{dist}外。",
  "Open the directions again": "重新打开导航",
- "Stop showing this": "不再显示"
+ "Stop showing this": "不再显示",
+ "Before you ride": "骑行前须知",
+ "You ride at your own risk": "骑行风险由您自行承担",
+ "Check the conditions on the day, including weather, tracks and traffic, and choose a ride that suits your fitness and riding ability.": "请在当天查看路况，包括天气、道路和交通情况，并选择适合您体能和骑行能力的路线。",
+ "Never ride through flood water or flooded creeks. If conditions look unsafe or beyond your ability, turn back and use your phone's maps app to find a safe way back.": "切勿骑车穿越洪水或被淹没的溪流。如果路况看起来不安全或超出您的能力，请掉头，并使用手机上的地图应用找到安全的返回路线。",
+ "Follow the road rules and wear your helmet. Queensland law says your phone must be in a phone mount while you ride. Never hold it or rest it on your body.": "请遵守交通规则并佩戴头盔。根据昆士兰州法律，骑行时手机必须固定在手机支架上。切勿手持手机或将其放在身上。",
+ "I understand": "我已了解",
+ "You ride at your own risk. Read before you ride.": "骑行风险由您自行承担。出发前请阅读。"
 }

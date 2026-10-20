@@ -1733,6 +1733,34 @@
   function isStandalone() { return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
   function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
   function siteAddress() { return location.origin + location.pathname.replace(/index\.html$/, ''); }
+  // ---------- before you ride (Ben, 20/10/2026) ----------
+  // A short risk card, shown the first time a ride is started on a phone; "I understand" starts the ride and is kept for
+  // that ride on that phone. The same card opens from the line under Start riding. Test drive and staff check links skip it.
+  function riskKey() { return baseRoute().slug || baseRoute().key; }
+  function riskSeen() { var m = lsGet('rg.risk', {}); return !!m[riskKey()]; }
+  function openRisk(go) {
+    openSheet(function (b) {
+      b.appendChild(el('div', { class: 'kicker', text: tu('Before you ride') }));
+      b.appendChild(el('h2', { id: 'sheet-title', text: tu('You ride at your own risk') }));
+      b.appendChild(el('p', { text: tu('Check the conditions on the day, including weather, tracks and traffic, and choose a ride that suits your fitness and riding ability.') }));
+      b.appendChild(el('p', { text: tu('Never ride through flood water or flooded creeks. If conditions look unsafe or beyond your ability, turn back and use your phone\'s maps app to find a safe way back.') }));
+      b.appendChild(el('p', { text: tu('Follow the road rules and wear your helmet. Queensland law says your phone must be in a phone mount while you ride. Never hold it or rest it on your body.') }));
+      var acts = el('div', { class: 'sheet-actions' });
+      var ok = el('button', { class: 'btn primary full', type: 'button', text: tu('I understand') });
+      ok.addEventListener('click', function () {
+        var m = lsGet('rg.risk', {}); m[riskKey()] = Date.now(); lsSet('rg.risk', m);
+        closeSheet();
+        if (go) go();
+      });
+      acts.appendChild(ok); b.appendChild(acts);
+    });
+  }
+  // every ride start a rider taps goes through here
+  function beginRide(resume) {
+    if (CHECK || resume || riskSeen()) { startRide(resume); return; }
+    openRisk(function () { startRide(resume); });
+  }
+
   // ---------- directions to the route (Ben, 20/10/2026) ----------
   // Riders staying elsewhere get directions to the start, or to the nearest point on the route, in their own maps app.
   // A web page cannot bring itself back once the maps app is in front, so the rider is asked to come back to this page;
@@ -1807,7 +1835,7 @@
       b.appendChild(el('p', { text: tu(loop ? 'Tap Start riding. The directions start from here, and your ride finishes back here after the whole loop.' : 'Tap Start riding. The directions start from here.') }));
       var acts = el('div', { class: 'sheet-actions' });
       var go = el('button', { class: 'btn primary full', type: 'button', text: tu('Start riding from here') });
-      go.addEventListener('click', function () { closeSheet(); startRide(false); });
+      go.addEventListener('click', function () { closeSheet(); beginRide(false); });
       acts.appendChild(go); b.appendChild(acts);
     });
   }
@@ -1912,7 +1940,8 @@
 
   // ---------- wiring ----------
   function wire() {
-    $('start-btn').addEventListener('click', function () { startRide(!!this.dataset.resume); });
+    $('start-btn').addEventListener('click', function () { beginRide(!!this.dataset.resume); });
+    $('risk-btn').addEventListener('click', function () { openRisk(null); });
     $('end-btn').addEventListener('click', endRide);
     $('pause-btn').addEventListener('click', function () { if (ride.paused) resumeRide(); else pauseRide(); });
     $('route-stops-btn').addEventListener('click', openStops);

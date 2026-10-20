@@ -1739,5 +1739,12 @@
  "Still on your way?": "まだ移動中ですか？",
  "The route is {dist} away.": "ルートまで{dist}です。",
  "Open the directions again": "道順をもう一度開く",
- "Stop showing this": "今後表示しない"
+ "Stop showing this": "今後表示しない",
+ "Before you ride": "走り出す前に",
+ "You ride at your own risk": "走行はご自身の責任で行ってください",
+ "Check the conditions on the day, including weather, tracks and traffic, and choose a ride that suits your fitness and riding ability.": "当日の天候、道の状態、交通状況などのコンディションを確認し、ご自身の体力と走行技術に合ったルートを選んでください。",
+ "Never ride through flood water or flooded creeks. If conditions look unsafe or beyond your ability, turn back and use your phone's maps app to find a safe way back.": "冠水した場所や増水した川は絶対に走行して渡らないでください。危険に見える、またはご自身の能力を超えると感じたら引き返し、スマートフォンの地図アプリで安全な帰り道を探してください。",
+ "Follow the road rules and wear your helmet. Queensland law says your phone must be in a phone mount while you ride. Never hold it or rest it on your body.": "交通ルールを守り、ヘルメットを着用してください。クイーンズランド州の法律では、走行中はスマートフォンをホルダーに固定する必要があります。手に持ったり、体の上に置いたりしないでください。",
+ "I understand": "理解しました",
+ "You ride at your own risk. Read before you ride.": "走行はご自身の責任で。出発前にお読みください。"
 }
