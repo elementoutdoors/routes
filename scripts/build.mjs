@@ -445,7 +445,7 @@ async function main() {
   const health = { built: now.toISOString(), build, routes: [], offers: [], problems: [] };
   health.counter = { on: !!countUrl() };
   if (!countUrl()) health.problems.push('ride counts: config/counter.json has no valid counter address, so rides are not being counted');
-  loadCueWording(ROOT);
+  const cueW = loadCueWording(ROOT);
   const settings = loadSettings(health.problems);
   health.settings = settings;
   const links = {}, codes = {};
@@ -565,7 +565,8 @@ async function main() {
   // Directions Review page; rulings live in config/direction-rulings.json.
   const dirRulings = (readJson('config/direction-rulings.json', {}).rulings) || {};
   health.directions = built.flatMap(b => checkDirections(b.route.slug, b.route, dirRulings));
-  health.cueWording = [...new Set(built.flatMap(b => b.route.cues.map(c => c.n)).filter(looksShort))];
+  const cueFine = new Set(cueW.fine || []);
+  health.cueWording = [...new Set(built.flatMap(b => b.route.cues.map(c => c.n)).filter(t => looksShort(t) && !cueFine.has(t)))];
   // Same place, different story: a story stop copied onto several rides instead of shared from the POI Library drifts apart.
   {
     const byName = new Map();
