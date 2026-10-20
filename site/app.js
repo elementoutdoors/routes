@@ -141,6 +141,63 @@
     return lo;
   }
 
+  // ---------- join anywhere on a loop (Ben, 20/10/2026) ----------
+  // A loop (start and finish together) can be joined at any point: the rider rides the whole loop from there and the ride
+  // ends back where they joined. The route is turned round in the phone so the join point is the start: every distance
+  // along the route shifts, nothing else changes. One way rides are left as they are (joining part way rides to the finish).
+  var JOIN_MIN = 500;   // closer than this to the real start or finish: just ride the route as it is
+  function isLoop(r) {
+    var T = r.track, n = T.lat.length - 1;
+    return r.distance > 2000 && hav(T.lat[0], T.lng[0], T.lat[n], T.lng[n]) < 300;
+  }
+  function joinedRoute(base, J) {
+    var T = base.track, L = base.distance, n = T.d.length;
+    var gap = Math.round(hav(T.lat[n - 1], T.lng[n - 1], T.lat[0], T.lng[0]));
+    var NL = L + gap;
+    function f(d) { return d >= J ? d - J : d + (L - J) + gap; }
+    var o = { lng: [], lat: [], ele: [], d: [] }, k = 0;
+    while (k < n && T.d[k] < J) k++;
+    function add(lng, lat, ele, d) {
+      if (o.d.length && d <= o.d[o.d.length - 1]) return;
+      o.lng.push(lng); o.lat.push(lat); o.ele.push(ele); o.d.push(Math.round(d));
+    }
+    var save = R; R = base; var jp = pointAt(J); R = save;
+    var je = T.ele ? T.ele[Math.max(0, k - 1)] : 0;
+    add(+jp[0].toFixed(6), +jp[1].toFixed(6), je, 0);
+    for (var i = k; i < n; i++) add(T.lng[i], T.lat[i], T.ele ? T.ele[i] : 0, T.d[i] - J);
+    for (i = 0; i < k; i++) add(T.lng[i], T.lat[i], T.ele ? T.ele[i] : 0, T.d[i] + (L - J) + gap);
+    add(+jp[0].toFixed(6), +jp[1].toFixed(6), je, NL);
+    // the old opening line at the real start and the arrival line at the real finish are dropped: the ride now starts
+    // and finishes at the join point
+    var cues = base.cues.filter(function (c, i) { return c.d < L - 60 && !(i === 0 && c.d < 40 && !c.h); }).map(function (c) { return Object.assign({}, c, { d: Math.round(f(c.d)) }); })
+      .sort(function (a, b) { return a.d - b.d; });
+    var stops = base.stops.filter(function (s) { return !(s.plain && s.d < 300); }).map(function (s) {
+      var x = Object.assign({}, s);
+      if (s.kind === 'finish') x.d = NL - 1;
+      else {
+        x.d = Math.round(f(s.d));
+        if (s.ds) x.ds = s.ds.map(function (d) { return Math.round(f(d)); }).sort(function (a, b) { return a - b; });
+      }
+      return x;
+    }).sort(function (a, b) { return a.d - b.d; });
+    var offers = base.offers.map(function (x) { return Object.assign({}, x, { d: x.d == null ? null : Math.round(f(x.d)) }); });
+    var loose = [];
+    (base.loose || []).forEach(function (s) {
+      if (s[0] >= J || s[1] < J) loose.push([Math.round(f(s[0])), Math.round(f(s[1]))]);
+      else { loose.push([Math.round(f(s[0])), NL]); loose.push([0, Math.round(s[1] - J)]); }
+    });
+    return Object.assign({}, base, { track: o, distance: NL, cues: cues, stops: stops, offers: offers, loose: loose, joined: J, base: base });
+  }
+  function baseRoute() { return R && R.base ? R.base : R; }
+  // switch the route to joined at J (0 = back to the route as built), redrawing the line and the markers
+  function useJoin(J) {
+    var b = baseRoute();
+    R = J > 0 ? joinedRoute(b, J) : b;
+    ride.cueState = {}; ride.prevD = null;
+    if (map && mapReady) { addRouteLayers(); }
+    addMarkers();
+  }
+
   // ---------- icons ----------
   var IC = {
     left: '<path d="M16 20v-8a3 3 0 0 0-3-3H5"/><path d="M9 5L5 9l4 4"/>',
@@ -696,12 +753,15 @@
     paused: false, cueState: {}, shown: {}, watch: null, fix: null, backCount: 0, lastTouch: Date.now(), sim: null, finished: false };
 
   function progressKey() { return 'rg.progress.' + R.key; }
-  function saveProgress() { if (ride.sim) return; lsSet(progressKey(), { d: ride.d, ts: Date.now(), shown: ride.shown, cueState: ride.cueState, version: R.version, paused: ride.paused, ridden: ride.ridden || 0, rid: ride.rid }); }
+  function saveProgress() { if (ride.sim) return; lsSet(progressKey(), { d: ride.d, ts: Date.now(), shown: ride.shown, cueState: ride.cueState, version: R.version, paused: ride.paused, ridden: ride.ridden || 0, rid: ride.rid, join: R.joined || 0 }); }
 
   function startRide(resume) {
+    if (R.base) useJoin(0);
+    lsDel('rg.approach');
     ride.active = true; ride.finished = false; ride.follow = true; ride.off = false; ride.offCount = 0; ride.onCount = 0; ride.backCount = 0;
     var p = resume ? lsGet(progressKey(), null) : null;
     ride.prevD = null; ride.saidStart = false; ride.paused = false;
+    if (p && p.version === R.version && p.join > 0 && isLoop(R)) useJoin(p.join);   // a ride joined part way round the loop
     if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; ride.paused = !!p.paused; ride.ridden = p.ridden || 0; ride.resumed = true; ride.rid = p.rid || rid(); }
     else { ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.locked = false; ride.ridden = 0; ride.resumed = false; ride.rid = rid(); }
     ride.backRun = 0; ride.saidBack = false;
@@ -723,6 +783,7 @@
   function endRide() {
     ride.active = false; ride.paused = false; stopGps(); stopSim(); releaseWake(); hideSaver(); updatePauseBtn();
     stopSpeech();
+    if (R.base) useJoin(0);
     lsDel(progressKey());
     ride.d = 0; updateDone();
     openRoute();
@@ -786,6 +847,11 @@
         if (!pick || cost < pick.cost) pick = p;
       });
     }
+    // first lock part way round a loop: the ride starts here and ends back here (Ben, 20/10/2026)
+    if (pick && !ride.locked && !ride.resumed && ride.d === 0 && !ride.sim && !CHECK && !R.base && isLoop(R) && pick.d > JOIN_MIN && pick.d < R.distance - JOIN_MIN) {
+      useJoin(pick.d); pick.d = 0;
+      say(tu('Starting from here. You will ride the whole loop and finish back here.'), { interrupt: true });
+    }
     if (pick) {
       // riding backwards: the position along the route has gone down steadily for about 150 m. On out and back rides the
       // way back is a later part of the route, so riding back the right way still counts as going forward.
@@ -800,9 +866,11 @@
     } else if (!ride.locked) {
       // not on the route yet: guide to the start instead of calling it "off route"
       var toStart = hav(c.latitude, c.longitude, R.track.lat[0], R.track.lng[0]);
+      ride.toLine = isLoop(R) && cand.nearest ? cand.nearest.dist : null;
       if (!ride.saidStart) {
         ride.saidStart = true;
-        say(fmt(tu('The start of the route is {dist} away. Head to the green marker.'), { dist: distParts(toStart).say }));
+        if (ride.toLine != null && !ride.sim) say(fmt(tu('The route is {dist} away. Ride to the line on the map and the directions start where you join it.'), { dist: distParts(ride.toLine).say }));
+        else say(fmt(tu('The start of the route is {dist} away. Head to the green marker.'), { dist: distParts(toStart).say }));
         if (toStart > 3000 && !ride.sim) banner(tu('You are a long way from this route.'), 'caution', 12000);
       }
     } else {
@@ -952,8 +1020,10 @@
     offerPlaces().forEach(function (g) {
       var o = g[0], id = 'offer-' + o.id;
       if (o.fin) {
-        // for the end of the ride: brought up in the last 1.5 km, never at the start
-        if (ride.shown[id] || R.distance - ride.d > 1500 || ride.d < R.distance * 0.5) return;
+        // for the end of the ride: brought up in the last 1.5 km, never at the start. A ride joined part way round the
+        // loop brings it up when passing the partner instead (Land and Sea is over the road from the shop).
+        if (ride.shown[id]) return;
+        if (R.base ? (ride.d < 800 || hav(ride.fix.lat, ride.fix.lng, o.lat, o.lng) > 400) : (R.distance - ride.d > 1500 || ride.d < R.distance * 0.5)) return;
         ride.shown[id] = 1; ride.shown.finOffers = 1; addMarkers();
         banner(fmt(tu('Rider offer when you get back: {name}'), { name: o.partner }), 'offer', 15000, function () { openOffers(g); });
         say(fmt(tu('Rider offer when you get back: {name}'), { name: o.partner }));
@@ -1006,9 +1076,10 @@
       $('cue-next-text').textContent = '';
     } else if (!ride.locked && ride.fix) {
       var st = hav(ride.fix.lat, ride.fix.lng, R.track.lat[0], R.track.lng[0]);
+      var line = ride.toLine != null && !ride.sim;
       $('cue-icon').innerHTML = svg('pin');
-      $('cue-dist').textContent = distText(st);
-      $('cue-text').textContent = tu('Head to the start of the route, shown by the green marker.');
+      $('cue-dist').textContent = distText(line ? ride.toLine : st);
+      $('cue-text').textContent = line ? tu('Ride to the route line. You can join it anywhere and ride the whole loop from there.') : tu('Head to the start of the route, shown by the green marker.');
       $('cue-next-text').textContent = '';
     } else if (!ride.fix) {
       $('cue-icon').innerHTML = svg('pin');
@@ -1617,6 +1688,7 @@
     saveOffline();
     precacheVoice();
     countOpen();
+    setTimeout(checkArrival, 1500);
   }
 
   // ---------- in-app page viewer (the ride keeps running underneath) ----------
@@ -1661,6 +1733,112 @@
   function isStandalone() { return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
   function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
   function siteAddress() { return location.origin + location.pathname.replace(/index\.html$/, ''); }
+  // ---------- directions to the route (Ben, 20/10/2026) ----------
+  // Riders staying elsewhere get directions to the start, or to the nearest point on the route, in their own maps app.
+  // A web page cannot bring itself back once the maps app is in front, so the rider is asked to come back to this page;
+  // when they do, it checks where they are and either gets them riding or offers the directions again.
+  function mapsLinks(lat, lng) {
+    var a = baseRoute().activity, ll = lat.toFixed(6) + ',' + lng.toFixed(6);
+    return {
+      google: 'https://www.google.com/maps/dir/?api=1&destination=' + ll + '&travelmode=' + (a === 'walk' ? 'walking' : a === 'kayak' ? 'driving' : 'bicycling'),
+      apple: 'https://maps.apple.com/?daddr=' + ll + (a === 'walk' ? '&dirflg=w' : a === 'kayak' ? '&dirflg=d' : '')
+    };
+  }
+  function nearestOnRoute(lat, lng) {
+    var save = R; R = baseRoute();
+    var n = candidates(lat, lng, 0).nearest, p = n ? pointAt(n.d) : null;
+    R = save;
+    return n ? { d: n.d, dist: n.dist, lng: p[0], lat: p[1] } : null;
+  }
+  function locate(ok, fail) {
+    if (!('geolocation' in navigator)) { fail(); return; }
+    navigator.geolocation.getCurrentPosition(function (pos) { ok(pos.coords.latitude, pos.coords.longitude); }, fail,
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+  }
+  function directionsTo(b, target) {
+    b.innerHTML = '';
+    var loop = isLoop(baseRoute());
+    b.appendChild(el('div', { class: 'kicker', text: tu('Directions') }));
+    var toStart = target.kind === 'start';
+    b.appendChild(el('h2', { id: 'sheet-title', text: tu(toStart ? 'Directions to the start' : 'Directions to the nearest point') }));
+    b.appendChild(el('p', { text: tu('Your maps app opens with the directions. When it says you have arrived, come back to this page and it will be ready to start.') }));
+    if (!toStart) b.appendChild(el('p', { text: tu(loop ? 'Join the loop there and ride the whole loop. Your ride finishes back where you joined.' : 'Join the ride there and ride on to the finish.') }));
+    var acts = el('div', { class: 'sheet-actions' }), L = mapsLinks(target.lat, target.lng);
+    function link(href, label, first) {
+      var a = el('a', { class: 'btn ' + (first ? 'primary' : 'outline') + ' full', href: href, target: '_blank', rel: 'noopener', text: label });
+      a.addEventListener('click', function () { lsSet('rg.approach', { key: baseRoute().key, kind: target.kind, lat: target.lat, lng: target.lng, ts: Date.now() }); });
+      acts.appendChild(a);
+    }
+    if (isIOS()) link(L.apple, tu('Open in Apple Maps'), true);
+    link(L.google, tu('Open in Google Maps'), !isIOS());
+    b.appendChild(acts);
+  }
+  function openGetThere() {
+    openSheet(function (b) {
+      var loop = isLoop(baseRoute());
+      b.appendChild(el('div', { class: 'kicker', text: tu('Directions') }));
+      b.appendChild(el('h2', { id: 'sheet-title', text: tu('Directions to the route') }));
+      b.appendChild(el('p', { text: tu(loop ? 'Staying somewhere else? You can join this loop at any point. You ride the whole loop from there and finish back where you joined.'
+        : 'Staying somewhere else? Get directions to the start, or join part way and ride from there to the finish.') }));
+      var acts = el('div', { class: 'sheet-actions' });
+      var near = el('button', { class: 'btn primary full', type: 'button', text: tu('To the nearest point on the route') });
+      var start = el('button', { class: 'btn outline full', type: 'button', text: tu('To the start of the route') });
+      var msg = el('p', { class: 'muted' }); msg.hidden = true;
+      near.addEventListener('click', function () {
+        msg.hidden = false; msg.textContent = tu('Finding your location');
+        locate(function (lat, lng) {
+          var n = nearestOnRoute(lat, lng);
+          if (!n) { msg.textContent = tu('Your location could not be found. Try the start instead.'); return; }
+          if (n.dist < 120) { closeSheet(); openArrived(); return; }
+          directionsTo(b, { kind: 'near', lat: n.lat, lng: n.lng });
+        }, function () { msg.textContent = tu('Your location could not be found. Turn on location for your browser, or use the start instead.'); });
+      });
+      start.addEventListener('click', function () { var T = baseRoute().track; directionsTo(b, { kind: 'start', lat: T.lat[0], lng: T.lng[0] }); });
+      acts.appendChild(near); acts.appendChild(start);
+      b.appendChild(acts); b.appendChild(msg);
+    });
+  }
+  function openArrived() {
+    var loop = isLoop(baseRoute());
+    if (S.chime) { try { var a = new Audio(CHIME_URL); var p = a.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+    openSheet(function (b) {
+      b.appendChild(el('div', { class: 'kicker', text: tu('Directions') }));
+      b.appendChild(el('h2', { id: 'sheet-title', text: tu("You're on the route") }));
+      b.appendChild(el('p', { text: tu(loop ? 'Tap Start riding. The directions start from here, and your ride finishes back here after the whole loop.' : 'Tap Start riding. The directions start from here.') }));
+      var acts = el('div', { class: 'sheet-actions' });
+      var go = el('button', { class: 'btn primary full', type: 'button', text: tu('Start riding from here') });
+      go.addEventListener('click', function () { closeSheet(); startRide(false); });
+      acts.appendChild(go); b.appendChild(acts);
+    });
+  }
+  function openOnTheWay(a, dist) {
+    openSheet(function (b) {
+      b.appendChild(el('div', { class: 'kicker', text: tu('Directions') }));
+      b.appendChild(el('h2', { id: 'sheet-title', text: tu('Still on your way?') }));
+      b.appendChild(el('p', { text: fmt(tu('The route is {dist} away.'), { dist: distText(dist) }) }));
+      var acts = el('div', { class: 'sheet-actions' });
+      var again = el('button', { class: 'btn primary full', type: 'button', text: tu('Open the directions again') });
+      again.addEventListener('click', function () { directionsTo(b, a); });
+      var stop = el('button', { class: 'btn outline full', type: 'button', text: tu('Stop showing this') });
+      stop.addEventListener('click', function () { lsDel('rg.approach'); closeSheet(); });
+      acts.appendChild(again); acts.appendChild(stop); b.appendChild(acts);
+    });
+  }
+  // back from the maps app: are they at the route yet?
+  function checkArrival() {
+    if (!R || ride.active || CHECK || document.visibilityState !== 'visible') return;
+    var a = lsGet('rg.approach', null);
+    if (!a || a.key !== baseRoute().key || Date.now() - a.ts > 6 * 3600 * 1000) return;
+    locate(function (lat, lng) {
+      if (ride.active || !R || baseRoute().key !== a.key) return;
+      var n = nearestOnRoute(lat, lng); if (!n) return;
+      var atStart = hav(lat, lng, baseRoute().track.lat[0], baseRoute().track.lng[0]);
+      if (n.dist < 120 || atStart < 150) openArrived();
+      else if (Date.now() - a.ts > 60000) openOnTheWay(a, a.kind === 'start' ? atStart : n.dist);
+    }, function () {});
+  }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') setTimeout(checkArrival, 600); });
+
   function openKeep() {
     // While this sheet is open the address carries the route, so "Add to Home Screen" opens this route.
     try { history.replaceState(null, '', location.pathname + '#' + R.key); } catch (e) {}
@@ -1766,6 +1944,7 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheetOpen()) closeSheet(); });
     window.addEventListener('hashchange', function () { if (ride.keepOpen) return; var k = keyFromUrl(); if (k) { scrubUrl(); openKey(k); } });
     $('keep-btn').addEventListener('click', openKeep);
+    $('getthere-btn').addEventListener('click', openGetThere);
     $('viewer-back').addEventListener('click', function () { closeViewer(false); });
     window.addEventListener('popstate', function () { closeViewer(true); });
     $('code-form').addEventListener('submit', function (e) { e.preventDefault(); openCode($('code-input').value); });

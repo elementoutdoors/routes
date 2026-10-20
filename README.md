@@ -115,6 +115,22 @@ right by themselves:
 which Claude publishes to https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18. `ride-desk/mock.js` stands in for the page's
 database when the screenshots are taken.
 
+## Directions to the route and joining a loop part way
+
+Added 20/10/2026 for riders staying somewhere else. "Directions to the route" on the route page offers the nearest point
+on the route or the start, and opens Apple Maps (iPhone) or Google Maps with that point set (cycling, walking for walks,
+driving for paddles). A web page cannot bring itself back once the maps app is in front, so the rider is asked to come
+back; when they do (`checkArrival`, on returning to the page) the app checks where they are: on the route it chimes and
+offers "Start riding from here", otherwise "Still on your way?" with the directions again. The pending trip is kept in
+`rg.approach` on the phone for 6 hours.
+
+On a loop (start and finish within 300 m, over 2 km), a ride that first locks on more than 500 m from the start or finish
+is joined there: the app turns the route round so the join point is the start (`joinedRoute`), the rider rides the whole
+loop and the ride (and the finish card) ends back at the join point. The old opening and arrival lines at the real start
+and finish are dropped for that ride. "Near the end only" offers come up when passing the partner instead of in the last
+1.5 km. Progress remembers the join point, so Continue my ride picks up the same way. One way rides are not turned:
+joining part way rides on to the finish. Test drive and staff check links always start at the real start.
+
 ## Ride counts
 
 An indicative count of how often each map is used, shown on the Ride Desk (17/10/2026). The app sends one

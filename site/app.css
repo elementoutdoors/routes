@@ -311,3 +311,9 @@ body.view-check #check-panel{display:block;position:fixed;left:0;right:0;bottom:
 .banner.info svg{color:#1F2A37}
 .viewer-offline{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:#FFF4E5;color:#6B3200;font-weight:700;font-size:14px}
 .viewer-offline[hidden]{display:none}
+
+/* Directions to the route (20/10/2026) */
+.btn.getthere{min-height:44px;margin-top:8px;font-size:15px}
+.btn.getthere svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sheet-actions a.btn{text-decoration:none}
+.sheet-body p.muted{color:var(--muted);font-weight:600}
