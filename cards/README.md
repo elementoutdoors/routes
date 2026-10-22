@@ -8,6 +8,9 @@ Ben's digital business cards. Someone scans the QR code on Ben's phone, the card
 | Ben de Vaus, Director, Bike On | https://elementoutdoors.github.io/routes/card/ben-bikeon/ |
 | Ben de Vaus, Director, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/ben-beo/ |
 | Ben de Vaus, Head Coach / Director, Bike On MTB Coaching | https://elementoutdoors.github.io/routes/card/ben-mtb/ |
+| Matt Watts, General Manager, Bike On | https://elementoutdoors.github.io/routes/card/matt-bikeon/ |
+| Matt Watts, General Manager, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/matt-beo/ |
+| Matt Watts, General Manager, Element Outdoors | https://elementoutdoors.github.io/routes/card/matt-eo/ |
 
 Each card folder also holds `lock-screen.png` (1179 x 2556, set as the phone's lock screen to show the QR code),
 `qr.png` and `qr.svg` (for print, slides and email) and the contact file itself.
@@ -44,6 +47,8 @@ saved QR codes keep working after any change of details.
 - Bike On MTB Coaching logo: the email signature copy (340 px wide), the only copy outside OneDrive. If the full
   size `BikeOn-MTB-Coaching-LS-BlueBlack.png` (3508 x 1662) is ever put in `cards/assets/logo-bikeon-mtb.png`, the
   next build uses it.
-- Photos: Bike On from the ride sheet cover, By Earth and Ocean and MTB coaching from the brand websites.
+- Photos: Bike On = professional gravel shoot HinterlandGravel-039 and Element Outdoors = HinterlandGravel-041 (1600 px copies of the OneDrive originals, credit By Earth and Ocean, Noosa); Ben's MTB card = Ben coaching (Program-Feature-4 on bikeon.com.au, his pick); By Earth and Ocean = guided kayak photo from byearthandocean.com.au. A card can carry its own `photo`, `photo_focus` and `photo_size` (for example `200% auto` to zoom in).
+- Element Outdoors card: elementoutdoors.com.au is not a business website, so the card lists both brand websites and both brands' socials instead. Logo is the 240 px signature copy.
+- A person without a `mobile` (Matt) gets no mobile row; Call rings the shop.
 - Colours: Bike On brand kit (site blue for structure, Trail Orange for Save contact); By Earth and Ocean designer
   palette (Deep Navy, Sunlit Gold).

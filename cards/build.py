@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / 'cards'
 OUT = ROOT / 'site' / 'card'
 FONTS = ROOT / 'ride-sheets' / 'assets'
-VERSION = '1'   # bump to force every image to be remade
+VERSION = '2'   # bump to force every image to be remade
 
 def load():
     return json.loads((SRC / 'cards.json').read_text())
@@ -42,8 +42,13 @@ def esc(s):
 
 def card_view(cfg, c):
     p = cfg['people'][c['person']]
-    b = cfg['brands'][c['brand']]
+    b = dict(cfg['brands'][c['brand']])
     s = cfg['shared']
+    for k in ('photo', 'photo_focus', 'photo_size'):   # a card may use its own photo (e.g. Ben coaching)
+        if c.get(k): b[k] = c[k]
+    if 'websites' not in b:
+        b['websites'] = [{'label': 'Website', 'value': b['website_label'], 'url': b['website'], 'sub': b.get('website_sub', '')}]
+    b.setdefault('footer', s['group_line'])
     full = f"{p['first']} {p['last']}"
     return {
         **c, 'person_data': p, 'brand_data': b, 'shared': s,
@@ -93,15 +98,15 @@ def vcard(v):
         f"FN:{vesc(v['name'])}",
         f"ORG:{vesc(b['name'])}",
         f"TITLE:{vesc(v['title'])}",
-        f"TEL;TYPE=CELL,VOICE,pref:{p['mobile_e164']}",
-        f"TEL;TYPE=WORK,VOICE:{s['shop_phone_e164']}",
+    ] + ([f"TEL;TYPE=CELL,VOICE,pref:{p['mobile_e164']}"] if p.get('mobile_e164') else []) + [
+        f"TEL;TYPE=WORK,VOICE{'' if p.get('mobile_e164') else ',pref'}:{s['shop_phone_e164']}",
         f"EMAIL;TYPE=INTERNET,WORK,pref:{v['email']}",
-        f"URL;TYPE=WORK:{b['website']}",
+    ] + [f"URL;TYPE=WORK:{w['url']}" for w in b['websites']] + [
         f"ADR;TYPE=WORK:;;{vesc(a['street'])};{vesc(a['locality'])};{vesc(a['region'])};{vesc(a['postcode'])};{vesc(a['country'])}",
     ]
     for so in b['social']:
         lines.append(f"X-SOCIALPROFILE;TYPE={so['type']}:{so['url']}")
-    lines.append(f"NOTE:{vesc(v['tagline'] + '. ' + s['group_line'] + '. Shop ' + s['shop_phone'] + ', ' + s['hours'] + '.')}")
+    lines.append(f"NOTE:{vesc(v['tagline'] + '. ' + b['footer'] + '. Shop ' + s['shop_phone'] + ', ' + s['hours'] + '.')}")
     lines.append('PHOTO;ENCODING=b;TYPE=JPEG:' + base64.b64encode(contact_photo(b)).decode())
     lines.append(f"X-EO-CARD:{v['slug']}")
     lines.append('END:VCARD')
@@ -160,11 +165,10 @@ def page(v, asset_names):
     p, b, s = v['person_data'], v['brand_data'], v['shared']
     c = b['colors']
     a = s['address']
-    rows = [
-        ('phone', 'Mobile', p['mobile'], 'tel:' + p['mobile_e164'], ''),
+    rows = ([('phone', 'Mobile', p['mobile'], 'tel:' + p['mobile_e164'], '')] if p.get('mobile_e164') else []) + [
         ('shop', 'Shop', s['shop_phone'], 'tel:' + s['shop_phone_e164'], s['hours']),
         ('mail', 'Email', v['email'], 'mailto:' + v['email'], ''),
-        ('web', 'Website', b['website_label'], b['website'], b.get('website_sub', '')),
+    ] + [('web', w['label'], w['value'], w['url'], w.get('sub', '')) for w in b['websites']] + [
         ('pin', 'Visit the shop', f"{a['street']}, {a['locality']} {a['region']} {a['postcode']}", s['maps_url'], ''),
     ]
     row_html = []
@@ -175,9 +179,13 @@ def page(v, asset_names):
             f'<a class="row" href="{esc(href)}"{ext}>{icon(ic)}<span class="txt"><span class="lab">{esc(label)}</span>'
             f'<span class="val">{esc(value)}</span>{subline}</span></a>')
     social = ''.join(
-        f'<a class="soc" href="{esc(so["url"])}" target="_blank" rel="noopener" aria-label="{esc(b["name"])} on {esc(so["label"])}">{icon(so["type"])}<span>{esc(so["label"])}</span></a>'
+        f'<a class="soc" href="{esc(so["url"])}" target="_blank" rel="noopener" aria-label="{esc(so.get("aria") or (b["name"] + " on " + so["label"]))}">{icon(so["type"])}<span>{esc(so["label"])}</span></a>'
         for so in b['social'])
     title_line = f"{v['title']}, {b['name']}"
+    if len(b['websites']) == 1:
+        quick_web = f'<a href="{esc(b["websites"][0]["url"])}" target="_blank" rel="noopener">{icon("web")}Website</a>'
+    else:
+        quick_web = f'<a href="#links">{icon("web")}Websites</a>'
     desc = f"{v['name']}, {title_line}. {v['tagline']}."
     qr = qr_svg(v['url'], c['qr'], scale=1, border=2)
     qr = re.sub(r'<svg[^>]*>', '<svg class="qr" viewBox="0 0 %s %s" role="img" aria-label="QR code for this card" xmlns="http://www.w3.org/2000/svg">' % qr_dims(v['url']), qr, count=1)
@@ -207,7 +215,7 @@ def page(v, asset_names):
 html{{-webkit-text-size-adjust:100%;background:var(--dark)}}
 body{{margin:0;font-family:Montserrat,"Helvetica Neue",Arial,sans-serif;font-weight:500;color:var(--ink);background:var(--ground);min-height:100vh;min-height:100dvh}}
 .wrap{{max-width:460px;margin:0 auto;background:var(--ground);min-height:100vh;min-height:100dvh;padding-bottom:calc(28px + env(safe-area-inset-bottom))}}
-.hero{{position:relative;height:210px;background:var(--dark) url(../assets/{asset_names['photo']}) {b['photo_focus']}/cover no-repeat}}
+.hero{{position:relative;height:210px;background:var(--dark) url(../assets/{asset_names['photo']}) {b['photo_focus']}/{b.get('photo_size', 'cover')} no-repeat}}
 .hero::after{{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.28))}}
 .card{{position:relative;z-index:1;margin:-64px 16px 0;background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(20,30,45,.14),0 1px 0 rgba(20,30,45,.04);padding:22px 20px 20px;text-align:center}}
 .logo{{display:block;margin:0 auto 14px;height:auto;max-width:72%;max-height:118px;width:auto}}
@@ -229,7 +237,7 @@ h1{{margin:0;font-weight:800;font-size:28px;line-height:1.15;letter-spacing:-.01
 .lab{{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}}
 .val{{font-size:15.5px;font-weight:700;color:var(--dark);overflow-wrap:anywhere}}
 .sub{{font-size:13px;color:var(--muted)}}
-.socials{{display:grid;grid-template-columns:repeat({len(b['social'])},1fr);gap:8px;margin:16px 16px 0}}
+.socials{{display:grid;grid-template-columns:repeat({2 if len(b['social']) == 4 else (min(len(b['social']), 3) or 1)},1fr);gap:8px;margin:16px 16px 0}}
 .soc{{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:14px;background:#fff;color:var(--dark);text-decoration:none;font-weight:700;font-size:13px;box-shadow:0 1px 0 rgba(20,30,45,.04),0 3px 10px rgba(20,30,45,.06)}}
 .soc .i{{width:22px;height:22px;color:var(--primary)}}
 .share{{margin:22px 16px 0;padding:20px;background:#fff;border-radius:18px;text-align:center;box-shadow:0 1px 0 rgba(20,30,45,.04),0 4px 16px rgba(20,30,45,.06)}}
@@ -255,12 +263,12 @@ a:focus-visible,button:focus-visible{{outline:3px solid var(--primary);outline-o
 <p class="tag">{esc(v['tagline'])}</p>
 <a class="save" href="{esc(v['vcf_name'])}">{icon('save')}Save contact</a>
 <div class="quick">
-<a href="tel:{p['mobile_e164']}">{icon('phone')}Call</a>
+<a href="tel:{p.get('mobile_e164') or s['shop_phone_e164']}">{icon('phone')}Call</a>
 <a href="mailto:{esc(v['email'])}">{icon('mail')}Email</a>
-<a href="{esc(b['website'])}" target="_blank" rel="noopener">{icon('web')}Website</a>
+{quick_web}
 </div>
 </main>
-<nav class="list" aria-label="Contact details">
+<nav class="list" id="links" aria-label="Contact details">
 {chr(10).join(row_html)}
 </nav>
 <div class="socials">{social}</div>
@@ -270,7 +278,7 @@ a:focus-visible,button:focus-visible{{outline:3px solid var(--primary);outline-o
 {qr}
 <button class="sharebtn" type="button" id="share">{icon('share')}Send the link</button>
 </section>
-<p class="foot">{esc(s['group_line'])}</p>
+<p class="foot">{esc(b['footer'])}</p>
 </div>
 <div class="toast" id="toast" role="status"></div>
 <script>
@@ -325,7 +333,7 @@ body{{font-family:M,sans-serif;background:{c['dark']};position:relative}}
 <div class="n">{esc(v['name'])}</div><div class="r">{esc(v['title'])}</div><div class="o">{esc(b['name'])}</div></div></div>
 <div class="qr">{qr}</div>
 <div class="s">Scan to save my details</div>
-</div><div class="f">{esc(v['shared']['group_line'])}</div></body></html>'''
+</div><div class="f">{esc(b['footer'])}</div></body></html>'''
 
 def qr_dims_border(url, border):
     import segno
@@ -399,14 +407,15 @@ def build(dest, with_images=True, previous=None):
     for key, b in cfg['brands'].items():
         logo_bytes, size = web_logo(b['logo'])
         files[f'assets/{b["logo"]}'] = logo_bytes
-        files[f'assets/{b["photo"]}'] = web_photo(b['photo'])
         files[f'assets/icon-{key}.png'] = icon_png(b)
-        brand_assets[key] = {'logo': b['logo'], 'logo_size': size, 'photo': b['photo'], 'icon': f'icon-{key}.png'}
+        brand_assets[key] = {'logo': b['logo'], 'logo_size': size, 'icon': f'icon-{key}.png'}
+    for photo in sorted({v['brand_data']['photo'] for v in views}):
+        files[f'assets/{photo}'] = web_photo(photo)
     manifest = {'_about': 'Written by cards/build.py. Do not edit.', 'cards': {}}
     template_hash = sha((SRC / 'build.py').read_bytes())
     for v in views:
         key = v['brand']
-        files[f"{v['slug']}/index.html"] = page(v, brand_assets[key]).encode()
+        files[f"{v['slug']}/index.html"] = page(v, {**brand_assets[key], 'photo': v['brand_data']['photo']}).encode()
         files[f"{v['slug']}/{v['vcf_name']}"] = vcard(v).encode()
         files[f"{v['slug']}/qr.svg"] = qr_svg(v['url'], v['brand_data']['colors']['qr']).encode()
         img_inputs = sha(VERSION, template_hash, json.dumps(v, sort_keys=True, default=str),
@@ -486,7 +495,7 @@ def live():
             local = (OUT / v['slug'] / rel).read_bytes()
             if body != local:
                 problems.append(f'{url} is not the current version yet')
-        links = [v['brand_data']['website']] + [so['url'] for so in v['brand_data']['social']]
+        links = [w['url'] for w in v['brand_data']['websites']] + [so['url'] for so in v['brand_data']['social']]
         for u in links:
             try:
                 st, _, _ = get(u)

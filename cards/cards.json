@@ -21,6 +21,10 @@
       "last": "de Vaus",
       "mobile": "0434 101 308",
       "mobile_e164": "+61434101308"
+    },
+    "matt": {
+      "first": "Matt",
+      "last": "Watts"
     }
   },
   "brands": {
@@ -28,8 +32,8 @@
       "name": "Bike On",
       "logo": "logo-bikeon.png",
       "logo_alt": "Bike On",
-      "photo": "photo-bikeon.jpg",
-      "photo_focus": "50% 60%",
+      "photo": "photo-bikeon-gravel.jpg",
+      "photo_focus": "34% 76%",
       "website": "https://bikeon.com.au/",
       "website_label": "bikeon.com.au",
       "social": [
@@ -59,7 +63,8 @@
         "ink": "#292929",
         "muted": "#54595F",
         "qr": "#231F20"
-      }
+      },
+      "photo_size": "200% auto"
     },
     "bikeon-mtb": {
       "name": "Bike On MTB Coaching",
@@ -130,6 +135,65 @@
         "muted": "#33373D",
         "qr": "#182B3D"
       }
+    },
+    "eo": {
+      "name": "Element Outdoors",
+      "logo": "logo-eo.png",
+      "logo_alt": "Element Outdoors",
+      "photo": "photo-eo-gravel.jpg",
+      "photo_focus": "50% 55%",
+      "websites": [
+        {
+          "label": "Bike On",
+          "value": "bikeon.com.au",
+          "url": "https://bikeon.com.au/",
+          "sub": "Bike hire, tours and MTB coaching"
+        },
+        {
+          "label": "By Earth and Ocean",
+          "value": "byearthandocean.com.au",
+          "url": "https://byearthandocean.com.au/",
+          "sub": "Kayak and bike experiences"
+        }
+      ],
+      "social": [
+        {
+          "type": "instagram",
+          "label": "Bike On",
+          "aria": "Bike On on Instagram",
+          "url": "https://www.instagram.com/bikeon_noosa_hiretours/"
+        },
+        {
+          "type": "instagram",
+          "label": "By Earth and Ocean",
+          "aria": "By Earth and Ocean on Instagram",
+          "url": "https://www.instagram.com/byearthandocean/"
+        },
+        {
+          "type": "facebook",
+          "label": "Bike On",
+          "aria": "Bike On on Facebook",
+          "url": "https://www.facebook.com/bikeonaustralia"
+        },
+        {
+          "type": "facebook",
+          "label": "By Earth and Ocean",
+          "aria": "By Earth and Ocean on Facebook",
+          "url": "https://www.facebook.com/byearthandocean"
+        }
+      ],
+      "footer": "Bike On · By Earth and Ocean",
+      "colors": {
+        "primary": "#005B27",
+        "action": "#FDDA04",
+        "action_text": "#003D1A",
+        "dark": "#0B3B21",
+        "ground": "#F7F5EE",
+        "line": "#E6E1D3",
+        "ink": "#292929",
+        "muted": "#4B5249",
+        "qr": "#003D1A"
+      }
     }
   },
   "cards": [
@@ -155,7 +219,33 @@
       "brand": "bikeon-mtb",
       "title": "Head Coach / Director",
       "email": "ride@bikeon.com.au",
-      "tagline": "Mountain bike skills coaching for kids, adults and racers"
+      "tagline": "Mountain bike skills coaching for kids, adults and racers",
+      "photo": "photo-ben-coaching.jpg",
+      "photo_focus": "55% 8%"
+    },
+    {
+      "slug": "matt-bikeon",
+      "person": "matt",
+      "brand": "bikeon",
+      "title": "General Manager",
+      "email": "matt@elementoutdoors.com.au",
+      "tagline": "Bike hire, tours, MTB coaching and education in Noosa"
+    },
+    {
+      "slug": "matt-beo",
+      "person": "matt",
+      "brand": "beo",
+      "title": "General Manager",
+      "email": "matt@elementoutdoors.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
+    },
+    {
+      "slug": "matt-eo",
+      "person": "matt",
+      "brand": "eo",
+      "title": "General Manager",
+      "email": "matt@elementoutdoors.com.au",
+      "tagline": "Bike On and By Earth and Ocean, Noosa"
     }
   ]
 }
