@@ -1,0 +1,161 @@
+{
+  "_about": "Digital business cards. This file is the only place card details live: change it, and the cards workflow rebuilds every page, contact file, QR code and lock screen image. See cards/README.md.",
+  "base_url": "https://elementoutdoors.github.io/routes/card/",
+  "shared": {
+    "shop_phone": "(07) 5474 3322",
+    "shop_phone_e164": "+61754743322",
+    "address": {
+      "street": "Unit 12, 20 Venture Drive",
+      "locality": "Noosaville",
+      "region": "QLD",
+      "postcode": "4566",
+      "country": "Australia"
+    },
+    "hours": "Open 7 days, 8.30 am to 4.30 pm",
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Unit+12%2C+20+Venture+Drive%2C+Noosaville+QLD+4566",
+    "group_line": "Part of the Element Outdoors group"
+  },
+  "people": {
+    "ben": {
+      "first": "Ben",
+      "last": "de Vaus",
+      "mobile": "0434 101 308",
+      "mobile_e164": "+61434101308"
+    }
+  },
+  "brands": {
+    "bikeon": {
+      "name": "Bike On",
+      "logo": "logo-bikeon.png",
+      "logo_alt": "Bike On",
+      "photo": "photo-bikeon.jpg",
+      "photo_focus": "50% 60%",
+      "website": "https://bikeon.com.au/",
+      "website_label": "bikeon.com.au",
+      "social": [
+        {
+          "type": "instagram",
+          "label": "Instagram",
+          "url": "https://www.instagram.com/bikeon_noosa_hiretours/"
+        },
+        {
+          "type": "facebook",
+          "label": "Facebook",
+          "url": "https://www.facebook.com/bikeonaustralia"
+        },
+        {
+          "type": "youtube",
+          "label": "YouTube",
+          "url": "https://www.youtube.com/channel/UCcmVCIq1qO8KHys540BDRMg"
+        }
+      ],
+      "colors": {
+        "primary": "#2B65A4",
+        "action": "#E8751A",
+        "action_text": "#FFFFFF",
+        "dark": "#1F2937",
+        "ground": "#F8F4EF",
+        "line": "#E9E2D8",
+        "ink": "#292929",
+        "muted": "#54595F",
+        "qr": "#231F20"
+      }
+    },
+    "bikeon-mtb": {
+      "name": "Bike On MTB Coaching",
+      "logo": "logo-bikeon-mtb.png",
+      "logo_alt": "Bike On MTB Coaching",
+      "photo": "photo-bikeon-mtb.jpg",
+      "photo_focus": "50% 15%",
+      "website": "https://bikeon.com.au/mountain-bike-coaching/",
+      "website_label": "bikeon.com.au",
+      "social": [
+        {
+          "type": "instagram",
+          "label": "Instagram",
+          "url": "https://www.instagram.com/bikeon_noosa_hiretours/"
+        },
+        {
+          "type": "facebook",
+          "label": "Facebook",
+          "url": "https://www.facebook.com/bikeonaustralia"
+        },
+        {
+          "type": "youtube",
+          "label": "YouTube",
+          "url": "https://www.youtube.com/channel/UCcmVCIq1qO8KHys540BDRMg"
+        }
+      ],
+      "colors": {
+        "primary": "#2B65A4",
+        "action": "#E8751A",
+        "action_text": "#FFFFFF",
+        "dark": "#1F2937",
+        "ground": "#F8F4EF",
+        "line": "#E9E2D8",
+        "ink": "#292929",
+        "muted": "#54595F",
+        "qr": "#231F20"
+      },
+      "website_sub": "Mountain bike coaching programs"
+    },
+    "beo": {
+      "name": "By Earth and Ocean",
+      "logo": "logo-beo.png",
+      "logo_alt": "By Earth and Ocean",
+      "photo": "photo-beo.jpg",
+      "photo_focus": "50% 55%",
+      "website": "https://byearthandocean.com.au/",
+      "website_label": "byearthandocean.com.au",
+      "social": [
+        {
+          "type": "instagram",
+          "label": "Instagram",
+          "url": "https://www.instagram.com/byearthandocean/"
+        },
+        {
+          "type": "facebook",
+          "label": "Facebook",
+          "url": "https://www.facebook.com/byearthandocean"
+        }
+      ],
+      "colors": {
+        "primary": "#182B3D",
+        "action": "#F5CA3A",
+        "action_text": "#182B3D",
+        "dark": "#182B3D",
+        "ground": "#FAF8F4",
+        "line": "#E9E1D6",
+        "ink": "#292929",
+        "muted": "#33373D",
+        "qr": "#182B3D"
+      }
+    }
+  },
+  "cards": [
+    {
+      "slug": "ben-bikeon",
+      "person": "ben",
+      "brand": "bikeon",
+      "title": "Director",
+      "email": "ben@elementoutdoors.com.au",
+      "tagline": "Bike hire, tours, MTB coaching and education in Noosa"
+    },
+    {
+      "slug": "ben-beo",
+      "person": "ben",
+      "brand": "beo",
+      "title": "Director",
+      "email": "ben@elementoutdoors.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
+    },
+    {
+      "slug": "ben-mtb",
+      "person": "ben",
+      "brand": "bikeon-mtb",
+      "title": "Head Coach / Director",
+      "email": "ride@bikeon.com.au",
+      "tagline": "Mountain bike skills coaching for kids, adults and racers"
+    }
+  ]
+}

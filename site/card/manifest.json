@@ -1,0 +1,29 @@
+{
+  "_about": "Written by cards/build.py. Do not edit.",
+  "cards": {
+    "ben-bikeon": {
+      "url": "https://elementoutdoors.github.io/routes/card/ben-bikeon/",
+      "vcf": "ben-de-vaus-bike-on.vcf",
+      "brand": "Bike On",
+      "title": "Director",
+      "email": "ben@elementoutdoors.com.au",
+      "images": "cd3918f849b790b8"
+    },
+    "ben-beo": {
+      "url": "https://elementoutdoors.github.io/routes/card/ben-beo/",
+      "vcf": "ben-de-vaus-by-earth-and-ocean.vcf",
+      "brand": "By Earth and Ocean",
+      "title": "Director",
+      "email": "ben@elementoutdoors.com.au",
+      "images": "3c6c9186b10837d7"
+    },
+    "ben-mtb": {
+      "url": "https://elementoutdoors.github.io/routes/card/ben-mtb/",
+      "vcf": "ben-de-vaus-bike-on-mtb-coaching.vcf",
+      "brand": "Bike On MTB Coaching",
+      "title": "Head Coach / Director",
+      "email": "ride@bikeon.com.au",
+      "images": "512d42101000cbf5"
+    }
+  }
+}

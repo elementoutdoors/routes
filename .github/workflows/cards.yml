@@ -1,0 +1,63 @@
+name: Business cards
+
+# Keeps the digital business cards (cards/cards.json -> site/card/) correct by themselves.
+# On every change to the cards, every Monday morning and on demand it:
+#   1. checks site/card is exactly what cards/cards.json makes (pages, contact files, QR codes, lock screens);
+#      anything stale, missing or edited by hand is rebuilt and committed here, then the site build is started;
+#   2. on the Monday run and on demand, checks the published cards match this repo and every website and social
+#      link still answers; if the live site is behind, it starts the site build and checks again.
+# A run only fails when it could not fix the problem itself (see cards/README.md).
+on:
+  push:
+    branches: [main]
+    paths: ['cards/**', 'site/card/**', '.github/workflows/cards.yml']
+  schedule:
+    - cron: '23 21 * * 0'   # Monday 7:23am Brisbane
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: cards
+  cancel-in-progress: false
+
+jobs:
+  cards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Tools (pinned so a rebuild is byte for byte the same)
+        run: pip install -q pillow==12.3.0 segno==1.6.6 fonttools==4.66.1 brotli==1.2.0 opencv-python-headless==4.10.0.84 playwright==1.47.0
+      - name: Check the cards
+        id: check
+        continue-on-error: true
+        run: python3 cards/build.py --check
+      - name: Rebuild what drifted
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 -m playwright install --with-deps chromium > /dev/null
+          python3 cards/build.py
+          python3 cards/build.py --check
+          git config user.name "Business cards"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A site/card
+          if git diff --cached --quiet; then echo "Nothing to commit"; exit 0; fi
+          git commit -q -m "Business cards: rebuilt from cards.json (drift fixed by the cards check)"
+          git pull -q --rebase origin main && git push -q origin HEAD:main
+          gh workflow run build.yml --ref main
+      - name: Check the published cards
+        if: github.event_name != 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if python3 cards/build.py --live; then exit 0; fi
+          echo "Live cards are behind this repo, starting the site build"
+          gh workflow run build.yml --ref main
+          for i in $(seq 1 24); do sleep 60; if python3 cards/build.py --live > /tmp/live.txt 2>&1; then cat /tmp/live.txt; exit 0; fi; done
+          cat /tmp/live.txt; exit 1
