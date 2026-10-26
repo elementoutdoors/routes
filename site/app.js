@@ -188,7 +188,7 @@
     var tips = tipsOf();
     for (var k = 0; k < tips.length; k++) {
       var t = tips[k];
-      if (t < ride.d - 25 || t - ride.d > 2000) continue;
+      if (t < ride.d - 25 || t - ride.d > 20000) continue;
       var tp = pointAt(t), nearTip = hav(lat, lng, tp[1], tp[0]) < 50;
       var mirror = function (d) {
         var m = 2 * t - d, q = pointAt(m);

@@ -129,6 +129,14 @@ database when the screenshots are taken.
   the Mt Tinbeerwah up and back: one wobbly fix at the summit car park, where the way up and the way down are 25 m apart,
   could put the rider on the way up and the app then said "riding backwards" all the way down. A direction read straight
   after a stop (`after`) is kept until the stop has been read.
+- Turn arounds (26/10/2026, all routes checked): the app finds every point where a route comes straight back the way it
+  went (`tipsOf`, from the line itself; single track left out). The position only crosses to the way back once the rider
+  has been within 50 m of the turn around (`tipGuard`), so a wobbly fix can no longer skip the U-turn direction or give
+  "riding backwards" there. A rider who turns back early is moved to the same spot on the way back after going back
+  about 50 m, and the way back directions carry on. A direction the rider is still within 60 m of is said even if a fix
+  has moved the position past it (`nearCue`). Found with wobbly GPS rides of every out and back: the Hill Road U-turn
+  (Valleys and Vistas, Through Lake Country, Rockpools and Ridgelines) and the Mt Tinbeerwah lookout on the Lakes Ride
+  were usually never said.
 - More than 2 km to the next direction (FAR_CUE): the riding screen shows "Follow the route" and "Next direction in X"
   instead of naming a turn that is a long way off. Found on Mt Tinbeerwah, where the climb showed the turn for the way
   back down. Spoken warnings are unchanged.

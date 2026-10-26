@@ -37,9 +37,11 @@ with sync_playwright() as p:
     print('URL after load:', page.url)
     page.screenshot(path=f'{out}/1-route.png')
     route = page.evaluate(f"fetch('r/{key}.json').then(r=>r.json())")
-    page.click('#route-offers .offer-strip'); time.sleep(0.6)
-    page.screenshot(path=f'{out}/2-offer.png')
-    page.click('#sheet-close'); time.sleep(0.3)
+    # no offer card on the ride page since 16/10/2026: offers are opened from the Offers list while riding
+    if page.is_visible('#route-offers .offer-strip'):
+        page.click('#route-offers .offer-strip'); time.sleep(0.6)
+        page.screenshot(path=f'{out}/2-offer.png')
+        page.click('#sheet-close'); time.sleep(0.3)
     page.click('#start-btn'); time.sleep(1)
     if page.is_visible('text=I understand'): page.click('text=I understand')
     time.sleep(1)
