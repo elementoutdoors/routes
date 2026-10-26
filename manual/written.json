@@ -95,7 +95,7 @@
    "uptodate": "6ad542878976c802e8204446"
   }
  },
- "checkedOn": "2026-10-20",
+ "checkedOn": "2026-10-26",
  "facts": {
   "phoneSettings": [
    "Settings",
@@ -249,6 +249,7 @@
    "Finish",
    "Follow the line to the finish.",
    "Follow the road rules and wear your helmet. Queensland law says your phone must be in a phone mount while you ride. Never hold it or rest it on your body.",
+   "Follow the route",
    "For Garmin, Wahoo and other bike computers. The file holds the route line only.",
    "Getting back to this route",
    "Head to the start of the route, shown by the green marker.",
@@ -270,6 +271,7 @@
    "Natural voice",
    "Needs mobile signal",
    "Never ride through flood water or flooded creeks. If conditions look unsafe or beyond your ability, turn back and use your phone\\'s maps app to find a safe way back.",
+   "Next direction in {dist}",
    "No signal here. This page needs mobile signal. Your ride carries on.",
    "No signal. This page needs mobile signal.",
    "Not great",
