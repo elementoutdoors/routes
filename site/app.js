@@ -145,20 +145,71 @@
   // turnaround the two sides can be only metres apart, so the expected place wins over the nearer line.
   function nearIn(lat, lng, from, to, maxDist, expect, mb) {
     var T = R.track, i0 = idxAt(Math.max(0, from)), i1 = Math.min(T.d.length - 2, idxAt(Math.min(to, R.distance)) + 1);
-    var runs = [], run = null;
+    // the closest point of each stretch near the rider, inside the window only: at the far end of an up and back the
+    // way out and the way back make one stretch, and its closest point can be on the way back beyond the window
+    var runs = [], run = null, inRun = false;
     for (var i = i0; i <= i1; i++) {
       var p = projSeg(T, i, lat, lng);
-      if (p.dist <= maxDist) { if (!run || p.dist < run.dist) run = p; }
-      else if (run) { runs.push(run); run = null; }
+      if (p.dist <= maxDist) { inRun = true; if (p.d >= from && p.d <= to && (!run || p.dist < run.dist)) run = p; }
+      else if (inRun) { if (run) runs.push(run); run = null; inRun = false; }
     }
     if (run) runs.push(run);
     var best = null;
     runs.forEach(function (p) {
-      if (p.d < from || p.d > to) return;
       p.cost = Math.abs(p.d - expect) + (against(p.i, mb) ? 400 : 0);
       if (!best || p.cost < best.cost) best = p;
     });
     return best;
+  }
+  // Turn around points: where the route comes straight back the way it went (the far end of an up and back). Found
+  // from the line itself, so every route gets them; single track stretches are left out (switchbacks, rough lines).
+  function tipsOf() {
+    if (R._tips) return R._tips;
+    var T = R.track, out = [];
+    function gap(d, k) { var a = pointAt(d - k), b = pointAt(d + k); return hav(a[1], a[0], b[1], b[0]); }
+    for (var i = 1; i < T.d.length - 1; i++) {
+      var d = T.d[i];
+      if (d < 100 || d > R.distance - 100) continue;
+      if ((R.loose || []).some(function (s) { return d >= s[0] - 50 && d <= s[1] + 50; })) continue;
+      var g = gap(d, 30);
+      if (g > 12 || gap(d, 80) > 30) continue;
+      var last = out[out.length - 1];
+      if (last && d - last.d < 150) { if (g < last.g) { last.d = d; last.g = g; } }
+      else out.push({ d: d, g: g });
+    }
+    R._tips = out.map(function (t) { return t.d; });
+    return R._tips;
+  }
+  // Keeps the position on the right side of a turn around (Ben, 26/10/2026: the U-turns on Hill Road and at the
+  // Mt Tinbeerwah lookout were often never said, and wobbly GPS sometimes gave "riding backwards" there). The way out
+  // and the way back are the same road, so a fix can match either. The position only crosses to the way back once the
+  // rider has been near the turn around, or has clearly turned back early (then the same spot on the way back is used).
+  function tipGuard(p, lat, lng, tol) {
+    var tips = tipsOf();
+    for (var k = 0; k < tips.length; k++) {
+      var t = tips[k];
+      if (t < ride.d - 25 || t - ride.d > 2000) continue;
+      var tp = pointAt(t), nearTip = hav(lat, lng, tp[1], tp[0]) < 50;
+      var mirror = function (d) {
+        var m = 2 * t - d, q = pointAt(m);
+        return hav(lat, lng, q[1], q[0]) <= tol ? { d: m, i: idxAt(m), dist: hav(lat, lng, q[1], q[0]), mirrored: true } : null;
+      };
+      // crossing to the way back without having reached the turn around: use the same spot on the way out
+      // (after a few fixes in a row that all say the way back, e.g. the GPS dropped out at the end, it is believed)
+      if (p.d > t && ride.d < t - 25 && !nearTip) {
+        var m1 = mirror(p.d);
+        if (m1 && m1.d >= ride.d - 60) { ride.tipHold = 0; return m1; }
+        ride.tipHold = (ride.tipHold || 0) + 1;
+        return ride.tipHold >= 4 ? (ride.tipHold = 0, p) : null;
+      }
+      // turned back before the end: once it has gone backwards for 50 m, carry on along the way back
+      if (p.d < ride.d - 2 && p.d < t && (ride.backRun || 0) + (ride.d - p.d) >= 50) {
+        var m2 = mirror(p.d);
+        if (m2) return m2;
+      }
+    }
+    ride.tipHold = 0;
+    return p;
   }
   function pointAt(d) {
     var T = R.track, lo = 0, hi = T.d.length - 1;
@@ -798,7 +849,7 @@
     if (p && p.version === R.version && p.join > 0 && isLoop(R)) useJoin(p.join);   // a ride joined part way round the loop
     if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; ride.paused = !!p.paused; ride.ridden = p.ridden || 0; ride.resumed = true; ride.rid = p.rid || rid(); }
     else { ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.locked = false; ride.ridden = 0; ride.resumed = false; ride.rid = rid(); }
-    ride.backRun = 0; ride.saidBack = false; ride.lastPos = null; ride.lastFixT = 0; ride.mb = null; ride.jump = null;
+    ride.backRun = 0; ride.saidBack = false; ride.lastPos = null; ride.lastFixT = 0; ride.mb = null; ride.jump = null; ride.tipHold = 0;
     show('ride');
     updateFollowBtn(); updateVoiceBtn();
     // Speaking once inside the tap unlocks speech on iPhone.
@@ -901,6 +952,11 @@
         else { ride.jump = { d: pick.d, t: Date.now() }; pick = null; held = true; }
       }
     }
+    if (pick && ride.locked) {
+      var g = tipGuard(pick, c.latitude, c.longitude, tol);
+      if (!g) { pick = null; held = true; }
+      else { if (g.mirrored) { ride.jump = null; if (g.d > ride.d) ride.backRun = 0; } pick = g; }
+    }
     // first lock part way round a loop: the ride starts here and ends back here (Ben, 20/10/2026)
     if (pick && !ride.locked && !ride.resumed && ride.d === 0 && !ride.sim && !CHECK && !R.base && isLoop(R) && pick.d > JOIN_MIN && pick.d < R.distance - JOIN_MIN) {
       useJoin(pick.d); pick.d = 0;
@@ -976,7 +1032,7 @@
       ride.cueState[k] = 2;
       // on single track the position can jump forward when the rider comes back onto the drawn line: still say the turn
       var late = (R.loose || []).some(function (s) { return c.d >= s[0] && c.d <= s[1]; }) ? 150 : 45;
-      if (ride.d - c.d < late) turnCall(c, k);
+      if (ride.d - c.d < late || nearCue(c)) turnCall(c, k);
     });
     var i = nextCueIndex(); if (i < 0) return;
     var c = R.cues[i], dist = c.d - ride.d, st = ride.cueState[i] || 0;
@@ -1008,10 +1064,19 @@
     var m = R.i18n && R.i18n[S.lang];
     return m && m[c.h] ? c.h : c.n;
   }
+  // At the far end of an up and back the way out and the way back are side by side, so one wobbly fix can put the rider
+  // 100 m or more past the turn around while they are still standing at it (26/10/2026: the U-turns on Hill Road and at
+  // the Mt Tinbeerwah lookout were sometimes never said). A direction the rider is still close to is said however far
+  // along the route the fix has moved.
+  function nearCue(c) {
+    if (!ride.fix) return false;
+    var p = pointAt(c.d);
+    return hav(ride.fix.lat, ride.fix.lng, p[1], p[0]) < 60;
+  }
   function turnCall(c, i) {
     var danger = c.t === 'danger';
     // a direction read straight after a stop (c.after) waits for the stop's words, so it is kept for longer
-    var grp = { stale: function () { return ride.d - c.d > (c.after ? 300 : 40); } };
+    var grp = { stale: function () { return ride.d - c.d > (c.after ? 300 : 40) && !nearCue(c); } };
     // the ding marks a turn: not the opening line, a finish line or a note
     var turn = !danger && (!!c.h || (c.t && c.t !== 'generic'));
     sayContent(danger ? c.n : turnLine(c), danger ? tu('Caution.') : null, { urgent: true, chime: turn, grp: grp });
