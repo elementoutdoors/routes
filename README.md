@@ -122,6 +122,13 @@ database when the screenshots are taken.
   (`followMap`, REFOLLOW_MS), or at once with the locate button.
 - Battery: the map is not moved while battery saver has the screen blacked out or the page is hidden, nor for moves under
   4 m; when the black screen lifts the map jumps straight back to the rider.
+- Following the rider along the route (map matching, 26/10/2026): once riding, each GPS fix is matched first to the
+  stretch just behind and ahead of the last position (`nearIn`), picking the place closest to where the rider should be
+  by now, and a stretch running against the rider's direction of travel is avoided. Only when that fails is the whole
+  route searched, and a jump far ahead (over 300 m) or back (over 60 m) is taken only when a second fix agrees. Found on
+  the Mt Tinbeerwah up and back: one wobbly fix at the summit car park, where the way up and the way down are 25 m apart,
+  could put the rider on the way up and the app then said "riding backwards" all the way down. A direction read straight
+  after a stop (`after`) is kept until the stop has been read.
 - More than 2 km to the next direction (FAR_CUE): the riding screen shows "Follow the route" and "Next direction in X"
   instead of naming a turn that is a long way off. Found on Mt Tinbeerwah, where the climb showed the turn for the way
   back down. Spoken warnings are unchanged.

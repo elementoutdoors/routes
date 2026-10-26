@@ -127,6 +127,39 @@
     if (run) best.push(run);
     return { list: best, nearest: nearest };
   }
+  // compass bearing (degrees) from one point to another, and whether the route at segment i runs against the rider's
+  // direction of travel (mb, or null when not known). Where the way out and the way back share a road, this tells the
+  // two apart (Ben, 26/10/2026).
+  function bearing(lat1, lng1, lat2, lng2) {
+    var y = (lng2 - lng1) * Math.cos(lat1 * DEG), x = lat2 - lat1;
+    return (Math.atan2(y, x) / DEG + 360) % 360;
+  }
+  function against(i, mb) {
+    if (mb == null) return false;
+    var T = R.track, j = Math.min(i + 1, T.lat.length - 1);
+    var b = bearing(T.lat[i], T.lng[i], T.lat[j], T.lng[j]), diff = Math.abs(((b - mb) + 540) % 360 - 180);
+    return diff > 110;
+  }
+  // Within a stretch of the route (from..to metres along): every place the route passes within maxDist of the point,
+  // and of those the one closest to where the rider is expected to be along the route. On a loop at a car park or a
+  // turnaround the two sides can be only metres apart, so the expected place wins over the nearer line.
+  function nearIn(lat, lng, from, to, maxDist, expect, mb) {
+    var T = R.track, i0 = idxAt(Math.max(0, from)), i1 = Math.min(T.d.length - 2, idxAt(Math.min(to, R.distance)) + 1);
+    var runs = [], run = null;
+    for (var i = i0; i <= i1; i++) {
+      var p = projSeg(T, i, lat, lng);
+      if (p.dist <= maxDist) { if (!run || p.dist < run.dist) run = p; }
+      else if (run) { runs.push(run); run = null; }
+    }
+    if (run) runs.push(run);
+    var best = null;
+    runs.forEach(function (p) {
+      if (p.d < from || p.d > to) return;
+      p.cost = Math.abs(p.d - expect) + (against(p.i, mb) ? 400 : 0);
+      if (!best || p.cost < best.cost) best = p;
+    });
+    return best;
+  }
   function pointAt(d) {
     var T = R.track, lo = 0, hi = T.d.length - 1;
     if (d <= 0) return [T.lng[0], T.lat[0]];
@@ -765,7 +798,7 @@
     if (p && p.version === R.version && p.join > 0 && isLoop(R)) useJoin(p.join);   // a ride joined part way round the loop
     if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; ride.paused = !!p.paused; ride.ridden = p.ridden || 0; ride.resumed = true; ride.rid = p.rid || rid(); }
     else { ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.locked = false; ride.ridden = 0; ride.resumed = false; ride.rid = rid(); }
-    ride.backRun = 0; ride.saidBack = false;
+    ride.backRun = 0; ride.saidBack = false; ride.lastPos = null; ride.lastFixT = 0; ride.mb = null; ride.jump = null;
     show('ride');
     updateFollowBtn(); updateVoiceBtn();
     // Speaking once inside the tap unlocks speech on iPhone.
@@ -839,14 +872,34 @@
     if (cand.list.length && ride.resumed && !ride.locked && ride.d > R.distance * 0.5 && cand.list.some(function (p) { return p.d < 300; })) {
       ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.ridden = 0; ride.resumed = false; ride.rid = rid();
     }
-    if (cand.list.length) {
+    // Once riding, the next position is looked for first just behind and ahead of the last one (Ben, 26/10/2026: on the
+    // Mt Tinbeerwah up and back, one wobbly fix near the top matched the way up instead of the way down and the app then
+    // said "riding backwards" all the way down). Only when the rider is not on that stretch is the whole route searched,
+    // and a jump to a far part of the route is taken only once a second fix agrees.
+    // expected advance since the last fix: the phone's speed (or about 4 m a second) for the time since, at least 5 m
+    var dt = ride.lastFixT ? Math.min(30, (Date.now() - ride.lastFixT) / 1000) : 1; ride.lastFixT = Date.now();
+    var adv = Math.max(5, Math.min(250, (c.speed != null && c.speed >= 0 ? c.speed : 4) * dt));
+    var mb = null;
+    if (ride.lastPos) {
+      var moved = hav(ride.lastPos[0], ride.lastPos[1], c.latitude, c.longitude);
+      if (moved >= 8) { mb = bearing(ride.lastPos[0], ride.lastPos[1], c.latitude, c.longitude); ride.lastPos = [c.latitude, c.longitude]; ride.mb = mb; }
+      else mb = moved >= 3 ? ride.mb : null;
+    } else ride.lastPos = [c.latitude, c.longitude];
+    var held = false, cont = ride.locked ? nearIn(c.latitude, c.longitude, ride.d - 30, ride.d + Math.max(150, adv * 3), tol, ride.d + adv, mb) : null;
+    if (cont) { pick = cont; ride.jump = null; }
+    else if (cand.list.length) {
       var expect = ride.d + 15;
       cand.list.forEach(function (p) {
-        var cost = p.d >= ride.d - 30 ? Math.abs(p.d - expect) : (ride.d - p.d) * 4;
+        var cost = (p.d >= ride.d - 30 ? Math.abs(p.d - expect) : (ride.d - p.d) * 4) + (ride.locked && against(p.i, mb) ? 1500 : 0);
         if (!ride.locked && ride.d === 0) cost = p.d;   // first fix: earliest point of the route
         p.cost = cost;
         if (!pick || cost < pick.cost) pick = p;
       });
+      if (pick && ride.locked && (pick.d - ride.d > 300 || pick.d - ride.d < -60)) {
+        var j = ride.jump;
+        if (j && Math.abs(pick.d - j.d) < 200 && Date.now() - j.t < 30000) ride.jump = null;
+        else { ride.jump = { d: pick.d, t: Date.now() }; pick = null; held = true; }
+      }
     }
     // first lock part way round a loop: the ride starts here and ends back here (Ben, 20/10/2026)
     if (pick && !ride.locked && !ride.resumed && ride.d === 0 && !ride.sim && !CHECK && !R.base && isLoop(R) && pick.d > JOIN_MIN && pick.d < R.distance - JOIN_MIN) {
@@ -864,6 +917,8 @@
       ride.offCount = 0;
       if (ride.off) { ride.onCount++; if (ride.onCount >= 2) { ride.off = false; ride.onCount = 0; say(tu('Back on route.'), { interrupt: true }); } }
       if (ride.backRun >= 150 && !ride.saidBack) { ride.saidBack = true; say(tu('You may be riding the route backwards. Check the arrows on the line.'), { interrupt: true }); }
+    } else if (held) {
+      ride.offCount = 0;   // on the line somewhere else: wait for the next fix before moving there
     } else if (!ride.locked) {
       // not on the route yet: guide to the start instead of calling it "off route"
       var toStart = hav(c.latitude, c.longitude, R.track.lat[0], R.track.lng[0]);
@@ -955,7 +1010,8 @@
   }
   function turnCall(c, i) {
     var danger = c.t === 'danger';
-    var grp = { stale: function () { return ride.d - c.d > 40; } };
+    // a direction read straight after a stop (c.after) waits for the stop's words, so it is kept for longer
+    var grp = { stale: function () { return ride.d - c.d > (c.after ? 300 : 40); } };
     // the ding marks a turn: not the opening line, a finish line or a note
     var turn = !danger && (!!c.h || (c.t && c.t !== 'generic'));
     sayContent(danger ? c.n : turnLine(c), danger ? tu('Caution.') : null, { urgent: true, chime: turn, grp: grp });
