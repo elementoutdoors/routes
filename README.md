@@ -116,6 +116,16 @@ right by themselves:
 which Claude publishes to https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18. `ride-desk/mock.js` stands in for the page's
 database when the screenshots are taken.
 
+## Map follow, battery and long gaps between directions (26/10/2026)
+
+- Touching or dragging the map stops it following the rider; it follows again by itself 15 seconds after the last touch
+  (`followMap`, REFOLLOW_MS), or at once with the locate button.
+- Battery: the map is not moved while battery saver has the screen blacked out or the page is hidden, nor for moves under
+  4 m; when the black screen lifts the map jumps straight back to the rider.
+- More than 2 km to the next direction (FAR_CUE): the riding screen shows "Follow the route" and "Next direction in X"
+  instead of naming a turn that is a long way off. Found on Mt Tinbeerwah, where the climb showed the turn for the way
+  back down. Spoken warnings are unchanged.
+
 ## Before you ride (risk card)
 
 Added 20/10/2026 (Ben's wording, checked against the Checkfront waiver "Risk Warning and Acknowledgement" and the

@@ -320,7 +320,8 @@
     map.touchZoomRotate.disableRotation();
     map.on('load', function () { mapReady = true; addRouteLayers(); fitRoute(); });
     map.on('style.load', function () { if (mapReady) addRouteLayers(); });
-    map.on('dragstart', function () { if (ride.active) { ride.follow = false; updateFollowBtn(); } });
+    map.on('dragstart', function () { if (ride.active) { ride.follow = false; ride.mapTouch = Date.now(); updateFollowBtn(); } });
+    map.on('zoomstart', function (e) { if (ride.active && e.originalEvent && !ride.follow) ride.mapTouch = Date.now(); });
     map.on('zoomend', function (e) { if (ride.active && e.originalEvent) ride.zoom = map.getZoom(); });
   }
   function routeGeo(fromD, toD) {
@@ -825,7 +826,7 @@
     var c = pos.coords, acc = c.accuracy || 30;
     ride.fix = { lat: c.latitude, lng: c.longitude, acc: acc, heading: c.heading, speed: c.speed, t: Date.now() };
     updateMe();
-    if (ride.paused) { if (ride.follow && map) map.easeTo({ center: [c.longitude, c.latitude], zoom: ride.zoom, duration: 800 }); return; }
+    if (ride.paused) { followMap(c.latitude, c.longitude); return; }
     if (acc > 80) return;   // too vague to use
     // single track stretches (R.loose, from the build): hand-drawn lines through twisty trails can sit well off the
     // real trail, so allow more room before "off route" and never call switchbacks "riding backwards"
@@ -888,11 +889,24 @@
     }
     checkCues(); checkStops(); checkOffers(); checkFinish();
     renderRide();
-    if (ride.follow && map) map.easeTo({ center: [c.longitude, c.latitude], zoom: ride.zoom, duration: 800 });
+    followMap(c.latitude, c.longitude);
     saveProgress();
     saverTick();
   }
 
+  // The map follows the rider (Ben, 26/10/2026). Moving the map by hand stops it following; it picks up again by itself
+  // 15 seconds after the last touch (or straight away with the locate button). To save battery the map is not moved
+  // while battery saver has the screen blacked out or the page is hidden, nor for moves of a few metres.
+  var REFOLLOW_MS = 15000, lastCentre = null, FAR_CUE = 2000;
+  function followMap(lat, lng, force) {
+    if (!map) return;
+    if (!ride.follow && ride.active && ride.mapTouch && Date.now() - ride.mapTouch > REFOLLOW_MS && sheetOpen() === false) { ride.follow = true; updateFollowBtn(); force = true; }
+    if (!ride.follow) return;
+    if (!$('saver').hidden || document.visibilityState !== 'visible') { lastCentre = null; return; }
+    if (!force && lastCentre && hav(lat, lng, lastCentre[0], lastCentre[1]) < 4) return;
+    lastCentre = [lat, lng];
+    if (force) map.jumpTo({ center: [lng, lat], zoom: ride.zoom }); else map.easeTo({ center: [lng, lat], zoom: ride.zoom, duration: 800 });
+  }
   function nextCueIndex() {
     for (var i = 0; i < R.cues.length; i++) if (R.cues[i].d > ride.d - 8 && !(ride.cueState[i] >= 2 && R.cues[i].d < ride.d + 5)) return i;
     return -1;
@@ -1093,12 +1107,15 @@
       $('cue-text').textContent = tu('Follow the line to the finish.');
       $('cue-next-text').textContent = '';
     } else {
-      var c = R.cues[i];
-      $('cue-icon').innerHTML = svg(cueIcon(c.t));
+      var c = R.cues[i], far = c.d - ride.d > FAR_CUE;
+      // more than 2 km to the next direction (a long climb, an out and back): "Follow the route" rather than a turn
+      // that is a long way off and can look wrong where the ride comes back the same way (Ben, 26/10/2026)
+      $('cue-icon').innerHTML = svg(far ? 'straight' : cueIcon(c.t));
       $('cue-dist').textContent = distText(Math.max(0, c.d - ride.d));
-      $('cue-text').textContent = tc(c.n);
+      $('cue-text').textContent = far ? tu('Follow the route') : tc(c.n);
       var nx = R.cues[i + 1];
-      $('cue-next-text').textContent = nx ? fmt(tu('Then: {text}'), { text: tc(nx.n) }) + ' (' + distText(nx.d - c.d) + ')' : tu('Then: the finish');
+      $('cue-next-text').textContent = far ? fmt(tu('Next direction in {dist}'), { dist: distText(c.d - ride.d) })
+        : nx ? fmt(tu('Then: {text}'), { text: tc(nx.n) }) + ' (' + distText(nx.d - c.d) + ')' : tu('Then: the finish');
     }
     updateDone();
     updateSaverText();
@@ -1147,7 +1164,11 @@
     $('saver-dist').textContent = $('cue-dist').textContent;
     $('saver-text').textContent = $('cue-text').textContent;
   }
-  function hideSaver() { $('saver').hidden = true; }
+  function hideSaver() {
+    var was = !$('saver').hidden;
+    $('saver').hidden = true;
+    if (was && ride.active && ride.fix) followMap(ride.fix.lat, ride.fix.lng, true);
+  }
   function wakeSaver() { ride.lastTouch = Date.now(); hideSaver(); }
 
   // ---------- sheets ----------
