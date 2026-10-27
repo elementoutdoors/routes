@@ -137,6 +137,12 @@ database when the screenshots are taken.
   has moved the position past it (`nearCue`). Found with wobbly GPS rides of every out and back: the Hill Road U-turn
   (Valleys and Vistas, Through Lake Country, Rockpools and Ridgelines) and the Mt Tinbeerwah lookout on the Lakes Ride
   were usually never said.
+- Battery saver is on by default for every ride (Ben, 27/10/2026; config/settings.json screen.batterySaver and the Ride
+  Desk). A rider can still turn it off in Settings. A stop card that opened by itself closes again once the stop has been
+  read and nothing has been touched for the blackout time (`autoCloseStop`), so the screen can go black again. A card the
+  rider opened from the map or the Stops list stays open.
+- Battery (27/10/2026): the whole route is only searched when the stretch just ridden doesn't match (`cands`), instead
+  of on every GPS reading.
 - More than 2 km to the next direction (FAR_CUE): the riding screen shows "Follow the route" and "Next direction in X"
   instead of naming a turn that is a long way off. Found on Mt Tinbeerwah, where the climb showed the turn for the way
   back down. Spoken warnings are unchanged.

@@ -36,7 +36,7 @@
   // switch is kept for that ride only. An older phone-wide choice no longer applies.
   touched = touched.filter(function (k) { return k !== 'stories'; });
   var storyPick = lsGet('rg.stories', {});
-  var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, natural: true, chime: true, stories: true, wake: true, saver: false, sat: false }, savedS);
+  var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, natural: true, chime: true, stories: true, wake: true, saver: true, sat: false }, savedS);
   function saveSettings(key) {
     if (key && touched.indexOf(key) < 0) touched.push(key);
     var out = {}; touched.forEach(function (k) { out[k] = S[k]; });
@@ -569,7 +569,7 @@
     var h = voiceHash(lang + '|' + String(text).trim());
     return (vm.h.has(h) || (routeClips[lang] && routeClips[lang].has(h))) ? 'v/' + vm.tag + '/' + h + '.mp3' : null;
   }
-  var aud = null, queue = [], speaking = false, phoneTimer = null, curItem = null, storyFor = null;
+  var aud = null, queue = [], speaking = false, phoneTimer = null, curItem = null, storyFor = null, spokeAt = 0;
   function audioEl() {
     if (!aud) {
       aud = new Audio(); aud.preload = 'auto';
@@ -628,7 +628,7 @@
     var it = queue.shift();
     while (it && it.grp && it.grp.stale && it.grp.stale()) { var g = it.grp; it = queue.shift(); while (it && it.grp === g) it = queue.shift(); }
     curItem = it || null;
-    if (!it) { speaking = false; if (storyFor) { storyFor = null; updateStoryBtn(); } return; }
+    if (!it) { speaking = false; spokeAt = Date.now(); if (storyFor) { storyFor = null; updateStoryBtn(); } return; }
     speaking = true;
     if (it.url) {
       var a = audioEl(); a._item = it; a.src = it.url;
@@ -916,11 +916,14 @@
     // real trail, so allow more room before "off route" and never call switchbacks "riding backwards"
     var trail = ride.locked && (R.loose || []).some(function (s) { return ride.d >= s[0] && ride.d <= s[1]; });
     var tol = trail ? TRAIL_ROOM : Math.max(CFG.offRoute.metres * 0.7, Math.min(CFG.offRoute.metres, acc + 15));
-    var cand = candidates(c.latitude, c.longitude, tol);
+    // the whole route is only searched when it is needed (not yet on the route, or not on the stretch just ridden):
+    // a search of every point once a second is the app's main work per reading (27/10/2026, battery)
+    var candMemo = null;
+    function cands() { return candMemo || (candMemo = candidates(c.latitude, c.longitude, tol)); }
     var pick = null;
     // Resumed an earlier ride but standing at the start (a loop's start and finish are the same spot): start fresh,
     // so an old ride left near the finish can never end the new one straight away (Ben, 16/10/2026).
-    if (cand.list.length && ride.resumed && !ride.locked && ride.d > R.distance * 0.5 && cand.list.some(function (p) { return p.d < 300; })) {
+    if (ride.resumed && !ride.locked && ride.d > R.distance * 0.5 && cands().list.length && cands().list.some(function (p) { return p.d < 300; })) {
       ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.ridden = 0; ride.resumed = false; ride.rid = rid();
     }
     // Once riding, the next position is looked for first just behind and ahead of the last one (Ben, 26/10/2026: on the
@@ -938,9 +941,9 @@
     } else ride.lastPos = [c.latitude, c.longitude];
     var held = false, cont = ride.locked ? nearIn(c.latitude, c.longitude, ride.d - 30, ride.d + Math.max(150, adv * 3), tol, ride.d + adv, mb) : null;
     if (cont) { pick = cont; ride.jump = null; }
-    else if (cand.list.length) {
+    else if (cands().list.length) {
       var expect = ride.d + 15;
-      cand.list.forEach(function (p) {
+      cands().list.forEach(function (p) {
         var cost = (p.d >= ride.d - 30 ? Math.abs(p.d - expect) : (ride.d - p.d) * 4) + (ride.locked && against(p.i, mb) ? 1500 : 0);
         if (!ride.locked && ride.d === 0) cost = p.d;   // first fix: earliest point of the route
         p.cost = cost;
@@ -978,7 +981,7 @@
     } else if (!ride.locked) {
       // not on the route yet: guide to the start instead of calling it "off route"
       var toStart = hav(c.latitude, c.longitude, R.track.lat[0], R.track.lng[0]);
-      ride.toLine = isLoop(R) && cand.nearest ? cand.nearest.dist : null;
+      ride.toLine = isLoop(R) && cands().nearest ? cands().nearest.dist : null;
       if (!ride.saidStart) {
         ride.saidStart = true;
         if (ride.toLine != null && !ride.sim) say(fmt(tu('The route is {dist} away. Ride to the line on the map and the directions start where you join it.'), { dist: distParts(ride.toLine).say }));
@@ -988,7 +991,7 @@
     } else {
       ride.onCount = 0;
       ride.offCount++;
-      var away = cand.nearest ? cand.nearest.dist : 0;
+      var away = cands().nearest ? cands().nearest.dist : 0;
       if (!ride.off && ride.offCount >= CFG.offRoute.readings) {
         ride.off = true; ride.lastOffSay = Date.now();
         say(tu("You're off the route. Please use the map on your screen to make your way back to the route line. If you're taking a break, tap Pause."), { interrupt: true });
@@ -1120,7 +1123,7 @@
     // on the map and in the Stops list. Welcome or briefing pins and turnarounds are not points of interest and are
     // always read; cautions never come here (Ben, 15/10/2026).
     if (poi && !S.stories) return;
-    if (!sheetOpen()) openStop(s, true);
+    if (!sheetOpen()) { openStop(s, true); ride.autoSheet = { at: Date.now() }; }
     // welcome pins and turnarounds are read as they are; other stops get "You have reached a point of interest."
     if (poi) say(tu('You have reached a point of interest.'), { stop: true });
     sayContent(s.name, null, { stop: true });
@@ -1274,8 +1277,18 @@
   }
 
   // ---------- battery saver ----------
+  // Battery saver and a stop card that opened by itself (Ben, 27/10/2026): the card closes on its own once the stop
+  // has been read and nothing has been touched for the blackout time, so the screen can go black again. A card the
+  // rider opened, or is still reading or listening to, stays open.
+  function autoCloseStop() {
+    var a = ride.autoSheet;
+    if (!a || !sheetOpen()) { ride.autoSheet = null; return; }
+    if (speaking) return;
+    if (Date.now() - Math.max(a.at, spokeAt, ride.lastTouch) >= CFG.screen.blackoutAfterSeconds * 1000) closeSheet();
+  }
   function saverTick() {
     if (!S.saver || !ride.active || ride.paused) { hideSaver(); return; }
+    autoCloseStop();
     var i = nextCueIndex(), dist = i >= 0 ? R.cues[i].d - ride.d : 9999;
     if (dist < CFG.screen.wakeBeforeTurnMetres || ride.off || sheetOpen() || !$('viewer').hidden || Date.now() - ride.lastTouch < CFG.screen.blackoutAfterSeconds * 1000) hideSaver();
     else $('saver').hidden = false;
@@ -1316,7 +1329,7 @@
   }
   function sheetOpen() { return !$('sheet').hidden; }
   function openSheet(build, cls) {
-    dropMiniMap();
+    dropMiniMap(); ride.autoSheet = null;
     var body = $('sheet-body'); body.innerHTML = ''; body.className = 'sheet-body' + (cls ? ' ' + cls : '');
     build(body);
     $('sheet').hidden = false; $('scrim').hidden = false;
@@ -1324,7 +1337,7 @@
     hideSaver();
     setTimeout(function () { $('sheet-close').focus(); }, 50);
   }
-  function closeSheet() { dropMiniMap(); $('sheet').hidden = true; $('scrim').hidden = true; if (ride.keepOpen) { ride.keepOpen = false; scrubUrl(); } }
+  function closeSheet() { dropMiniMap(); ride.autoSheet = null; $('sheet').hidden = true; $('scrim').hidden = true; if (ride.keepOpen) { ride.keepOpen = false; scrubUrl(); } }
 
   function linkRow(href, label, icon, frame) {
     var a = el('a', { class: 'linkrow needs-net', href: href, target: '_blank', rel: 'noopener' });

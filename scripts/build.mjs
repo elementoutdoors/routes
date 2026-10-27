@@ -53,7 +53,7 @@ const SETTINGS_RULES = {
     skipFirstWarningIfCuesCloserThanMetres: [110, 0, 300], mergeNextCueWithinMetres: [90, 0, 250] },
   offRoute: { metres: [50, 25, 150], readings: [3, 1, 10], repeatSeconds: [60, 20, 600] },
   stops: { triggerMetres: [60, 20, 200], cautionWarningMetres: [90, 30, 300] },
-  screen: { keepScreenOn: [true], batterySaver: [false], readStoriesAloud: [true], wakeBeforeTurnMetres: [250, 80, 1000], blackoutAfterSeconds: [20, 5, 120] },
+  screen: { keepScreenOn: [true], batterySaver: [true], readStoriesAloud: [true], wakeBeforeTurnMetres: [250, 80, 1000], blackoutAfterSeconds: [20, 5, 120] },
   speeds: { scenic: [15, 3, 40], mtb: [12, 3, 40], gravel: [18, 3, 40], road: [25, 3, 40], hinterlandMtb: [15, 3, 40], hinterlandGravel: [20, 3, 40],
     ebike: [15, 3, 40], bike: [13, 3, 40], walk: [4.5, 1, 10], kayak: [5, 1, 15] }
 };
