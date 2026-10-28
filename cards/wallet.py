@@ -131,6 +131,50 @@ def photo(v):
     return Image.open(SRC / 'assets' / v['brand_data']['photo']).convert('RGB')
 
 
+FONTS = ROOT / 'ride-sheets' / 'assets'
+
+
+def name_strip(v, scale):
+    """The photo strip with the name and title set in Montserrat over a soft shade, like the card page hero."""
+    from PIL import Image, ImageDraw, ImageFont
+    b = v['brand_data']
+    w, h = 375 * scale, 123 * scale
+    im = cover(photo(v), w, h, b['photo_focus'], b.get('photo_size', 'cover')).convert('RGBA')
+    shade = Image.new('L', (w, h))
+    px = shade.load()
+    for y in range(h):
+        ty = max(0.0, (y / h - 0.25) / 0.75)
+        for x in range(w):
+            tx = max(0.0, 1 - x / (w * 0.85))
+            px[x, y] = int(255 * min(0.84, 0.70 * ty ** 1.1 + 0.30 * tx * ty))
+    dark = Image.new('RGBA', (w, h), (10, 14, 20, 255))
+    dark.putalpha(shade)
+    im.alpha_composite(dark)
+    d = ImageDraw.Draw(im)
+    x, bottom = 16 * scale, h - 13 * scale
+    title = v['title'].upper()
+    tf = ImageFont.truetype(str(FONTS / 'montserrat-700.ttf'), 10.5 * scale)
+    track = 1.1 * scale
+    tw = sum(d.textlength(c, font=tf) for c in title) + track * (len(title) - 1)
+    tb = tf.getbbox('H')
+    ty = bottom - (tb[3] - tb[1]) - tb[1]
+    accent = b['colors']['action'] if b['colors']['action'].upper() not in ('#FFFFFF',) else '#FFFFFF'
+    cx = x
+    for c in title:
+        d.text((cx, ty), c, font=tf, fill=accent)
+        cx += d.textlength(c, font=tf) + track
+    size = 25
+    while True:
+        nf = ImageFont.truetype(str(FONTS / 'montserrat-800.ttf'), size * scale)
+        if d.textlength(v['name'], font=nf) <= w - 2 * x or size <= 16:
+            break
+        size -= 1
+    nb = nf.getbbox('Hg')
+    ny = ty + tb[1] - 6 * scale - (nf.getbbox('H')[3] - nf.getbbox('H')[1]) - nf.getbbox('H')[1]
+    d.text((x, ny), v['name'], font=nf, fill='#FFFFFF')
+    return im.convert('RGB')
+
+
 def brand_icon(v, size):
     from PIL import Image
     canvas = Image.new('RGBA', (size, size), (255, 255, 255, 255))
@@ -169,10 +213,13 @@ def apple_files(v, cfg):
     a = wcfg(cfg)['apple']
     p, b, s = v['person_data'], v['brand_data'], v['shared']
     col = colours(v)
+    # One tidy row under the photo: two short fields only (the name and title are set in the photo strip).
     aux = []
     if p.get('mobile'):
         aux.append({'key': 'm', 'label': 'MOBILE', 'value': p['mobile']})
     aux.append({'key': 's', 'label': 'SHOP', 'value': s['shop_phone']})
+    if len(aux) < 2:
+        aux.append({'key': 'o', 'label': 'OPEN', 'value': '7 days'})
     pj = {
         'formatVersion': 1,
         'passTypeIdentifier': a['passTypeIdentifier'],
@@ -185,8 +232,7 @@ def apple_files(v, cfg):
         'labelColor': hex_rgb(col['label']),
         'sharingProhibited': False,
         'storeCard': {
-            'secondaryFields': [{'key': 'name', 'label': v['title'].upper(), 'value': v['name']}],
-            'auxiliaryFields': aux,
+            'secondaryFields': aux,
             'backFields': back_fields(v),
         },
         'barcodes': [{'format': 'PKBarcodeFormatQR', 'message': v['url'], 'messageEncoding': 'iso-8859-1',
@@ -197,7 +243,7 @@ def apple_files(v, cfg):
     for scale, suf in ((1, ''), (2, '@2x'), (3, '@3x')):
         files[f'logo{suf}.png'] = _png(fit_logo(logo_path, 160 * scale, 50 * scale))
         files[f'icon{suf}.png'] = _png(brand_icon(v, 29 * scale))
-        files[f'strip{suf}.png'] = _png_photo(cover(photo(v), 375 * scale, 123 * scale, b['photo_focus'], b.get('photo_size', 'cover')))
+        files[f'strip{suf}.png'] = _png_photo(name_strip(v, scale))
     return files
 
 
