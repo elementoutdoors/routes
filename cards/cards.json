@@ -74,7 +74,9 @@
       "wallet": {
         "bg": "#FFFFFF",
         "fg": "#1F2937",
-        "label": "#2B65A4"
+        "label": "#2B65A4",
+        "photo_focus": "0% 62%",
+        "photo_size": "130% auto"
       }
     },
     "bikeon-mtb": {
@@ -117,7 +119,9 @@
       "wallet": {
         "bg": "#FFFFFF",
         "fg": "#1F2937",
-        "label": "#2B65A4"
+        "label": "#2B65A4",
+        "photo_focus": "50% 30%",
+        "photo_size": "cover"
       }
     },
     "beo": {
@@ -154,7 +158,9 @@
       "wallet": {
         "bg": "#182B3D",
         "fg": "#FFFFFF",
-        "label": "#F5CA3A"
+        "label": "#F5CA3A",
+        "photo_focus": "50% 35%",
+        "photo_size": "cover"
       }
     },
     "eo": {
@@ -218,7 +224,9 @@
       "wallet": {
         "bg": "#0B3B21",
         "fg": "#FFFFFF",
-        "label": "#FDDA04"
+        "label": "#FDDA04",
+        "photo_focus": "50% 85%",
+        "photo_size": "cover"
       }
     }
   },
@@ -247,7 +255,9 @@
       "email": "ride@bikeon.com.au",
       "tagline": "Mountain bike skills coaching for kids, adults and racers",
       "photo": "photo-ben-coaching.jpg",
-      "photo_focus": "55% 8%"
+      "photo_focus": "55% 8%",
+      "wallet_photo_focus": "50% 30%",
+      "wallet_photo_size": "cover"
     },
     {
       "slug": "matt-bikeon",

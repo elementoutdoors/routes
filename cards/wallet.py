@@ -139,7 +139,10 @@ def name_strip(v, scale):
     from PIL import Image, ImageDraw, ImageFont
     b = v['brand_data']
     w, h = 375 * scale, 123 * scale
-    im = cover(photo(v), w, h, b['photo_focus'], b.get('photo_size', 'cover')).convert('RGBA')
+    c, wc = v, b.get('wallet') or {}
+    focus = c.get('wallet_photo_focus') or wc.get('photo_focus') or b['photo_focus']   # the strip is 3:1, so it has its own framing
+    size = c.get('wallet_photo_size') or wc.get('photo_size') or 'cover'
+    im = cover(photo(v), w, h, focus, size).convert('RGBA')
     shade = Image.new('L', (w, h))
     px = shade.load()
     for y in range(h):
@@ -232,6 +235,7 @@ def apple_files(v, cfg):
         'labelColor': hex_rgb(col['label']),
         'sharingProhibited': False,
         'storeCard': {
+            'headerFields': [{'key': 'web', 'label': 'WEBSITE', 'value': b['website_label']}] if b.get('website_label') else [],
             'secondaryFields': aux,
             'backFields': back_fields(v),
         },
