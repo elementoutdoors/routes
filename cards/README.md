@@ -16,6 +16,17 @@ Ben's digital business cards. Someone scans the QR code on Ben's phone, the card
 | Rhonda Lawrence, Owner / Senior Coach, Bike On MTB Coaching | https://elementoutdoors.github.io/routes/card/rhonda-mtb/ |
 | Rhonda Lawrence, Owner, Element Outdoors | https://elementoutdoors.github.io/routes/card/rhonda-eo/ |
 | Melisa King, Operations Manager, Element Outdoors | https://elementoutdoors.github.io/routes/card/melisa-eo/ |
+| Jan Muller, Senior Guide, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/jan-muller-beo/ |
+| Matt Smith, Tours Manager, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/matt-smith-beo/ |
+| Khan Omerod, Tour Guide, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/khan-omerod-beo/ |
+| Khan Omerod, MTB Coach, Bike On MTB Coaching | https://elementoutdoors.github.io/routes/card/khan-omerod-mtb/ |
+| James Beadle, Tour Guide, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/james-beadle-beo/ |
+| James Beadle, Senior MTB Coach, Bike On MTB Coaching | https://elementoutdoors.github.io/routes/card/james-beadle-mtb/ |
+| Isaac Jervis, Tour Guide, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/isaac-jervis-beo/ |
+| Isaac Jervis, Senior MTB Coach, Bike On MTB Coaching | https://elementoutdoors.github.io/routes/card/isaac-jervis-mtb/ |
+| Franco D'Elia, Tour Guide, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/franco-delia-beo/ |
+| Helena Pedranzini, Tour Guide, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/helena-pedranzini-beo/ |
+| Locky Barratt, Tour Guide, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/locky-barratt-beo/ |
 
 Each card folder also holds `lock-screen.png` (1179 x 2556, set as the phone's lock screen to show the QR code),
 `qr.png` and `qr.svg` (for print, slides and email) and the contact file itself.

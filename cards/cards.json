@@ -47,6 +47,38 @@
     "melisa": {
       "first": "Melisa",
       "last": "King"
+    },
+    "jan-muller": {
+      "first": "Jan",
+      "last": "Muller"
+    },
+    "matt-smith": {
+      "first": "Matt",
+      "last": "Smith"
+    },
+    "khan-omerod": {
+      "first": "Khan",
+      "last": "Omerod"
+    },
+    "james-beadle": {
+      "first": "James",
+      "last": "Beadle"
+    },
+    "isaac-jervis": {
+      "first": "Isaac",
+      "last": "Jervis"
+    },
+    "franco-delia": {
+      "first": "Franco",
+      "last": "D'Elia"
+    },
+    "helena-pedranzini": {
+      "first": "Helena",
+      "last": "Pedranzini"
+    },
+    "locky-barratt": {
+      "first": "Locky",
+      "last": "Barratt"
     }
   },
   "brands": {
@@ -425,6 +457,94 @@
         0.95
       ],
       "wallet_fade": 0.3
+    },
+    {
+      "slug": "jan-muller-beo",
+      "person": "jan-muller",
+      "brand": "beo",
+      "title": "Senior Guide",
+      "email": "tours@byearthandocean.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
+    },
+    {
+      "slug": "matt-smith-beo",
+      "person": "matt-smith",
+      "brand": "beo",
+      "title": "Tours Manager",
+      "email": "tours@byearthandocean.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
+    },
+    {
+      "slug": "khan-omerod-beo",
+      "person": "khan-omerod",
+      "brand": "beo",
+      "title": "Tour Guide",
+      "email": "tours@byearthandocean.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
+    },
+    {
+      "slug": "khan-omerod-mtb",
+      "person": "khan-omerod",
+      "brand": "bikeon-mtb",
+      "title": "MTB Coach",
+      "email": "ride@bikeon.com.au",
+      "tagline": "Mountain bike skills coaching for kids, adults and racers"
+    },
+    {
+      "slug": "james-beadle-beo",
+      "person": "james-beadle",
+      "brand": "beo",
+      "title": "Tour Guide",
+      "email": "tours@byearthandocean.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
+    },
+    {
+      "slug": "james-beadle-mtb",
+      "person": "james-beadle",
+      "brand": "bikeon-mtb",
+      "title": "Senior MTB Coach",
+      "email": "ride@bikeon.com.au",
+      "tagline": "Mountain bike skills coaching for kids, adults and racers"
+    },
+    {
+      "slug": "isaac-jervis-beo",
+      "person": "isaac-jervis",
+      "brand": "beo",
+      "title": "Tour Guide",
+      "email": "tours@byearthandocean.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
+    },
+    {
+      "slug": "isaac-jervis-mtb",
+      "person": "isaac-jervis",
+      "brand": "bikeon-mtb",
+      "title": "Senior MTB Coach",
+      "email": "ride@bikeon.com.au",
+      "tagline": "Mountain bike skills coaching for kids, adults and racers"
+    },
+    {
+      "slug": "franco-delia-beo",
+      "person": "franco-delia",
+      "brand": "beo",
+      "title": "Tour Guide",
+      "email": "tours@byearthandocean.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
+    },
+    {
+      "slug": "helena-pedranzini-beo",
+      "person": "helena-pedranzini",
+      "brand": "beo",
+      "title": "Tour Guide",
+      "email": "tours@byearthandocean.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
+    },
+    {
+      "slug": "locky-barratt-beo",
+      "person": "locky-barratt",
+      "brand": "beo",
+      "title": "Tour Guide",
+      "email": "tours@byearthandocean.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
     }
   ]
 }

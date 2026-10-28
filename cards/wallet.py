@@ -183,7 +183,7 @@ def name_strip(v, scale):
     size = 23
     while True:
         nf = ImageFont.truetype(str(FONTS / 'montserrat-800.ttf'), size * scale)
-        if d.textlength(v['name'], font=nf) <= 140 * scale or size <= 16:
+        if d.textlength(v['name'], font=nf) <= 140 * scale or size <= 14:
             break
         size -= 1
     title = v['title'].upper()
