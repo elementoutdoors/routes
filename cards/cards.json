@@ -283,14 +283,13 @@
       "tagline": "Mountain bike skills coaching for kids, adults and racers",
       "photo": "photo-ben-coaching.jpg",
       "photo_focus": "55% 8%",
-      "wallet_photo": "photo-ben-coaching.jpg",
+      "wallet_photo": "photo-mtb-coaching-341.jpg",
       "wallet_crop": [
-        0.18,
         0.12,
-        0.96,
-        0.78
-      ],
-      "wallet_fade": 0.3
+        0.04,
+        0.88,
+        0.84
+      ]
     },
     {
       "slug": "matt-bikeon",
