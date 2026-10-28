@@ -161,11 +161,11 @@ def name_strip(v, scale):
     im = Image.new('RGBA', (w, h), wc.get('panel') or b['colors']['dark'])
     im.alpha_composite(pic, (w - pw, 0))
     d = ImageDraw.Draw(im)
-    left = 16 * scale
-    size = 25
+    left = 44 * scale   # Wallet trims about 28 points off each side of the strip on a phone, so the text sits inside that
+    size = 23
     while True:
         nf = ImageFont.truetype(str(FONTS / 'montserrat-800.ttf'), size * scale)
-        if d.textlength(v['name'], font=nf) <= w * 0.5 or size <= 16:
+        if d.textlength(v['name'], font=nf) <= 140 * scale or size <= 16:
             break
         size -= 1
     title = v['title'].upper()
@@ -238,7 +238,7 @@ def apple_files(v, cfg):
         'backgroundColor': hex_rgb(col['bg']),
         'foregroundColor': hex_rgb(col['fg']),
         'labelColor': hex_rgb(col['label']),
-        'sharingProhibited': False,
+        'sharingProhibited': True,   # a shared pass only copies the QR; people share the card link instead, which saves the contact
         'storeCard': {
             'headerFields': [{'key': 'web', 'label': 'WEBSITE', 'value': b['website_label']}] if b.get('website_label') else [],
             'secondaryFields': aux,
