@@ -14,6 +14,9 @@ on:
   schedule:
     - cron: '23 21 * * 0'   # Monday 7:23am Brisbane
   workflow_dispatch:
+  workflow_run:   # after every site publish: new card images are live, so the Google passes can sync
+    workflows: ['Build and publish']
+    types: [completed]
 
 permissions:
   contents: write

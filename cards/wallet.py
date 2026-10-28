@@ -555,6 +555,10 @@ def google_sync(cfg, views, fix=True):
                 st, have = _api(tok, 'PUT', 'genericObject/' + want['id'], want); notes.append(f"Google Wallet: {v['slug']} updated")
             else:
                 probs.append(f"Google Wallet: {v['slug']} differs from cards.json")
-        if st >= 300:
+        if st >= 300 and 'Image cannot be loaded' in str(have) and os.environ.get('GITHUB_EVENT_NAME') == 'push':
+            # a new card's images are not on the site until the site build finishes; the cards run that follows
+            # the site build (workflow_run) syncs it then
+            notes.append(f"Google Wallet: {v['slug']} waits for the site build to publish its images")
+        elif st >= 300:
             probs.append(f"Google Wallet: {v['slug']} answered {st} {str(have)[:160]}")
     return probs, notes
