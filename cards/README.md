@@ -15,6 +15,7 @@ Ben's digital business cards. Someone scans the QR code on Ben's phone, the card
 | Rhonda Lawrence, Owner, Bike On | https://elementoutdoors.github.io/routes/card/rhonda-bikeon/ |
 | Rhonda Lawrence, Owner / Senior Coach, Bike On MTB Coaching | https://elementoutdoors.github.io/routes/card/rhonda-mtb/ |
 | Rhonda Lawrence, Owner, Element Outdoors | https://elementoutdoors.github.io/routes/card/rhonda-eo/ |
+| Melisa King, Operations Manager, Element Outdoors | https://elementoutdoors.github.io/routes/card/melisa-eo/ |
 
 Each card folder also holds `lock-screen.png` (1179 x 2556, set as the phone's lock screen to show the QR code),
 `qr.png` and `qr.svg` (for print, slides and email) and the contact file itself.
@@ -56,3 +57,5 @@ saved QR codes keep working after any change of details.
 - A person without a `mobile` (Matt) gets no mobile row; Call rings the shop.
 - Colours: Bike On brand kit (site blue for structure, Trail Orange for Save contact); By Earth and Ocean designer
   palette (Deep Navy, Sunlit Gold).
+
+Element Outdoors cards carry an "Our brands" section: one tile per brand from `our_brands` on the eo brand in cards.json (name, logo in cards/assets, link, one line). A brand with `our_brands` drops its website rows from the contact list, since the tiles carry them; the websites stay in the contact file.

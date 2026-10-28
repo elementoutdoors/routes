@@ -42,6 +42,10 @@
       "last": "Lawrence",
       "mobile": "0424 330 389",
       "mobile_e164": "+61424330389"
+    },
+    "melisa": {
+      "first": "Melisa",
+      "last": "King"
     }
   },
   "brands": {
@@ -200,10 +204,22 @@
           "sub": "Bike hire, tours and MTB coaching"
         },
         {
+          "label": "Bike On MTB Coaching",
+          "value": "bikeon.com.au/mountain-bike-coaching",
+          "url": "https://bikeon.com.au/mountain-bike-coaching/",
+          "sub": "Mountain bike coaching programs"
+        },
+        {
           "label": "By Earth and Ocean",
           "value": "byearthandocean.com.au",
           "url": "https://byearthandocean.com.au/",
           "sub": "Kayak and bike experiences"
+        },
+        {
+          "label": "Sandy Shores",
+          "value": "sandyshoreshire.com.au",
+          "url": "https://sandyshoreshire.com.au/",
+          "sub": "Surf and beach hire"
         }
       ],
       "social": [
@@ -232,7 +248,7 @@
           "url": "https://www.facebook.com/byearthandocean"
         }
       ],
-      "footer": "Bike On · By Earth and Ocean",
+      "footer": "Bike On · By Earth and Ocean · Sandy Shores",
       "colors": {
         "primary": "#005B27",
         "action": "#FDDA04",
@@ -254,7 +270,33 @@
           0.95,
           0.97
         ]
-      }
+      },
+      "our_brands": [
+        {
+          "name": "Bike On",
+          "logo": "logo-bikeon.png",
+          "url": "https://bikeon.com.au/",
+          "sub": "Bike hire and tours"
+        },
+        {
+          "name": "Bike On MTB Coaching",
+          "logo": "logo-bikeon-mtb.png",
+          "url": "https://bikeon.com.au/mountain-bike-coaching/",
+          "sub": "Kids, adults and race coaching"
+        },
+        {
+          "name": "By Earth and Ocean",
+          "logo": "logo-beo.png",
+          "url": "https://byearthandocean.com.au/",
+          "sub": "Kayak and bike experiences"
+        },
+        {
+          "name": "Sandy Shores",
+          "logo": "logo-sandyshores.png",
+          "url": "https://sandyshoreshire.com.au/",
+          "sub": "Surf and beach hire"
+        }
+      ]
     }
   },
   "cards": [
@@ -356,6 +398,24 @@
       "title": "Owner",
       "email": "accounts@elementoutdoors.com.au",
       "tagline": "Bike On and By Earth and Ocean, Noosa"
+    },
+    {
+      "slug": "melisa-eo",
+      "person": "melisa",
+      "brand": "eo",
+      "title": "Operations Manager",
+      "email": "admin@elementoutdoors.com.au",
+      "tagline": "Bike On and By Earth and Ocean, Noosa",
+      "photo": "photo-melisa-biosphere-189.jpg",
+      "photo_focus": "50% 72%",
+      "wallet_photo": "photo-melisa-biosphere-189.jpg",
+      "wallet_crop": [
+        0.25,
+        0.42,
+        1.0,
+        0.95
+      ],
+      "wallet_fade": 0.3
     }
   ]
 }

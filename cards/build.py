@@ -182,7 +182,7 @@ def page(v, asset_names, wl=None):
     rows = ([('phone', 'Mobile', p['mobile'], 'tel:' + p['mobile_e164'], '')] if p.get('mobile_e164') else []) + [
         ('shop', 'Shop', s['shop_phone'], 'tel:' + s['shop_phone_e164'], s['hours']),
         ('mail', 'Email', v['email'], 'mailto:' + v['email'], ''),
-    ] + [('web', w['label'], w['value'], w['url'], w.get('sub', '')) for w in b['websites']] + [
+    ] + ([] if b.get('our_brands') else [('web', w['label'], w['value'], w['url'], w.get('sub', '')) for w in b['websites']]) + [
         ('pin', 'Visit the shop', f"{a['street']}, {a['locality']} {a['region']} {a['postcode']}", s['maps_url'], ''),
     ]
     row_html = []
@@ -199,8 +199,14 @@ def page(v, asset_names, wl=None):
     if len(b['websites']) == 1:
         quick_web = f'<a href="{esc(b["websites"][0]["url"])}" target="_blank" rel="noopener">{icon("web")}Website</a>'
     else:
-        quick_web = f'<a href="#links">{icon("web")}Websites</a>'
+        quick_web = f'<a href="#{"brands" if b.get("our_brands") else "links"}">{icon("web")}Websites</a>'
     desc = f"{v['name']}, {title_line}. {v['tagline']}."
+    brands_html = ''
+    if b.get('our_brands'):   # Element Outdoors cards: a tile per brand, each opening that brand's site
+        tiles = ''.join(
+            f'<a class="btile" href="{esc(t["url"])}" target="_blank" rel="noopener"><img src="../assets/{esc(t["logo"])}" alt="{esc(t["name"])}" loading="lazy">'
+            f'<b>{esc(t["name"])}</b><span>{esc(t["sub"])}</span></a>' for t in b['our_brands'])
+        brands_html = f'<section class="brands" id="brands" aria-label="Our brands"><h2>Our brands</h2><div class="bgrid">{tiles}</div></section>\n'
     qr = qr_svg(v['url'], c['qr'], scale=1, border=2)
     qr = re.sub(r'<svg[^>]*>', '<svg class="qr" viewBox="0 0 %s %s" role="img" aria-label="QR code for this card" xmlns="http://www.w3.org/2000/svg">' % qr_dims(v['url']), qr, count=1)
     logo_w, logo_h = asset_names['logo_size']
@@ -266,6 +272,13 @@ h1{{margin:0;font-weight:800;font-size:28px;line-height:1.15;letter-spacing:-.01
 .toast{{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none}}
 .toast.on{{opacity:1}}
 a:focus-visible,button:focus-visible{{outline:3px solid var(--primary);outline-offset:2px}}
+.brands{{margin:16px 16px 0;padding:18px 16px 16px;background:#fff;border-radius:18px;box-shadow:0 1px 0 rgba(20,30,45,.04),0 4px 16px rgba(20,30,45,.06)}}
+.brands h2{{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center}}
+.bgrid{{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+.btile{{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;padding:14px 8px 12px;border-radius:14px;background:var(--ground);text-decoration:none;color:var(--dark);text-align:center}}
+.btile img{{height:62px;width:auto;max-width:100%;object-fit:contain;margin-bottom:2px}}
+.btile b{{font-size:13px;font-weight:700}}
+.btile span{{font-size:11.5px;color:var(--muted);line-height:1.35}}
 </style>
 </head>
 <body>
@@ -284,7 +297,7 @@ a:focus-visible,button:focus-visible{{outline:3px solid var(--primary);outline-o
 {quick_web}
 </div>
 </main>
-<nav class="list" id="links" aria-label="Contact details">
+{brands_html}<nav class="list" id="links" aria-label="Contact details">
 {chr(10).join(row_html)}
 </nav>
 <div class="socials">{social}</div>
@@ -426,6 +439,8 @@ def build(dest, with_images=True, previous=None):
         files[f'assets/{b["logo"]}'] = logo_bytes
         files[f'assets/icon-{key}.png'] = icon_png(b)
         brand_assets[key] = {'logo': b['logo'], 'logo_size': size, 'icon': f'icon-{key}.png'}
+    for logo in sorted({t['logo'] for b in cfg['brands'].values() for t in b.get('our_brands', [])} - {b['logo'] for b in cfg['brands'].values()}):
+        files[f'assets/{logo}'] = web_logo(logo)[0]
     for photo in sorted({v['brand_data']['photo'] for v in views}):
         files[f'assets/{photo}'] = web_photo(photo)
     manifest = {'_about': 'Written by cards/build.py. Do not edit.', 'cards': {}}
