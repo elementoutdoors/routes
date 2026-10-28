@@ -142,7 +142,8 @@ def name_strip(v, scale):
     c, wc = v, b.get('wallet') or {}
     focus = c.get('wallet_photo_focus') or wc.get('photo_focus') or b['photo_focus']   # the strip is 3:1, so it has its own framing
     size = c.get('wallet_photo_size') or wc.get('photo_size') or 'cover'
-    im = cover(photo(v), w, h, focus, size).convert('RGBA')
+    src = Image.open(SRC / 'assets' / c['wallet_photo']).convert('RGB') if c.get('wallet_photo') else photo(v)   # a wide shot suits the 3:1 strip
+    im = cover(src, w, h, focus, size).convert('RGBA')
     shade = Image.new('L', (w, h))
     px = shade.load()
     for y in range(h):
