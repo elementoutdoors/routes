@@ -70,6 +70,10 @@ def hex_rgb(h):
     return f'rgb({int(h[0:2], 16)}, {int(h[2:4], 16)}, {int(h[4:6], 16)})'
 
 
+def wc_logo_chip(b):
+    return bool((b.get('wallet') or {}).get('logo_chip'))
+
+
 def colours(v):
     b = v['brand_data']
     wc = b.get('wallet') or {}
@@ -134,6 +138,20 @@ def photo(v):
 FONTS = ROOT / 'ride-sheets' / 'assets'
 
 
+def logo_chip(name, cw, ch, scale, radius=6):
+    """A logo centred on a white rounded chip, so dark or coloured artwork reads on any brand colour."""
+    from PIL import Image, ImageDraw
+    c = Image.new('RGBA', (int(cw), int(ch)), (0, 0, 0, 0))
+    m = Image.new('L', c.size, 0)
+    ImageDraw.Draw(m).rounded_rectangle((0, 0, c.width - 1, c.height - 1), radius=radius * scale, fill=255)
+    c.paste(Image.new('RGBA', c.size, (255, 255, 255, 255)), (0, 0), m)
+    lg = Image.open(SRC / 'assets' / name).convert('RGBA')
+    pad = 4 * scale
+    lg.thumbnail((int(c.width - 2 * pad), int(c.height - 2 * pad)), Image.LANCZOS)
+    c.alpha_composite(lg, ((c.width - lg.width) // 2, (c.height - lg.height) // 2))
+    return c
+
+
 def name_strip(v, scale):
     """The photo strip: the name and title in Montserrat on a brand dark panel at the left, and the photo at the
     right, shown at the strip's full height so the riders and bikes stay whole, fading into the panel."""
@@ -174,8 +192,14 @@ def name_strip(v, scale):
     nH = nf.getbbox('H'); tH = tf.getbbox('H')
     gap = 7 * scale
     block = (nH[3] - nH[1]) + gap + (tH[3] - tH[1])
-    top = (h - block) / 2
-    d.text((left, top - nH[1]), v['name'], font=nf, fill='#FFFFFF')
+    row = b.get('our_brands') or []
+    top = (h - block) / 2 if not row else 20 * scale   # with a logo row the name sits higher
+    if row:   # Element Outdoors: a white chip per brand logo under the name
+        cw, chh, cg = 42 * scale, 30 * scale, 5 * scale
+        for i, t in enumerate(row):
+            im.alpha_composite(logo_chip(t['logo'], cw, chh, scale), (int(left + i * (cw + cg)), int(h - chh - 15 * scale)))
+    if v['name']:
+        d.text((left, top - nH[1]), v['name'], font=nf, fill='#FFFFFF')
     accent = wc.get('accent') or b['colors']['action']
     tx, ty = left, top + (nH[3] - nH[1]) + gap - tH[1]
     for ch in title:
@@ -226,8 +250,8 @@ def apple_files(v, cfg):
     if p.get('mobile'):
         aux.append({'key': 'm', 'label': 'MOBILE', 'value': p['mobile']})
     aux.append({'key': 's', 'label': 'SHOP', 'value': s['shop_phone']})
-    if len(aux) < 2:
-        aux.append({'key': 'o', 'label': 'OPEN', 'value': '7 days'})
+    if len(aux) < 2:   # no mobile: the shop address takes the second place
+        aux.append({'key': 'a', 'label': s['address']['locality'].upper(), 'value': s['address'].get('short') or s['address']['street']})
     pj = {
         'formatVersion': 1,
         'passTypeIdentifier': a['passTypeIdentifier'],
@@ -250,7 +274,11 @@ def apple_files(v, cfg):
     files = {'pass.json': json.dumps(pj, indent=1, ensure_ascii=False).encode()}
     logo_path = SRC / 'assets' / b['logo']
     for scale, suf in ((1, ''), (2, '@2x'), (3, '@3x')):
-        files[f'logo{suf}.png'] = _png(fit_logo(logo_path, 160 * scale, 50 * scale))
+        if wc_logo_chip(b):
+            lg = fit_logo(logo_path, 146 * scale, 38 * scale)
+            files[f'logo{suf}.png'] = _png(logo_chip(b['logo'], lg.width + 14 * scale, 46 * scale, scale, radius=8))
+        else:
+            files[f'logo{suf}.png'] = _png(fit_logo(logo_path, 160 * scale, 50 * scale))
         files[f'icon{suf}.png'] = _png(brand_icon(v, 29 * scale))
         files[f'strip{suf}.png'] = _png_photo(name_strip(v, scale))
     return files
@@ -360,7 +388,7 @@ def g_images(v):
     return {
         f"assets/{n['logo']}": _png(brand_icon(v, 660)),
         f"assets/{n['wide']}": _png(wide_canvas),
-        f"{v['slug']}/{n['hero']}": _jpg(cover(photo(v), 1032, 336, b['photo_focus'], b.get('photo_size', 'cover'))),
+        f"{v['slug']}/{n['hero']}": _jpg(name_strip({**v, 'name': '', 'title': ''}, 3).resize((1032, 336), Image.LANCZOS)),
     }
 
 

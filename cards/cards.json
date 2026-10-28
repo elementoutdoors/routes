@@ -20,7 +20,8 @@
       "locality": "Noosaville",
       "region": "QLD",
       "postcode": "4566",
-      "country": "Australia"
+      "country": "Australia",
+      "short": "20 Venture Dr"
     },
     "hours": "Open 7 days, 8.30 am to 4.30 pm",
     "maps_url": "https://www.google.com/maps/search/?api=1&query=Unit+12%2C+20+Venture+Drive%2C+Noosaville+QLD+4566",
@@ -87,15 +88,18 @@
       },
       "photo_size": "200% auto",
       "wallet": {
-        "bg": "#FFFFFF",
-        "fg": "#1F2937",
-        "label": "#2B65A4",
+        "bg": "#2B65A4",
+        "fg": "#FFFFFF",
+        "label": "#F8F4EF",
         "crop": [
           0.22,
           0.38,
           0.88,
           1.0
-        ]
+        ],
+        "panel": "#2B65A4",
+        "accent": "#F8F4EF",
+        "logo_chip": true
       }
     },
     "bikeon-mtb": {
@@ -136,15 +140,18 @@
       },
       "website_sub": "Mountain bike coaching programs",
       "wallet": {
-        "bg": "#FFFFFF",
-        "fg": "#1F2937",
-        "label": "#2B65A4",
+        "bg": "#2B65A4",
+        "fg": "#FFFFFF",
+        "label": "#F8F4EF",
         "crop": [
           0,
           0,
           1,
           1
-        ]
+        ],
+        "panel": "#2B65A4",
+        "accent": "#F8F4EF",
+        "logo_chip": true
       }
     },
     "beo": {
@@ -187,7 +194,8 @@
           0.3,
           1.0,
           0.95
-        ]
+        ],
+        "panel": "#182B3D"
       }
     },
     "eo": {
@@ -269,7 +277,8 @@
           0.3,
           0.95,
           0.97
-        ]
+        ],
+        "panel": "#0B3B21"
       },
       "our_brands": [
         {
