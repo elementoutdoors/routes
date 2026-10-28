@@ -5,6 +5,11 @@
     "apple": {
       "passTypeIdentifier": "pass.au.com.elementoutdoors.card",
       "teamIdentifier": "ZLCMS58XHH"
+    },
+    "google": {
+      "issuerId": "3388000000023230745",
+      "serviceAccountEmail": "business-cards-wallet@element-outdoors-wallet.iam.gserviceaccount.com",
+      "iat": 1793000000
     }
   },
   "shared": {
