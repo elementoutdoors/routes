@@ -1,6 +1,12 @@
 {
   "_about": "Digital business cards. This file is the only place card details live: change it, and the cards workflow rebuilds every page, contact file, QR code and lock screen image. See cards/README.md.",
   "base_url": "https://elementoutdoors.github.io/routes/card/",
+  "wallet": {
+    "apple": {
+      "passTypeIdentifier": "pass.au.com.elementoutdoors.card",
+      "teamIdentifier": "ZLCMS58XHH"
+    }
+  },
   "shared": {
     "shop_phone": "(07) 5474 3322",
     "shop_phone_e164": "+61754743322",
