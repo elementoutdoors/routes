@@ -75,8 +75,12 @@
         "bg": "#FFFFFF",
         "fg": "#1F2937",
         "label": "#2B65A4",
-        "photo_focus": "0% 62%",
-        "photo_size": "130% auto"
+        "crop": [
+          0.22,
+          0.38,
+          0.88,
+          1.0
+        ]
       }
     },
     "bikeon-mtb": {
@@ -120,8 +124,12 @@
         "bg": "#FFFFFF",
         "fg": "#1F2937",
         "label": "#2B65A4",
-        "photo_focus": "50% 30%",
-        "photo_size": "cover"
+        "crop": [
+          0,
+          0,
+          1,
+          1
+        ]
       }
     },
     "beo": {
@@ -159,8 +167,12 @@
         "bg": "#182B3D",
         "fg": "#FFFFFF",
         "label": "#F5CA3A",
-        "photo_focus": "50% 35%",
-        "photo_size": "cover"
+        "crop": [
+          0.05,
+          0.3,
+          1.0,
+          0.95
+        ]
       }
     },
     "eo": {
@@ -225,8 +237,12 @@
         "bg": "#0B3B21",
         "fg": "#FFFFFF",
         "label": "#FDDA04",
-        "photo_focus": "50% 85%",
-        "photo_size": "cover"
+        "crop": [
+          0.08,
+          0.3,
+          0.95,
+          0.97
+        ]
       }
     }
   },
@@ -256,9 +272,13 @@
       "tagline": "Mountain bike skills coaching for kids, adults and racers",
       "photo": "photo-ben-coaching.jpg",
       "photo_focus": "55% 8%",
-      "wallet_photo_focus": "50% 40%",
-      "wallet_photo_size": "cover",
-      "wallet_photo": "photo-bikeon-mtb.jpg"
+      "wallet_photo": "photo-mtb-coaching-341.jpg",
+      "wallet_crop": [
+        0.12,
+        0.04,
+        0.88,
+        0.84
+      ]
     },
     {
       "slug": "matt-bikeon",

@@ -135,47 +135,52 @@ FONTS = ROOT / 'ride-sheets' / 'assets'
 
 
 def name_strip(v, scale):
-    """The photo strip with the name and title set in Montserrat over a soft shade, like the card page hero."""
+    """The photo strip: the name and title in Montserrat on a brand dark panel at the left, and the photo at the
+    right, shown at the strip's full height so the riders and bikes stay whole, fading into the panel."""
     from PIL import Image, ImageDraw, ImageFont
-    b = v['brand_data']
+    b, wc = v['brand_data'], v['brand_data'].get('wallet') or {}
     w, h = 375 * scale, 123 * scale
-    c, wc = v, b.get('wallet') or {}
-    focus = c.get('wallet_photo_focus') or wc.get('photo_focus') or b['photo_focus']   # the strip is 3:1, so it has its own framing
-    size = c.get('wallet_photo_size') or wc.get('photo_size') or 'cover'
-    src = Image.open(SRC / 'assets' / c['wallet_photo']).convert('RGB') if c.get('wallet_photo') else photo(v)   # a wide shot suits the 3:1 strip
-    im = cover(src, w, h, focus, size).convert('RGBA')
-    shade = Image.new('L', (w, h))
-    px = shade.load()
-    for y in range(h):
-        ty = max(0.0, (y / h - 0.25) / 0.75)
-        for x in range(w):
-            tx = max(0.0, 1 - x / (w * 0.85))
-            px[x, y] = int(255 * min(0.84, 0.70 * ty ** 1.1 + 0.30 * tx * ty))
-    dark = Image.new('RGBA', (w, h), (10, 14, 20, 255))
-    dark.putalpha(shade)
-    im.alpha_composite(dark)
+    src = Image.open(SRC / 'assets' / v['wallet_photo']).convert('RGB') if v.get('wallet_photo') else photo(v)
+    x0, y0, x1, y1 = v.get('wallet_crop') or wc.get('crop') or (0, 0, 1, 1)   # the part of the photo to show
+    iw, ih = src.size
+    box = [round(x0 * iw), round(y0 * ih), round(x1 * iw), round(y1 * ih)]
+    pw = round((box[2] - box[0]) * h / (box[3] - box[1]))
+    maxw = round(w * 0.62)
+    if pw > maxw:   # too wide for the space: trim the sides evenly
+        trim = (box[2] - box[0]) * (1 - maxw / pw) / 2
+        box = [round(box[0] + trim), box[1], round(box[2] - trim), box[3]]
+        pw = maxw
+    pic = src.crop(box).resize((pw, h), Image.LANCZOS).convert('RGBA')
+    fade = Image.new('L', (pw, h))
+    ramp = round(pw * 0.42)
+    fade.paste(255, (ramp, 0, pw, h))
+    for x in range(ramp):
+        t = x / ramp
+        fade.paste(round(255 * t * t * (3 - 2 * t)), (x, 0, x + 1, h))
+    pic.putalpha(fade)
+    im = Image.new('RGBA', (w, h), wc.get('panel') or b['colors']['dark'])
+    im.alpha_composite(pic, (w - pw, 0))
     d = ImageDraw.Draw(im)
-    x, bottom = 16 * scale, h - 13 * scale
-    title = v['title'].upper()
-    tf = ImageFont.truetype(str(FONTS / 'montserrat-700.ttf'), 10.5 * scale)
-    track = 1.1 * scale
-    tw = sum(d.textlength(c, font=tf) for c in title) + track * (len(title) - 1)
-    tb = tf.getbbox('H')
-    ty = bottom - (tb[3] - tb[1]) - tb[1]
-    accent = b['colors']['action'] if b['colors']['action'].upper() not in ('#FFFFFF',) else '#FFFFFF'
-    cx = x
-    for c in title:
-        d.text((cx, ty), c, font=tf, fill=accent)
-        cx += d.textlength(c, font=tf) + track
+    left = 16 * scale
     size = 25
     while True:
         nf = ImageFont.truetype(str(FONTS / 'montserrat-800.ttf'), size * scale)
-        if d.textlength(v['name'], font=nf) <= w - 2 * x or size <= 16:
+        if d.textlength(v['name'], font=nf) <= w * 0.5 or size <= 16:
             break
         size -= 1
-    nb = nf.getbbox('Hg')
-    ny = ty + tb[1] - 6 * scale - (nf.getbbox('H')[3] - nf.getbbox('H')[1]) - nf.getbbox('H')[1]
-    d.text((x, ny), v['name'], font=nf, fill='#FFFFFF')
+    title = v['title'].upper()
+    tf = ImageFont.truetype(str(FONTS / 'montserrat-700.ttf'), 10.5 * scale)
+    track = 1.1 * scale
+    nH = nf.getbbox('H'); tH = tf.getbbox('H')
+    gap = 7 * scale
+    block = (nH[3] - nH[1]) + gap + (tH[3] - tH[1])
+    top = (h - block) / 2
+    d.text((left, top - nH[1]), v['name'], font=nf, fill='#FFFFFF')
+    accent = wc.get('accent') or b['colors']['action']
+    tx, ty = left, top + (nH[3] - nH[1]) + gap - tH[1]
+    for ch in title:
+        d.text((tx, ty), ch, font=tf, fill=accent)
+        tx += d.textlength(ch, font=tf) + track
     return im.convert('RGB')
 
 
@@ -197,7 +202,7 @@ def apple_name(v):
 def back_fields(v):
     p, b, s = v['person_data'], v['brand_data'], v['shared']
     a = s['address']
-    f = []
+    f = [{'key': 'card', 'label': 'Save my contact', 'value': v['url']}]   # first, so a shared pass saves the contact in one tap
     if p.get('mobile'):
         f.append({'key': 'mobile', 'label': 'Mobile', 'value': p['mobile']})
     f.append({'key': 'shop', 'label': 'Shop', 'value': f"{s['shop_phone']}\n{s['hours']}"})
@@ -207,7 +212,6 @@ def back_fields(v):
     f.append({'key': 'address', 'label': 'Visit the shop', 'value': f"{a['street']}, {a['locality']} {a['region']} {a['postcode']}"})
     for i, so in enumerate(b['social']):
         f.append({'key': f'social{i}', 'label': so.get('aria') or f"{b['name']} on {so['label']}", 'value': so['url']})
-    f.append({'key': 'card', 'label': 'Full card and save my contact', 'value': v['url']})
     f.append({'key': 'about', 'label': b['name'], 'value': f"{v['tagline']}. {b['footer']}."})
     return f
 
