@@ -64,7 +64,12 @@
         "muted": "#54595F",
         "qr": "#231F20"
       },
-      "photo_size": "200% auto"
+      "photo_size": "200% auto",
+      "wallet": {
+        "bg": "#FFFFFF",
+        "fg": "#1F2937",
+        "label": "#2B65A4"
+      }
     },
     "bikeon-mtb": {
       "name": "Bike On MTB Coaching",
@@ -102,7 +107,12 @@
         "muted": "#54595F",
         "qr": "#231F20"
       },
-      "website_sub": "Mountain bike coaching programs"
+      "website_sub": "Mountain bike coaching programs",
+      "wallet": {
+        "bg": "#FFFFFF",
+        "fg": "#1F2937",
+        "label": "#2B65A4"
+      }
     },
     "beo": {
       "name": "By Earth and Ocean",
@@ -134,6 +144,11 @@
         "ink": "#292929",
         "muted": "#33373D",
         "qr": "#182B3D"
+      },
+      "wallet": {
+        "bg": "#182B3D",
+        "fg": "#FFFFFF",
+        "label": "#F5CA3A"
       }
     },
     "eo": {
@@ -193,6 +208,11 @@
         "ink": "#292929",
         "muted": "#4B5249",
         "qr": "#003D1A"
+      },
+      "wallet": {
+        "bg": "#0B3B21",
+        "fg": "#FFFFFF",
+        "label": "#FDDA04"
       }
     }
   },

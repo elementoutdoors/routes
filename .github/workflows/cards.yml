@@ -32,7 +32,7 @@ jobs:
         with:
           python-version: '3.13'
       - name: Tools (pinned so a rebuild is byte for byte the same)
-        run: pip install -q pillow==12.3.0 segno==1.6.6 fonttools==4.66.1 brotli==1.2.0 opencv-python-headless==4.10.0.84 playwright==1.56.0
+        run: pip install -q pillow==12.3.0 segno==1.6.6 fonttools==4.66.1 brotli==1.2.0 opencv-python-headless==4.10.0.84 playwright==1.56.0 cryptography==50.0.1
       - name: Check the cards
         id: check
         continue-on-error: true
@@ -41,20 +41,26 @@ jobs:
         if: steps.check.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
+          ROUTE_SECRETS: ${{ secrets.ROUTE_SECRETS }}   # opens cards/wallet/keys.enc.json to sign wallet passes
         run: |
           python3 -m playwright install --with-deps chromium > /dev/null
           python3 cards/build.py
           python3 cards/build.py --check
           git config user.name "Business cards"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A site/card
+          git add -A site/card cards/wallet/google-links.json
           if git diff --cached --quiet; then echo "Nothing to commit"; exit 0; fi
           git commit -q -m "Business cards: rebuilt from cards.json (drift fixed by the cards check)"
           git pull -q --rebase origin main && git push -q origin HEAD:main
           gh workflow run build.yml --ref main
+      - name: Keep the Google Wallet passes current
+        env:
+          ROUTE_SECRETS: ${{ secrets.ROUTE_SECRETS }}
+        run: python3 cards/build.py --google-sync
       - name: Check the published cards
         if: github.event_name != 'push'
         env:
           GH_TOKEN: ${{ github.token }}
+          ROUTE_SECRETS: ${{ secrets.ROUTE_SECRETS }}
         run: |
           if python3 cards/build.py --live; then exit 0; fi
           echo "Live cards are behind this repo, starting the site build"

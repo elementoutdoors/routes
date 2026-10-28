@@ -21,10 +21,12 @@ import base64, hashlib, html, io, json, os, re, shutil, subprocess, sys, tempfil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import wallet
 SRC = ROOT / 'cards'
 OUT = ROOT / 'site' / 'card'
 FONTS = ROOT / 'ride-sheets' / 'assets'
-VERSION = '2'   # bump to force every image to be remade
+VERSION = '3'   # bump to force every image to be remade
 
 def load():
     return json.loads((SRC / 'cards.json').read_text())
@@ -161,7 +163,19 @@ def icon(name, cls='i'):
 
 # ---------------------------------------------------------------- page
 
-def page(v, asset_names):
+def wallet_block(v, wl):
+    if not wl.get('apple') and not wl.get('google'):
+        return ''
+    parts = []
+    if wl.get('apple'):
+        parts.append(f'<a class="wb" href="{esc(wl["apple"])}"><img src="../assets/add-to-apple-wallet.svg" alt="Add to Apple Wallet" width="110" height="34"></a>')
+    if wl.get('google'):
+        parts.append(f'<a class="wb" href="{esc(wl["google"])}" target="_blank" rel="noopener"><img src="../assets/add-to-google-wallet.svg" alt="Add to Google Wallet" width="164" height="34"></a>')
+    return ('<section class="share wallet"><h2>Keep it in your phone wallet</h2><p>Shows the QR code from your lock screen</p>'
+            f'<div class="wbs">{"".join(parts)}</div></section>')
+
+def page(v, asset_names, wl=None):
+    wl = wl or {}
     p, b, s = v['person_data'], v['brand_data'], v['shared']
     c = b['colors']
     a = s['address']
@@ -246,6 +260,8 @@ h1{{margin:0;font-weight:800;font-size:28px;line-height:1.15;letter-spacing:-.01
 .qr{{display:block;width:200px;height:200px;margin:0 auto;shape-rendering:crispEdges}}
 .sharebtn{{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:11px 18px;border:2px solid var(--primary);border-radius:999px;background:#fff;color:var(--primary);font:700 14px/1 Montserrat,"Helvetica Neue",Arial,sans-serif;cursor:pointer}}
 .sharebtn .i{{width:18px;height:18px}}
+.wallet .wbs{{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;align-items:center}}
+.wb img{{display:block;height:44px;width:auto}}
 .foot{{margin:22px 16px 0;text-align:center;font-size:12px;color:var(--muted)}}
 .toast{{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none}}
 .toast.on{{opacity:1}}
@@ -278,6 +294,7 @@ a:focus-visible,button:focus-visible{{outline:3px solid var(--primary);outline-o
 {qr}
 <button class="sharebtn" type="button" id="share">{icon('share')}Send the link</button>
 </section>
+{wallet_block(v, wl)}
 <p class="foot">{esc(b['footer'])}</p>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -412,16 +429,28 @@ def build(dest, with_images=True, previous=None):
     for photo in sorted({v['brand_data']['photo'] for v in views}):
         files[f'assets/{photo}'] = web_photo(photo)
     manifest = {'_about': 'Written by cards/build.py. Do not edit.', 'cards': {}}
-    template_hash = sha((SRC / 'build.py').read_bytes())
+    template_hash = sha((SRC / 'build.py').read_bytes() + (SRC / 'wallet.py').read_bytes())
+    apple_on, google_on = wallet.apple_on(cfg), wallet.google_on(cfg)
+    glinks = wallet.google_links() if google_on else {}
+    if apple_on or google_on:
+        files['assets/add-to-apple-wallet.svg'] = (SRC / 'wallet' / 'add-to-apple-wallet.svg').read_bytes()
+        files['assets/add-to-google-wallet.svg'] = (SRC / 'wallet' / 'add-to-google-wallet.svg').read_bytes()
+    if google_on:
+        for v in views:
+            files.update(wallet.g_images(v))
     for v in views:
         key = v['brand']
-        files[f"{v['slug']}/index.html"] = page(v, {**brand_assets[key], 'photo': v['brand_data']['photo']}).encode()
+        wl = {'apple': wallet.apple_name(v) if apple_on else None,
+              'google': wallet.save_url(glinks[v['slug']]['jwt']) if google_on and v['slug'] in glinks else None}
+        files[f"{v['slug']}/index.html"] = page(v, {**brand_assets[key], 'photo': v['brand_data']['photo']}, wl).encode()
         files[f"{v['slug']}/{v['vcf_name']}"] = vcard(v).encode()
         files[f"{v['slug']}/qr.svg"] = qr_svg(v['url'], v['brand_data']['colors']['qr']).encode()
         img_inputs = sha(VERSION, template_hash, json.dumps(v, sort_keys=True, default=str),
                          (SRC / 'assets' / v['brand_data']['logo']).read_bytes(), (SRC / 'assets' / v['brand_data']['photo']).read_bytes())
         manifest['cards'][v['slug']] = {'url': v['url'], 'vcf': v['vcf_name'], 'brand': v['brand_data']['name'], 'title': v['title'],
                                         'email': v['email'], 'images': img_inputs}
+        if apple_on:
+            manifest['cards'][v['slug']]['apple'] = wallet.apple_fingerprint(v, cfg)
     for rel, data in files.items():
         (dest / rel).parent.mkdir(parents=True, exist_ok=True)
         (dest / rel).write_bytes(data)
@@ -437,6 +466,20 @@ def build(dest, with_images=True, previous=None):
             for v in need:
                 (dest / v['slug'] / 'qr.png').write_bytes(qr_png(v['url'], v['brand_data']['colors']['qr']))
                 (dest / v['slug'] / 'lock-screen.png').write_bytes(locks[v['slug']])
+        if apple_on:   # Apple Wallet passes: re-signed only when their contents changed, and only where the key is
+            key = wallet.secrets().get('apple_key_pem')
+            for v in views:
+                name, fp = wallet.apple_name(v), manifest['cards'][v['slug']]['apple']
+                old = OUT / v['slug'] / name
+                same = previous and previous.get('cards', {}).get(v['slug'], {}).get('apple') == fp and old.exists()
+                if same or (old.exists() and not key):
+                    shutil.copyfile(old, dest / v['slug'] / name)
+                    if not same:
+                        manifest['cards'][v['slug']]['apple'] = previous.get('cards', {}).get(v['slug'], {}).get('apple', 'stale') if previous else 'stale'
+                elif key:
+                    (dest / v['slug'] / name).write_bytes(wallet.apple_sign(wallet.apple_files(v, cfg), key))
+                else:
+                    manifest['cards'][v['slug']]['apple'] = 'missing'
     (dest / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     return views, manifest
 
@@ -465,7 +508,10 @@ def check():
     for rel, data in want.items():
         if rel not in have: problems.append(f'{rel} is missing')
         elif have[rel] != data: problems.append(f'{rel} is out of date or was edited by hand')
+    cfg = load()
     expected_images = {f"{v['slug']}/{f}" for v in views for f in ('qr.png', 'lock-screen.png')}
+    if wallet.apple_on(cfg):
+        expected_images |= {f"{v['slug']}/{wallet.apple_name(v)}" for v in views}
     for rel in have:
         if rel not in want and rel not in expected_images:
             problems.append(f'{rel} should not be there (no card makes it)')
@@ -473,6 +519,27 @@ def check():
         if prev.get('cards', {}).get(slug, {}).get('images') != m['images']:
             problems.append(f'{slug}: the QR and lock screen images were made from older details')
     problems += verify_images(OUT, views)
+    problems += check_wallet(cfg, views)
+    return problems
+
+def check_wallet(cfg, views):
+    problems = []
+    if wallet.apple_on(cfg):
+        days, end = wallet.cert_days_left(wallet.APPLE_CERT)
+        if days < wallet.CERT_WARN_DAYS:
+            problems.append(f'Apple Wallet pass certificate ends {end} ({days} days): renew it in the Apple Developer account')
+        for v in views:
+            pk = OUT / v['slug'] / wallet.apple_name(v)
+            if not pk.exists():
+                problems.append(f"{v['slug']}: Apple Wallet pass is missing"); continue
+            problems += wallet.apple_verify(pk.read_bytes(), v, cfg)
+    if wallet.google_on(cfg):
+        links = wallet.google_links()
+        for v in views:
+            jwt = links.get(v['slug'], {}).get('jwt')
+            why = wallet.g_jwt_ok(jwt, wallet.g_payload(cfg, v)) if jwt else 'it is missing'
+            if why:
+                problems.append(f"{v['slug']}: the Save to Google Wallet link needs re-signing: {why}")
     return problems
 
 def live():
@@ -486,7 +553,10 @@ def live():
         with urllib.request.urlopen(req, timeout=30) as r:
             return r.status, r.read(), r.headers.get('Content-Type', '')
     for v in views:
-        for rel in ('index.html', v['vcf_name'], 'qr.svg', 'qr.png', 'lock-screen.png'):
+        rels = ['index.html', v['vcf_name'], 'qr.svg', 'qr.png', 'lock-screen.png']
+        if wallet.apple_on(cfg): rels.append(wallet.apple_name(v))
+        if wallet.google_on(cfg): rels.append(wallet.g_image_names(v)['hero'])
+        for rel in rels:
             url = v['url'] + ('' if rel == 'index.html' else rel)
             try:
                 st, body, ctype = get(url + ('?check' if rel == 'index.html' else ''))
@@ -495,6 +565,8 @@ def live():
             local = (OUT / v['slug'] / rel).read_bytes()
             if body != local:
                 problems.append(f'{url} is not the current version yet')
+            if rel.endswith('.pkpass') and 'application/vnd.apple.pkpass' not in ctype:
+                problems.append(f'{url} is served as {ctype!r}, so iPhones will not open it as a pass')
         links = [w['url'] for w in v['brand_data']['websites']] + [so['url'] for so in v['brand_data']['social']]
         for u in links:
             try:
@@ -507,10 +579,22 @@ def live():
                     warnings.append(f'{u} answered {e.code} (social sites often refuse robots)')
             except Exception as e:
                 warnings.append(f'{u} could not be reached ({e})')
+    if wallet.google_on(cfg):
+        p3, notes = wallet.google_sync(cfg, views, fix=True)
+        problems += p3; warnings += notes
     return problems, warnings
 
 def main():
     args = sys.argv[1:]
+    if '--google-sync' in args:
+        cfg = load()
+        if not wallet.google_on(cfg):
+            print('Google Wallet not set up yet'); return
+        probs, notes = wallet.google_sync(cfg, [card_view(cfg, c) for c in cfg['cards']], fix=True)
+        for n in notes: print(n)
+        if probs:
+            print('GOOGLE WALLET NEEDS FIXING:'); [print(' -', p) for p in probs]; sys.exit(1)
+        print('Google Wallet passes OK'); return
     if '--check' in args or '--live' in args:
         problems = check() if '--check' in args else []
         warnings = []
@@ -521,13 +605,18 @@ def main():
             print('CARDS NEED FIXING:'); [print(' -', p) for p in problems]; sys.exit(1)
         print('Cards OK'); return
     prev = json.loads((OUT / 'manifest.json').read_text()) if (OUT / 'manifest.json').exists() else None
+    cfg = load()
+    if wallet.google_on(cfg):
+        changed, missing = wallet.refresh_google_links(cfg, [card_view(cfg, c) for c in cfg['cards']])
+        if changed: print('Save to Google Wallet links re-signed:', ', '.join(changed))
+        if missing: print('note: no Google key here, these links stay as they are until the GitHub build signs them:', ', '.join(missing))
     tmp = Path(tempfile.mkdtemp()) / 'card'
     views, _ = build(tmp, with_images=True, previous=prev)
     if OUT.exists(): shutil.rmtree(OUT)
     shutil.copytree(tmp, OUT)
-    problems = verify_images(OUT, views)
+    problems = verify_images(OUT, views) + check_wallet(cfg, views)
     if problems:
-        print('BUILT BUT QR CHECK FAILED:'); [print(' -', p) for p in problems]; sys.exit(1)
+        print('BUILT BUT CHECKS FAILED:'); [print(' -', p) for p in problems]; sys.exit(1)
     print('Built', len(views), 'cards:'); [print(' ', v['url']) for v in views]
 
 if __name__ == '__main__':
