@@ -281,14 +281,14 @@
       "title": "Head Coach / Director",
       "email": "ride@bikeon.com.au",
       "tagline": "Mountain bike skills coaching for kids, adults and racers",
-      "photo": "photo-mtb-coaching-035.jpg",
-      "photo_focus": "30% 45%",
-      "wallet_photo": "photo-mtb-coaching-035.jpg",
+      "photo": "photo-ben-coaching.jpg",
+      "photo_focus": "55% 8%",
+      "wallet_photo": "photo-ben-coaching.jpg",
       "wallet_crop": [
-        0.0,
-        0.26,
-        0.7,
-        0.66
+        0.18,
+        0.12,
+        0.96,
+        0.78
       ],
       "wallet_fade": 0.3
     },
