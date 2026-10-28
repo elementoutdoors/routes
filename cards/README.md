@@ -11,6 +11,10 @@ Ben's digital business cards. Someone scans the QR code on Ben's phone, the card
 | Matt Watts, General Manager, Bike On | https://elementoutdoors.github.io/routes/card/matt-bikeon/ |
 | Matt Watts, General Manager, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/matt-beo/ |
 | Matt Watts, General Manager, Element Outdoors | https://elementoutdoors.github.io/routes/card/matt-eo/ |
+| Rhonda Lawrence, Owner, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/rhonda-beo/ |
+| Rhonda Lawrence, Owner, Bike On | https://elementoutdoors.github.io/routes/card/rhonda-bikeon/ |
+| Rhonda Lawrence, Owner / Senior Coach, Bike On MTB Coaching | https://elementoutdoors.github.io/routes/card/rhonda-mtb/ |
+| Rhonda Lawrence, Owner, Element Outdoors | https://elementoutdoors.github.io/routes/card/rhonda-eo/ |
 
 Each card folder also holds `lock-screen.png` (1179 x 2556, set as the phone's lock screen to show the QR code),
 `qr.png` and `qr.svg` (for print, slides and email) and the contact file itself.

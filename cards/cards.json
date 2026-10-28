@@ -36,6 +36,12 @@
     "matt": {
       "first": "Matt",
       "last": "Watts"
+    },
+    "rhonda": {
+      "first": "Rhonda",
+      "last": "Lawrence",
+      "mobile": "0424 330 389",
+      "mobile_e164": "+61424330389"
     }
   },
   "brands": {
@@ -275,15 +281,16 @@
       "title": "Head Coach / Director",
       "email": "ride@bikeon.com.au",
       "tagline": "Mountain bike skills coaching for kids, adults and racers",
-      "photo": "photo-ben-coaching.jpg",
-      "photo_focus": "55% 8%",
-      "wallet_photo": "photo-mtb-coaching-341.jpg",
+      "photo": "photo-mtb-coaching-035.jpg",
+      "photo_focus": "30% 45%",
+      "wallet_photo": "photo-mtb-coaching-035.jpg",
       "wallet_crop": [
-        0.12,
-        0.04,
-        0.88,
-        0.84
-      ]
+        0.0,
+        0.26,
+        0.7,
+        0.66
+      ],
+      "wallet_fade": 0.3
     },
     {
       "slug": "matt-bikeon",
@@ -307,6 +314,48 @@
       "brand": "eo",
       "title": "General Manager",
       "email": "matt@elementoutdoors.com.au",
+      "tagline": "Bike On and By Earth and Ocean, Noosa"
+    },
+    {
+      "slug": "rhonda-beo",
+      "person": "rhonda",
+      "brand": "beo",
+      "title": "Owner",
+      "email": "tours@elementoutdoors.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
+    },
+    {
+      "slug": "rhonda-bikeon",
+      "person": "rhonda",
+      "brand": "bikeon",
+      "title": "Owner",
+      "email": "hire@bikeon.com.au",
+      "tagline": "Bike hire, tours, MTB coaching and education in Noosa"
+    },
+    {
+      "slug": "rhonda-mtb",
+      "person": "rhonda",
+      "brand": "bikeon-mtb",
+      "title": "Owner / Senior Coach",
+      "email": "ride@bikeon.com.au",
+      "tagline": "Mountain bike skills coaching for kids, adults and racers",
+      "photo": "photo-rhonda-coaching.jpg",
+      "photo_focus": "35% 30%",
+      "wallet_photo": "photo-rhonda-coaching.jpg",
+      "wallet_crop": [
+        0.0,
+        0.18,
+        0.75,
+        1.0
+      ],
+      "wallet_fade": 0.28
+    },
+    {
+      "slug": "rhonda-eo",
+      "person": "rhonda",
+      "brand": "eo",
+      "title": "Owner",
+      "email": "accounts@elementoutdoors.com.au",
       "tagline": "Bike On and By Earth and Ocean, Noosa"
     }
   ]

@@ -152,7 +152,7 @@ def name_strip(v, scale):
         pw = maxw
     pic = src.crop(box).resize((pw, h), Image.LANCZOS).convert('RGBA')
     fade = Image.new('L', (pw, h))
-    ramp = round(pw * 0.42)
+    ramp = round(pw * float(v.get('wallet_fade') or 0.42))   # a narrow portrait crop needs a shorter fade
     fade.paste(255, (ramp, 0, pw, h))
     for x in range(ramp):
         t = x / ramp
