@@ -8,6 +8,7 @@ Ben's digital business cards. Someone scans the QR code on Ben's phone, the card
 | Ben de Vaus, Director, Bike On | https://elementoutdoors.github.io/routes/card/ben-bikeon/ |
 | Ben de Vaus, Director, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/ben-beo/ |
 | Ben de Vaus, Head Coach / Director, Bike On MTB Coaching | https://elementoutdoors.github.io/routes/card/ben-mtb/ |
+| Ben de Vaus, Director, Element Outdoors | https://elementoutdoors.github.io/routes/card/ben-eo/ |
 | Matt Watts, General Manager, Bike On | https://elementoutdoors.github.io/routes/card/matt-bikeon/ |
 | Matt Watts, General Manager, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/matt-beo/ |
 | Matt Watts, General Manager, Element Outdoors | https://elementoutdoors.github.io/routes/card/matt-eo/ |
