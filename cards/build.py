@@ -290,7 +290,7 @@ a:focus-visible,button:focus-visible{{outline:3px solid var(--primary);outline-o
 <h1>{esc(v['name'])}</h1>
 <p class="role">{esc(v['title'])}</p>
 {'' if v['name'] == b['name'] else f'<p class="org">{esc(b["name"])}</p>'}
-<p class="tag">{esc(v['tagline'])}</p>
+{'' if b.get('hide_tagline') else f'<p class="tag">{esc(v["tagline"])}</p>'}
 <a class="save" href="{esc(v['vcf_name'])}">{icon('save')}Save contact</a>
 <div class="quick">
 <a href="tel:{p.get('mobile_e164') or s['shop_phone_e164']}">{icon('phone')}Call</a>
@@ -309,7 +309,7 @@ a:focus-visible,button:focus-visible{{outline:3px solid var(--primary);outline-o
 <button class="sharebtn" type="button" id="share">{icon('share')}Send the link</button>
 </section>
 {wallet_block(v, wl)}
-<p class="foot">{esc(b['footer'])}</p>
+{'' if b.get('hide_footer') else f'<p class="foot">{esc(b["footer"])}</p>'}
 </div>
 <div class="toast" id="toast" role="status"></div>
 <script>
@@ -364,7 +364,7 @@ body{{font-family:M,sans-serif;background:{c['dark']};position:relative}}
 <div class="n">{esc(v['name'])}</div><div class="r">{esc(v['title'])}</div><div class="o">{esc(b['name'])}</div></div></div>
 <div class="qr">{qr}</div>
 <div class="s">Scan to save my details</div>
-</div><div class="f">{esc(b['footer'])}</div></body></html>'''
+</div>{'' if b.get('hide_footer') else f'<div class="f">{esc(b["footer"])}</div>'}</body></html>'''
 
 def qr_dims_border(url, border):
     import segno

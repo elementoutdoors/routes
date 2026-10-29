@@ -344,7 +344,9 @@
           "url": "https://sandyshoreshire.com.au/",
           "sub": "Surf and beach hire"
         }
-      ]
+      ],
+      "hide_tagline": true,
+      "hide_footer": true
     }
   },
   "cards": [
