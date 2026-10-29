@@ -528,6 +528,14 @@ def _same(want, have):
     return want == have
 
 
+def _published(url):
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, method='HEAD'), timeout=20) as r:
+            return r.status == 200
+    except Exception:
+        return False
+
+
 def google_sync(cfg, views, fix=True):
     """Every card's Google Wallet class and object must match cards.json; fix=True puts right what differs."""
     g = wcfg(cfg)['google']
@@ -555,9 +563,9 @@ def google_sync(cfg, views, fix=True):
                 st, have = _api(tok, 'PUT', 'genericObject/' + want['id'], want); notes.append(f"Google Wallet: {v['slug']} updated")
             else:
                 probs.append(f"Google Wallet: {v['slug']} differs from cards.json")
-        if st >= 300 and 'Image cannot be loaded' in str(have) and os.environ.get('GITHUB_EVENT_NAME') == 'push':
-            # a new card's images are not on the site until the site build finishes; the cards run that follows
-            # the site build (workflow_run) syncs it then
+        if st >= 300 and 'Image cannot be loaded' in str(have) and not _published(cfg['base_url'] + v['slug'] + '/' + g_image_names(v)['hero']):
+            # a new card's images are not on the site until its site build finishes; the cards run that follows
+            # that build (workflow_run) syncs it. An image that IS published and still refused stays a problem.
             notes.append(f"Google Wallet: {v['slug']} waits for the site build to publish its images")
         elif st >= 300:
             probs.append(f"Google Wallet: {v['slug']} answered {st} {str(have)[:160]}")
