@@ -397,7 +397,7 @@ def g_object(cfg, v):
     col = colours(v)
     base = cfg['base_url']
     n = g_image_names(v)
-    first = p['first']
+    first = 'us' if p.get('company') else p['first']
     texts = []
     if p.get('mobile'):
         texts.append({'id': 'mobile', 'header': 'Mobile', 'body': p['mobile']})

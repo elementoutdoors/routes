@@ -51,12 +51,12 @@ def card_view(cfg, c):
     if 'websites' not in b:
         b['websites'] = [{'label': 'Website', 'value': b['website_label'], 'url': b['website'], 'sub': b.get('website_sub', '')}]
     b.setdefault('footer', s['group_line'])
-    full = f"{p['first']} {p['last']}"
+    full = f"{p['first']} {p['last']}".strip()   # a business card (no person) has the brand as first name and no last
     return {
         **c, 'person_data': p, 'brand_data': b, 'shared': s,
         'name': full,
         'url': cfg['base_url'] + c['slug'] + '/',
-        'vcf_name': re.sub(r'[^a-z0-9]+', '-', f"{full} {b['name']}".lower()).strip('-') + '.vcf',
+        'vcf_name': re.sub(r'[^a-z0-9]+', '-', (full if full == b['name'] else f"{full} {b['name']}").lower()).strip('-') + '.vcf',
     }
 
 # ---------------------------------------------------------------- vCard
@@ -96,8 +96,9 @@ def vcard(v):
     a = s['address']
     lines = [
         'BEGIN:VCARD', 'VERSION:3.0',
-        f"N:{vesc(p['last'])};{vesc(p['first'])};;;",
+        f"N:{vesc(p['last'])};{vesc(p['first'])};;;" if not p.get('company') else 'N:;;;;',
         f"FN:{vesc(v['name'])}",
+    ] + (['X-ABShowAs:COMPANY'] if p.get('company') else []) + [
         f"ORG:{vesc(b['name'])}",
         f"TITLE:{vesc(v['title'])}",
     ] + ([f"TEL;TYPE=CELL,VOICE,pref:{p['mobile_e164']}"] if p.get('mobile_e164') else []) + [
@@ -288,7 +289,7 @@ a:focus-visible,button:focus-visible{{outline:3px solid var(--primary);outline-o
 <img class="logo" src="../assets/{asset_names['logo']}" width="{logo_w}" height="{logo_h}" alt="{esc(b['logo_alt'])}">
 <h1>{esc(v['name'])}</h1>
 <p class="role">{esc(v['title'])}</p>
-<p class="org">{esc(b['name'])}</p>
+{'' if v['name'] == b['name'] else f'<p class="org">{esc(b["name"])}</p>'}
 <p class="tag">{esc(v['tagline'])}</p>
 <a class="save" href="{esc(v['vcf_name'])}">{icon('save')}Save contact</a>
 <div class="quick">

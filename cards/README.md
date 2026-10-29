@@ -17,6 +17,7 @@ Ben's digital business cards. Someone scans the QR code on Ben's phone, the card
 | Rhonda Lawrence, Owner / Senior Coach, Bike On MTB Coaching | https://elementoutdoors.github.io/routes/card/rhonda-mtb/ |
 | Rhonda Lawrence, Owner, Element Outdoors | https://elementoutdoors.github.io/routes/card/rhonda-eo/ |
 | Melisa King, Operations Manager, Element Outdoors | https://elementoutdoors.github.io/routes/card/melisa-eo/ |
+| By Earth and Ocean (no person), Tours and Bookings | https://elementoutdoors.github.io/routes/card/beo/ |
 | Jan Muller, Senior Guide, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/jan-muller-beo/ |
 | Matt Smith, Tours Manager, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/matt-smith-beo/ |
 | Khan Omerod, Tour Guide, By Earth and Ocean | https://elementoutdoors.github.io/routes/card/khan-omerod-beo/ |
@@ -71,3 +72,5 @@ saved QR codes keep working after any change of details.
   palette (Deep Navy, Sunlit Gold).
 
 Element Outdoors cards carry an "Our brands" section: one tile per brand from `our_brands` on the eo brand in cards.json (name, logo in cards/assets, link, one line). A brand with `our_brands` drops its website rows from the contact list, since the tiles carry them; the websites stay in the contact file.
+
+A business card with no person: add a "people" entry with "company": true, the brand name as "first" and an empty "last". The contact saves as a company, and the page drops the repeated brand line.

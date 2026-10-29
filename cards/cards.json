@@ -81,6 +81,11 @@
     "locky-barratt": {
       "first": "Locky",
       "last": "Barratt"
+    },
+    "beo-team": {
+      "first": "By Earth and Ocean",
+      "last": "",
+      "company": true
     }
   },
   "brands": {
@@ -467,6 +472,14 @@
         0.95
       ],
       "wallet_fade": 0.3
+    },
+    {
+      "slug": "beo",
+      "person": "beo-team",
+      "brand": "beo",
+      "title": "Tours and Bookings",
+      "email": "tours@byearthandocean.com.au",
+      "tagline": "Kayak and bike experiences in Noosa"
     },
     {
       "slug": "jan-muller-beo",
