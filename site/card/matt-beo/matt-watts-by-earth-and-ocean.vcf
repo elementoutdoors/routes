@@ -4,7 +4,8 @@ N:Watts;Matt;;;
 FN:Matt Watts
 ORG:By Earth and Ocean
 TITLE:General Manager
-TEL;TYPE=WORK,VOICE,pref:+61754743322
+TEL;TYPE=CELL,VOICE,pref:+61410959400
+TEL;TYPE=WORK,VOICE:+61754743322
 EMAIL;TYPE=INTERNET,WORK,pref:matt@elementoutdoors.com.au
 URL;TYPE=WORK:https://byearthandocean.com.au/
 ADR;TYPE=WORK:;;Unit 12\, 20 Venture Drive;Noosaville;QLD;4566;Australia
