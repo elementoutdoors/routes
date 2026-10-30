@@ -1,0 +1,61 @@
+{
+ "months": {
+  "2026-10": 1606002
+ },
+ "voices": {
+  "en": {
+   "lang": "en",
+   "code": "en-AU",
+   "name": "en-AU-Chirp3-HD-Aoede",
+   "tag": "c8646a"
+  },
+  "de": {
+   "lang": "de",
+   "code": "de-DE",
+   "name": "de-DE-Chirp3-HD-Aoede",
+   "tag": "bfafc5"
+  },
+  "fr": {
+   "lang": "fr",
+   "code": "fr-FR",
+   "name": "fr-FR-Chirp3-HD-Aoede",
+   "tag": "bad28f"
+  },
+  "es": {
+   "lang": "es",
+   "code": "es-ES",
+   "name": "es-ES-Chirp3-HD-Aoede",
+   "tag": "83bb57"
+  },
+  "it": {
+   "lang": "it",
+   "code": "it-IT",
+   "name": "it-IT-Chirp3-HD-Aoede",
+   "tag": "67aa56"
+  },
+  "nl": {
+   "lang": "nl",
+   "code": "nl-NL",
+   "name": "nl-NL-Chirp3-HD-Aoede",
+   "tag": "bcdcbc"
+  },
+  "zh": {
+   "lang": "zh",
+   "code": "cmn-CN",
+   "name": "cmn-CN-Chirp3-HD-Aoede",
+   "tag": "3ae740"
+  },
+  "ja": {
+   "lang": "ja",
+   "code": "ja-JP",
+   "name": "ja-JP-Chirp3-HD-Aoede",
+   "tag": "84799d"
+  },
+  "ko": {
+   "lang": "ko",
+   "code": "ko-KR",
+   "name": "ko-KR-Chirp3-HD-Aoede",
+   "tag": "da66f4"
+  }
+ }
+}
