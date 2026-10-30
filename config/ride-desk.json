@@ -1,7 +1,7 @@
 {
  "_about": "The Ride Desk's cards (https://claude.ai/artifact/9XG8MDnUm5k5RCFyXUko18), copied here by the \"Ride Guide settings apply\" scheduled task. Never edit by hand: change the card on the Ride Desk. The build and ride-sheets/ read every ride's fields from here (staff sections and privacy codes are in config/ride-desk-private.enc.json). Claude's fields per ride: rwgps, rev (bump to replace a ride's link, route code and QR code), activity, websitePage (the Bike On website page whose photo is the default), found and rwgpsName. Read scripts/ride-desk.mjs.",
- "deskRev": 10,
- "updated": "2026-10-20T16:43:01.133Z",
+ "deskRev": 13,
+ "updated": "2026-10-30T03:09:43.686Z",
  "rides": {
   "full-noosa": {
    "rwgps": 52186029,
@@ -96,7 +96,7 @@
    "bike": "e-Bike",
    "bikeNote": "Cruiser",
    "sheetNote": "Riding time is time on the bike. Allow extra for stops and breaks. Allow time for beach stops and a coffee in Peregian Beach village.",
-   "description": "",
+   "description": "Ride from the shop to Noosa's surf beaches on a self-guided e-bike tour. Cross Weyba Bridge over the mangroves of Weyba Creek, then head to Sunrise and Sunshine Beach for your first look at the surf. From there the ride follows David Low Way south past Castaways and Marcus Beach, over a few rolling hills the e-assist makes easy, to Peregian Beach village: a good spot for a swim and a coffee before you ride back.\n\nThe whole ride is on sealed paths and roads. Allow extra time for beach stops.",
    "photo": {
     "source": "website"
    }
