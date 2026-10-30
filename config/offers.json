@@ -74,7 +74,7 @@
       "matchPoi": "Flightschool Noosa",
       "validUntil": null,
       "hideOn": [],
-      "showAt": "anywhere",
+      "showAt": "finish",
       "lat": -26.39787,
       "lng": 153.059965
     },
@@ -97,7 +97,7 @@
       "matchPoi": "Noosa Ocean Adventures",
       "validUntil": null,
       "hideOn": [],
-      "showAt": "anywhere",
+      "showAt": "finish",
       "lat": -26.39765,
       "lng": 153.06121
     }
