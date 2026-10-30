@@ -1,5 +1,5 @@
 {
-  "_about": "Partner offers. An offer shows on every active route that passes within its radius (metres), or on every route if allRoutes is true. A Ride with GPS stop whose name matches matchPoi is replaced by the offer. Set validUntil (YYYY-MM-DD) to have it hide itself after that date. hideOn lists route slugs to leave it off. lat and lng are worked out from where (an address or a Google Maps link). Managed on the Ride Guide Settings page. logo is a file in site/ (shown on the card in place of the partner name). conditions can be one line or a list of lines. about is a short description under the headline; phone adds a Call button. showAt is \"anywhere\" (the default: shown on the route page and when riders pass it) or \"finish\" (only brought up near the end of the ride and on the finish card, for a partner near the shop).",
+  "_about": "Partner offers. An offer shows on every active route that passes within its radius (metres), or on every route if allRoutes is true. A Ride with GPS stop whose name matches matchPoi is replaced by the offer. Set validUntil (YYYY-MM-DD) to have it hide itself after that date. hideOn lists route slugs to leave it off. lat and lng are worked out from where (an address or a Google Maps link). Managed on the Ride Guide Settings page. logo is a file in site/ (shown on the card in place of the partner name). conditions can be one line or a list of lines. about is a short description under the headline; phone adds a Call button. showAt is \"anywhere\" (the default: shown on the route page and when riders pass it) \"finish\" (only brought up near the end of the ride and on the finish card, for a food or drink partner near the shop) or \"list\" (Offers list only: never pops up, spoken, marked on the map or put on the finish card; for anything that is not food or drink on the ride, Ben 30/10/2026).",
   "offers": [
     {
       "id": "land-and-sea",
@@ -74,7 +74,7 @@
       "matchPoi": "Flightschool Noosa",
       "validUntil": null,
       "hideOn": [],
-      "showAt": "finish",
+      "showAt": "list",
       "lat": -26.39787,
       "lng": 153.059965
     },
@@ -97,7 +97,7 @@
       "matchPoi": "Noosa Ocean Adventures",
       "validUntil": null,
       "hideOn": [],
-      "showAt": "finish",
+      "showAt": "list",
       "lat": -26.39765,
       "lng": 153.06121
     }

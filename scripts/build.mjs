@@ -155,6 +155,7 @@ function offersFor(T, slug) {
     const cond = [].concat(o.conditions || []).filter(Boolean);
     out.push({ id: o.id, partner: o.partner, logo: o.logo || null, headline: o.headline, alt: o.alt || null, about: o.about || null, how: o.how || null, phone: o.phone || null,
       fin: o.showAt === 'finish',
+      list: o.showAt === 'list' || undefined,   // Offers list only: never pops up, spoken or put on the finish card (Ben, 30/10/2026)
       conditions: cond.length ? cond : null, address: o.address || null, url: o.url || null, lat: o.lat, lng: o.lng,
       d: runs.length ? Math.round(runs[0].d) : null, validUntil: o.validUntil || null });
   }
@@ -679,7 +680,7 @@ async function main() {
   for (const o of offersCfg.offers) {
     const expired = o.validUntil && new Date(o.validUntil + 'T23:59:59+10:00') < now;
     if (o.active && (typeof o.lat !== 'number' || typeof o.lng !== 'number')) health.problems.push(`offer ${o.id} has no location yet`);
-    health.offers.push({ id: o.id, partner: o.partner, active: o.active && !expired, expired: !!expired, lat: o.lat, lng: o.lng, radius: o.radius || 400, showAt: o.showAt === 'finish' ? 'finish' : 'anywhere',
+    health.offers.push({ id: o.id, partner: o.partner, active: o.active && !expired, expired: !!expired, lat: o.lat, lng: o.lng, radius: o.radius || 400, showAt: ['finish', 'list'].includes(o.showAt) ? o.showAt : 'anywhere',
       onRoutes: health.routes.filter(r => (r.offers || []).includes(o.id)).map(r => r.slug) });
     if (o.active && !expired && !health.routes.some(r => (r.offers || []).includes(o.id))) health.problems.push(`offer ${o.id} is not near any route`);
     if (o.logo && !fs.existsSync(path.join(ROOT, 'site', o.logo))) health.problems.push(`offer ${o.id}: logo ${o.logo} is missing, card shows the name instead`);

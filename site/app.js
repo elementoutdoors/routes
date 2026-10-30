@@ -453,6 +453,7 @@
     });
     offerPlaces().forEach(function (g) {
       if (g[0].fin && !(ride.active && ride.shown.finOffers)) return;   // an offer for the end of the ride only shows near the end
+      if (g.every(function (o) { return o.list; })) return;   // Offers list only: no map marker (Ben, 30/10/2026)
       var b = el('button', { class: 'mk offer', type: 'button', 'aria-label': g[0].partner }, svg('offer'));
       b.addEventListener('click', function (e) { e.stopPropagation(); openOffers(g); });
       markers.push(new maplibregl.Marker({ element: b }).setLngLat([g[0].lng, g[0].lat]).addTo(map));
@@ -1157,6 +1158,7 @@
     if (!ride.fix) return;
     offerPlaces().forEach(function (g) {
       var o = g[0], id = 'offer-' + o.id;
+      if (o.list) return;   // Offers list only: never pops up or spoken (Ben, 30/10/2026)
       if (o.fin) {
         // for the end of the ride: brought up in the last 1.5 km, never at the start. A ride joined part way round the
         // loop brings it up when passing the partner instead (Land and Sea is over the road from the shop).
@@ -1455,7 +1457,7 @@
       var acts = el('div', { class: 'sheet-actions' });
       var showMap = el('button', { class: 'btn primary full', type: 'button' }, svg('pin') + '<span></span>');
       showMap.querySelector('span').textContent = tu('Show on the map');
-      showMap.addEventListener('click', function () { closeSheet(); if (map) { ride.follow = false; updateFollowBtn(); map.easeTo({ center: [o.lng, o.lat], zoom: 16 }); } });
+      showMap.addEventListener('click', function () { closeSheet(); if (map) { ride.follow = false; updateFollowBtn(); map.easeTo({ center: [o.lng, o.lat], zoom: 16 }); if (o.list) { var mk = el('div', { class: 'mk offer' }, svg('offer')); markers.push(new maplibregl.Marker({ element: mk }).setLngLat([o.lng, o.lat]).addTo(map)); } } });
       acts.appendChild(showMap);
       if (o.phone) {
         var call = el('a', { class: 'btn outline full', href: 'tel:' + String(o.phone).replace(/[^+0-9]/g, '') }, svg('phone') + '<span></span>');
@@ -1486,7 +1488,7 @@
     openSheet(function (b) {
       b.appendChild(el('div', { class: 'kicker', text: tu('Finish') }));
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('You made it. Thanks for riding with us.') }));
-      var fo = R.offers.slice();   // every rider offer again at the finish (Ben, 16/10/2026)
+      var fo = R.offers.filter(function (o) { return !o.list; });   // every rider offer again at the finish (Ben, 16/10/2026), except Offers list only ones (30/10/2026)
       var area = el('div', { class: 'rate' });
       b.appendChild(area);
       function ask() {

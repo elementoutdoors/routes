@@ -88,7 +88,7 @@ PARTS = [
             L('Route codes use capital letters and the numbers 3, 4, 6, 7 and 9 only. There is no O, I, L, zero or one in any code, so nothing can be mixed up.',
               'Never set a customer up on "Ben\'s test route". It is a short test loop, not a ride.',
               "If a ride's link is ever changed, its old QR code and route code stop working. This manual updates itself; reprint that ride's page of the booklet.",
-              'Partner offers: the Land and Sea Brewery offer needs the physical voucher card, one per rider aged 18 or over, given when they get back. For the Fliteschool Noosa 10% offer they call 0477 418 419 and mention Bike On.'),
+              'Partner offers: the Land and Sea Brewery offer needs the physical voucher card, one per rider aged 18 or over, given when they get back. For the Fliteschool Noosa 10% offer they call 0477 418 419 and mention Bike On. For Noosa Ocean Adventures 10% off they enter the code NOAEOD10 when they book.'),
             NOTE("The Ride Guide is there to help, but finding their way is the rider's responsibility, and so is judging the risks along the ride. If they need picking up, recovery is charged (see When something goes wrong)."),
         ]),
         ('The app, screen by screen', [
@@ -113,7 +113,7 @@ PARTS = [
             T('A stop pops up as the rider reaches a place on the ride (when stories are on), and its name and a short overview are read out. Caution stops (a busy crossing, a slippery path) always show a warning and are spoken ahead, even with stories off. Toilets, cafes and water are on the map and in the Stops list but never pop up.'),
             SHOTS('stops'),
             H('Offers and the finish'),
-            T('Rider offers are listed under Offers. Land and Sea Brewery is over the road from the shop, so its offers come up near the end of the ride and on the finish card, never at the start. A rider who joined a loop part way gets them as they pass the brewery instead. The finish card comes up once most of the ride (75%) has been ridden on that phone.'),
+            T('Rider offers are listed under Offers. Land and Sea Brewery is over the road from the shop, so its offers come up near the end of the ride and on the finish card, never at the start. A rider who joined a loop part way gets them as they pass the brewery instead. Offers that are not food or drink (Fliteschool Noosa, Noosa Ocean Adventures) only sit in the Offers list: they never pop up and are never spoken. The finish card comes up once most of the ride (75%) has been ridden on that phone.'),
             SHOTS('finish'),
             NOTE("Riders who tap It was OK or Not great are offered an email or a call to us first, then the same review links. Google doesn't allow asking only happy customers for reviews."),
         ]),
@@ -190,7 +190,7 @@ PARTS = [
                 ["Phone mount isn't secure", 'A universal mount is fine on sealed paths and the North Shore ride. Off road (MTB rides, rough gravel) they need a Quad Lock: a Quad Lock mount is $5 per booking for riders who have a Quad Lock case. Without a case, hire our phone with a Quad Lock mount.'],
                 ['Riding time on screen is different to what we told them', "The Ride Guide's figure is time on the bike only, at an average speed for that kind of ride. The time we sell includes stops and breaks, so it is longer. Go by the time to allow and the 4pm return."],
                 ["Stop stories didn't play", 'Stories are off by default on road rides, gravel rides and Tewantin MTB Trails. Turn on Point of interest stories in Settings. On any stop card, Listen reads the short version and "Hear the full story" plays the longer one.'],
-                ["The offer screen doesn't work at Land and Sea Brewery", 'The brewery needs the physical voucher card from us (one per rider, 18 and over). Give it out when they get back. Fliteschool Noosa: they call 0477 418 419 and mention Bike On.'],
+                ["The offer screen doesn't work at Land and Sea Brewery", 'The brewery needs the physical voucher card from us (one per rider, 18 and over). Give it out when they get back. Fliteschool Noosa: they call 0477 418 419 and mention Bike On. Noosa Ocean Adventures: they enter the code NOAEOD10 when they book.'],
                 ["The finish card didn't come up", "It only appears once most of the ride (75%) has been ridden on that phone, so a ride cut short or started on another phone won't show it. On a loop joined part way it comes up back where they joined. Tap End ride. Nothing else is needed."],
                 ['Wants the route on a Garmin or Wahoo', 'On road, gravel, MTB and hinterland rides, Settings has "Download this ride as a GPX file". Not on the scenic e-Bike rides.'],
                 ['Wrong language, or wants miles', 'Use the EN and km buttons on the ride page, or Settings. Nine languages.'],
@@ -301,7 +301,7 @@ PARTS = [
         ('Partner offers', [
             T('Offers are set on the Ride Desk under Partner offers, then Save.'),
             TAB(['Field', 'What it does'], [
-                ['When riders see it', 'Anywhere on the ride (pops up near the partner), or Near the end only (comes up in the last 1.5 km and on the finish card).'],
+                ['When riders see it', 'Anywhere on the ride (pops up near the partner), Near the end only (comes up in the last 1.5 km and on the finish card; for food or drink near the shop), or In the Offers list only (never pops up or spoken, not on the finish card; for anything that is not food or drink on the ride).'],
                 ['Partner, deal, second deal, about', 'What the offer card says.'],
                 ['How to claim, conditions', 'How riders claim it, and the fine print (one condition per line).'],
                 ['Phone, website', 'Call and Visit buttons on the card.'],

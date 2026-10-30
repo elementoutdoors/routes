@@ -49,13 +49,13 @@
       asw.addEventListener("click", function () { o.allRoutes = !o.allRoutes; refresh(); }); ar.appendChild(asw); row.appendChild(ar);
       var wf = el("div", "fld"), wl = el("label", null, "When riders see it"); wf.appendChild(wl);
       var wseg = el("div", "whenseg");
-      [["anywhere", "Anywhere on the ride"], ["finish", "Near the end only"]].forEach(function (opt) {
+      [["anywhere", "Anywhere on the ride"], ["finish", "Near the end only"], ["list", "In the Offers list only"]].forEach(function (opt) {
         var lab = el("label"), rb = el("input"); rb.type = "radio"; rb.name = "offer-" + idx + "-when"; rb.value = opt[0]; rb.checked = (o.showAt || "anywhere") === opt[0];
         rb.addEventListener("change", function () { if (rb.checked) { o.showAt = opt[0]; refresh(); } });
         lab.appendChild(rb); lab.appendChild(document.createTextNode(" " + opt[1])); wseg.appendChild(lab);
       });
       wf.appendChild(wseg);
-      wf.appendChild(el("small", null, "Near the end only: not shown on the route page or at the start. Riders hear about it in the last 1.5 km and see it on the finish card. Use it for a partner near the shop."));
+      wf.appendChild(el("small", null, "Near the end only: riders hear about it in the last 1.5 km and see it on the finish card. Use it for a food or drink partner near the shop. In the Offers list only: never pops up, never spoken and not on the finish card; riders find it under Offers. Use it for anything that isn't food or drink on the ride."));
       row.appendChild(wf);
       var rf = el("div", "fld"), rid = "offer-" + idx + "-radius"; var rl = el("label", null, "Pops up within " + (o.radius || 500) + " m"); rl.htmlFor = rid; rf.appendChild(rl);
       var r = el("input"); r.type = "range"; r.id = rid; r.min = 100; r.max = 2000; r.step = 50; r.value = o.radius || 500;
@@ -81,7 +81,7 @@
       // fold everything under the title into a body that opens and closes
       var body = el("div", "obody"), kids = Array.prototype.slice.call(row.children).filter(function (c) { return c !== top; });
       kids.forEach(function (c) { body.appendChild(c); }); row.appendChild(body);
-      var sum = el("p", "osum", (o.headline || "No deal yet") + (o.showAt === "finish" ? " \u00b7 near the end only" : "") + (o.active ? "" : " \u00b7 off")); row.insertBefore(sum, body);
+      var sum = el("p", "osum", (o.headline || "No deal yet") + (o.showAt === "finish" ? " \u00b7 near the end only" : o.showAt === "list" ? " \u00b7 Offers list only" : "") + (o.active ? "" : " \u00b7 off")); row.insertBefore(sum, body);
       var tg = el("button", "btn ghost otoggle"); tg.type = "button"; tg.setAttribute("aria-expanded", "false");
       function setOpen(on) { body.hidden = !on; tg.textContent = on ? "Hide details" : "Show details"; tg.setAttribute("aria-expanded", String(on)); if (on) openOffer[o.id] = 1; else delete openOffer[o.id]; }
       tg.addEventListener("click", function () { setOpen(body.hidden); });
