@@ -77,6 +77,29 @@
       "showAt": "anywhere",
       "lat": -26.39787,
       "lng": 153.059965
+    },
+    {
+      "id": "noosa-ocean-adventures",
+      "active": true,
+      "allRoutes": true,
+      "partner": "Noosa Ocean Adventures",
+      "logo": "assets/partner-noosa-ocean-adventures.png",
+      "headline": "10% off your ocean adventure",
+      "alt": null,
+      "about": "Explore stunning coastlines with Noosa Ocean Adventures, offering unforgettable whale watching, dolphin encounters and scenic river cruises with experienced locals.",
+      "how": "Enter the code NOAEOD10 when you book to get your 10% off.",
+      "conditions": null,
+      "phone": "0412 735 624",
+      "address": "194 Gympie Terrace, Noosaville",
+      "where": "194 Gympie Terrace, Noosaville",
+      "url": "https://noosaoceanadventures.com/",
+      "radius": 500,
+      "matchPoi": "Noosa Ocean Adventures",
+      "validUntil": null,
+      "hideOn": [],
+      "showAt": "anywhere",
+      "lat": -26.39765,
+      "lng": 153.06121
     }
   ]
 }
