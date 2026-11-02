@@ -1,6 +1,14 @@
 {
   "_about": "Digital business cards. This file is the only place card details live: change it, and the cards workflow rebuilds every page, contact file, QR code and lock screen image. See cards/README.md.",
   "base_url": "https://elementoutdoors.github.io/routes/card/",
+  "moved": {
+    "_about": "Old card addresses (left) that forward to the card now at the right. Never remove a line: a QR code someone saved may still open the old address.",
+    "melisa-eo": "melissa-eo",
+    "jan-muller-beo": "jan-mueller-beo",
+    "khan-omerod-beo": "khan-ormerod-beo",
+    "khan-omerod-mtb": "khan-ormerod-mtb",
+    "locky-barratt-beo": "lockie-barratt-beo"
+  },
   "wallet": {
     "apple": {
       "passTypeIdentifier": "pass.au.com.elementoutdoors.card",
@@ -46,21 +54,21 @@
       "mobile": "0424 330 389",
       "mobile_e164": "+61424330389"
     },
-    "melisa": {
-      "first": "Melisa",
+    "melissa": {
+      "first": "Melissa",
       "last": "King"
     },
-    "jan-muller": {
+    "jan-mueller": {
       "first": "Jan",
-      "last": "Muller"
+      "last": "Mueller"
     },
     "matt-smith": {
       "first": "Matt",
       "last": "Smith"
     },
-    "khan-omerod": {
+    "khan-ormerod": {
       "first": "Khan",
-      "last": "Omerod"
+      "last": "Ormerod"
     },
     "james-beadle": {
       "first": "James",
@@ -78,8 +86,8 @@
       "first": "Helena",
       "last": "Pedranzini"
     },
-    "locky-barratt": {
-      "first": "Locky",
+    "lockie-barratt": {
+      "first": "Lockie",
       "last": "Barratt"
     },
     "beo-team": {
@@ -458,15 +466,15 @@
       "tagline": "Bike On and By Earth and Ocean, Noosa"
     },
     {
-      "slug": "melisa-eo",
-      "person": "melisa",
+      "slug": "melissa-eo",
+      "person": "melissa",
       "brand": "eo",
       "title": "Operations Manager",
       "email": "admin@elementoutdoors.com.au",
       "tagline": "Bike On and By Earth and Ocean, Noosa",
-      "photo": "photo-melisa-biosphere-189.jpg",
+      "photo": "photo-melissa-biosphere-189.jpg",
       "photo_focus": "50% 72%",
-      "wallet_photo": "photo-melisa-biosphere-189.jpg",
+      "wallet_photo": "photo-melissa-biosphere-189.jpg",
       "wallet_crop": [
         0.25,
         0.42,
@@ -484,8 +492,8 @@
       "tagline": "Kayak and bike experiences in Noosa"
     },
     {
-      "slug": "jan-muller-beo",
-      "person": "jan-muller",
+      "slug": "jan-mueller-beo",
+      "person": "jan-mueller",
       "brand": "beo",
       "title": "Senior Guide",
       "email": "tours@elementoutdoors.com.au",
@@ -500,16 +508,16 @@
       "tagline": "Kayak and bike experiences in Noosa"
     },
     {
-      "slug": "khan-omerod-beo",
-      "person": "khan-omerod",
+      "slug": "khan-ormerod-beo",
+      "person": "khan-ormerod",
       "brand": "beo",
       "title": "Tour Guide",
       "email": "tours@elementoutdoors.com.au",
       "tagline": "Kayak and bike experiences in Noosa"
     },
     {
-      "slug": "khan-omerod-mtb",
-      "person": "khan-omerod",
+      "slug": "khan-ormerod-mtb",
+      "person": "khan-ormerod",
       "brand": "bikeon-mtb",
       "title": "MTB Coach",
       "email": "ride@bikeon.com.au",
@@ -564,8 +572,8 @@
       "tagline": "Kayak and bike experiences in Noosa"
     },
     {
-      "slug": "locky-barratt-beo",
-      "person": "locky-barratt",
+      "slug": "lockie-barratt-beo",
+      "person": "lockie-barratt",
       "brand": "beo",
       "title": "Tour Guide",
       "email": "tours@elementoutdoors.com.au",

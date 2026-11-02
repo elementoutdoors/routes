@@ -6,6 +6,8 @@ cards/cards.json is the only source. This script makes, for every card, under si
   <name>.vcf        the contact file "Save contact" downloads (vCard 3.0, with the brand logo as the photo)
   qr.svg, qr.png    the QR code for the page (print, email, slides)
   lock-screen.png   a 1179 x 2556 phone wallpaper with the QR code, for showing on a phone screen
+and, for every old address under "moved" (a card whose web address changed, e.g. a name spelling fixed), a small
+site/card/<old slug>/index.html that forwards to the card now in use, so QR codes already saved keep working,
 and shared files under site/card/assets/ (fonts, logos, photos).
 The routes build copies site/ to GitHub Pages, so the cards go live with the next Ride Guide build.
 
@@ -424,6 +426,29 @@ def icon_png(brand):
 
 # ---------------------------------------------------------------- build
 
+def moved(cfg, slugs):
+    """Old card addresses and the slug each now forwards to. Every target must be a card; no old address may be one."""
+    m = {k: v for k, v in cfg.get('moved', {}).items() if not k.startswith('_')}
+    for old, new in m.items():
+        assert new in slugs, f'moved: {old} forwards to {new}, which is not a card'
+        assert old not in slugs, f'moved: {old} is still a card, so it cannot also forward'
+    return m
+
+def forward_page(url):
+    u = esc(url)
+    return f'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>This card has moved</title>
+<link rel="canonical" href="{u}">
+<meta http-equiv="refresh" content="0; url={u}">
+<script>location.replace({json.dumps(url)} + location.hash)</script>
+</head><body style="font-family:system-ui,sans-serif;margin:2rem">
+<p>This card has moved. <a href="{u}">Open the card</a>.</p>
+</body></html>
+'''
+
 def build(dest, with_images=True, previous=None):
     """Write every output into dest. Images are only remade when their inputs changed (or always if previous is None)."""
     cfg = load()
@@ -432,6 +457,8 @@ def build(dest, with_images=True, previous=None):
     assert len(set(slugs)) == len(slugs), 'two cards share a slug'
     (dest / 'assets').mkdir(parents=True, exist_ok=True)
     files = {}
+    for old, new in moved(cfg, slugs).items():
+        files[f'{old}/index.html'] = forward_page(cfg['base_url'] + new + '/').encode()
     for wt in (500, 700, 800):
         files[f'assets/montserrat-{wt}.woff2'] = font_woff2(wt)
     brand_assets = {}
@@ -568,6 +595,14 @@ def live():
         req = urllib.request.Request(url, headers=ua)
         with urllib.request.urlopen(req, timeout=30) as r:
             return r.status, r.read(), r.headers.get('Content-Type', '')
+    for old in moved(cfg, {v['slug'] for v in views}):
+        url = cfg['base_url'] + old + '/'
+        try:
+            _, body, _ = get(url + '?check')
+            if body != (OUT / old / 'index.html').read_bytes():
+                problems.append(f'{url} does not forward to the current card yet')
+        except Exception as e:
+            problems.append(f'{url} (an old card address) does not open ({e})')
     for v in views:
         rels = ['index.html', v['vcf_name'], 'qr.svg', 'qr.png', 'lock-screen.png']
         if wallet.apple_on(cfg): rels.append(wallet.apple_name(v))
