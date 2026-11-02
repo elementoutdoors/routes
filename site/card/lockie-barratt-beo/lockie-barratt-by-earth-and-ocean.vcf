@@ -1,9 +1,9 @@
 BEGIN:VCARD
 VERSION:3.0
-N:Muller;Jan;;;
-FN:Jan Muller
+N:Barratt;Lockie;;;
+FN:Lockie Barratt
 ORG:By Earth and Ocean
-TITLE:Senior Guide
+TITLE:Tour Guide
 TEL;TYPE=WORK,VOICE,pref:+61754743322
 EMAIL;TYPE=INTERNET,WORK,pref:tours@elementoutdoors.com.au
 URL;TYPE=WORK:https://byearthandocean.com.au/
@@ -633,5 +633,5 @@ PHOTO;ENCODING=b;TYPE=JPEG:/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwQDAwQEBAQF
  IiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAi
  IgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIi
  IAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgP/Z
-X-EO-CARD:jan-muller-beo
+X-EO-CARD:lockie-barratt-beo
 END:VCARD
