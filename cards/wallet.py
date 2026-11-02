@@ -584,6 +584,8 @@ def google_sync(cfg, views, fix=True):
                 st, have = _api(tok, 'PUT', 'genericObject/' + want['id'], want); notes.append(f"Google Wallet: {old_slug} (saved before it moved) updated to match {new_slug}")
             else:
                 probs.append(f"Google Wallet: {old_slug} (saved before it moved) differs from {new_slug}")
-        if st >= 300:
+        if st >= 300 and 'Image cannot be loaded' in str(have) and not _published(cfg['base_url'] + new_slug + '/' + g_image_names(by_slug[new_slug])['hero']):
+            notes.append(f"Google Wallet: {old_slug} waits for the site build to publish {new_slug}'s images")
+        elif st >= 300:
             probs.append(f"Google Wallet: {old_slug} (saved before it moved) answered {st} {str(have)[:160]}")
     return probs, notes
