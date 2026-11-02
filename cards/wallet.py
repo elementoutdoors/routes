@@ -569,4 +569,21 @@ def google_sync(cfg, views, fix=True):
             notes.append(f"Google Wallet: {v['slug']} waits for the site build to publish its images")
         elif st >= 300:
             probs.append(f"Google Wallet: {v['slug']} answered {st} {str(have)[:160]}")
+    # A pass saved under an old card address (see "moved" in cards.json) keeps its id, so it is kept matching the
+    # card that address now forwards to: someone who saved it before the change sees the right details.
+    by_slug = {v['slug']: v for v in views}
+    for old_slug, new_slug in cfg.get('moved', {}).items():
+        if old_slug.startswith('_') or new_slug not in by_slug:
+            continue
+        want = {**g_object(cfg, by_slug[new_slug]), 'id': f"{g['issuerId']}.card-{old_slug}"}
+        st, have = _api(tok, 'GET', 'genericObject/' + want['id'])
+        if st == 404:
+            continue   # nobody saved a pass under the old address
+        if st < 300 and not _same(want, have):
+            if fix:
+                st, have = _api(tok, 'PUT', 'genericObject/' + want['id'], want); notes.append(f"Google Wallet: {old_slug} (saved before it moved) updated to match {new_slug}")
+            else:
+                probs.append(f"Google Wallet: {old_slug} (saved before it moved) differs from {new_slug}")
+        if st >= 300:
+            probs.append(f"Google Wallet: {old_slug} (saved before it moved) answered {st} {str(have)[:160]}")
     return probs, notes
