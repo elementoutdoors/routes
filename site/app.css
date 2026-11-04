@@ -97,6 +97,11 @@ a.btn{text-decoration:none;box-sizing:border-box}
 .round{width:52px;height:52px;border-radius:26px;border:none;background:var(--surface);box-shadow:0 4px 12px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;color:var(--ink)}
 .round.ghost{width:44px;height:44px;background:transparent;box-shadow:none;border:1.5px solid rgba(255,255,255,.35);color:#fff}
 .round.on{background:var(--primary);color:#fff}
+.round.compass{width:44px;height:44px;align-self:center}
+.round.compass svg{width:26px;height:26px;overflow:visible}
+.round.compass .needle{transform-origin:12px 12px;transition:transform .3s}
+.round.compass .n{fill:#D93025;stroke:none}
+.round.compass .s{fill:#9AA0A6;stroke:none}
 
 /* ride */
 #v-ride{pointer-events:none}

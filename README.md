@@ -146,6 +146,14 @@ database when the screenshots are taken.
 - More than 2 km to the next direction (FAR_CUE): the riding screen shows "Follow the route" and "Next direction in X"
   instead of naming a turn that is a long way off. Found on Mt Tinbeerwah, where the climb showed the turn for the way
   back down. Spoken warnings are unchanged.
+- Map direction (Ben, 4/11/2026; riders said the map did not turn the way they were facing): the map now turns so the
+  way the rider is going is at the top, by default. On the route the direction comes from the route line just ahead
+  (`routeBearingAt`), off the route from the way the rider has been moving, and it is held while stopped or paused and
+  only turns for a change of more than 15 degrees (`TURN_MIN`), so it stays steady on a bar mount. The phone's compass is
+  not used (iPhone asks permission for it in a web page, and it swings with the handlebar). The rider sits a little below
+  the middle so more of the way ahead shows (`AHEAD_SHIFT`). Riders can choose "North at the top" in Settings (Map
+  direction, setting `mapUp`) or tap the compass button above the voice button, which also shows where north is.
+  Hand rotation stays off. The route page map is always north up.
 
 ## Before you ride (risk card)
 

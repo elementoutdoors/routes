@@ -36,7 +36,8 @@
   // switch is kept for that ride only. An older phone-wide choice no longer applies.
   touched = touched.filter(function (k) { return k !== 'stories'; });
   var storyPick = lsGet('rg.stories', {});
-  var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, natural: true, chime: true, stories: true, wake: true, saver: true, sat: false }, savedS);
+  var S = Object.assign({ units: defaultUnits(), lang: defaultLang(), voice: true, natural: true, chime: true, stories: true, wake: true, saver: true, sat: false, mapUp: 'travel' }, savedS);
+  if (S.mapUp !== 'north') S.mapUp = 'travel';
   function saveSettings(key) {
     if (key && touched.indexOf(key) < 0) touched.push(key);
     var out = {}; touched.forEach(function (k) { out[k] = S[k]; });
@@ -401,7 +402,8 @@
       container: 'map', style: S.sat ? satStyle() : STYLE, attributionControl: { compact: true },
       center: [R.track.lng[0], R.track.lat[0]], zoom: 13, pitchWithRotate: false, dragRotate: false, touchPitch: false
     });
-    map.touchZoomRotate.disableRotation();
+    map.touchZoomRotate.disableRotation();   // riders can't twist the map by hand; it turns itself (mapBearing)
+    map.on('rotate', updateCompass);
     map.on('load', function () { mapReady = true; addRouteLayers(); fitRoute(); });
     map.on('style.load', function () { if (mapReady) addRouteLayers(); });
     map.on('dragstart', function () { if (ride.active) { ride.follow = false; ride.mapTouch = Date.now(); updateFollowBtn(); } });
@@ -437,7 +439,7 @@
     if (!map) return;
     var T = R.track, b = new maplibregl.LngLatBounds();
     for (var i = 0; i < T.lat.length; i += 5) b.extend([T.lng[i], T.lat[i]]);
-    map.fitBounds(b, { padding: { top: 70, bottom: 40, left: 30, right: 30 }, duration: 0, maxZoom: 15 });
+    map.fitBounds(b, { padding: { top: 70, bottom: 40, left: 30, right: 30 }, duration: 0, maxZoom: 15, bearing: 0 });
   }
   function clearMarkers() { markers.forEach(function (m) { m.remove(); }); markers = []; }
   function addMarkers() {
@@ -864,7 +866,7 @@
     renderRide();
     saveProgress();
     ride.zoom = 16;
-    if (map) setTimeout(function () { map.jumpTo({ center: ride.fix ? [ride.fix.lng, ride.fix.lat] : pointAt(ride.d), zoom: 16 }); }, 80);
+    if (map) setTimeout(function () { var c = ride.fix ? [ride.fix.lng, ride.fix.lat] : pointAt(ride.d); lastCentre = null; map.easeTo(viewAt(c[1], c[0], true, routeBearingAt(ride.d))); }, 80);
   }
   function endRide() {
     ride.active = false; ride.paused = false; stopGps(); stopSim(); releaseWake(); hideSaver(); updatePauseBtn();
@@ -889,7 +891,7 @@
     say(tu('Ride resumed.'), { interrupt: true });
     requestWake(); updatePauseBtn(); renderRide(); saveProgress();
     ride.follow = true; updateFollowBtn();
-    if (map && ride.fix) map.easeTo({ center: [ride.fix.lng, ride.fix.lat], zoom: ride.zoom, duration: 600 });
+    if (map && ride.fix) { lastCentre = null; followMap(ride.fix.lat, ride.fix.lng, true); }
   }
   function updatePauseBtn() {
     var b = $('pause-btn'); if (!b) return;
@@ -1020,7 +1022,51 @@
     if (!$('saver').hidden || document.visibilityState !== 'visible') { lastCentre = null; return; }
     if (!force && lastCentre && hav(lat, lng, lastCentre[0], lastCentre[1]) < 4) return;
     lastCentre = [lat, lng];
-    if (force) map.jumpTo({ center: [lng, lat], zoom: ride.zoom }); else map.easeTo({ center: [lng, lat], zoom: ride.zoom, duration: 800 });
+    map.easeTo(viewAt(lat, lng, force));
+  }
+  // Map direction (Ben, 4/11/2026: riders expected the map to turn the way they were facing). By default the map turns so
+  // the way the rider is going is at the top, like a bike computer; "North at the top" is a choice in Settings and on the
+  // compass button. While on the route the direction comes from the route line just ahead, which stays steady on a bar
+  // mount; off the route from the way the rider has been moving. It is held while stopped or paused and only turns for a
+  // change of more than TURN_MIN degrees, so GPS wobble never sets it swinging. The phone's compass is not used: on iPhone
+  // a web page needs a permission prompt for it, and on a handlebar it swings with every steering movement.
+  var TURN_MIN = 15, AHEAD_SHIFT = 0.14;
+  function routeBearingAt(d) {
+    if (!R) return null;
+    var a = pointAt(Math.max(0, d - 5)), b = pointAt(Math.min(R.distance, d + 25));
+    return hav(a[1], a[0], b[1], b[0]) > 5 ? bearing(a[1], a[0], b[1], b[0]) : null;
+  }
+  function travelBearing() {
+    if (!ride.active || ride.paused || !ride.fix) return null;
+    var f = ride.fix;
+    if (f.speed != null && f.speed >= 0 && f.speed < 1) return null;   // stopped: hold the map still
+    if (ride.locked && !ride.off && (ride.backRun || 0) < 30) { var rb = routeBearingAt(ride.d); if (rb != null) return rb; }
+    if (ride.mb != null) return ride.mb;
+    if (f.heading != null && !isNaN(f.heading) && (f.speed || 0) > 1) return f.heading;
+    return null;
+  }
+  function mapBearing(want) {
+    if (S.mapUp !== 'travel') return 0;
+    var cur = map.getBearing(), t = want != null ? want : travelBearing();
+    if (t == null) return cur;
+    return Math.abs(((t - cur) + 540) % 360 - 180) < TURN_MIN ? cur : t;
+  }
+  // camera for following the rider: in travel mode the rider sits a little below the middle, so more of the way ahead shows
+  function viewAt(lat, lng, now, want) {
+    var h = map.getContainer().clientHeight || 600;
+    return { center: [lng, lat], zoom: ride.zoom, bearing: mapBearing(want), duration: now ? 0 : 800,
+      offset: [0, S.mapUp === 'travel' && ride.active ? Math.round(h * AHEAD_SHIFT) : 0] };
+  }
+  function updateCompass() {
+    var b = $('btn-compass'); if (!b || !map) return;
+    var n = b.querySelector('.needle'); if (n) n.style.transform = 'rotate(' + (-map.getBearing()) + 'deg)';
+  }
+  function setMapUp(v, tell) {
+    S.mapUp = v; saveSettings('mapUp');
+    var b = $('btn-compass'); if (b) b.setAttribute('aria-pressed', String(v === 'travel'));
+    if (tell) banner(tu(v === 'travel' ? 'The map now turns with you.' : 'North is now at the top of the map.'), 'info', 3000);
+    if (map && ride.active && ride.fix) { ride.follow = true; updateFollowBtn(); lastCentre = null; followMap(ride.fix.lat, ride.fix.lng, false); }
+    else if (map && v === 'north') map.easeTo({ bearing: 0, duration: 400 });
   }
   function nextCueIndex() {
     for (var i = 0; i < R.cues.length; i++) if (R.cues[i].d > ride.d - 8 && !(ride.cueState[i] >= 2 && R.cues[i].d < ride.d + 5)) return i;
@@ -1255,10 +1301,12 @@
   }
   function updateMe() {
     if (!map || !ride.fix) return;
-    if (!meMarker) { var e = el('div', { class: 'me' }); meMarker = new maplibregl.Marker({ element: e }).setLngLat([ride.fix.lng, ride.fix.lat]).addTo(map); }
+    if (!meMarker) { var e = el('div', { class: 'me' }); meMarker = new maplibregl.Marker({ element: e, rotationAlignment: 'map' }).setLngLat([ride.fix.lng, ride.fix.lat]).addTo(map); }
     meMarker.setLngLat([ride.fix.lng, ride.fix.lat]);
     var me = meMarker.getElement();
-    if (ride.fix.heading != null && !isNaN(ride.fix.heading) && (ride.fix.speed || 0) > 1) { me.classList.add('heading'); me.style.setProperty('--hd', ride.fix.heading + 'deg'); }
+    // the arrow on the dot points the way the rider is moving (relative to north: the marker turns with the map)
+    var f = ride.fix, moving = (f.speed || 0) > 1, hd = moving && f.heading != null && !isNaN(f.heading) ? f.heading : moving ? ride.mb : null;
+    if (hd != null) { me.classList.add('heading'); me.style.setProperty('--hd', hd + 'deg'); }
     else me.classList.remove('heading');
   }
   function updateFollowBtn() { $('btn-follow').classList.toggle('on', ride.follow); }
@@ -1648,6 +1696,7 @@
       vg.appendChild(cl);
       seg(group(tu('Map')), [[false, tu('Standard')], [true, tu('Satellite')]], S.sat, function (v) { setSatellite(v); });
       var mg = b.lastChild; mg.appendChild(el('p', { class: 'note', text: tu('Satellite view needs signal.') }));
+      seg(group(tu('Map direction')), [['travel', tu('Turns with you')], ['north', tu('North at the top')]], S.mapUp, function (v) { setMapUp(v); });
       if (R && CHECK) {
         var chkBtn = el('button', { class: 'btn primary full', type: 'button', text: 'Check directions step by step' });
         chkBtn.addEventListener('click', function () { closeSheet(); openCheck(); });
@@ -2116,7 +2165,9 @@
     $('sheet-close').addEventListener('click', closeSheet);
     $('scrim').addEventListener('click', closeSheet);
     $('btn-voice').addEventListener('click', function () { S.voice = !S.voice; saveSettings('voice'); updateVoiceBtn(); if (!S.voice) { stopSpeech(); } else say(tu('Voice on.')); });
-    $('btn-follow').addEventListener('click', function () { ride.follow = true; updateFollowBtn(); if (map && ride.fix) map.easeTo({ center: [ride.fix.lng, ride.fix.lat], zoom: Math.max(map.getZoom(), 15.5) }); });
+    $('btn-follow').addEventListener('click', function () { ride.follow = true; updateFollowBtn(); if (map && ride.fix) { ride.zoom = Math.max(map.getZoom(), 15.5); lastCentre = null; followMap(ride.fix.lat, ride.fix.lng, false); } });
+    $('btn-compass').addEventListener('click', function () { setMapUp(S.mapUp === 'travel' ? 'north' : 'travel', true); });
+    $('btn-compass').setAttribute('aria-pressed', String(S.mapUp === 'travel'));
     $('cue-repeat').addEventListener('click', function () {
       if (ride.paused) { stopSpeech(); var w = S.voice; S.voice = true; say(tu('Ride paused. Directions are off until you tap Resume.')); S.voice = w; return; }
       var i = nextCueIndex(); if (i < 0) return;
