@@ -370,7 +370,8 @@
       });
       lsSet('rg.route.' + key, data);
     }
-    routeIndex[key] = { name: data.name, slug: data.slug, saved: Date.now(), brand: data.brand && data.brand.id };
+    routeIndex[key] = { name: data.name, slug: data.slug, saved: Date.now(), brand: data.brand && data.brand.id,
+      logo: data.brand && data.brand.logo, dist: data.distance };
     lsSet('rg.routes', routeIndex);
   }
   function getRoute(key) {
@@ -1868,7 +1869,11 @@
     var resumable = p && p.version === R.version && p.d > 150 && Date.now() - p.ts < 8 * 3600 * 1000;
     $('start-label').textContent = tu(resumable ? 'Continue my ride' : 'Start riding');
     $('start-btn').dataset.resume = resumable ? '1' : '';
-    $('route-back').hidden = Object.keys(routeIndex).length < 2;
+    // Your routes (Ben, 9/11/2026): always shown on the route page, from the first scan, so riders know every route
+    // they open is kept in one list on the phone. The icon carries the count.
+    var nRoutes = Math.max(1, Object.keys(routeIndex).length);
+    $('route-back-count').textContent = String(nRoutes);
+    $('route-library-label').textContent = fmt(tu('Your routes ({n})'), { n: nRoutes });
   }
   function refreshAll() {
     applyStaticText();
@@ -2123,13 +2128,23 @@
     $('home-list-wrap').hidden = !keys.length;
     $('home-empty').hidden = !!keys.length;
     var list = $('home-list'); list.innerHTML = '';
+    var filled = false;
     keys.forEach(function (k) {
+      var r = routeIndex[k];
+      if (r.dist == null) {   // routes saved before 9/11/2026: fill logo and distance from the saved route
+        var d = lsGet('rg.route.' + k, null);
+        if (d) { r.dist = d.distance || 0; r.logo = d.brand && d.brand.logo; filled = true; }
+      }
       var it = el('button', { class: 'list-item', type: 'button' });
-      it.appendChild(el('div', { class: 'li-icon' }, svg('pin')));
-      var m = el('div', { class: 'li-main' }); m.appendChild(el('div', { class: 'li-title', text: routeIndex[k].name })); it.appendChild(m);
+      it.appendChild(r.logo ? el('img', { class: 'li-logo', src: r.logo, alt: '' }) : el('div', { class: 'li-icon' }, svg('pin')));
+      var m = el('div', { class: 'li-main' }); m.appendChild(el('div', { class: 'li-title', text: r.name }));
+      if (r.dist) m.appendChild(el('div', { class: 'li-sub', text: distText(r.dist) }));
+      it.appendChild(m);
+      it.appendChild(el('span', { class: 'li-chev' }, '<svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M9 6l6 6-6 6"/></svg>'));
       it.addEventListener('click', function () { openKey(k); });
       list.appendChild(it);
     });
+    if (filled) lsSet('rg.routes', routeIndex);
   }
   function openHome() { R = null; renderHome(); applyStaticText(); show('home'); }
 
@@ -2161,6 +2176,7 @@
     $('route-lang').addEventListener('click', openSettings);
     $('route-units').addEventListener('click', function () { S.units = S.units === 'imperial' ? 'metric' : 'imperial'; saveSettings('units'); refreshAll(); });
     $('route-back').addEventListener('click', openHome);
+    $('route-library').addEventListener('click', openHome);
     $('route-desc-more').addEventListener('click', function () { $('route-desc').classList.remove('clamp'); this.hidden = true; });
     $('sheet-close').addEventListener('click', closeSheet);
     $('scrim').addEventListener('click', closeSheet);

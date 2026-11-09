@@ -1761,5 +1761,8 @@
  "Turns with you": "進行方向に回転",
  "North at the top": "北を上に",
  "The map now turns with you.": "地図が進行方向に合わせて回転するようになりました。",
- "North is now at the top of the map.": "地図の上が北になりました。"
+ "North is now at the top of the map.": "地図の上が北になりました。",
+ "Your routes ({n})": "あなたのルート（{n}）",
+ "Every route you open is saved on this phone and works with no signal. Tap one to open it.": "開いたルートはすべてこのスマートフォンに保存され、電波がなくても使えます。タップして開いてください。",
+ "To add another route, scan its QR code or type its route code below.": "別のルートを追加するには、そのQRコードを読み取るか、下にルートコードを入力してください。"
 }

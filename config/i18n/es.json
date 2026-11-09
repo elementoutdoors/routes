@@ -1761,5 +1761,8 @@
  "Turns with you": "Gira con usted",
  "North at the top": "Norte arriba",
  "The map now turns with you.": "Ahora el mapa gira con usted.",
- "North is now at the top of the map.": "Ahora el norte está en la parte superior del mapa."
+ "North is now at the top of the map.": "Ahora el norte está en la parte superior del mapa.",
+ "Your routes ({n})": "Tus rutas ({n})",
+ "Every route you open is saved on this phone and works with no signal. Tap one to open it.": "Cada ruta que abres se guarda en este teléfono y funciona sin cobertura. Toca una para abrirla.",
+ "To add another route, scan its QR code or type its route code below.": "Para añadir otra ruta, escanea su código QR o escribe su código de ruta abajo."
 }

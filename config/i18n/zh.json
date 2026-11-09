@@ -1761,5 +1761,8 @@
  "Turns with you": "随行进方向转动",
  "North at the top": "北方朝上",
  "The map now turns with you.": "地图现在会随您的行进方向转动。",
- "North is now at the top of the map.": "现在地图上方为北。"
+ "North is now at the top of the map.": "现在地图上方为北。",
+ "Your routes ({n})": "您的路线（{n}）",
+ "Every route you open is saved on this phone and works with no signal. Tap one to open it.": "您打开的每条路线都会保存在这部手机上，没有信号也能使用。点击即可打开。",
+ "To add another route, scan its QR code or type its route code below.": "如需添加其他路线，请扫描其二维码，或在下方输入路线代码。"
 }

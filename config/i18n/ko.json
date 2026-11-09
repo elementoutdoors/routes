@@ -1761,5 +1761,8 @@
  "Turns with you": "진행 방향으로 회전",
  "North at the top": "북쪽이 위로",
  "The map now turns with you.": "이제 지도가 진행 방향에 맞춰 회전합니다.",
- "North is now at the top of the map.": "이제 지도의 위쪽이 북쪽입니다."
+ "North is now at the top of the map.": "이제 지도의 위쪽이 북쪽입니다.",
+ "Your routes ({n})": "내 경로 ({n})",
+ "Every route you open is saved on this phone and works with no signal. Tap one to open it.": "열어 본 모든 경로는 이 휴대폰에 저장되며 신호가 없어도 사용할 수 있습니다. 경로를 눌러 여세요.",
+ "To add another route, scan its QR code or type its route code below.": "다른 경로를 추가하려면 QR 코드를 스캔하거나 아래에 경로 코드를 입력하세요."
 }
