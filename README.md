@@ -18,6 +18,12 @@ phone's browser with the map, spoken and written directions, stops and partner o
 - Opening a route saves it to the phone, with the map around it, so it keeps working with no signal.
 - Each route also has a 6-character route code (printed on its QR card). Typing it on the home page reopens the route,
   and "Save to my phone" shows the code and adds the route to the home screen.
+- Route page layout (10/11/2026): "Saved to your phone. Works with no signal." sits under the distance, climbing and time,
+  and only Start riding is pinned to the bottom; the rest scrolls with the page. The route page scrolls as a normal page
+  (html.page-scroll) so iPhone Safari shrinks its address bar as the rider scrolls.
+- Full screen while riding: Start riding asks the browser for full screen, so Android and desktop hide the address bar
+  (the ride screen never scrolls, so the browser would otherwise keep it). iPhone browsers can't do this for a web page;
+  there only a home screen icon removes it. End ride leaves full screen.
 - "More about this place" pages that allow it open inside the app with a Back to my ride bar, so the ride keeps running.
   The build checks every link each night to decide.
 - A stop that links to a place on the ride story blogs (Bike On and By Earth and Ocean) has a "Hear the full story" button:

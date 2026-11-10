@@ -65,6 +65,10 @@ body.view-loading #v-loading,body.view-home #v-home,body.view-route #v-route,bod
 
 /* route overview */
 #v-route{flex-direction:column;overflow-y:auto;overscroll-behavior:contain;pointer-events:auto}
+/* the route page scrolls as a normal page, so iPhone Safari can shrink its address bar */
+html.page-scroll,html.page-scroll body{height:auto;min-height:100%;overflow:visible}
+html.page-scroll{overflow-y:auto}
+html.page-scroll #v-route{position:relative;inset:auto;min-height:100vh;overflow:visible}
 .map-spacer{flex:0 0 var(--map-h);pointer-events:none}
 .route-body{background:var(--ground);padding:18px 18px 8px;border-radius:20px 20px 0 0;margin-top:-18px;position:relative;flex:1 0 auto}
 .eyebrow{font-size:12px;font-weight:800;color:var(--line);letter-spacing:1px;text-transform:uppercase}
@@ -78,11 +82,12 @@ body.view-loading #v-loading,body.view-home #v-home,body.view-route #v-route,bod
 .desc{font-size:15px;line-height:1.6;color:#3B3F45;font-weight:500;margin:0;white-space:pre-line}
 .desc.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .link-btn{background:none;border:none;padding:10px 0;font-weight:700;font-size:14px;color:var(--primary);text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:44px}
-.offline-note{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);font-weight:600;margin:10px 0 4px}
+.offline-note{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);font-weight:600;margin:-2px 0 12px}
 .offline-note.done .spin{border:none;width:auto;height:auto;animation:none}
 .offline-note.done .spin::before{content:"";display:block;width:10px;height:5px;border-left:2.5px solid #2F7A3E;border-bottom:2.5px solid #2F7A3E;transform:rotate(-45deg) translate(1px,-1px)}
 .spin{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--sand);border-top-color:var(--primary);animation:spin 1s linear infinite}
-.route-actions{position:sticky;bottom:0;background:var(--ground);padding:12px 18px calc(14px + var(--safe-bot));display:flex;flex-direction:column;gap:2px;z-index:2}
+.route-actions{position:sticky;bottom:0;background:var(--ground);padding:10px 18px calc(10px + var(--safe-bot));display:flex;flex-direction:column;z-index:2}
+.route-more{background:var(--ground);padding:2px 18px calc(16px + var(--safe-bot));display:flex;flex-direction:column;gap:2px}
 .row-links{display:flex;justify-content:space-between}
 
 .offer-strip{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--primary);color:#fff;border:none;border-radius:14px;padding:14px;margin:4px 0 8px}
@@ -236,7 +241,7 @@ body.view-ride .maplibregl-ctrl-bottom-right{bottom:calc(200px + var(--safe-bot)
 
 @media (min-width:700px){
   :root{--map-h:46vh}
-  .route-body,.route-actions{max-width:640px;margin-left:auto;margin-right:auto;width:100%}
+  .route-body,.route-actions,.route-more{max-width:640px;margin-left:auto;margin-right:auto;width:100%}
   .bottom-sheet{max-width:560px;margin:0 auto}
   .cue-card,.banner{max-width:540px;margin:0 auto}
 }

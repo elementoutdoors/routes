@@ -333,7 +333,11 @@
 
   // ---------- views ----------
   function show(view) {
+    var was = document.body.className;
     document.body.className = 'view-' + view;
+    // The route page scrolls as a normal page, so iPhone Safari shrinks its address bar as the rider scrolls (Ben, 10/11/2026).
+    document.documentElement.classList.toggle('page-scroll', view === 'route');
+    if (view === 'route' && was !== 'view-route') window.scrollTo(0, 0);
     if (map) setTimeout(function () { map.resize(); }, 30);
   }
 
@@ -863,14 +867,27 @@
     if (!ride.paused) say(tu('Keep this screen open while you ride. Locking your phone stops the directions.'));
     updatePauseBtn();
     requestWake();
+    enterFullscreen();
     startGps();
     renderRide();
     saveProgress();
     ride.zoom = 16;
     if (map) setTimeout(function () { var c = ride.fix ? [ride.fix.lng, ride.fix.lat] : pointAt(ride.d); lastCentre = null; map.easeTo(viewAt(c[1], c[0], true, routeBearingAt(ride.d))); }, 80);
   }
+  // Full screen while riding (Ben, 10/11/2026): the ride screen never scrolls, so the browser keeps its address bar.
+  // Android and desktop browsers hide it from the Start riding tap; iPhone can't (only a home screen icon does).
+  function enterFullscreen() {
+    var d = document.documentElement, f = d.requestFullscreen || d.webkitRequestFullscreen;
+    if (!f || isStandalone() || document.fullscreenElement || document.webkitFullscreenElement) return;
+    try { var r = f.call(d, { navigationUI: 'hide' }); if (r && r.catch) r.catch(function () {}); } catch (e) {}
+  }
+  function exitFullscreen() {
+    var x = document.exitFullscreen || document.webkitExitFullscreen;
+    if (!x || !(document.fullscreenElement || document.webkitFullscreenElement)) return;
+    try { var r = x.call(document); if (r && r.catch) r.catch(function () {}); } catch (e) {}
+  }
   function endRide() {
-    ride.active = false; ride.paused = false; stopGps(); stopSim(); releaseWake(); hideSaver(); updatePauseBtn();
+    ride.active = false; ride.paused = false; stopGps(); stopSim(); releaseWake(); hideSaver(); updatePauseBtn(); exitFullscreen();
     stopSpeech();
     if (R.base) useJoin(0);
     lsDel(progressKey());
