@@ -131,6 +131,16 @@ def app_screens(p):
     page.goto(f'{base}#{key}')
     page.wait_for_selector('body.view-route', timeout=20000); time.sleep(7)
     route = page.evaluate(f"fetch('r/{key}.json').then(r=>r.json())")
+    # the red Before you start notice comes up first in a browser tab (Ben, 11/11/2026)
+    if wait_visible(page, '.notice-ok', 4):
+        shot(page, '01b-before-you-start.jpg', 'setup', 'Before you start',
+             'Comes up first when a ride opens in a browser tab, until the rider taps the red button. Not shown from a home screen icon.',
+             [(1, '#sheet-title', "Don't lose your map: the things to check before leaving the shop.", 'tl'),
+              (2, '.notice-list li:nth-child(1)', 'A normal browser tab, not private or incognito.', 'tl'),
+              (3, '.notice-list li:nth-child(2)', 'Save the ride to the home screen (How? shows the steps).', 'tl'),
+              (4, '.notice-list li:nth-child(3)', 'Location must be on for the browser.', 'tl'),
+              (5, '.notice-list li:nth-child(4)', 'Charge the phone.', 'tl')])
+        page.click('.notice-ok'); time.sleep(0.8)
     shot(page, '02-route.jpg', 'setup', 'Ride page',
          "The ride's own page, opened from its QR code, link or route code.",
          [(1, '#route-wordmark', "The ride's brand: Bike On or By Earth and Ocean.", 'tl'),

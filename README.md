@@ -161,6 +161,9 @@ database when the screenshots are taken.
   direction, setting `mapUp`) or tap the compass button above the voice button, which also shows where north is.
   Hand rotation stays off. The route page map is always north up.
 
+## Before you start notice (11/11/2026)
+A red card that comes up first when a ride opens in a browser tab, so riders who are not tech savvy don't lose the map. Points: use a normal tab (not private or incognito), save the map to the home screen (closing the tab loses it, closing the browser app is fine), location must be on (with a live "Location is on/off" line where the browser can tell), charge the phone, and on loops only, ride the loop in one direction. The home screen and location steps sit behind "How?" links. Closing line: if they choose not to and lose the map, they find their own way back. Button: "I've read this. I've done it, or chosen not to." It is kept per ride per phone (localStorage rg.notice), and also brings up the phone's location question. Skipped from a home screen icon (standalone) and on ?check links. Wording agreed with Ben 11/11/2026; change it only with him. Code: site/app.js openNotice and needNotice; styles at the end of site/app.css. Screenshot 01b in the staff pictures.
+
 ## Before you ride (risk card)
 
 Added 20/10/2026 (Ben's wording, checked against the Checkfront waiver "Risk Warning and Acknowledgement" and the

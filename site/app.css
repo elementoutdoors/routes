@@ -339,3 +339,26 @@ body.view-check #check-panel{display:block;position:fixed;left:0;right:0;bottom:
 .sheet-body p.muted{color:var(--muted);font-weight:600}
 .risk-note{display:flex;align-items:center;justify-content:center;gap:6px;margin:6px 2px 2px;padding:4px 0;background:none;border:0;font-size:12.5px;line-height:1.3;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:2px;width:100%}
 .risk-note svg{flex:none;width:16px;height:16px}
+/* Before you start: don't lose your map (Ben, 11/11/2026) */
+.sheet-body.notice{border-top:8px solid #C62828;border-radius:22px 22px 0 0}
+.notice-kicker{color:#C62828}
+.notice-title{color:#B71C1C}
+.notice-list{list-style:none;counter-reset:ni;margin:14px 0 6px;padding:0;display:flex;flex-direction:column;gap:10px}
+.notice-list li{counter-increment:ni;position:relative;background:#FDECEC;border:2px solid #E57373;border-radius:14px;padding:12px 14px 12px 54px}
+.notice-list li::before{content:counter(ni);position:absolute;left:12px;top:12px;width:30px;height:30px;border-radius:50%;background:#C62828;color:#fff;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center}
+.ni-head{font-size:16px;font-weight:800;color:#7F1010;margin-bottom:2px}
+.ni-text{font-size:14.5px;line-height:1.5;font-weight:500;color:#3B3F45}
+.ni-how{font-size:13px;line-height:1.45;font-weight:600;color:#5A2A2A;margin-top:6px}
+.ni-btn{margin-top:8px}
+.ni-status{font-size:13px;font-weight:800;margin-top:6px}
+.ni-status.ok{color:#1B7F3B}
+.ni-status.off{color:#C62828}
+.sheet-body p.notice-foot{font-size:14px;font-weight:700;color:#7F1010;margin-top:10px}
+.btn.notice-ok{background:#C62828;color:#fff;min-height:56px;font-size:16px;line-height:1.25;white-space:normal}
+.notice-list{gap:8px}
+.notice-list li{padding:10px 12px 10px 50px}
+.notice-list li::before{left:11px;top:10px;width:28px;height:28px;font-size:15px}
+.ni-head{font-size:15.5px}
+.ni-text{font-size:14px;line-height:1.45}
+.ni-howbtn{background:none;border:0;padding:4px 0 0;font-size:13px;font-weight:800;color:#C62828;text-decoration:underline;text-underline-offset:2px}
+.ni-how{margin-top:4px}

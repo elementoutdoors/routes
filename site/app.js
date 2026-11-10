@@ -1902,6 +1902,7 @@
     show('route');
     renderRoute();
     if (map) { fitRoute(); }
+    if (needNotice() && !ride.active) setTimeout(function () { if (R && !ride.active && !sheetOpen() && needNotice()) openNotice(); }, 300);
   }
   function useRoute(key, data) {
     R = data; R.key = key;
@@ -1982,6 +1983,73 @@
       });
       acts.appendChild(ok); b.appendChild(acts);
     });
+  }
+  // ---------- before you start: don't lose your map (Ben, 11/11/2026) ----------
+  // Customers who aren't tech savvy kept losing the map (private tabs, closed tabs, location off). A red notice comes up
+  // first when a route opens in a browser tab, until the rider taps the button for that route on that phone. A home
+  // screen icon, staff check links and Test drive skip it. The fourth point shows on loops only.
+  function noticeSeen() { var m = lsGet('rg.notice', {}); return !!m[riskKey()]; }
+  function needNotice() { return !CHECK && !isStandalone() && !noticeSeen(); }
+  function openNotice() {
+    try { history.replaceState(null, '', location.pathname + '#' + R.key); } catch (e) {}   // so Add to Home Screen opens this route
+    openSheet(function (b) {
+      b.appendChild(el('div', { class: 'kicker notice-kicker', text: tu('Important') }));
+      b.appendChild(el('h2', { id: 'sheet-title', class: 'notice-title', text: tu('Before you start: don\'t lose your map') }));
+      b.appendChild(el('p', { text: tu('Please check these now so you don\'t get lost.') }));
+      var ol = el('ol', { class: 'notice-list' });
+      // how: steps tucked behind a small "How?" link so the card stays short
+      function item(head, text, how, extra) {
+        var li = el('li');
+        li.appendChild(el('div', { class: 'ni-head', text: head }));
+        li.appendChild(el('div', { class: 'ni-text', text: text }));
+        if (how) {
+          var hb = el('button', { class: 'ni-howbtn', type: 'button', text: tu('How?'), 'aria-expanded': 'false' });
+          var hd = el('div', { class: 'ni-how', text: how, hidden: '' });
+          hb.addEventListener('click', function () { hd.hidden = !hd.hidden; hb.setAttribute('aria-expanded', String(!hd.hidden)); });
+          li.appendChild(hb); li.appendChild(hd);
+        }
+        if (extra) extra(li);
+        ol.appendChild(li);
+      }
+      item(tu('Use a normal browser tab'), tu('Not a private or incognito tab. Private tabs forget the map when they close.'));
+      item(tu('Save the map to your home screen'), tu('If you close this tab, the map is gone. Saved to your home screen, it is one tap away. Closing the browser app itself is fine.'),
+        installEvt ? null : (isIOS() ? tu('In Safari, tap the Share button, choose Add to Home Screen, then tap Add.') : tu('Open your browser menu and choose Add to Home screen or Install app.')),
+        function (li) {
+          if (!installEvt) return;
+          var ins = el('button', { class: 'btn outline small ni-btn', type: 'button', text: tu('Add to my home screen') });
+          ins.addEventListener('click', function () { installEvt.prompt(); installEvt = null; ins.remove(); });
+          li.appendChild(ins);
+        });
+      item(tu('Location must be on'), tu('Your phone needs to share your location with your browser. If a question pops up, tap Allow. If not, switch it on in your phone\'s Settings.'),
+        isIOS() ? tu('Open Settings, then Privacy & Security, then Location Services. Turn it on, then set Safari Websites to While Using the App.')
+                : tu('Turn on Location in your phone\'s quick settings. Then in your browser, allow Location for this site.'),
+        function (li) {
+          var st = el('div', { class: 'ni-status', hidden: '' }); li.appendChild(st);
+          try {
+            navigator.permissions.query({ name: 'geolocation' }).then(function (p) {
+              function upd() {
+                st.hidden = p.state === 'prompt';
+                st.className = 'ni-status ' + (p.state === 'granted' ? 'ok' : 'off');
+                st.textContent = p.state === 'granted' ? tu('Location is on.') : tu('Location is off for this browser.');
+              }
+              upd(); p.onchange = upd;
+            }, function () {});
+          } catch (e) {}
+        });
+      item(tu('Charge your phone'), tu('Navigating uses a lot of battery. Start with a full, or nearly full, charge.'));
+      if (isLoop(baseRoute())) item(tu('Ride the loop in one direction'), tu('Follow the directions as given. It will not work in reverse.'));
+      b.appendChild(ol);
+      b.appendChild(el('p', { class: 'notice-foot', text: tu('If you choose not to do these things and lose the map, you will need to find your own way back.') }));
+      var acts = el('div', { class: 'sheet-actions' });
+      var ok = el('button', { class: 'btn full notice-ok', type: 'button', text: tu('I\'ve read this. I\'ve done it, or chosen not to.') });
+      ok.addEventListener('click', function () {
+        var m = lsGet('rg.notice', {}); m[riskKey()] = Date.now(); lsSet('rg.notice', m);
+        closeSheet();
+        locate(function () {}, function () {});   // brings up the phone's location question now, while they're reading
+      });
+      acts.appendChild(ok); b.appendChild(acts);
+    }, 'notice');
+    ride.keepOpen = true;
   }
   // every ride start a rider taps goes through here
   function beginRide(resume) {
