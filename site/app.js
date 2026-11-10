@@ -1993,7 +1993,14 @@
   function openNotice() {
     try { history.replaceState(null, '', location.pathname + '#' + R.key); } catch (e) {}   // so Add to Home Screen opens this route
     openSheet(function (b) {
-      b.appendChild(el('div', { class: 'kicker notice-kicker', text: tu('Important') }));
+      // language picker inside the notice: the top bar's language button sits under the sheet's backdrop (11/11/2026)
+      var top = el('div', { class: 'notice-top' });
+      top.appendChild(el('div', { class: 'kicker notice-kicker', text: tu('Important') }));
+      var sel = el('select', { class: 'notice-lang', 'aria-label': tu('Language') });
+      LANGS.forEach(function (l) { var o = el('option', { value: l[0], lang: l[0], text: l[1] }); if (l[0] === S.lang) o.selected = true; sel.appendChild(o); });
+      sel.addEventListener('change', function () { S.lang = sel.value; saveSettings('lang'); refreshAll(); precacheVoice(); openNotice(); });
+      top.appendChild(sel);
+      b.appendChild(top);
       b.appendChild(el('h2', { id: 'sheet-title', class: 'notice-title', text: tu('Before you start: don\'t lose your map') }));
       b.appendChild(el('p', { text: tu('Please check these now so you don\'t get lost.') }));
       var ol = el('ol', { class: 'notice-list' });

@@ -362,3 +362,6 @@ body.view-check #check-panel{display:block;position:fixed;left:0;right:0;bottom:
 .ni-text{font-size:14px;line-height:1.45}
 .ni-howbtn{background:none;border:0;padding:4px 0 0;font-size:13px;font-weight:800;color:#C62828;text-decoration:underline;text-underline-offset:2px}
 .ni-how{margin-top:4px}
+.notice-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-right:52px;margin-bottom:4px}
+.notice-top .kicker{padding-right:0;margin-bottom:0}
+.notice-lang{font:inherit;font-size:14px;font-weight:700;color:#7F1010;background:#FDECEC;border:2px solid #E57373;border-radius:999px;padding:6px 12px;max-width:150px}
