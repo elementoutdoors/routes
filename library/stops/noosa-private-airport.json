@@ -3,7 +3,7 @@
  "kind": "stop",
  "title": "Noosa's private airport",
  "status": "live",
- "updated": "2026-10-11",
+ "updated": "2026-11-11",
  "tours": {
   "stingrays-everglades": 2
  },
@@ -12,6 +12,11 @@
    "Noosa Private Airport was established in the early 1980s for private aviation and tourism, near Noosa Heads with quick access to beaches and hinterland.",
    "56 hectares for airport operations, part of more than 400 hectares owned by Bob, who bought it in 2008.",
    "Development is restricted because the area is part of a UNESCO Biosphere Reserve; any expansion must fit its environmental commitments."
+  ],
+  "engage": [
+   "Ask: \"Any guesses what that is across the water?\"",
+   "Ask: \"If you could fly into Noosa in anything, what would it be?\"",
+   "Do: watch and listen for a plane or a helicopter coming in."
   ],
   "detail": "",
   "detail_blocks": [

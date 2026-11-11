@@ -11,7 +11,7 @@ function entry(e) {
   for (const [b, s] of Object.entries(e.blog || {})) parts.push(`<h4>${BRAND[b] || b}: ${esc(s.heading)}</h4>${(s.paras || []).map(p => `<p>${safeHtml(p)}</p>`).join('')}`);
   for (const [b, pins] of Object.entries(e.pins || {})) for (const p of pins) parts.push(`<h4>Ride with GPS pin (${b === 'beo' ? 'By Earth and Ocean' : 'Bike On'}): ${esc(p.name)}</h4><p class="said">${esc(p.text)}</p>`);
   if ((e.story || []).length) parts.push(`<h4>Spoken story</h4>${e.story.map(p => `<p class="said">${esc(p)}</p>`).join('')}`);
-  if (e.talk) parts.push(`<h4>Guide talking points${e.tours ? ', stop ' + Object.values(e.tours).join(', ') : ''}</h4><ul>${(e.talk.points || []).map(p => `<li>${esc(p)}</li>`).join('')}</ul>${e.talk.detail ? `<p>${esc(e.talk.detail)}</p>` : ''}`);
+  if (e.talk) parts.push(`<h4>Guide talking points${e.tours ? ', stop ' + Object.values(e.tours).join(', ') : ''}</h4><ul>${(e.talk.points || []).map(p => `<li>${esc(p)}</li>`).join('')}</ul>${(e.talk.engage || []).length ? `<h4>How to engage the group</h4><ul>${e.talk.engage.map(p => `<li>${esc(p)}</li>`).join('')}</ul>` : ''}${e.talk.detail ? `<p>${esc(e.talk.detail)}</p>` : ''}`);
   if (e.card) {
     const c = e.card;
     parts.push(`<h4>Wildlife card</h4>${c.photo_url ? `<img src="${esc(c.photo_url)}" alt="${esc(c.name)}" loading="lazy">` : ''}`

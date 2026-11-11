@@ -3,7 +3,7 @@
  "kind": "stop",
  "title": "The mangroves",
  "status": "live",
- "updated": "2026-10-12",
+ "updated": "2026-11-11",
  "tours": {
   "stingrays-everglades": 5
  },
@@ -15,6 +15,12 @@
    "They store four times more carbon than rainforests; one mangrove absorbs about 308 kg of CO2 over 25 years.",
    "Prop roots give stability; pneumatophores (breathing roots) let them take in oxygen in waterlogged soil.",
    "Eight species here, including red, goat's horn, grey (most common), orange (tallest), yellow and white-flowered (least common). Noosa Council does not allow any development that could damage the mangroves."
+  ],
+  "engage": [
+   "Ask: \"Hands up who's eaten fish this week.\" Then tell them three out of every four fish we eat in Australia use a mangrove at some point.",
+   "Ask: \"How do you think a tree lives in salt water?\"",
+   "Do: find a yellow leaf (where the tree dumps its salt) and the breathing roots poking out of the mud. Look from the kayak: never touch, enter or land in the mangroves.",
+   "Linger: look for crabs and small fish around the roots."
   ],
   "detail": "",
   "detail_blocks": [

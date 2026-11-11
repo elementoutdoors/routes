@@ -3,7 +3,7 @@
  "kind": "stop",
  "title": "The stingray sanctuary",
  "status": "live",
- "updated": "2026-10-11",
+ "updated": "2026-11-11",
  "tours": {
   "stingrays-everglades": 6
  },
@@ -12,6 +12,12 @@
    "Estuary stingray (Hemitrygon fluviorum): diamond-shaped body, long tail, a row of thorns along the back; up to 93 cm wide, yellow-brown or olive. Shallow mangrove-lined rivers and estuaries of southern Queensland and NSW. Near threatened: bycatch, habitat loss and persecution by shellfish farmers.",
    "Australian whipray (Himantura australis): broad disc with dark spots or a net pattern and a whip-like tail, up to 183 cm wide. Finds prawns and crabs by electroreception.",
    "Cowtail stingray (Pastinachus sephen): light brown with dark spots and a black and white banded tail, up to 183 cm wide. Rests in small groups in murky water, likely to avoid predators."
+  ],
+  "engage": [
+   "Ask: \"What do you think we're looking for?\" A shape, a shadow, a puff of sand.",
+   "Do: make it a game. The first to spot one points and calls it quietly. Everyone paddles softly in a line behind you.",
+   "Linger: while they look, tell them why the shallows matter: the shallow water is the young rays' shield from bigger predators.",
+   "A paddle's shadow can look a lot like a ray. Use it for a laugh."
   ],
   "detail": "",
   "detail_blocks": [],

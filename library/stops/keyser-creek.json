@@ -3,7 +3,7 @@
  "kind": "stop",
  "title": "Keyser Creek",
  "status": "live",
- "updated": "2026-10-12",
+ "updated": "2026-11-11",
  "tours": {
   "stingrays-everglades": 4
  },
@@ -12,6 +12,11 @@
    "Tannins leach colour from organic matter and turn the water tea or Coca-Cola coloured.",
    "The melaleuca (paperbark) makes an oil much like tea tree oil: pull a few leaves and have guests crush and smell them.",
    "Melaleuca oil and tannins in the water create the mirror-like reflections the Noosa Everglades system is known for. The name River of Mirrors belongs to the upper Noosa River, further north."
+  ],
+  "engage": [
+   "Ask: \"Why do you think the water is the colour of tea?\" Let them guess before you explain the tannins from the leaves and bark.",
+   "Do: everyone stops paddling until the water goes still, then takes the reflection photo. Offer to take a photo of each pair.",
+   "Linger: a minute of quiet. What can they hear?"
   ],
   "detail": "",
   "detail_blocks": [

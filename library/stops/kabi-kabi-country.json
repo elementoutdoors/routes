@@ -3,7 +3,7 @@
  "kind": "stop",
  "title": "Kabi Kabi Country",
  "status": "live",
- "updated": "2026-10-14",
+ "updated": "2026-11-11",
  "tours": {
   "stingrays-everglades": 1
  },
@@ -13,6 +13,12 @@
    "The Kabi Kabi people are the Traditional Custodians of land in South East Queensland, including Moreton Bay, the Sunshine Coast, Noosa, Maryborough and Gympie.",
    "Place names we can see from here: Mt Cooroy (originally Coorooey, from kurui, possum); Lake Weyba (understood to mean place of stingrays; -ba means place; the Kabi Kabi used the lake as a food source); Noosa (from Noothera or Gnuthuru, shadow or shady place).",
    "Overview of the rest of the tour. Point out the house on the other side of the lake as an orientation point."
+  ],
+  "engage": [
+   "Ask: \"Does anyone know what Weyba means?\" Let them guess before you tell them it's understood to mean place of stingrays.",
+   "Ask: \"Where's everyone from? Do you know any Aboriginal place names where you live?\"",
+   "Do: point out Mt Cooroy and the house across the lake you'll steer by, and ask them to find it.",
+   "Linger: before you start, ask everyone to stop paddling and just listen for 30 seconds."
   ],
   "detail": "Other place names: Mt Cooran (Guran, tall trees); Lake Cooroibah (Kurui-ba, place of possums); Mt Cooroora (a brush tail possum); Lake Cootharaba (where wood for studded clubs was found); Doonan (leaf of a tree); Eumundi (after the chieftain Ngumundi); Maroochydore (Murukutchi-dha, place of the black swan); Teewah (dead wood or dry timber); Tewantin (usually traced to dauwadhan, often translated as dead trees or logs); Mt Tinbeerwah (place of grasstrees, or high hill).",
   "detail_blocks": [

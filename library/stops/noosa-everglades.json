@@ -3,7 +3,7 @@
  "kind": "stop",
  "title": "The Noosa Everglades system",
  "status": "live",
- "updated": "2026-10-12",
+ "updated": "2026-11-11",
  "tours": {
   "stingrays-everglades": 3
  },
@@ -15,6 +15,12 @@
    "The wider Noosa Biosphere is home to 343 bird species, about 44% of Australia's, including egrets, herons and the white-bellied sea eagle; plus barramundi, stingrays and mangrove jack.",
    "The Noosa Biosphere Reserve is part of UNESCO's global network, and one of three connected biospheres with Great Sandy and the Sunshine Coast.",
    "Iconic and vulnerable species: koala, glossy black cockatoo, greater glider, Australian lungfish and the rare Mary River cod. 42% of the Noosa Biosphere is national park, conservation park, state forest, lakes and wetlands."
+  ],
+  "engage": [
+   "Ask: \"How many everglades systems do you think there are in the world? Where's the other one?\" It's often described as one of only two.",
+   "Ask them to guess how many lakes are in the system, then count them off together: Weyba, Doonella, Cooroibah, Cootharaba, Cooloola and Como.",
+   "Do: start a bird count. Who can spot the most kinds by the end of the tour?",
+   "Linger: ask what they think a UNESCO biosphere is before you explain it."
   ],
   "detail": "",
   "detail_blocks": [

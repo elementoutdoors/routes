@@ -138,7 +138,7 @@ export function lint(entries) {
     for (const [b, s] of Object.entries(e.blog || {})) look(e.key, `blog ${b}`, blogText(s.paras));
     for (const [b, pins] of Object.entries(e.pins || {})) (pins || []).forEach(p => look(e.key, `pin ${b} "${p.name}"`, p.text || ''));
     if (e.card) look(e.key, 'wildlife card', [e.card.description, e.card.how_to_spot, ...(e.card.detail || []).map(d => d.text || (d.items || []).join(' '))].join(' '));
-    if (e.talk) look(e.key, 'kayak talking points', [...(e.talk.points || []), e.talk.detail || ''].join(' '));
+    if (e.talk) look(e.key, 'kayak talking points', [...(e.talk.points || []), ...(e.talk.engage || []), e.talk.say_it || '', e.talk.detail || ''].join(' '));
   }
   return out;
 }
