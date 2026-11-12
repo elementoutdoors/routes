@@ -1831,5 +1831,6 @@
  "The map can't guide you without it. Follow these steps, then reload this page.": "Ohne Standort kann die Karte Sie nicht führen. Folgen Sie diesen Schritten und laden Sie dann diese Seite neu.",
  "The map needs your location to show the blue dot and guide you.": "Die Karte braucht Ihren Standort, um den blauen Punkt zu zeigen und Sie zu führen.",
  "Turn on location": "Standort einschalten",
- "Your phone will ask to use your location. Tap Allow.": "Ihr Telefon fragt gleich nach Ihrem Standort. Tippen Sie auf Erlauben."
+ "Your phone will ask to use your location. Tap Allow.": "Ihr Telefon fragt gleich nach Ihrem Standort. Tippen Sie auf Erlauben.",
+ "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "Gehen Sie zurück zu Einstellungen, tippen Sie auf Apps, dann Safari, dann Standort, und wählen Sie Fragen oder Erlauben."
 }

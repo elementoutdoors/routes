@@ -1831,5 +1831,6 @@
  "The map can't guide you without it. Follow these steps, then reload this page.": "Zonder locatie kan de kaart je niet leiden. Volg deze stappen en laad deze pagina daarna opnieuw.",
  "The map needs your location to show the blue dot and guide you.": "De kaart heeft je locatie nodig om de blauwe stip te tonen en je te leiden.",
  "Turn on location": "Zet locatie aan",
- "Your phone will ask to use your location. Tap Allow.": "Je telefoon vraagt zo om je locatie. Tik op Sta toe."
+ "Your phone will ask to use your location. Tap Allow.": "Je telefoon vraagt zo om je locatie. Tik op Sta toe.",
+ "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "Ga terug naar Instellingen, tik op Apps, dan Safari, dan Locatie, en kies Vraag of Sta toe."
 }

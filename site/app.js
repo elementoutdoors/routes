@@ -2079,8 +2079,11 @@
   function locSteps() {
     var ua = navigator.userAgent;
     if (isIOS()) return [tu('Open your phone\'s Settings app.'), tu('Tap Privacy & Security, then Location Services, and turn it on.'),
-      /CriOS/.test(ua) ? tu('Scroll down to Chrome and choose While Using the App.') : tu('Scroll down to Safari Websites and choose While Using the App.'),
-      tu('Come back to this page and reload it.')];
+      /CriOS/.test(ua) ? tu('Scroll down to Chrome and choose While Using the App.') : tu('Scroll down to Safari Websites and choose While Using the App.')]
+      // Safari's own Location setting (Settings, Apps, Safari, Location) set to Deny blocks every site silently, with no
+      // question on screen (Ben's test, 12/11/2026), so the Safari steps cover it too
+      .concat(/CriOS|FxiOS|EdgiOS/.test(ua) ? [] : [tu('Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.')])
+      .concat([tu('Come back to this page and reload it.')]);
     return [tu('Swipe down from the top of the screen and turn on Location.'), tu('In your browser, tap the icon at the left of the address bar, then Permissions or Site settings, and allow Location.'),
       tu('Reload this page.')];
   }

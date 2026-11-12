@@ -1831,5 +1831,6 @@
  "The map can't guide you without it. Follow these steps, then reload this page.": "没有定位，地图无法为您导航。请按以下步骤操作，然后重新加载此页面。",
  "The map needs your location to show the blue dot and guide you.": "地图需要您的位置来显示蓝点并为您导航。",
  "Turn on location": "开启定位",
- "Your phone will ask to use your location. Tap Allow.": "您的手机会请求使用您的位置。请轻点允许。"
+ "Your phone will ask to use your location. Tap Allow.": "您的手机会请求使用您的位置。请轻点允许。",
+ "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "返回设置，轻点 App，然后 Safari 浏览器，然后位置，选择询问或允许。"
 }

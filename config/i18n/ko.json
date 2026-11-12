@@ -1831,5 +1831,6 @@
  "The map can't guide you without it. Follow these steps, then reload this page.": "위치가 없으면 지도가 안내할 수 없습니다. 다음 단계를 따른 후 이 페이지를 새로고침하세요.",
  "The map needs your location to show the blue dot and guide you.": "지도에 파란 점을 표시하고 안내하려면 위치가 필요합니다.",
  "Turn on location": "위치 켜기",
- "Your phone will ask to use your location. Tap Allow.": "휴대전화가 위치 사용을 물어봅니다. 허용을 탭하세요."
+ "Your phone will ask to use your location. Tap Allow.": "휴대전화가 위치 사용을 물어봅니다. 허용을 탭하세요.",
+ "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "설정으로 돌아가 앱, Safari, 위치를 차례로 탭하고 묻기 또는 허용을 선택하세요."
 }
