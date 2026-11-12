@@ -1990,8 +1990,74 @@
   // screen icon, staff check links and Test drive skip it. The fourth point shows on loops only.
   function noticeSeen() { var m = lsGet('rg.notice', {}); return !!m[riskKey()]; }
   function needNotice() { return !CHECK && !isStandalone() && !noticeSeen(); }
+  // A tap on the button sooner than the notice could have been read brings up a "did you really read it?" check
+  // (Ben, 12/11/2026). Reading time depends on what is showing: 5 s per point still to do, 1 s per green tick,
+  // 10 s at least, 25 s at most. Seen once, it does not come up again; going back and tapping again is accepted.
+  var noticeStart = 0, noticeReadMs = 20000, noticeDoubleChecked = false;
+  function acceptNotice() {
+    var m = lsGet('rg.notice', {}); m[riskKey()] = Date.now(); lsSet('rg.notice', m);
+    closeSheet();
+    locate(function () {}, function () {});   // brings up the phone's location question now
+  }
+  function openNoticeCheck() {
+    noticeDoubleChecked = true;
+    openSheet(function (b) {
+      b.appendChild(el('div', { class: 'kicker notice-kicker', text: tu('Quick check') }));
+      b.appendChild(el('h2', { id: 'sheet-title', class: 'notice-title', text: tu('That was quick! Did you really read it?') }));
+      b.appendChild(el('p', { class: 'notice-check-text', text: tu('We\'re not trying to nag, we just want your ride to go smoothly. Nearly every navigation problem or lost map on a self-guided ride comes from a phone that wasn\'t set up first.') }));
+      b.appendChild(el('p', { class: 'notice-check-text strong', text: tu('Two minutes now saves a lot of hassle out on the ride.') }));
+      var acts = el('div', { class: 'sheet-actions notice-check-acts' });
+      var back = el('button', { class: 'btn full notice-ok', type: 'button', text: tu('Busted! I\'ll read it now and set my phone up.') });
+      back.addEventListener('click', function () { openNotice(); });
+      var yes = el('button', { class: 'btn full notice-yes', type: 'button', text: tu('Yes, I read it. My phone is set up and the map is on my home screen.') });
+      yes.addEventListener('click', acceptNotice);
+      acts.appendChild(back); acts.appendChild(yes); b.appendChild(acts);
+    }, 'notice');
+    ride.keepOpen = true;
+  }
+  // What the phone can tell us (12/11/2026): private tab, location permission, battery. Each is true/false/null
+  // (null = can't tell, so the point is shown in full). Private tab detection follows the detectIncognito library's
+  // tests (WebKit storage error, Chromium storage quota, Firefox storage error); each test fails safe to null.
+  function noticeChecks(cb) {
+    var out = { priv: null, loc: null, batt: null, perm: null }, left = 3, done = false;
+    function one() { if (--left === 0 && !done) { done = true; cb(out); } }
+    setTimeout(function () { if (!done) { done = true; cb(out); } }, 1500);
+    // private tab
+    (function () {
+      function set(v) { out.priv = v; one(); }
+      try {
+        var ua = navigator.userAgent, webkit = /AppleWebKit/.test(ua) && !/Chrome|CriOS|Android/.test(ua) || /iPhone|iPad|iPod/.test(ua);
+        if (webkit || /Firefox|FxiOS/.test(ua) && !/iPhone|iPad/.test(ua)) {
+          if (navigator.storage && typeof navigator.storage.getDirectory === 'function') {
+            navigator.storage.getDirectory().then(function () { set(false); }, function (e) {
+              var m = String(e && e.message || e);
+              set(/unknown transient reason|Security error/i.test(m) ? true : null);
+            });
+          } else set(null);
+        } else if (navigator.webkitTemporaryStorage && navigator.webkitTemporaryStorage.queryUsageAndQuota) {
+          navigator.webkitTemporaryStorage.queryUsageAndQuota(function (u, quota) {
+            var lim = (performance && performance.memory && performance.memory.jsHeapSizeLimit) || 1073741824;
+            set(Math.round(quota / 1048576) < Math.round(lim / 1048576) * 2);
+          }, function () { set(null); });
+        } else set(null);
+      } catch (e) { set(null); }
+    })();
+    // location permission
+    try {
+      navigator.permissions.query({ name: 'geolocation' }).then(function (p) { out.loc = p.state; out.perm = p; one(); }, function () { one(); });
+    } catch (e) { one(); }
+    // battery (Android Chrome; iPhones don't share it)
+    try {
+      if (navigator.getBattery) navigator.getBattery().then(function (bt) { out.batt = { level: bt.level, charging: bt.charging }; one(); }, function () { one(); });
+      else one();
+    } catch (e) { one(); }
+  }
+  var noticeState = null;
   function openNotice() {
+    if (!noticeStart) noticeStart = Date.now();
     try { history.replaceState(null, '', location.pathname + '#' + R.key); } catch (e) {}   // so Add to Home Screen opens this route
+    if (!noticeState) { noticeChecks(function (st) { noticeState = st; if (st.perm) st.perm.onchange = function () { st.loc = st.perm.state; if (isNoticeOpen()) openNotice(); }; openNotice(); }); return; }
+    var st = noticeState;
     openSheet(function (b) {
       // language picker inside the notice: the top bar's language button sits under the sheet's backdrop (11/11/2026)
       var top = el('div', { class: 'notice-top' });
@@ -2003,61 +2069,69 @@
       b.appendChild(top);
       b.appendChild(el('h2', { id: 'sheet-title', class: 'notice-title', text: tu('Before you start: don\'t lose your map') }));
       b.appendChild(el('p', { text: tu('Please check these now so you don\'t get lost.') }));
-      var ol = el('ol', { class: 'notice-list' });
-      // how: steps tucked behind a small "How?" link so the card stays short
-      function item(head, text, how, extra) {
-        var li = el('li');
+      var ol = el('ol', { class: 'notice-list' }), doneList = [];
+      // how: steps tucked behind a small "How?" link (open from the start when bad); bad: the phone told us it needs fixing
+      function item(head, text, how, extra, bad) {
+        var li = el('li', bad ? { class: 'bad' } : {});
         li.appendChild(el('div', { class: 'ni-head', text: head }));
         li.appendChild(el('div', { class: 'ni-text', text: text }));
         if (how) {
-          var hb = el('button', { class: 'ni-howbtn', type: 'button', text: tu('How?'), 'aria-expanded': 'false' });
-          var hd = el('div', { class: 'ni-how', text: how, hidden: '' });
+          var hb = el('button', { class: 'ni-howbtn', type: 'button', text: tu('How?'), 'aria-expanded': String(!!bad) });
+          var hd = Array.isArray(how) ? stepsList(how, 'ni-how ni-steps') : el('div', { class: 'ni-how', text: how });
+          if (!bad) hd.hidden = true;
           hb.addEventListener('click', function () { hd.hidden = !hd.hidden; hb.setAttribute('aria-expanded', String(!hd.hidden)); });
           li.appendChild(hb); li.appendChild(hd);
         }
         if (extra) extra(li);
         ol.appendChild(li);
       }
-      item(tu('Use a normal browser tab'), tu('Not a private or incognito tab. Private tabs forget the map when they close.'));
+      // 1. normal tab
+      if (st.priv === false) doneList.push(tu('Normal browser tab'));
+      else if (st.priv === true) item(tu('You are in a private tab'), tu('Private tabs forget the map when they close. Close this tab and open your ride again from your booking email or the QR code, in a normal tab.'), null, null, true);
+      else item(tu('Use a normal browser tab'), tu('Not a private or incognito tab. Private tabs forget the map when they close.'));
+      // 2. home screen: the page can't tell whether they've added it, so it is always shown in a browser tab
       item(tu('Save the map to your home screen'), tu('If you close this tab, the map is gone. Saved to your home screen, it is one tap away. Closing the browser app itself is fine.'),
-        installEvt ? null : (isIOS() ? tu('In Safari, tap the Share button, choose Add to Home Screen, then tap Add.') : tu('Open your browser menu and choose Add to Home screen or Install app.')),
+        homeSteps(),
         function (li) {
           if (!installEvt) return;
           var ins = el('button', { class: 'btn outline small ni-btn', type: 'button', text: tu('Add to my home screen') });
           ins.addEventListener('click', function () { installEvt.prompt(); installEvt = null; ins.remove(); });
           li.appendChild(ins);
         });
-      item(tu('Location must be on'), tu('Your phone needs to share your location with your browser. If a question pops up, tap Allow. If not, switch it on in your phone\'s Settings.'),
-        isIOS() ? tu('Open Settings, then Privacy & Security, then Location Services. Turn it on, then set Safari Websites to While Using the App.')
-                : tu('Turn on Location in your phone\'s quick settings. Then in your browser, allow Location for this site.'),
-        function (li) {
-          var st = el('div', { class: 'ni-status', hidden: '' }); li.appendChild(st);
-          try {
-            navigator.permissions.query({ name: 'geolocation' }).then(function (p) {
-              function upd() {
-                st.hidden = p.state === 'prompt';
-                st.className = 'ni-status ' + (p.state === 'granted' ? 'ok' : 'off');
-                st.textContent = p.state === 'granted' ? tu('Location is on.') : tu('Location is off for this browser.');
-              }
-              upd(); p.onchange = upd;
-            }, function () {});
-          } catch (e) {}
-        });
-      item(tu('Charge your phone'), tu('Navigating uses a lot of battery. Start with a full, or nearly full, charge.'));
+      // 3. location
+      var locHow = isIOS() ? (/CriOS/.test(navigator.userAgent) ? tu('Open Settings, then Privacy & Security, then Location Services. Turn it on, then set Chrome to While Using the App.')
+                                                                 : tu('Open Settings, then Privacy & Security, then Location Services. Turn it on, then set Safari Websites to While Using the App.'))
+                           : tu('Turn on Location in your phone\'s quick settings. Then in your browser, allow Location for this site.');
+      if (st.loc === 'granted') doneList.push(tu('Location is on'));
+      else if (st.loc === 'denied') item(tu('Location is off for this browser'), tu('The map can\'t guide you without it. Switch it on in your phone\'s Settings, then come back to this page.'), locHow, null, true);
+      else item(tu('Location must be on'), tu('Your phone needs to share your location with your browser. If a question pops up, tap Allow. If not, switch it on in your phone\'s Settings.'), locHow);
+      // 4. battery
+      var pct = st.batt ? Math.round(st.batt.level * 100) : null;
+      if (pct !== null && (pct >= 80 || st.batt.charging && pct >= 50)) doneList.push(tu('Battery {n}%').replace('{n}', pct));
+      else if (pct !== null) item(tu('Charge your phone'), tu('Your battery is at {n}%. Navigating uses a lot of battery. Start with a full, or nearly full, charge.').replace('{n}', pct), null, null, pct < 50);
+      else item(tu('Charge your phone'), tu('Navigating uses a lot of battery. Start with a full, or nearly full, charge.'));
+      // 5. loops
       if (isLoop(baseRoute())) item(tu('Ride the loop in one direction'), tu('Follow the directions as given. It will not work in reverse.'));
       b.appendChild(ol);
+      if (doneList.length) {
+        var dw = el('div', { class: 'notice-done' });
+        dw.appendChild(el('div', { class: 'nd-head', text: tu('Already done on this phone') }));
+        doneList.forEach(function (t) { dw.appendChild(el('div', { class: 'nd-row', text: t })); });
+        b.appendChild(dw);
+      }
+      noticeReadMs = Math.max(10, Math.min(25, ol.children.length * 5 + doneList.length)) * 1000;
       b.appendChild(el('p', { class: 'notice-foot', text: tu('If you choose not to do these things and lose the map, you will need to find your own way back.') }));
       var acts = el('div', { class: 'sheet-actions' });
       var ok = el('button', { class: 'btn full notice-ok', type: 'button', text: tu('I\'ve read this. I\'ve done it, or chosen not to.') });
       ok.addEventListener('click', function () {
-        var m = lsGet('rg.notice', {}); m[riskKey()] = Date.now(); lsSet('rg.notice', m);
-        closeSheet();
-        locate(function () {}, function () {});   // brings up the phone's location question now, while they're reading
+        if (!noticeDoubleChecked && Date.now() - noticeStart < noticeReadMs) openNoticeCheck();
+        else acceptNotice();
       });
       acts.appendChild(ok); b.appendChild(acts);
     }, 'notice');
     ride.keepOpen = true;
   }
+  function isNoticeOpen() { return !$('sheet').hidden && !!document.querySelector('#sheet .notice-list'); }
   // every ride start a rider taps goes through here
   function beginRide(resume) {
     if (CHECK || resume || riskSeen()) { startRide(resume); return; }
@@ -2170,6 +2244,19 @@
   }
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') setTimeout(checkArrival, 600); });
 
+  // Add to Home Screen steps for the rider's own browser (12/11/2026). iOS 26 Safari's Compact layout hides Share
+  // behind the ••• button, so the Safari steps cover both. Used by the Before you start notice and Getting back to this route.
+  function homeSteps() {
+    var ua = navigator.userAgent;
+    if (isIOS()) {
+      if (/CriOS/.test(ua)) return [tu('Tap the Share button at the top right, beside the address bar.'), tu('Scroll down and tap Add to Home Screen.'), tu('Tap Add. The ride opens from the new icon.')];
+      if (/FxiOS|EdgiOS/.test(ua)) return [tu('Tap the Share button. If you can\'t see it, tap the ••• menu first, then Share.'), tu('Scroll down and tap Add to Home Screen.'), tu('Tap Add. The ride opens from the new icon.')];
+      return [tu('Tap the Share button (a square with an arrow). If you can\'t see it, tap ••• next to the address bar first, then Share.'), tu('Scroll down and tap Add to Home Screen.'), tu('Tap Add. The ride opens from the new icon.')];
+    }
+    if (/SamsungBrowser/.test(ua)) return [tu('Tap the menu (three lines) at the bottom right.'), tu('Tap Add page to, then Home screen.'), tu('Tap Add. The ride opens from the new icon.')];
+    return [tu('Tap the menu (three dots) at the top right.'), tu('Tap Add to Home screen, or Install app.'), tu('Tap Add or Install. The ride opens from the new icon.')];
+  }
+  function stepsList(arr, cls) { var ol = el('ol', { class: cls || 'steps' }); arr.forEach(function (t) { ol.appendChild(el('li', { text: t })); }); return ol; }
   function openKeep() {
     // While this sheet is open the address carries the route, so "Add to Home Screen" opens this route.
     try { history.replaceState(null, '', location.pathname + '#' + R.key); } catch (e) {}
@@ -2188,11 +2275,7 @@
           acts.appendChild(ins);
         } else {
           b.appendChild(el('div', { class: 'set-label', text: tu('Add it to your home screen') }));
-          var ol = el('ol', { class: 'steps' });
-          (isIOS() ? [tu('Tap the Share button in Safari.'), tu('Choose Add to Home Screen.'), tu('Tap Add. The route opens from the new icon.')]
-                   : [tu('Open your browser menu.'), tu('Choose Add to Home screen or Install app.'), tu('The route opens from the new icon.')])
-            .forEach(function (t) { ol.appendChild(el('li', { text: t })); });
-          b.appendChild(ol);
+          b.appendChild(stepsList(homeSteps()));
         }
       }
       var done = el('button', { class: 'btn outline full', type: 'button', text: tu('Done') });

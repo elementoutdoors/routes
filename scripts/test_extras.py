@@ -22,6 +22,7 @@ with sync_playwright() as p:
     pg.wait_for_selector('body.view-route', timeout=20000); print('code opened route:', pg.inner_text('#route-name'))
     time.sleep(1.5)
     if pg.is_visible('.notice-ok'): pg.click('.notice-ok'); time.sleep(0.5)   # Before you start notice (11/11/2026)
+    if pg.is_visible('.notice-yes'): pg.click('.notice-yes'); time.sleep(0.5)   # Did you really read it? (12/11/2026)
     # wait for offline save
     for _ in range(60):
         if 'done' in (pg.get_attribute('#offline-note', 'class') or ''): break

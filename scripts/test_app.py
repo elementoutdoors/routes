@@ -35,6 +35,7 @@ with sync_playwright() as p:
     page.wait_for_selector('body.view-route', timeout=20000)
     time.sleep(1.5)
     if page.is_visible('.notice-ok'): page.click('.notice-ok'); time.sleep(0.5)   # Before you start notice (11/11/2026)
+    if page.is_visible('.notice-yes'): page.click('.notice-yes'); time.sleep(0.5)   # Did you really read it? (12/11/2026)
     time.sleep(6)
     print('URL after load:', page.url)
     page.screenshot(path=f'{out}/1-route.png')

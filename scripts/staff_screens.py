@@ -141,6 +141,12 @@ def app_screens(p):
               (4, '.notice-list li:nth-child(3)', 'Location must be on for the browser.', 'tl'),
               (5, '.notice-list li:nth-child(4)', 'Charge the phone.', 'tl')])
         page.click('.notice-ok'); time.sleep(0.8)
+        if wait_visible(page, '.notice-yes', 3):
+            shot(page, '01c-quick-check.jpg', 'setup', 'Quick check',
+                 'Comes up if the rider taps the button sooner than the notice could be read (5 seconds per point still to do, 1 per green tick, 10 to 25 seconds). Shown once.',
+                 [(1, '.notice-ok', 'Busted: back to the notice to set the phone up.', 'tl'),
+                  (2, '.notice-yes', 'Yes: the rider confirms the phone is set up. The ride page opens.', 'tl')])
+            page.click('.notice-yes'); time.sleep(0.8)
     shot(page, '02-route.jpg', 'setup', 'Ride page',
          "The ride's own page, opened from its QR code, link or route code.",
          [(1, '#route-wordmark', "The ride's brand: Bike On or By Earth and Ocean.", 'tl'),
