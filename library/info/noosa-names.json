@@ -1,0 +1,17 @@
+{
+ "key": "noosa-names",
+ "kind": "info",
+ "group": "noosa-facts",
+ "order": 5,
+ "title": "Noosa's many names",
+ "status": "live",
+ "updated": "2026-11-12",
+ "info": {
+  "points": [
+   "The first name Europeans used was Bracefield's Head or Cape Bracefield. In 1842 an exploring party with Andrew Petrie found the runaway convict Bracefield living with the Kabi Kabi people here.",
+   "The name that stuck, Noosa, comes from the Kabi Kabi language (see Kabi Kabi language and place names)."
+  ],
+  "detail_blocks": []
+ },
+ "sources": "Moved from Local facts for a chat (EO-TR-10, then EO-TR-14 Being a tour guide), 12/11/2026."
+}

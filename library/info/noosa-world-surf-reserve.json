@@ -1,0 +1,19 @@
+{
+ "key": "noosa-world-surf-reserve",
+ "kind": "info",
+ "group": "noosa-facts",
+ "order": 1,
+ "title": "World Surf Reserve",
+ "status": "live",
+ "updated": "2026-11-12",
+ "info": {
+  "points": [
+   "Noosa was declared a World Surf Reserve in 2020: the 10th in the world and the 3rd in Australia.",
+   "It runs from the point breaks of Laguna Bay at Noosa Main Beach to the beach break at North Sunshine Beach.",
+   "Noosa Main Beach is one of the few north facing beaches on Australia's east coast, so it's good for swimming and surfing all year.",
+   "It's home to the Noosa Festival of Surfing, one of the biggest surfing events in the world."
+  ],
+  "detail_blocks": []
+ },
+ "sources": "Moved from Local facts for a chat (EO-TR-10, then EO-TR-14 Being a tour guide), 12/11/2026."
+}

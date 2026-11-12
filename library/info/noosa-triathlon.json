@@ -1,0 +1,18 @@
+{
+ "key": "noosa-triathlon",
+ "kind": "info",
+ "group": "noosa-facts",
+ "order": 3,
+ "title": "Noosa Triathlon",
+ "status": "live",
+ "updated": "2026-11-12",
+ "info": {
+  "points": [
+   "Australia's largest, oldest and highest profile triathlon. The swim is usually at Main Beach and the bike transition is at Lions Park.",
+   "It was meant to be a marathon, but it was too hard to find 42 km of good sealed road, so it became a triathlon instead.",
+   "The first one, in 1983, had 180 people. Now it's the biggest Olympic distance triathlon in the world and the biggest multisport festival in the Southern Hemisphere: five days, over 13,000 competitors from around the world and more than 30,000 spectators."
+  ],
+  "detail_blocks": []
+ },
+ "sources": "Moved from Local facts for a chat (EO-TR-10, then EO-TR-14 Being a tour guide), 12/11/2026."
+}

@@ -17,7 +17,10 @@ import { loadDesk } from './ride-desk.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const LIB = path.join(ROOT, 'library');
-export const KINDS = { place: 'places', wildlife: 'wildlife', stop: 'stops' };
+export const KINDS = { place: 'places', wildlife: 'wildlife', stop: 'stops', info: 'info' };
+// Information entries (12/11/2026, Ben): Kabi Kabi Country and Noosa facts, shown in EO Crew's Places and stories tab and in
+// manuals. Never spoken or blogged, so they must never carry a story, blog or pins (that keeps the Ride Guide untouched).
+export const INFO_GROUPS = { 'kabi-kabi': 'Kabi Kabi Country', 'noosa-facts': 'Noosa facts' };
 export const BLOGS = {
   bikeon: 'https://bikeon.com.au/noosa-self-guided-rides-what-you-will-see/',
   beo: 'https://byearthandocean.com.au/noosa-hinterland-self-guided-rides-places/'
@@ -42,6 +45,10 @@ export function loadLibrary(root = ROOT) {
       if (e.key !== f.replace(/\.json$/, '')) throw new Error(`library/${dir}/${f}: key "${e.key}" does not match the file name`);
       if (e.kind !== kind) throw new Error(`library/${dir}/${f}: kind "${e.kind}" in the ${dir} folder`);
       if (entries[e.key]) throw new Error(`library: key "${e.key}" is used twice`);
+      if (kind === 'info') {
+        if (e.story || e.blog || e.pins) throw new Error(`library/${dir}/${f}: an information entry never has a story, blog or pins`);
+        if (!INFO_GROUPS[e.group]) throw new Error(`library/${dir}/${f}: group "${e.group}" is not one of ${Object.keys(INFO_GROUPS).join(', ')}`);
+      }
       entries[e.key] = e;
     }
   }
@@ -139,6 +146,7 @@ export function lint(entries) {
     for (const [b, s] of Object.entries(e.blog || {})) look(e.key, `blog ${b}`, blogText(s.paras));
     for (const [b, pins] of Object.entries(e.pins || {})) (pins || []).forEach(p => look(e.key, `pin ${b} "${p.name}"`, p.text || ''));
     if (e.card) look(e.key, 'wildlife card', [e.card.description, e.card.how_to_spot, ...(e.card.detail || []).map(d => d.text || (d.items || []).join(' '))].join(' '));
+    if (e.info) look(e.key, 'information', [...(e.info.points || []), ...(e.info.detail_blocks || []).map(d => d.text || (d.items || []).join(' '))].join(' '));
     if (e.talk) look(e.key, 'kayak talking points', [...(e.talk.points || []), ...(e.talk.engage || []), e.talk.say_it || '', e.talk.detail || ''].join(' '));
   }
   return out;

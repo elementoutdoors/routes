@@ -2,7 +2,7 @@
 // itself is changed in library/ in the repo.
 const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const BRAND = { bikeon: 'Bike On blog', beo: 'By Earth and Ocean blog' };
-const KIND = { place: 'Places', stop: 'Kayak tour stops', wildlife: 'Wildlife' };
+const KIND = { place: 'Places', stop: 'Kayak tour stops', info: 'Kabi Kabi Country and Noosa facts', wildlife: 'Wildlife' };
 // blog paragraphs are trusted library HTML limited to links, bold and italics
 const safeHtml = s => String(s || '').replace(/<(?!\/?(a|strong|em|b|i)\b)[^>]*>/gi, '').replace(/\son\w+="[^"]*"/gi, '');
 
@@ -12,6 +12,7 @@ function entry(e) {
   for (const [b, pins] of Object.entries(e.pins || {})) for (const p of pins) parts.push(`<h4>Ride with GPS pin (${b === 'beo' ? 'By Earth and Ocean' : 'Bike On'}): ${esc(p.name)}</h4><p class="said">${esc(p.text)}</p>`);
   if ((e.story || []).length) parts.push(`<h4>Spoken story</h4>${e.story.map(p => `<p class="said">${esc(p)}</p>`).join('')}`);
   if (e.talk) parts.push(`<h4>Guide talking points${e.tours ? ', stop ' + Object.values(e.tours).join(', ') : ''}</h4><ul>${(e.talk.points || []).map(p => `<li>${esc(p)}</li>`).join('')}</ul>${(e.talk.engage || []).length ? `<h4>How to engage the group</h4><ul>${e.talk.engage.map(p => `<li>${esc(p)}</li>`).join('')}</ul>` : ''}${e.talk.detail ? `<p>${esc(e.talk.detail)}</p>` : ''}`);
+  if (e.info) parts.push(`<h4>${esc(({ 'kabi-kabi': 'Kabi Kabi Country', 'noosa-facts': 'Noosa facts' })[e.group] || 'Information')}</h4><ul>${(e.info.points || []).map(p => `<li>${esc(p)}</li>`).join('')}</ul>${(e.info.detail_blocks || []).map(d => d.items ? `<ul>${d.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>` : `<p>${esc(String(d.text || '').replace(/\*\*/g, ''))}</p>`).join('')}`);
   if (e.card) {
     const c = e.card;
     parts.push(`<h4>Wildlife card</h4>${c.photo_url ? `<img src="${esc(c.photo_url)}" alt="${esc(c.name)}" loading="lazy">` : ''}`
@@ -19,7 +20,7 @@ function entry(e) {
       + `<p>${esc(c.description || '')}</p>${(c.detail || []).map(d => d.items ? `<ul>${d.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>` : `<p>${esc(String(d.text || '').replace(/\*\*/g, ''))}</p>`).join('')}`
       + (c.how_to_spot ? `<p><strong>How to spot:</strong> ${esc(c.how_to_spot)}</p>` : ''));
   }
-  const used = [e.blog && Object.keys(e.blog).map(b => BRAND[b]).join(', '), e.pins && 'Ride Guide and Ride with GPS', (e.story || []).length && 'natural voice and Know Noosa', e.card && 'EO Crew wildlife card', e.talk && 'EO Crew tour manual'].filter(Boolean).join(' · ');
+  const used = [e.blog && Object.keys(e.blog).map(b => BRAND[b]).join(', '), e.pins && 'Ride Guide and Ride with GPS', (e.story || []).length && 'natural voice and Know Noosa', e.card && 'EO Crew wildlife card', e.talk && 'EO Crew tour manual', e.info && 'EO Crew Places and stories and manuals'].filter(Boolean).join(' · ');
   if ((e.used_on_rides || []).length) parts.unshift(`<p><strong>On rides in the Ride Guide app:</strong> ${e.used_on_rides.map(r => esc(r.name)).join(', ')}</p>`);
   return `<details id="${esc(e.key)}" data-k="${esc((e.title + ' ' + e.key).toLowerCase())}"><summary><span>${esc(e.title)}</span><small>${esc(used)}</small></summary><div class="body">${parts.join('')}<p class="meta">Key ${esc(e.key)} · updated ${esc(e.updated || '')}</p></div></details>`;
 }

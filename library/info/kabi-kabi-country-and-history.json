@@ -1,0 +1,29 @@
+{
+ "key": "kabi-kabi-country-and-history",
+ "kind": "info",
+ "group": "kabi-kabi",
+ "order": 1,
+ "title": "Kabi Kabi Country and history",
+ "status": "live",
+ "updated": "2026-11-12",
+ "info": {
+  "points": [
+   "The Kabi Kabi people are the Traditional Custodians of the land and waters from the Pine River near Caboolture in the south to the Burrum River near Maryborough in the north, and west to the Conondale Ranges.",
+   "Their Country takes in beaches, lakes, rivers, creeks, mountains and rainforest, including Lake Weyba and the Noosa Everglades system.",
+   "Aboriginal people are considered the oldest continuous culture on earth, going back around 50,000 years. When Europeans arrived there were around 250 different Aboriginal language groups, each with its own Country, customs and traditions.",
+   "The Kabi Kabi have lived with this Country for thousands of years. Lake Weyba was a food source.",
+   "Kabi Kabi culture is still here today, and people are working to keep the language alive."
+  ],
+  "detail_blocks": [
+   {
+    "type": "text",
+    "text": "Kabi Kabi Country includes Petrie, Redcliffe, Caboolture, Bribie Island, the Sunshine Coast and hinterland, Noosa, Rainbow Beach, Hervey Bay, Maryborough and Gympie."
+   },
+   {
+    "type": "text",
+    "text": "Early Europeans wrote the name down as they heard it, so older records spell it Kabi, Kgabi or Gabi. Kabi Kabi (say Gu-bee Gu-bee) is the spelling we use. The languages were spoken, not written, until explorers, historians and surveyors wrote them down, which is why spellings vary."
+   }
+  ]
+ },
+ "sources": "Gubbi Gubbi Dyungungoo, https://gubbigubbidyungungoo.com/ ; moved from the Stop 1 (kabi-kabi-country) guide notes, 12/11/2026."
+}

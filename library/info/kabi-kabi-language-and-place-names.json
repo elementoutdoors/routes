@@ -1,0 +1,42 @@
+{
+ "key": "kabi-kabi-language-and-place-names",
+ "kind": "info",
+ "group": "kabi-kabi",
+ "order": 2,
+ "title": "Kabi Kabi language and place names",
+ "status": "live",
+ "updated": "2026-11-12",
+ "info": {
+  "points": [
+   "Wunya ngulum (say one-ya nulem): welcome everyone.",
+   "Weyba: understood to mean place of stingrays. Lots of local names end in -ba, which means place.",
+   "Noosa: from Noothera or Gnuthuru, understood to mean shadow or shady place. Noosa Head was Wantima, understood to mean rising up or climbing up.",
+   "Cooroy: from kurui, possum. Cooroibah: kurui-ba, place of possums.",
+   "Tewantin: usually traced to dauwadhan, often translated as dead trees or logs.",
+   "Koala: recorded as goala (F.J. Watson's 1944 vocabulary of the Kabi language).",
+   "Spellings vary because the languages were spoken, not written."
+  ],
+  "detail_blocks": [
+   {
+    "type": "text",
+    "text": "More place names around our tours and rides:"
+   },
+   {
+    "type": "list",
+    "items": [
+     "Mt Cooran: from Guran, tall trees.",
+     "Mt Cooroora: a brush tail possum.",
+     "Lake Cootharaba: the place where wood for notched or studded clubs was found.",
+     "Doonan: thought to mean leaf of a tree.",
+     "Eumundi: after Ngumundi (or Huomundy), an Aboriginal leader said to have adopted the escaped convict Bracefield as his son in 1831.",
+     "Gympie: the Kabi Kabi name for a stinging tree that grew all around the Mary River.",
+     "Maroochydore: from Murukutchi-dha, place of the black swan.",
+     "Teewah: from Dauwah, dead wood or dry timber.",
+     "Tewantin: timber brought the first Europeans here, and felled logs were rafted to a sawmill on Lake Doonella in the 1860s, so a name meaning dead trees or logs fits.",
+     "Mt Tinbeerwah: place of grasstrees, or high hill climbing up."
+    ]
+   }
+  ]
+ },
+ "sources": "Sunshine Coast Council, Place Name Origins, https://heritage.sunshinecoast.qld.gov.au/Museums-and-Places/Place-Name-Origins ; Gubbi Gubbi Dyungungoo, https://gubbigubbidyungungoo.com/ ; F.J. Watson, Vocabularies of Four Representative Tribes of South Eastern Queensland (1944), Kabi entry \"Goa'la or koa'la, or koa'dla, native bear\". Moved from the Stop 1 guide notes and the kayak guide manual, 12/11/2026."
+}

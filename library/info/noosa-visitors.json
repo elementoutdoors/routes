@@ -1,0 +1,18 @@
+{
+ "key": "noosa-visitors",
+ "kind": "info",
+ "group": "noosa-facts",
+ "order": 4,
+ "title": "Noosa's visitors",
+ "status": "live",
+ "updated": "2026-11-12",
+ "info": {
+  "points": [
+   "Noosa Shire has only about 54,000 residents, but over 2 million visitors a year.",
+   "About 1.5 million come from within Queensland, around 400,000 from other states and around 100,000 from overseas.",
+   "That's about the same number of visitors as the Great Barrier Reef. Australia's top destination is the Sydney Opera House, with about 11 million a year."
+  ],
+  "detail_blocks": []
+ },
+ "sources": "Moved from Local facts for a chat (EO-TR-10, then EO-TR-14 Being a tour guide), 12/11/2026."
+}

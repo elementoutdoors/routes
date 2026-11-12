@@ -1,0 +1,28 @@
+{
+ "key": "noosa-ocean-life",
+ "kind": "info",
+ "group": "noosa-facts",
+ "order": 2,
+ "title": "Ocean life around Noosa",
+ "status": "live",
+ "updated": "2026-11-12",
+ "info": {
+  "points": [
+   "Dolphins, turtles and schools of colourful fish are common in the waters around Noosa Heads.",
+   "Around 18,000 humpback whales migrate past Noosa.",
+   "Loggerhead turtles nest on Noosa's beaches.",
+   "Sharks live in Noosa's coastal waters, and bull sharks are known to live in the region's rivers."
+  ],
+  "detail_blocks": [
+   {
+    "type": "text",
+    "text": "Only two major shark attacks are known to have happened in Noosa: in the 1960s, which was fatal, and in 2013, which caused an injury."
+   },
+   {
+    "type": "text",
+    "text": "Noosa Main Beach has standard shark nets, and there are ongoing discussions about other ways to manage sharks."
+   }
+  ]
+ },
+ "sources": "Moved from Local facts for a chat (EO-TR-10, then EO-TR-14 Being a tour guide), 12/11/2026."
+}
