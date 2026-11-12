@@ -921,15 +921,23 @@
     stopGps();
     if (!('geolocation' in navigator)) { banner(tu('This phone cannot share its location, so directions will not follow you.'), 'caution'); return; }
     ride.watch = navigator.geolocation.watchPosition(onFix, function (err) {
-      if (err.code === 1) banner(tu('Location is turned off for this page. Turn on location for your browser in your phone settings, then reopen the route.'), 'caution', 0);
+      if (err.code === 1) locBanner(tu('Location is blocked for this page. Tap here for how to turn it on.'));
+      else if (err.code === 2) locBanner(tu('Location is off on this phone. Tap here for how to turn it on.'));
     }, { enableHighAccuracy: true, maximumAge: 1000, timeout: 20000 });
+    // no blue dot after 20 seconds (12/11/2026): say so and offer the steps
+    clearTimeout(ride.noFixTimer);
+    ride.noFixTimer = setTimeout(function () {
+      if (ride.active && !ride.sim && !ride.paused && !ride.fix) locBanner(tu('Can\'t see the blue dot? Location doesn\'t seem to be on. Tap here for how to turn it on.'));
+    }, 20000);
   }
-  function stopGps() { if (ride.watch != null) { try { navigator.geolocation.clearWatch(ride.watch); } catch (e) {} ride.watch = null; } }
+  function locBanner(text) { ride.locBanner = true; banner(text, 'caution', 0, function () { ride.locBanner = false; openLocHelp(); }); }
+  function stopGps() { clearTimeout(ride.noFixTimer); if (ride.watch != null) { try { navigator.geolocation.clearWatch(ride.watch); } catch (e) {} ride.watch = null; } }
 
   function onFix(pos) {
     if (!ride.active) return;
     var c = pos.coords, acc = c.accuracy || 30;
     ride.fix = { lat: c.latitude, lng: c.longitude, acc: acc, heading: c.heading, speed: c.speed, t: Date.now() };
+    if (ride.locBanner) { ride.locBanner = false; $('banner').hidden = true; }
     updateMe();
     if (ride.paused) { followMap(c.latitude, c.longitude); return; }
     if (acc > 80) return;   // too vague to use
@@ -1997,7 +2005,6 @@
   function acceptNotice() {
     var m = lsGet('rg.notice', {}); m[riskKey()] = Date.now(); lsSet('rg.notice', m);
     closeSheet();
-    locate(function () {}, function () {});   // brings up the phone's location question now
   }
   function openNoticeCheck() {
     noticeDoubleChecked = true;
@@ -2042,10 +2049,17 @@
         } else set(null);
       } catch (e) { set(null); }
     })();
-    // location permission
+    // location (12/11/2026): ask the phone straight away, so its own "Allow location?" question comes up first.
+    // The answer updates the notice when it arrives: granted, denied (blocked for this page), off (no location from
+    // the phone) or null (can't tell). Until then st.loc is 'asking' (or the permission hint if the browser gives one).
+    out.loc = 'asking';
     try {
-      navigator.permissions.query({ name: 'geolocation' }).then(function (p) { out.loc = p.state; out.perm = p; one(); }, function () { one(); });
+      navigator.permissions.query({ name: 'geolocation' }).then(function (p) {
+        if (out.loc === 'asking' && (p.state === 'granted' || p.state === 'denied')) out.loc = p.state;
+        out.perm = p; one();
+      }, function () { one(); });
     } catch (e) { one(); }
+    askLocation(function (state) { out.loc = state; if (noticeState && isNoticeOpen()) openNotice(); });
     // battery (Android Chrome; iPhones don't share it)
     try {
       if (navigator.getBattery) navigator.getBattery().then(function (bt) { out.batt = { level: bt.level, charging: bt.charging }; one(); }, function () { one(); });
@@ -2053,6 +2067,37 @@
     } catch (e) { one(); }
   }
   var noticeState = null;
+  function askLocation(cb) {
+    if (!('geolocation' in navigator)) { cb(null); return; }
+    try {
+      navigator.geolocation.getCurrentPosition(function () { cb('granted'); },
+        function (err) { cb(err.code === 1 ? 'denied' : err.code === 2 ? 'off' : null); },
+        { enableHighAccuracy: false, maximumAge: 600000, timeout: 20000 });
+    } catch (e) { cb(null); }
+  }
+  // How to turn location on, for the rider's own phone and browser (notice How? and the map's location help)
+  function locSteps() {
+    var ua = navigator.userAgent;
+    if (isIOS()) return [tu('Open your phone\'s Settings app.'), tu('Tap Privacy & Security, then Location Services, and turn it on.'),
+      /CriOS/.test(ua) ? tu('Scroll down to Chrome and choose While Using the App.') : tu('Scroll down to Safari Websites and choose While Using the App.'),
+      tu('Come back to this page and reload it.')];
+    return [tu('Swipe down from the top of the screen and turn on Location.'), tu('In your browser, tap the icon at the left of the address bar, then Permissions or Site settings, and allow Location.'),
+      tu('Reload this page.')];
+  }
+  function openLocHelp() {
+    openSheet(function (b) {
+      b.appendChild(el('div', { class: 'kicker', text: tu('Location') }));
+      b.appendChild(el('h2', { id: 'sheet-title', text: tu('Turn on location') }));
+      b.appendChild(el('p', { text: tu('The map needs your location to show the blue dot and guide you.') }));
+      b.appendChild(stepsList(locSteps()));
+      var acts = el('div', { class: 'sheet-actions' });
+      var rl = el('button', { class: 'btn primary full', type: 'button', text: tu('Reload this page') });
+      rl.addEventListener('click', function () { saveProgress(); location.replace(location.pathname + '#' + R.key); location.reload(); });
+      var done = el('button', { class: 'btn outline full', type: 'button', text: tu('Done') });
+      done.addEventListener('click', closeSheet);
+      acts.appendChild(rl); acts.appendChild(done); b.appendChild(acts);
+    });
+  }
   function openNotice() {
     if (!noticeStart) noticeStart = Date.now();
     try { history.replaceState(null, '', location.pathname + '#' + R.key); } catch (e) {}   // so Add to Home Screen opens this route
@@ -2099,12 +2144,11 @@
           li.appendChild(ins);
         });
       // 3. location
-      var locHow = isIOS() ? (/CriOS/.test(navigator.userAgent) ? tu('Open Settings, then Privacy & Security, then Location Services. Turn it on, then set Chrome to While Using the App.')
-                                                                 : tu('Open Settings, then Privacy & Security, then Location Services. Turn it on, then set Safari Websites to While Using the App.'))
-                           : tu('Turn on Location in your phone\'s quick settings. Then in your browser, allow Location for this site.');
       if (st.loc === 'granted') doneList.push(tu('Location is on'));
-      else if (st.loc === 'denied') item(tu('Location is off for this browser'), tu('The map can\'t guide you without it. Switch it on in your phone\'s Settings, then come back to this page.'), locHow, null, true);
-      else item(tu('Location must be on'), tu('Your phone needs to share your location with your browser. If a question pops up, tap Allow. If not, switch it on in your phone\'s Settings.'), locHow);
+      else if (st.loc === 'denied') item(tu('Location is blocked for this page'), tu('The map can\'t guide you without it. Follow these steps, then reload this page.'), locSteps(), null, true);
+      else if (st.loc === 'off') item(tu('Location is off on this phone'), tu('The map can\'t guide you without it. Follow these steps, then reload this page.'), locSteps(), null, true);
+      else if (st.loc === 'asking') item(tu('Location must be on'), tu('Your phone will ask to use your location. Tap Allow.'));
+      else item(tu('Location must be on'), tu('Your phone needs to share your location with your browser. If a question pops up, tap Allow. If not, switch it on in your phone\'s Settings.'), locSteps());
       // 4. battery
       var pct = st.batt ? Math.round(st.batt.level * 100) : null;
       if (pct !== null && (pct >= 80 || st.batt.charging && pct >= 50)) doneList.push(tu('Battery {n}%').replace('{n}', pct));
