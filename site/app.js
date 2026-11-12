@@ -2009,7 +2009,7 @@
       var acts = el('div', { class: 'sheet-actions notice-check-acts' });
       var back = el('button', { class: 'btn full notice-ok', type: 'button', text: tu('Busted! I\'ll read it now and set my phone up.') });
       back.addEventListener('click', function () { openNotice(); });
-      var yes = el('button', { class: 'btn full notice-yes', type: 'button', text: tu('Yes, I read it. My phone is set up and the map is on my home screen.') });
+      var yes = el('button', { class: 'btn full notice-yes', type: 'button', text: tu('Yes, I read it. My phone is set up and the map is also saved on my home screen.') });
       yes.addEventListener('click', acceptNotice);
       acts.appendChild(back); acts.appendChild(yes); b.appendChild(acts);
     }, 'notice');

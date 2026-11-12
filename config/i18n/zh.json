@@ -1810,7 +1810,7 @@
  "The map can't guide you without it. Switch it on in your phone's Settings, then come back to this page.": "没有定位，地图无法为您导航。请在手机设置中开启，然后返回此页面。",
  "Two minutes now saves a lot of hassle out on the ride.": "现在花两分钟，骑行时少很多麻烦。",
  "We're not trying to nag, we just want your ride to go smoothly. Nearly every navigation problem or lost map on a self-guided ride comes from a phone that wasn't set up first.": "我们不是在唠叨，只是希望您骑行顺利。自助骑行中几乎所有的导航问题或地图丢失，都是因为手机事先没有设置好。",
- "Yes, I read it. My phone is set up and the map is on my home screen.": "是的，我已阅读。我的手机已设置好，地图也在主屏幕上。",
  "You are in a private tab": "您正在使用隐私标签页",
- "Your battery is at {n}%. Navigating uses a lot of battery. Start with a full, or nearly full, charge.": "您的电量为 {n}%。导航非常耗电。出发时请确保电量充满或接近充满。"
+ "Your battery is at {n}%. Navigating uses a lot of battery. Start with a full, or nearly full, charge.": "您的电量为 {n}%。导航非常耗电。出发时请确保电量充满或接近充满。",
+ "Yes, I read it. My phone is set up and the map is also saved on my home screen.": "是的，我已阅读。我的手机已设置好，地图也已保存到主屏幕。"
 }
