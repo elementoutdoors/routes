@@ -1,0 +1,18 @@
+{
+ "key": "noosa-landcare",
+ "kind": "info",
+ "group": "noosa-facts",
+ "order": 6,
+ "title": "Noosa and District Landcare",
+ "status": "live",
+ "updated": "2026-11-12",
+ "info": {
+  "points": [
+   "Noosa and District Landcare is the local community group restoring the land and waterways around Noosa.",
+   "Between 2022 and 2024 it planted about 133,000 trees over 332 hectares of logged hinterland forest, chosen to bring back the eucalypts koalas feed on.",
+   "$1 from every one of our guests goes to Noosa and District Landcare, through Trees for Tourism and Noosa Koala Connect."
+  ],
+  "detail_blocks": []
+ },
+ "sources": "Tree planting figures: library/places/koalas.json (Ride Guide koala story). $1 per guest: EO-TR-10 Caring for the place brief. Added 12/11/2026 at Ben's request."
+}
