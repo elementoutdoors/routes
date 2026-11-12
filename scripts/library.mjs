@@ -93,13 +93,14 @@ export function recordFrom(entries) {
   };
 }
 // Everything, for the site (EO Crew reads wildlife cards and kayak talking points from it).
-export function compiled(entries) {
+export function compiled(entries, usedRides = {}) {
   const out = [];
   for (const e of Object.values(entries).sort((a, b) => a.key.localeCompare(b.key))) {
     if (!live(e)) continue;
     const x = JSON.parse(JSON.stringify(e));
     for (const s of Object.values(x.blog || {})) s.text = blogText(s.paras);
     x.fingerprint = fp(JSON.stringify(e));
+    if (e.kind === 'place') x.used_on_rides = (usedRides[e.key] || []).sort((a, b) => a.name.localeCompare(b.name));
     out.push(x);
   }
   return { _about: 'The Element Outdoors Story Library, compiled by the Ride Guide build from library/ in github.com/elementoutdoors/routes. Read only: change the library, never this copy.', built: new Date().toISOString(), blogs: BLOGS, entries: out };

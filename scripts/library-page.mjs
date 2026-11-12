@@ -20,6 +20,7 @@ function entry(e) {
       + (c.how_to_spot ? `<p><strong>How to spot:</strong> ${esc(c.how_to_spot)}</p>` : ''));
   }
   const used = [e.blog && Object.keys(e.blog).map(b => BRAND[b]).join(', '), e.pins && 'Ride Guide and Ride with GPS', (e.story || []).length && 'natural voice and Know Noosa', e.card && 'EO Crew wildlife card', e.talk && 'EO Crew tour manual'].filter(Boolean).join(' · ');
+  if ((e.used_on_rides || []).length) parts.unshift(`<p><strong>On rides in the Ride Guide app:</strong> ${e.used_on_rides.map(r => esc(r.name)).join(', ')}</p>`);
   return `<details id="${esc(e.key)}" data-k="${esc((e.title + ' ' + e.key).toLowerCase())}"><summary><span>${esc(e.title)}</span><small>${esc(used)}</small></summary><div class="body">${parts.join('')}<p class="meta">Key ${esc(e.key)} · updated ${esc(e.updated || '')}</p></div></details>`;
 }
 

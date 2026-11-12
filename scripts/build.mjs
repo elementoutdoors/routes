@@ -709,7 +709,18 @@ async function main() {
   // the Story Library, published for EO Crew (wildlife cards, kayak talking points) and as a page to read
   health.problems.push(...libraryProblems);
   if (library) {
-    const lib = compiled(library);
+    // Where each place story is used (12/11/2026, Ben): the rides whose Ride with GPS route carries its pin, for EO Crew's
+    // Story Library tab. Only rides read live this build count (a ride on its last good copy has no live stops).
+    const usedRides = {};
+    for (const s of Object.values(placeStops)) {
+      const [brand, key] = s.place.split('#');
+      for (const slug of s.rides) {
+        const r = built.find(b => b.route.slug === slug);
+        const list = (usedRides[key] = usedRides[key] || []);
+        if (!list.some(x => x.slug === slug)) list.push({ slug, name: r ? r.route.name : slug, brand, pin: s.name });
+      }
+    }
+    const lib = compiled(library, usedRides);
     fs.writeFileSync(path.join(dist, 'library.json'), JSON.stringify(lib));
     fs.writeFileSync(path.join(dist, 'library.html'), libraryPage(lib));
     const kinds = {}; lib.entries.forEach(e => { kinds[e.kind] = (kinds[e.kind] || 0) + 1; });
