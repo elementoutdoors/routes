@@ -30,8 +30,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      # Public toilets for the map icons (scripts/toilets.mjs, National Public Toilet Map, updated monthly by the government).
-      # Refreshed at 3am and on demand; committed only when the toilets change. A failed download keeps the last file.
+      # Public toilets for the map icons (scripts/toilets.mjs), read from the base map tiles so they match the map's own icons.
+      # Checked at 3am and on demand; downloads only when OpenFreeMap publishes a new map. A failed download keeps the last file.
       - name: Refresh public toilets
         if: github.event_name == 'workflow_dispatch' || github.event.schedule == '7 17 * * *'
         continue-on-error: true
@@ -39,7 +39,7 @@ jobs:
           node scripts/toilets.mjs
           if git diff --quiet -- config/toilets.json; then exit 0; fi
           git config user.name "Ride Guide build"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add config/toilets.json && git commit -q -m "Public toilets refreshed from the National Public Toilet Map"
+          git add config/toilets.json && git commit -q -m "Public toilets refreshed from the base map"
           git pull -q --rebase origin main && git push -q origin HEAD:main
       - name: Get saved voice recordings
         run: |

@@ -163,7 +163,8 @@ function offersFor(T, slug) {
 }
 
 // Public toilets near a route (Ben, 13/11/2026): a small icon on the riding map only. Never spoken, never popped up, not in
-// the Stops list. From config/toilets.json (scripts/toilets.mjs, National Public Toilet Map, refreshed by the 3am build).
+// the Stops list. From config/toilets.json (scripts/toilets.mjs, read from the base map tiles so they sit on the map's own
+// toilet icons; refreshed by the 3am build).
 // A toilet within nearMetres of the line is shown; toilets within 30 m of one already shown (two blocks in one park) are one icon.
 const toiletsCfg = readJson('config/toilets.json', { toilets: [], nearMetres: 150, area: null });
 function toiletsFor(T) {
@@ -291,7 +292,7 @@ function transform(entry, r) {
     let plain = 0;
     if (!isFinish && kind !== 'caution' && WARN_NAME.test(name)) { kind = 'caution'; warnings.push(`stop "${name}" is a warning on a ${p.poi_type_name} icon; the app treats it as Caution (change the icon to Caution in the POI Library)`); }
     else if (!isFinish && kind === 'info' && TOILET_NAME.test(name)) kind = 'toilet';
-    // Toilet pins in Ride with GPS are left out (Ben, 11/10/2026). Toilets come from the National Public Toilet Map instead
+    // Toilet pins in Ride with GPS are left out (Ben, 11/10/2026). Toilets come from the base map tiles instead
     // and show as a small map icon only (toiletsFor, Ben 13/11/2026).
     if (kind === 'toilet' || TOILET_NAME.test(name)) continue;
     else if (!isFinish && WELCOME_NAME.test(name)) plain = 1;   // welcome or briefing pins are read out without "You have reached..."
@@ -466,7 +467,7 @@ async function main() {
   fs.writeFileSync(path.join(dist, 'ui.json'), JSON.stringify(uiOut));
 
   const health = { built: now.toISOString(), build, routes: [], offers: [], problems: [] };
-  health.toilets = { source: toiletsCfg.source || null, sourceUpdated: toiletsCfg.sourceUpdated || null, fetched: toiletsCfg.fetched || null, inArea: (toiletsCfg.toilets || []).length, nearMetres: toiletsCfg.nearMetres || 150 };
+  health.toilets = { source: toiletsCfg.source || null, mapVersion: toiletsCfg.mapVersion || null, fetched: toiletsCfg.fetched || null, inArea: (toiletsCfg.toilets || []).length, nearMetres: toiletsCfg.nearMetres || 150 };
   if (!(toiletsCfg.toilets || []).length) health.problems.push('toilets: config/toilets.json is missing or empty, so no toilet icons are shown (run node scripts/toilets.mjs)');
   health.counter = { on: !!countUrl() };
   if (!countUrl()) health.problems.push('ride counts: config/counter.json has no valid counter address, so rides are not being counted');

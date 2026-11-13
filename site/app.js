@@ -405,7 +405,7 @@
   function initMap() {
     if (map || !window.maplibregl) return;
     map = new maplibregl.Map({
-      container: 'map', style: S.sat ? satStyle() : STYLE, attributionControl: { compact: true, customAttribution: 'Toilets: National Public Toilet Map, CC BY 3.0 AU' },
+      container: 'map', style: S.sat ? satStyle() : STYLE, attributionControl: { compact: true },
       center: [R.track.lng[0], R.track.lat[0]], zoom: 13, pitchWithRotate: false, dragRotate: false, touchPitch: false,
       // Battery (13/11/2026). Labels switch on and off rather than fading: a fade keeps the map redrawing for a third of
       // a second after every move. And the map is drawn at no more than twice the screen's base size: a 3x phone screen
@@ -457,13 +457,13 @@
     if (!map) return;
     var start = el('div', { class: 'mk start', title: tu('Start') }, svg('start'));
     markers.push(new maplibregl.Marker({ element: start }).setLngLat([R.track.lng[0], R.track.lat[0]]).addTo(map));
-    // Public toilets (National Public Toilet Map): a small icon only. Never spoken or popped up; a tap shows the name and
-    // opening hours (Ben, 13/11/2026). Drawn first so stops and offers sit on top of them.
+    // Public toilets, taken from the base map's own toilets so they sit exactly on its icons: a small icon only. Never spoken
+    // or popped up; a tap shows "Toilets" and the name if it has one (Ben, 13/11/2026). Drawn first so stops and offers sit on top of them.
     (R.toilets || []).forEach(function (t) {
       var b = el('button', { class: 'mk wc', type: 'button', 'aria-label': tu('Toilets') }, svg('wc'));
       b.addEventListener('click', function (e) {
         e.stopPropagation();
-        notice(tu('Toilets'), [t.n].concat(t.h ? [tu('Opening hours') + ': ' + t.h] : []));
+        notice(tu('Toilets'), [t.n, t.h ? tu('Opening hours') + ': ' + t.h : ''].filter(Boolean));
       });
       markers.push(new maplibregl.Marker({ element: b }).setLngLat([t.lng, t.lat]).addTo(map));
     });
