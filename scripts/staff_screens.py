@@ -99,6 +99,16 @@ def close_sheet(page):
         page.click('#sheet-close'); time.sleep(0.4)
 
 
+def set_saver(page, on):
+    """Battery saver on or off from the ride menu, whatever it was. It is on by default (27/10/2026), so the pictures
+    turn it off for the riding screens, where a black screen would spoil them, and on only for its own picture."""
+    page.click('#btn-ride-settings'); time.sleep(0.8)
+    sw = page.locator('.toggle-row', has_text='Battery saver').locator('.switch')
+    if (sw.get_attribute('aria-pressed') == 'true') != on:
+        sw.click(); time.sleep(0.3)
+    close_sheet(page)
+
+
 def off_point(T, i, metres):
     """A point this far to the side of the route line at track index i."""
     import math
@@ -258,6 +268,7 @@ def app_screens(p):
         page.click('.lock-ok')
     time.sleep(3)
     close_sheet(page)
+    set_saver(page, False)
     ctx.set_geolocation({'latitude': la + 0.00001, 'longitude': ln, 'accuracy': 8}); time.sleep(1.5)
     shot(page, '07-to-start.jpg', 'riding', 'Before reaching the route',
          'Started away from the route. Nothing is wrong: directions start once they reach the line.',
@@ -321,16 +332,14 @@ def app_screens(p):
     close_sheet(page)
 
     # battery saver: turn it on from the ride menu, then wait for the screen to black out away from a turn
-    page.click('#btn-ride-settings'); time.sleep(0.8)
-    page.locator('.toggle-row', has_text='Battery saver').locator('.switch').click(); time.sleep(0.3)
-    close_sheet(page)
+    set_saver(page, True)
     far = i
     while far < n - 1 and not any(0 < c['d'] - T['d'][far] < 400 for c in cues) and T['d'][far] - T['d'][i] < 1500:
         far += step
     # a stretch with no turn in the next 400 m
     best = None
     for j in range(i, n, step):
-        if not any(-20 < c['d'] - T['d'][j] < 450 for c in cues):
+        if not any(-60 < c['d'] - T['d'][j] < 450 for c in cues):
             best = j; break
     j = best or i
     for k in range(i, j + 1, step):
@@ -339,18 +348,16 @@ def app_screens(p):
     i = j
     page.evaluate("() => { const b = document.getElementById('banner'); if (b) b.hidden = true; }")
     # the saver checks on each GPS reading: keep readings coming while the blackout delay runs out
-    for k in range(26):
+    for k in range(40):
         ctx.set_geolocation({'latitude': T['lat'][i] + (k % 2) * 0.000005, 'longitude': T['lng'][i], 'accuracy': 8}); time.sleep(1)
         if page.is_visible('#saver'):
             break
     shot(page, '13-battery-saver.jpg', 'riding', 'Battery saver',
-         'With Battery saver on, the screen goes black between turns (almost no power) and lights up before each turn, at stops and when off route.',
+         'With Battery saver on, the screen goes black between turns (almost no power). It lights up before each turn and stays lit until just past it, and lights at stops and when off route. It still shows the next direction and how far it is.',
          [(1, '.saver-hint', 'Tap anywhere to wake the screen.', 'tl')])
     if page.is_visible('#saver'):
         page.click('#saver'); time.sleep(0.3)
-    page.click('#btn-ride-settings'); time.sleep(0.8)
-    page.locator('.toggle-row', has_text='Battery saver').locator('.switch').click(); time.sleep(0.3)
-    close_sheet(page)
+    set_saver(page, False)
 
     # ride on to the stop with a story
     got = False

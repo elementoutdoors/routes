@@ -957,7 +957,15 @@
     if (!('geolocation' in navigator)) { banner(tu('This phone cannot share its location, so directions will not follow you.'), 'caution'); return; }
     ride.watch = navigator.geolocation.watchPosition(onFix, function (err) {
       if (err.code === 1) locBanner(tu('Location is blocked for this page. Tap here for how to turn it on.'));
-      else if (err.code === 2) locBanner(tu('Location is off on this phone. Tap here for how to turn it on.'));
+      else if (err.code === 2) {
+        // "No position" from a phone that has been giving readings is a GPS blip (under trees, between buildings), not
+        // location turned off: the banner said it was off, and lit the screen for the blackout time, on every blip.
+        // It is only shown if no reading follows within LOC_QUIET_MS (13/11/2026). With no reading yet, it shows at once.
+        var seen = ride.fix ? ride.fix.t : 0, off = function () { locBanner(tu('Location is off on this phone. Tap here for how to turn it on.')); };
+        clearTimeout(ride.locOffTimer);
+        if (!seen) off();
+        else ride.locOffTimer = setTimeout(function () { if (ride.active && !ride.paused && ride.watch != null && ride.fix && ride.fix.t === seen) off(); }, LOC_QUIET_MS);
+      }
     }, { enableHighAccuracy: true, maximumAge: 1000, timeout: 20000 });
     // no blue dot after 20 seconds (12/11/2026): say so and offer the steps
     clearTimeout(ride.noFixTimer);
@@ -965,8 +973,9 @@
       if (ride.active && !ride.sim && !ride.paused && !ride.fix) locBanner(tu('Can\'t see the blue dot? Location doesn\'t seem to be on. Tap here for how to turn it on.'));
     }, 20000);
   }
+  var LOC_QUIET_MS = 8000;
   function locBanner(text) { ride.locBanner = true; banner(text, 'caution', 0, function () { ride.locBanner = false; openLocHelp(); }); }
-  function stopGps() { clearTimeout(ride.noFixTimer); if (ride.watch != null) { try { navigator.geolocation.clearWatch(ride.watch); } catch (e) {} ride.watch = null; } }
+  function stopGps() { clearTimeout(ride.noFixTimer); clearTimeout(ride.locOffTimer); if (ride.watch != null) { try { navigator.geolocation.clearWatch(ride.watch); } catch (e) {} ride.watch = null; } }
 
   function onFix(pos) {
     if (!ride.active) return;
