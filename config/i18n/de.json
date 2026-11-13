@@ -1832,5 +1832,9 @@
  "The map needs your location to show the blue dot and guide you.": "Die Karte braucht Ihren Standort, um den blauen Punkt zu zeigen und Sie zu führen.",
  "Turn on location": "Standort einschalten",
  "Your phone will ask to use your location. Tap Allow.": "Ihr Telefon fragt gleich nach Ihrem Standort. Tippen Sie auf Erlauben.",
- "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "Gehen Sie zurück zu Einstellungen, tippen Sie auf Apps, dann Safari, dann Standort, und wählen Sie Fragen oder Erlauben."
+ "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "Gehen Sie zurück zu Einstellungen, tippen Sie auf Apps, dann Safari, dann Standort, und wählen Sie Fragen oder Erlauben.",
+ "Read this": "Bitte lesen",
+ "Do not lock your screen": "Sperren Sie Ihren Bildschirm nicht",
+ "If your phone locks, the app will stop navigating.": "Wenn Ihr Telefon gesperrt wird, stoppt die App die Navigation.",
+ "The screen goes dark between turns to save battery. That is normal. Tap the screen to light it up. Do not press the button on the side of your phone.": "Zwischen den Abbiegungen wird der Bildschirm dunkel, um Akku zu sparen. Das ist normal. Tippen Sie auf den Bildschirm, um ihn wieder einzuschalten. Drücken Sie nicht die Taste an der Seite Ihres Telefons."
 }

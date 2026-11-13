@@ -65,7 +65,6 @@ export const PHRASES = [
   'You have reached a point of interest.',
   'You have finished the ride. Thanks for riding with us.',
   'Voice on.',
-  'Keep this screen open while you ride. Locking your phone stops the directions.',
   'Directions stopped while your phone was locked. Keep this screen open while you ride.',
   'Starting from here. You will ride the whole loop and finish back here.'
 ];

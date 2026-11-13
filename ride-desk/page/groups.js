@@ -26,10 +26,10 @@
         hear: function (v) { return "“Caution. Path can be slippery when wet.” about " + secs(v) + " before it."; } }
     ]},
     { id: "screen", title: "Screen", intro: "What riders start with. They can change these in the app. The screen always stays on during a ride (a locked phone cannot speak directions), so there is no setting for that.", items: [
-      { k: "batterySaver", label: "Battery saver", help: "Blacks out the screen between turns and lights it up for each turn, stop or warning. A stop card that opens by itself closes again once it has been read. A black screen uses very little power on most phones.", toggle: true, rec: true },
+      { k: "batterySaver", label: "Battery saver", help: "Blacks out the screen between turns and lights it up for each turn, stop or warning. It stays lit through the turn, until the rider is about 50 m past it. A stop or warning card that opens by itself closes again once it has been read. The screen also goes black when a rider has stopped for a minute, and lights again when they roll on. A black screen uses very little power on most phones.", toggle: true, rec: true },
       { k: "readStoriesAloud", label: "Point of interest stories for a new ride", help: "Only used for a ride that has no setting of its own yet. Each ride's own switch is on its card under Rides.", toggle: true, rec: true },
-      { k: "wakeBeforeTurnMetres", label: "Battery saver lights up before a turn", help: "Only used when battery saver is on.", min: 80, max: 1000, step: 10, rec: 250, unit: "m",
-        hear: function (v) { return "The screen lights up about " + secs(v) + " before each turn."; } },
+      { k: "wakeBeforeTurnMetres", label: "Battery saver lights up before a turn", help: "Only used when battery saver is on. Set it further out than the early warning above if the map should already be up when the voice first speaks; closer in saves battery, and the black screen shows the direction in the meantime.", min: 80, max: 1000, step: 10, rec: 250, unit: "m",
+        hear: function (v) { return "The screen lights up about " + secs(v) + " before each turn and stays lit until just past it."; } },
       { k: "blackoutAfterSeconds", label: "Battery saver blacks out after", help: "Seconds without a tap before the screen goes black again.", min: 5, max: 120, step: 5, rec: 20, unit: "s",
         hear: function (v) { return "Goes black " + dur(v) + " after the last tap."; } }
     ]},

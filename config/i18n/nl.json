@@ -1832,5 +1832,9 @@
  "The map needs your location to show the blue dot and guide you.": "De kaart heeft je locatie nodig om de blauwe stip te tonen en je te leiden.",
  "Turn on location": "Zet locatie aan",
  "Your phone will ask to use your location. Tap Allow.": "Je telefoon vraagt zo om je locatie. Tik op Sta toe.",
- "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "Ga terug naar Instellingen, tik op Apps, dan Safari, dan Locatie, en kies Vraag of Sta toe."
+ "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "Ga terug naar Instellingen, tik op Apps, dan Safari, dan Locatie, en kies Vraag of Sta toe.",
+ "Read this": "Lees dit",
+ "Do not lock your screen": "Vergrendel je scherm niet",
+ "If your phone locks, the app will stop navigating.": "Als je telefoon vergrendelt, stopt de navigatie.",
+ "The screen goes dark between turns to save battery. That is normal. Tap the screen to light it up. Do not press the button on the side of your phone.": "Het scherm wordt donker tussen afslagen om de batterij te sparen. Dat is normaal. Tik op het scherm om het weer aan te zetten. Druk niet op de knop aan de zijkant van je telefoon."
 }

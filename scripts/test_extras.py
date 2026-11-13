@@ -33,7 +33,8 @@ with sync_playwright() as p:
     pg.screenshot(path=f'{out}/keep.png'); pg.click('#sheet-close'); time.sleep(0.3); print('url scrubbed again:', key not in pg.url)
     # 3. far from the start (Brisbane)
     pg.click('#start-btn'); time.sleep(1)
-    if pg.is_visible('text=I understand'): pg.click('text=I understand')
+    if pg.is_visible('text=I understand') and not pg.is_visible('.lock-ok'): pg.click('text=I understand'); time.sleep(0.5)   # Before you ride card (first start on a phone)
+    if pg.is_visible('.lock-ok'): pg.click('.lock-ok')   # Do not lock your screen card (13/11/2026): every start
     time.sleep(2)
     print('said:', pg.evaluate('window.__said'))
     print('cue card:', pg.inner_text('#cue-dist'), '|', pg.inner_text('#cue-text'))

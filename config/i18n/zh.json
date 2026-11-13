@@ -1832,5 +1832,9 @@
  "The map needs your location to show the blue dot and guide you.": "地图需要您的位置来显示蓝点并为您导航。",
  "Turn on location": "开启定位",
  "Your phone will ask to use your location. Tap Allow.": "您的手机会请求使用您的位置。请轻点允许。",
- "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "返回设置，轻点 App，然后 Safari 浏览器，然后位置，选择询问或允许。"
+ "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "返回设置，轻点 App，然后 Safari 浏览器，然后位置，选择询问或允许。",
+ "Read this": "请先阅读",
+ "Do not lock your screen": "请勿锁定屏幕",
+ "If your phone locks, the app will stop navigating.": "手机一旦锁屏，导航就会停止。",
+ "The screen goes dark between turns to save battery. That is normal. Tap the screen to light it up. Do not press the button on the side of your phone.": "为了省电，两次转弯之间屏幕会变黑。这是正常现象。点击屏幕即可点亮。请不要按手机侧面的按键。"
 }

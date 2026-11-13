@@ -46,7 +46,8 @@ with sync_playwright() as p:
         page.screenshot(path=f'{out}/2-offer.png')
         page.click('#sheet-close'); time.sleep(0.3)
     page.click('#start-btn'); time.sleep(1)
-    if page.is_visible('text=I understand'): page.click('text=I understand')
+    if page.is_visible('text=I understand') and not page.is_visible('.lock-ok'): page.click('text=I understand'); time.sleep(0.5)   # Before you ride card (first start on a phone)
+    if page.is_visible('.lock-ok'): page.click('.lock-ok')   # Do not lock your screen card (13/11/2026): every start
     time.sleep(1)
     page.screenshot(path=f'{out}/3-ride-start.png')
 

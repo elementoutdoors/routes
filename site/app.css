@@ -147,15 +147,19 @@ a.btn{text-decoration:none;box-sizing:border-box}
 .remain{font-size:24px;font-weight:900;white-space:nowrap}
 .remain-sub{font-size:13px;font-weight:600;color:var(--muted)}
 .progress{height:8px;border-radius:4px;background:var(--sand);overflow:hidden}
-.progress-bar{height:8px;width:0;background:var(--line);transition:width .6s}
+.progress-bar{height:8px;width:0;background:var(--line)}
 .bottom-btns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .tile{min-height:54px;border-radius:12px;border:none;background:var(--sand);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 6px;color:var(--ink)}
 .tile svg{width:18px;height:18px}
 .tile.dark{background:var(--primary);color:#fff}
-.saver{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.94);color:#fff;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center}
+/* Battery saver's black screen. Fully black (13/11/2026): on the OLED screens most phones now have, a black pixel is
+   switched off, and at 94% black the map still showed through faintly, so no pixel was ever off. The map and the ride
+   controls under it are not drawn at all while it is up. */
+.saver{position:absolute;inset:0;z-index:20;background:#000;color:#fff;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center}
 .saver-dist{font-size:48px;font-weight:900}
 .saver-text{font-size:20px;font-weight:600;line-height:1.35;max-width:420px}
-.saver-hint{font-size:13px;opacity:.6;margin-top:24px}
+.saver-hint{font-size:15px;font-weight:600;opacity:.75;margin-top:24px}
+body.saver-on #map,body.saver-on .cue-card,body.saver-on .side-btns,body.saver-on .bottom-sheet{visibility:hidden}
 
 /* markers */
 .mk{width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.3);cursor:pointer;padding:0}
@@ -380,3 +384,13 @@ body.view-check #check-panel{display:block;position:fixed;left:0;right:0;bottom:
 .nd-row::before{content:"";position:absolute;left:2px;top:6px;width:14px;height:8px;border-left:3px solid #1B7F3B;border-bottom:3px solid #1B7F3B;transform:rotate(-45deg)}
 .ni-steps{margin:6px 0 0;padding-left:20px;line-height:1.5}
 .ni-steps li{margin:2px 0}
+/* Do not lock your screen (Ben, 13/11/2026): the big red card from Start riding */
+.sheet-body.lockcard{padding:0 0 calc(22px + var(--safe-bot))}
+.lock-hero{background:#C62828;color:#fff;border-radius:22px 22px 0 0;padding:28px 22px 26px;text-align:center}
+.lock-hero svg{width:76px;height:76px;stroke-width:2.2;margin-bottom:10px}
+.lock-kicker{font-size:16px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase}
+.sheet-body .lock-title{font-size:36px;line-height:1.08;font-weight:900;margin:8px 0 0;color:#fff}
+.sheet-body p.lock-lead{font-size:21px;line-height:1.35;font-weight:800;color:#7F1010;margin:22px 22px 0;text-align:center}
+.sheet-body p.lock-more{font-size:16px;line-height:1.5;font-weight:600;color:#3B3F45;margin:14px 22px 0;text-align:center}
+.lockcard .sheet-actions{margin:24px 18px 0}
+.btn.lock-ok{background:#C62828;color:#fff;min-height:70px;font-size:23px;border-radius:18px}
