@@ -21,7 +21,10 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Pinned to Ubuntu 24.04 (13/11/2026). GitHub moved "ubuntu-latest" to Ubuntu 26.04, whose Python 3.14 cannot install
+    # the pinned Playwright (1.47.0) that the staff screenshots and the ride sheets use, so both steps failed (without
+    # stopping the build, so nobody was told). Move this and the two pip lines below together, and check both steps run.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -52,22 +55,35 @@ jobs:
           git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:voice-cache
           echo "Saved $(find . -name '*.mp3' | wc -l) recordings"
 
-      # Staff screenshots for the EO Crew Ride Guide manual: taken on a phone-sized browser at 3am, on every change and on
-      # demand, locked with EO Crew's public key (scripts/staff_bundle.mjs) and kept on the staff-screens branch, so the
-      # hourly builds publish the last set without retaking them. A failure keeps the last set and never stops the build.
+      # Staff screenshots for the EO Crew Ride Guide manual: taken on a phone-sized browser on every change, on demand, and
+      # by the first scheduled build after the last set is 20 hours old (so once a night, whichever scheduled run GitHub
+      # actually fires: since the afternoon of 5/11/2026 it has fired only 3 to 5 of the 16 scheduled builds a day, hours
+      # late, so the 3am run cannot be counted on by name). Locked with EO Crew's public key
+      # (scripts/staff_bundle.mjs) and kept on the staff-screens branch, so the other builds publish the last set without
+      # retaking them. A failure keeps the last set and never stops the build. staff-screens.json (when they were last
+      # taken and how many: nothing private) is published beside the locked file, so the weekly check (scripts/check.mjs)
+      # can tell when the screenshots have stopped being retaken.
       - name: Get staff screenshots
+        id: shots
         run: |
           if git fetch --depth=1 origin staff-screens:staff-screens 2>/dev/null; then git worktree add .staff-screens staff-screens; else mkdir -p .staff-screens; fi
           if [ -f .staff-screens/staff-screens.enc.json ]; then cp .staff-screens/staff-screens.enc.json dist/; fi
+          stale=true
+          if [ -f .staff-screens/staff-screens.json ]; then
+            cp .staff-screens/staff-screens.json dist/ || true
+            stale=$(node -e "try{const t=Date.parse(require('./.staff-screens/staff-screens.json').taken);console.log(Date.now()-t<20*3600*1000?'false':'true')}catch(e){console.log('true')}" 2>/dev/null || echo true)
+          fi
+          echo "stale=$stale" >> "$GITHUB_OUTPUT"
       - name: Take staff screenshots
-        if: github.event_name != 'schedule' || github.event.schedule == '7 17 * * *' || hashFiles('.staff-screens/staff-screens.enc.json') == ''
+        if: github.event_name != 'schedule' || steps.shots.outputs.stale == 'true' || hashFiles('.staff-screens/staff-screens.enc.json') == ''
         continue-on-error: true
         run: |
           pip install -q playwright==1.47.0 && python3 -m playwright install --with-deps chromium > /dev/null
           (python3 -m http.server 8765 -d dist > /dev/null 2>&1 &) && sleep 2
           python3 scripts/staff_screens.py http://localhost:8765/ /tmp/screens
           node scripts/staff_bundle.mjs screens /tmp/screens dist/staff-screens.enc.json
-          mkdir -p /tmp/ss && cp dist/staff-screens.enc.json /tmp/ss/ && cd /tmp/ss
+          node -e "const m=require('/tmp/screens/screens.json');require('fs').writeFileSync('dist/staff-screens.json',JSON.stringify({taken:m.taken,count:m.screens.length}))"
+          mkdir -p /tmp/ss && cp dist/staff-screens.enc.json dist/staff-screens.json /tmp/ss/ && cd /tmp/ss
           git init -q -b staff-screens
           git config user.name "Ride Guide build"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A && git commit -q -m "Staff screenshots $(date -u +%FT%H:%MZ)"

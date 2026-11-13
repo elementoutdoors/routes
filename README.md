@@ -200,6 +200,13 @@ phone-sized browser with simulated GPS (18 km/h, nobody tapping; again at 25 km/
   is now asked for again when it is released, on a full screen change, on every GPS reading (every 10 s after a
   refusal) and on every tap (some phones only grant it again from a tap). It is let go at the finish, so a phone left on
   the finish card can lock as usual.
+- A GPS blip is not "location is off" (`startGps`, `LOC_QUIET_MS`). Since 12/11/2026 a "no position" answer from the
+  phone showed the "Location is off on this phone" banner, which also lit the screen for the blackout time. A phone
+  that is giving readings and misses one (under trees, between buildings) has not had location turned off, so the
+  banner now only comes up if no reading follows within 8 seconds, or at once when there has been no reading at all.
+  There is one wait per quiet spell (`ride.locQuiet`): a phone that repeats the miss every second does not push the
+  wait back, and once the banner has come up each further miss shows it again at once, until a reading arrives.
+  Found because the test browser reports a miss before every reading, which kept the screen lit for good.
 - Not done: a backup for phones whose browser has no working wake lock (iPhones before iOS 16.4, and a ride opened from
   a home screen icon before iOS 18.4, where Apple's Safari 18.4 release notes list it as fixed). The usual fix is a
   hidden looping video (the NoSleep.js library). It is third party code that cannot be tested from here on a real
@@ -218,6 +225,25 @@ phone." (a rider who takes the black screen for a sleeping phone and presses the
 button starts the ride. It took the place of the spoken "Keep this screen open while you ride" line at the start of the
 ride, which Ben asked to drop; with that line gone the first direction's early warning is no longer crowded out. Staff
 check links and Test drive skip the card. In all 9 languages. Change the wording only with Ben. Screenshot 06c.
+
+The build machine (13/11/2026): GitHub moved its "ubuntu-latest" runner to Ubuntu 26.04, whose Python 3.14 cannot install
+the pinned Playwright (1.47.0), so the staff screenshot step and any ride sheet rebuild failed. Neither stops the build
+(the last good set is kept), so nothing said so. The build job is now pinned to `ubuntu-24.04`. The screenshots are
+retaken on every change and by the first scheduled build after the last set is 20 hours old, whichever scheduled run
+that is. The build publishes `staff-screens.json` (when the set was taken and how many pictures), and the weekly check
+(`scripts/check.mjs`, version 12) raises an issue if the set is more than 3 days old.
+
+Scheduled builds are not arriving hourly (found 13/11/2026). The schedule has not changed since 18/10/2026 (3:07am, then
+hourly from 6:07am to 8:07pm Brisbane: 16 a day), and on 3/11 and 4/11/2026 GitHub ran 15 of them each day. Since the
+afternoon of 5/11/2026 it has run 3 to 5 a day, hours late (the 3:07am run has arrived between 6:47am and 10:38am
+since 7/11). GitHub's own documentation says scheduled runs can be delayed, and dropped, when it is busy. A push still
+builds at once, so Ride Desk saves are not affected; an edit made in Ride with GPS now waits for the next scheduled
+build, usually 6 to 8 hours and up to 11. Not fixed: it needs a decision on what should start the builds instead of
+GitHub's scheduler.
+
+Staff screenshots (`scripts/staff_screens.py`): the Battery saver picture (13) had been showing a lit map since
+27/10/2026, when battery saver became on by default: the script clicked the switch to turn it on, which turned it off.
+It now sets the switch to the state it wants (`set_saver`): off for the riding pictures, on for its own picture.
 
 ## Before you start notice (11/11/2026)
 A red card that comes up first when a ride opens in a browser tab, so riders who are not tech savvy don't lose the map. Points: use a normal tab (not private or incognito), save the map to the home screen (closing the tab loses it, closing the browser app is fine), location must be on (with a live "Location is on/off" line where the browser can tell), charge the phone, and on loops only, ride the loop in one direction. The home screen and location steps sit behind "How?" links. Closing line: if they choose not to and lose the map, they find their own way back. Button: "I've read this. I've done it, or chosen not to." A language picker sits in the notice (the top bar language button is under the backdrop while it is open). It is kept per ride per phone (localStorage rg.notice), and also brings up the phone's location question. Skipped from a home screen icon (standalone) and on ?check links. Wording agreed with Ben 11/11/2026; change it only with him. Code: site/app.js openNotice and needNotice; styles at the end of site/app.css. Screenshot 01b in the staff pictures.
