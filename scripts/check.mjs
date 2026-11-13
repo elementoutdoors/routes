@@ -57,6 +57,17 @@ if (unruled.length) notes.push(`directions: ${unruled.length} flagged directions
 dirs.filter(x => x.ruled && x.ruled !== 'keep').forEach(x => issues.push(`direction ruled "${x.ruled}" but not applied yet: ${x.slug} at ${x.d} m, "${x.n}"`));
 const directionFlags = unruled;
 
+// Version 12 (13/11/2026): public toilet icons. The 3am build refreshes config/toilets.json from the National Public Toilet
+// Map; flag it if that has stopped (file over 60 days old) or a live ride shows none at all.
+const tl = h.toilets;
+if (!tl || !tl.inArea) issues.push('toilets: no public toilets in the build (config/toilets.json missing or empty); run node scripts/toilets.mjs and push');
+else {
+  const tAge = (Date.now() - new Date(tl.fetched).getTime()) / 86400000;
+  if (tAge > 60) issues.push(`toilets: config/toilets.json last refreshed ${Math.round(tAge)} days ago (the 3am "Refresh public toilets" step may be failing); run node scripts/toilets.mjs and push`);
+  const none = h.routes.filter(r => r.ok && r.toilets === 0).map(r => r.slug);
+  if (none.length) notes.push(`toilets: no public toilet within ${tl.nearMetres} m of ${none.join(', ')}`);
+}
+
 // natural voice: the build records new lines each night; check it is running, inside its cap, and the recordings load
 const v = h.voice;
 if (!v) issues.push('natural voice: no voice report in health.json (voice step not running)');

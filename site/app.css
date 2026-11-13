@@ -167,6 +167,8 @@ body.saver-on #map,body.saver-on .cue-card,body.saver-on .side-btns,body.saver-o
 .mk.caution{background:#C2410C}
 .mk.toilet,.mk.food,.mk.drink,.mk.service{background:#5B5F66;width:28px;height:28px}
 .mk.toilet svg,.mk.food svg,.mk.drink svg,.mk.service svg{width:14px;height:14px}
+.mk.wc{background:#2563A8;width:24px;height:24px;border-width:2px;z-index:0}
+.mk.wc svg{width:15px;height:15px;stroke-width:1.6;fill:currentColor}
 .mk.offer{background:var(--accent);color:var(--primary);border-radius:10px}
 .mk.finish,.mk.start{background:#2F5D3A}
 .me{width:22px;height:22px;border-radius:50%;background:#1A73E8;border:4px solid #fff;box-shadow:0 0 0 8px rgba(26,115,232,.2),0 2px 6px rgba(0,0,0,.3);position:relative}

@@ -30,6 +30,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      # Public toilets for the map icons (scripts/toilets.mjs, National Public Toilet Map, updated monthly by the government).
+      # Refreshed at 3am and on demand; committed only when the toilets change. A failed download keeps the last file.
+      - name: Refresh public toilets
+        if: github.event_name == 'workflow_dispatch' || github.event.schedule == '7 17 * * *'
+        continue-on-error: true
+        run: |
+          node scripts/toilets.mjs
+          if git diff --quiet -- config/toilets.json; then exit 0; fi
+          git config user.name "Ride Guide build"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add config/toilets.json && git commit -q -m "Public toilets refreshed from the National Public Toilet Map"
+          git pull -q --rebase origin main && git push -q origin HEAD:main
       - name: Get saved voice recordings
         run: |
           if git fetch --depth=1 origin voice-cache:voice-cache 2>/dev/null; then git worktree add .voice-cache voice-cache; else mkdir -p .voice-cache; fi

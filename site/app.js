@@ -302,6 +302,7 @@
     view: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
     caution: '<path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5v.5"/>',
     toilet: '<path d="M7 4v16M17 4v16M4 9h6M14 9h6"/>',
+    wc: '<circle cx="7.5" cy="4.5" r="1.8"/><circle cx="16.5" cy="4.5" r="1.8"/><path d="M5 9h5v6H9v6H6v-6H5z"/><path d="M16.5 8.5l3.5 8h-7z"/><path d="M15 16.5V21M18 16.5V21"/>',
     food: '<path d="M4 8h13v5a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/>',
     park: '<path d="M12 3l6 9H6z"/><path d="M12 8l7 10H5z"/><path d="M12 18v3"/>',
     turn: '<path d="M8 21V9a4 4 0 0 1 8 0v4"/><path d="M12 10l4 4 4-4"/>',
@@ -404,7 +405,7 @@
   function initMap() {
     if (map || !window.maplibregl) return;
     map = new maplibregl.Map({
-      container: 'map', style: S.sat ? satStyle() : STYLE, attributionControl: { compact: true },
+      container: 'map', style: S.sat ? satStyle() : STYLE, attributionControl: { compact: true, customAttribution: 'Toilets: National Public Toilet Map, CC BY 3.0 AU' },
       center: [R.track.lng[0], R.track.lat[0]], zoom: 13, pitchWithRotate: false, dragRotate: false, touchPitch: false,
       // Battery (13/11/2026). Labels switch on and off rather than fading: a fade keeps the map redrawing for a third of
       // a second after every move. And the map is drawn at no more than twice the screen's base size: a 3x phone screen
@@ -456,6 +457,16 @@
     if (!map) return;
     var start = el('div', { class: 'mk start', title: tu('Start') }, svg('start'));
     markers.push(new maplibregl.Marker({ element: start }).setLngLat([R.track.lng[0], R.track.lat[0]]).addTo(map));
+    // Public toilets (National Public Toilet Map): a small icon only. Never spoken or popped up; a tap shows the name and
+    // opening hours (Ben, 13/11/2026). Drawn first so stops and offers sit on top of them.
+    (R.toilets || []).forEach(function (t) {
+      var b = el('button', { class: 'mk wc', type: 'button', 'aria-label': tu('Toilets') }, svg('wc'));
+      b.addEventListener('click', function (e) {
+        e.stopPropagation();
+        notice(tu('Toilets'), [t.n].concat(t.h ? [tu('Opening hours') + ': ' + t.h] : []));
+      });
+      markers.push(new maplibregl.Marker({ element: b }).setLngLat([t.lng, t.lat]).addTo(map));
+    });
     R.stops.forEach(function (s) {
       if (s.kind === 'finish') return;
       var b = el('button', { class: 'mk ' + s.kind, type: 'button', 'aria-label': tc(s.name) }, svg(s.kind));

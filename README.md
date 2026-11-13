@@ -278,6 +278,14 @@ and finish are dropped for that ride. "Near the end only" offers come up when pa
 1.5 km. Progress remembers the join point, so Continue my ride picks up the same way. One way rides are not turned:
 joining part way rides on to the finish. Test drive and staff check links always start at the real start.
 
+## Public toilets on the map (13/11/2026)
+
+- Every ride shows a small blue toilet icon for each public toilet within 150 m of its line, on the riding map only (hidden on the route page, like the stops). Nothing is spoken, nothing pops up, and toilets are not in the Stops list. Tapping an icon shows the toilet's name and opening hours. Ben asked for this 13/11/2026; toilet pins in Ride with GPS are still left out.
+- Source: the National Public Toilet Map (Australian Government, data.gov.au, CC BY 3.0 AU, updated monthly). The credit is in the map's attribution. Not Google Maps: its terms do not allow copying places onto another map.
+- `node scripts/toilets.mjs` downloads the latest national file and writes `config/toilets.json` (only the area around Noosa, the hinterland and Gympie, set by `area`; toilets that need an MLAK key are left out). The build adds `toilets` to each route (`toiletsFor` in scripts/build.mjs). Change the distance with `nearMetres` in config/toilets.json.
+- Keeping it right: the 3am build runs "Refresh public toilets" and commits the file only when something changed. A failed download, or one with 30% fewer toilets than last time, keeps the old file. The build flags a ride that leaves the area; health.json `toilets` shows the source and date and each route its count; the weekly check flags a file over 60 days old.
+- A wrong or closed toilet is fixed at the source: report it at https://toiletmap.gov.au (it flows in with the next monthly file).
+
 ## Ride counts
 
 An indicative count of how often each map is used, shown on the Ride Desk (17/10/2026). The app sends one

@@ -162,6 +162,27 @@ function offersFor(T, slug) {
   return out;
 }
 
+// Public toilets near a route (Ben, 13/11/2026): a small icon on the riding map only. Never spoken, never popped up, not in
+// the Stops list. From config/toilets.json (scripts/toilets.mjs, National Public Toilet Map, refreshed by the 3am build).
+// A toilet within nearMetres of the line is shown; toilets within 30 m of one already shown (two blocks in one park) are one icon.
+const toiletsCfg = readJson('config/toilets.json', { toilets: [], nearMetres: 150, area: null });
+function toiletsFor(T) {
+  const near = toiletsCfg.nearMetres || 150, pad = near / 90000;
+  let s = 90, n = -90, w = 180, e = -180;
+  for (let i = 0; i < T.lat.length; i++) { s = Math.min(s, T.lat[i]); n = Math.max(n, T.lat[i]); w = Math.min(w, T.lng[i]); e = Math.max(e, T.lng[i]); }
+  const out = [];
+  for (const t of toiletsCfg.toilets || []) {
+    if (t.lat < s - pad || t.lat > n + pad || t.lng < w - pad * 1.2 || t.lng > e + pad * 1.2) continue;
+    if (!passes(T, t.lat, t.lng, near).runs.length) continue;
+    if (out.some(o => hav(o.lat, o.lng, t.lat, t.lng) < 30)) continue;
+    out.push({ n: t.n, h: t.h || null, lat: t.lat, lng: t.lng });
+  }
+  // a ride that goes outside the area toilets were collected for would silently miss some
+  const a = toiletsCfg.area;
+  const outside = a && (s < a.south || n > a.north || w < a.west || e > a.east);
+  return { list: out, outside };
+}
+
 // ---------- full stories ----------
 // A stop whose link points at a place on one of the ride story blogs gets that place's full story (written to be heard,
 // config/stories.json), played when the rider taps Hear the full story.
@@ -270,7 +291,8 @@ function transform(entry, r) {
     let plain = 0;
     if (!isFinish && kind !== 'caution' && WARN_NAME.test(name)) { kind = 'caution'; warnings.push(`stop "${name}" is a warning on a ${p.poi_type_name} icon; the app treats it as Caution (change the icon to Caution in the POI Library)`); }
     else if (!isFinish && kind === 'info' && TOILET_NAME.test(name)) kind = 'toilet';
-    // Toilets are left out of the app altogether: not on the map, not in the Stops list, never spoken (Ben, 11/10/2026)
+    // Toilet pins in Ride with GPS are left out (Ben, 11/10/2026). Toilets come from the National Public Toilet Map instead
+    // and show as a small map icon only (toiletsFor, Ben 13/11/2026).
     if (kind === 'toilet' || TOILET_NAME.test(name)) continue;
     else if (!isFinish && WELCOME_NAME.test(name)) plain = 1;   // welcome or briefing pins are read out without "You have reached..."
     const { runs, nearest } = passes(T, p.lat, p.lng, 60);
@@ -444,6 +466,8 @@ async function main() {
   fs.writeFileSync(path.join(dist, 'ui.json'), JSON.stringify(uiOut));
 
   const health = { built: now.toISOString(), build, routes: [], offers: [], problems: [] };
+  health.toilets = { source: toiletsCfg.source || null, sourceUpdated: toiletsCfg.sourceUpdated || null, fetched: toiletsCfg.fetched || null, inArea: (toiletsCfg.toilets || []).length, nearMetres: toiletsCfg.nearMetres || 150 };
+  if (!(toiletsCfg.toilets || []).length) health.problems.push('toilets: config/toilets.json is missing or empty, so no toilet icons are shown (run node scripts/toilets.mjs)');
   health.counter = { on: !!countUrl() };
   if (!countUrl()) health.problems.push('ride counts: config/counter.json has no valid counter address, so rides are not being counted');
   const cueW = loadCueWording(ROOT);
@@ -498,6 +522,8 @@ async function main() {
 
     // offers always come from config/offers.json, even when the route itself is the last good copy
     route.offers = offersFor(route.track, entry.slug);
+    { const tl = toiletsFor(route.track); route.toilets = tl.list; h.toilets = tl.list.length;
+      if (tl.outside) health.problems.push(`${entry.slug}: the ride goes outside the toilet map area in config/toilets.json; widen "area" and run node scripts/toilets.mjs`); }
 
     attachStories(route, storyReport);
 
