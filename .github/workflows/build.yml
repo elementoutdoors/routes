@@ -57,7 +57,8 @@ jobs:
 
       # Staff screenshots for the EO Crew Ride Guide manual: taken on a phone-sized browser on every change, on demand, and
       # by the first scheduled build after the last set is 20 hours old (so once a night, whichever scheduled run GitHub
-      # actually fires; matching the 3am schedule by name missed nights). Locked with EO Crew's public key
+      # actually fires: since the afternoon of 5/11/2026 it has fired only 3 to 5 of the 16 scheduled builds a day, hours
+      # late, so the 3am run cannot be counted on by name). Locked with EO Crew's public key
       # (scripts/staff_bundle.mjs) and kept on the staff-screens branch, so the other builds publish the last set without
       # retaking them. A failure keeps the last set and never stops the build. staff-screens.json (when they were last
       # taken and how many: nothing private) is published beside the locked file, so the weekly check (scripts/check.mjs)

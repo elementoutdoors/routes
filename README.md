@@ -229,9 +229,17 @@ check links and Test drive skip the card. In all 9 languages. Change the wording
 The build machine (13/11/2026): GitHub moved its "ubuntu-latest" runner to Ubuntu 26.04, whose Python 3.14 cannot install
 the pinned Playwright (1.47.0), so the staff screenshot step and any ride sheet rebuild failed. Neither stops the build
 (the last good set is kept), so nothing said so. The build job is now pinned to `ubuntu-24.04`. The screenshots are
-retaken on every change and by the first scheduled build after the last set is 20 hours old (matching the 3am schedule
-by name missed nights). The build publishes `staff-screens.json` (when the set was taken and how many pictures), and the
-weekly check (`scripts/check.mjs`, version 12) raises an issue if the set is more than 3 days old.
+retaken on every change and by the first scheduled build after the last set is 20 hours old, whichever scheduled run
+that is. The build publishes `staff-screens.json` (when the set was taken and how many pictures), and the weekly check
+(`scripts/check.mjs`, version 12) raises an issue if the set is more than 3 days old.
+
+Scheduled builds are not arriving hourly (found 13/11/2026). The schedule has not changed since 18/10/2026 (3:07am, then
+hourly from 6:07am to 8:07pm Brisbane: 16 a day), and on 3/11 and 4/11/2026 GitHub ran 15 of them each day. Since the
+afternoon of 5/11/2026 it has run 3 to 5 a day, hours late (the 3:07am run has arrived between 6:47am and 10:38am
+since 7/11). GitHub's own documentation says scheduled runs can be delayed, and dropped, when it is busy. A push still
+builds at once, so Ride Desk saves are not affected; an edit made in Ride with GPS now waits for the next scheduled
+build, usually 6 to 8 hours and up to 11. Not fixed: it needs a decision on what should start the builds instead of
+GitHub's scheduler.
 
 Staff screenshots (`scripts/staff_screens.py`): the Battery saver picture (13) had been showing a lit map since
 27/10/2026, when battery saver became on by default: the script clicked the switch to turn it on, which turned it off.
