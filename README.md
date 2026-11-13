@@ -224,6 +224,13 @@ button starts the ride. It took the place of the spoken "Keep this screen open w
 ride, which Ben asked to drop; with that line gone the first direction's early warning is no longer crowded out. Staff
 check links and Test drive skip the card. In all 9 languages. Change the wording only with Ben. Screenshot 06c.
 
+The build machine (13/11/2026): GitHub moved its "ubuntu-latest" runner to Ubuntu 26.04, whose Python 3.14 cannot install
+the pinned Playwright (1.47.0), so the staff screenshot step and any ride sheet rebuild failed. Neither stops the build
+(the last good set is kept), so nothing said so. The build job is now pinned to `ubuntu-24.04`. The screenshots are
+retaken on every change and by the first scheduled build after the last set is 20 hours old (matching the 3am schedule
+by name missed nights). The build publishes `staff-screens.json` (when the set was taken and how many pictures), and the
+weekly check (`scripts/check.mjs`, version 12) raises an issue if the set is more than 3 days old.
+
 Staff screenshots (`scripts/staff_screens.py`): the Battery saver picture (13) had been showing a lit map since
 27/10/2026, when battery saver became on by default: the script clicked the switch to turn it on, which turned it off.
 It now sets the switch to the state it wants (`set_saver`): off for the riding pictures, on for its own picture.

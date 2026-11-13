@@ -14,6 +14,9 @@
 // Version 11 (19/10/2026): the Ride Guide manual in EO Crew (EO-HI-10; one document since 20/10/2026). Their pictures retake themselves, so
 // this checks the screenshots are fresh and that the code still matches what the words were written against
 // (scripts/manual_facts.mjs); "manual" in the output lists what changed and the EO Crew sections to rewrite.
+// Version 12 (13/11/2026): the screenshots must also still be being retaken. The build's screenshot step failed for a day
+// (GitHub's runner moved to a Python the pinned Playwright cannot install on) and nothing said so, because a failure keeps
+// the last set. The build now publishes staff-screens.json (when the set was taken); older than SCREENS_MAX_DAYS is an issue.
 // Usage: node scripts/check.mjs [siteBase]   (route links are read from qr/links.json when present)
 import fs from 'node:fs';
 import { loadLibrary, plan as libraryPlan } from './library.mjs';
@@ -180,6 +183,15 @@ try {
   const sh = await fetch(BASE + 'staff-screens.enc.json', { method: 'HEAD', cache: 'no-store' });
   if (!sh.ok) issues.push(`manual: the screenshots for EO Crew are not published (${sh.status})`);
 } catch (e) { issues.push('manual: the screenshots for EO Crew could not be checked'); }
+// still being retaken? (they are retaken on every change and once a night; see .github/workflows/build.yml)
+const SCREENS_MAX_DAYS = 3;
+try {
+  const r = await fetch(BASE + 'staff-screens.json?t=' + Date.now(), { cache: 'no-store' });
+  if (r.ok) {
+    const s = await r.json(), days = (Date.now() - Date.parse(s.taken)) / 86400000;
+    if (!(days < SCREENS_MAX_DAYS)) issues.push(`manual: the screenshots for EO Crew were last taken ${Math.round(days)} days ago (${String(s.taken).slice(0, 10)}): the "Take staff screenshots" step of the build is failing`);
+  } else notes.push('manual: the build has not published when the staff screenshots were taken yet (it does after the next screenshot run)');
+} catch (e) { notes.push('manual: when the staff screenshots were taken could not be read'); }
 
 console.log(JSON.stringify({ ok: !issues.length, built: h.built, routes: h.routes.map(r => `${r.slug}: ${r.source}, ${r.cues} cues, ${r.stops} stops`), issues, notes, push, houseRules, placeChanges, directionFlags, manual }, null, 1));
 process.exit(issues.length ? 1 : 0);
