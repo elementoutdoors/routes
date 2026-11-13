@@ -58,7 +58,7 @@ dirs.filter(x => x.ruled && x.ruled !== 'keep').forEach(x => issues.push(`direct
 const directionFlags = unruled;
 
 // Version 12 (13/11/2026): public toilet icons. The 3am build refreshes config/toilets.json from the base map tiles
-// Map; flag it if that has stopped (file over 60 days old) or a live ride shows none at all.
+// flag it if that has stopped (file over 60 days old) or a live ride shows none at all.
 const tl = h.toilets;
 if (!tl || !tl.inArea) issues.push('toilets: no public toilets in the build (config/toilets.json missing or empty); run node scripts/toilets.mjs and push');
 else {
