@@ -961,10 +961,17 @@
         // "No position" from a phone that has been giving readings is a GPS blip (under trees, between buildings), not
         // location turned off: the banner said it was off, and lit the screen for the blackout time, on every blip.
         // It is only shown if no reading follows within LOC_QUIET_MS (13/11/2026). With no reading yet, it shows at once.
-        var seen = ride.fix ? ride.fix.t : 0, off = function () { locBanner(tu('Location is off on this phone. Tap here for how to turn it on.')); };
-        clearTimeout(ride.locOffTimer);
-        if (!seen) off();
-        else ride.locOffTimer = setTimeout(function () { if (ride.active && !ride.paused && ride.watch != null && ride.fix && ride.fix.t === seen) off(); }, LOC_QUIET_MS);
+        // One wait per quiet spell: a phone that repeats the error every second must not keep pushing the wait back
+        // (the banner would then never come up). Once a spell has been told, each further error shows it at once.
+        var seen = ride.fix ? ride.fix.t : 0, q = ride.locQuiet, off = function () { locBanner(tu('Location is off on this phone. Tap here for how to turn it on.')); };
+        if (!seen || (q && q.seen === seen && q.told)) off();
+        else if (!q || q.seen !== seen) {
+          clearTimeout(ride.locOffTimer);
+          q = ride.locQuiet = { seen: seen, told: false };
+          ride.locOffTimer = setTimeout(function () {
+            if (ride.active && !ride.paused && ride.watch != null && ride.fix && ride.fix.t === seen) { q.told = true; off(); }
+          }, LOC_QUIET_MS);
+        }
       }
     }, { enableHighAccuracy: true, maximumAge: 1000, timeout: 20000 });
     // no blue dot after 20 seconds (12/11/2026): say so and offer the steps
@@ -975,7 +982,7 @@
   }
   var LOC_QUIET_MS = 8000;
   function locBanner(text) { ride.locBanner = true; banner(text, 'caution', 0, function () { ride.locBanner = false; openLocHelp(); }); }
-  function stopGps() { clearTimeout(ride.noFixTimer); clearTimeout(ride.locOffTimer); if (ride.watch != null) { try { navigator.geolocation.clearWatch(ride.watch); } catch (e) {} ride.watch = null; } }
+  function stopGps() { clearTimeout(ride.noFixTimer); clearTimeout(ride.locOffTimer); ride.locQuiet = null; if (ride.watch != null) { try { navigator.geolocation.clearWatch(ride.watch); } catch (e) {} ride.watch = null; } }
 
   function onFix(pos) {
     if (!ride.active) return;

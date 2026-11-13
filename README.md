@@ -204,6 +204,8 @@ phone-sized browser with simulated GPS (18 km/h, nobody tapping; again at 25 km/
   phone showed the "Location is off on this phone" banner, which also lit the screen for the blackout time. A phone
   that is giving readings and misses one (under trees, between buildings) has not had location turned off, so the
   banner now only comes up if no reading follows within 8 seconds, or at once when there has been no reading at all.
+  There is one wait per quiet spell (`ride.locQuiet`): a phone that repeats the miss every second does not push the
+  wait back, and once the banner has come up each further miss shows it again at once, until a reading arrives.
   Found because the test browser reports a miss before every reading, which kept the screen lit for good.
 - Not done: a backup for phones whose browser has no working wake lock (iPhones before iOS 16.4, and a ride opened from
   a home screen icon before iOS 18.4, where Apple's Safari 18.4 release notes list it as fixed). The usual fix is a
