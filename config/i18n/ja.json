@@ -1832,5 +1832,9 @@
  "The map needs your location to show the blue dot and guide you.": "地図は青い点を表示して案内するために、あなたの位置情報が必要です。",
  "Turn on location": "位置情報をオンにする",
  "Your phone will ask to use your location. Tap Allow.": "スマートフォンが位置情報の使用を確認します。許可をタップしてください。",
- "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "設定に戻り、App、Safari、位置情報の順にタップして、「確認」または「許可」を選びます。"
+ "Go back to Settings, tap Apps, then Safari, then Location, and choose Ask or Allow.": "設定に戻り、App、Safari、位置情報の順にタップして、「確認」または「許可」を選びます。",
+ "Read this": "必ずお読みください",
+ "Do not lock your screen": "画面をロックしないでください",
+ "If your phone locks, the app will stop navigating.": "スマートフォンがロックされると、ナビが止まります。",
+ "The screen goes dark between turns to save battery. That is normal. Tap the screen to light it up. Do not press the button on the side of your phone.": "バッテリー節約のため、曲がり角の間は画面が暗くなります。これは正常です。画面をタップすると明るくなります。スマートフォン側面のボタンは押さないでください。"
 }

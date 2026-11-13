@@ -405,7 +405,11 @@
     if (map || !window.maplibregl) return;
     map = new maplibregl.Map({
       container: 'map', style: S.sat ? satStyle() : STYLE, attributionControl: { compact: true },
-      center: [R.track.lng[0], R.track.lat[0]], zoom: 13, pitchWithRotate: false, dragRotate: false, touchPitch: false
+      center: [R.track.lng[0], R.track.lat[0]], zoom: 13, pitchWithRotate: false, dragRotate: false, touchPitch: false,
+      // Battery (13/11/2026). Labels switch on and off rather than fading: a fade keeps the map redrawing for a third of
+      // a second after every move. And the map is drawn at no more than twice the screen's base size: a 3x phone screen
+      // has over twice as many pixels to fill, for nothing a rider can see on a handlebar.
+      fadeDuration: 0, pixelRatio: Math.min(window.devicePixelRatio || 1, 2)
     });
     map.touchZoomRotate.disableRotation();   // riders can't twist the map by hand; it turns itself (mapBearing)
     map.on('rotate', updateCompass);
@@ -438,7 +442,7 @@
       layout: { 'symbol-placement': 'line', 'symbol-spacing': 90, 'text-field': '›', 'text-size': 22, 'text-keep-upright': false,
         'text-font': ['Noto Sans Bold'], 'text-allow-overlap': true, 'text-offset': [0, -0.1] },
       paint: { 'text-color': '#ffffff' } });
-    if (ride.d > 0) updateDone();
+    if (ride.d > 0) updateDone(true);
   }
   function fitRoute() {
     if (!map) return;
@@ -821,20 +825,38 @@
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') refreshFromServer(); });
 
   // ---------- wake lock ----------
-  var wakeLock = null;
   // The screen always stays on during a ride (Ben, 16/10/2026): a locked phone stops the directions, so there is no switch.
-  function wantWake() { return ride.active && !ride.paused; }
-  function requestWake() {
-    if (!wantWake() || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
-    navigator.wakeLock.request('screen').then(function (l) { wakeLock = l; l.addEventListener('release', function () { wakeLock = null; }); }).catch(function () {});
+  // The browser's Screen Wake Lock is what stops the phone locking itself. The browser can take it back at any time
+  // (the page was hidden, the page went full screen on some phones, the phone decided to), so it is asked for again
+  // whenever it is found missing (13/11/2026): when it is released, when the page comes back or changes full screen, on
+  // every GPS reading (at most every WAKE_RETRY_MS after a refusal) and on every tap. A tap matters: some phones only
+  // grant it again from a tap after the page has been away. Before this it was only asked for at Start riding and when
+  // the page came back, so a lock lost any other way stayed lost and the phone locked itself mid ride.
+  // Once the ride is finished it is let go, so a phone left showing the finish card can lock as usual.
+  var wakeLock = null, wakeAsking = 0, wakeRefusedAt = 0, WAKE_RETRY_MS = 10000;
+  function wantWake() { return ride.active && !ride.paused && !ride.finished; }
+  function requestWake(fromTap) {
+    if (wakeLock || !wantWake() || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+    if (wakeAsking && Date.now() - wakeAsking < WAKE_RETRY_MS) return;   // already asking (an answer that never comes is given up on)
+    if (!fromTap && wakeRefusedAt && Date.now() - wakeRefusedAt < WAKE_RETRY_MS) return;
+    var p;
+    try { p = navigator.wakeLock.request('screen'); } catch (e) { wakeRefusedAt = Date.now(); return; }
+    wakeAsking = Date.now();
+    p.then(function (l) {
+      wakeAsking = 0; wakeRefusedAt = 0;
+      if (!wantWake()) { try { l.release(); } catch (e) {} return; }
+      wakeLock = l;
+      l.addEventListener('release', function () { if (wakeLock === l) wakeLock = null; setTimeout(requestWake, 250); });
+    }, function () { wakeAsking = 0; wakeRefusedAt = Date.now(); });
   }
-  function releaseWake() { if (wakeLock) { try { wakeLock.release(); } catch (e) {} wakeLock = null; } }
-  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') requestWake(); });
+  function releaseWake() { var l = wakeLock; wakeLock = null; if (l) { try { l.release(); } catch (e) {} } }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') { requestWake(); if (ride.active && ride.fix) { updateMe(); updateDone(true); } } });
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) { document.addEventListener(ev, function () { requestWake(); }); });
   // Back from a locked screen or another app mid ride: say plainly that directions stopped while it was away.
   var hiddenAt = 0;
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'hidden') { hiddenAt = Date.now(); return; }
-    if (hiddenAt && ride.active && !ride.paused && Date.now() - hiddenAt > 15000) {
+    if (document.visibilityState === 'hidden') { hiddenAt = Date.now(); if (ride.active) saveProgress(true); return; }
+    if (hiddenAt && ride.active && !ride.paused && !ride.finished && Date.now() - hiddenAt > 15000) {
       var t = tu('Directions stopped while your phone was locked. Keep this screen open while you ride.');
       banner(t, 'caution', 12000); say(t, { interrupt: true });
     }
@@ -846,7 +868,18 @@
     paused: false, cueState: {}, shown: {}, watch: null, fix: null, backCount: 0, lastTouch: Date.now(), sim: null, finished: false };
 
   function progressKey() { return 'rg.progress.' + R.key; }
-  function saveProgress() { if (ride.sim) return; lsSet(progressKey(), { d: ride.d, ts: Date.now(), shown: ride.shown, cueState: ride.cueState, version: R.version, paused: ride.paused, ridden: ride.ridden || 0, rid: ride.rid, join: R.joined || 0 }); }
+  // Saved every few seconds, not on every GPS reading (13/11/2026, battery: a write to the phone's storage each second
+  // adds up over a long ride). Saved at once when it matters: start, pause, resume, a direction or stop just given, and
+  // the page being hidden or closed.
+  var SAVE_EVERY_MS = 5000, savedAt = 0, savedSig = '';
+  function saveProgress(now) {
+    if (ride.sim || !R) return;
+    var sig = JSON.stringify([ride.cueState, ride.shown, ride.paused]);
+    if (!now && sig === savedSig && Date.now() - savedAt < SAVE_EVERY_MS) return;
+    savedAt = Date.now(); savedSig = sig;
+    lsSet(progressKey(), { d: ride.d, ts: Date.now(), shown: ride.shown, cueState: ride.cueState, version: R.version, paused: ride.paused, ridden: ride.ridden || 0, rid: ride.rid, join: R.joined || 0 });
+  }
+  window.addEventListener('pagehide', function () { if (ride.active) saveProgress(true); });
 
   function startRide(resume) {
     if (R.base) useJoin(0);
@@ -858,19 +891,21 @@
     if (p && p.version === R.version) { ride.d = p.d; ride.shown = p.shown || {}; ride.cueState = p.cueState || {}; ride.locked = false; ride.paused = !!p.paused; ride.ridden = p.ridden || 0; ride.resumed = true; ride.rid = p.rid || rid(); }
     else { ride.d = 0; ride.shown = {}; ride.cueState = {}; ride.locked = false; ride.ridden = 0; ride.resumed = false; ride.rid = rid(); }
     ride.backRun = 0; ride.saidBack = false; ride.lastPos = null; ride.lastFixT = 0; ride.mb = null; ride.jump = null; ride.tipHold = 0;
+    ride.pastCue = null; ride.anchor = null; ride.lastTouch = Date.now();
     show('ride');
     updateFollowBtn(); updateVoiceBtn();
     // Speaking once inside the tap unlocks speech on iPhone.
     say(ride.paused ? tu('Your ride is paused. Tap Resume when you are ready to keep going.')
       : tu(resume ? 'Welcome back. Picking up where you left off.' : "Let's ride. Follow the line on the map and listen for directions."), { interrupt: true });
-    // The browser stops GPS and speech when the phone locks (Ben, 16/10/2026: make this clear to riders)
-    if (!ride.paused) say(tu('Keep this screen open while you ride. Locking your phone stops the directions.'));
+    // The browser stops GPS and speech when the phone locks. Riders are told by the red "Do not lock your screen" card
+    // that comes up from Start riding (openLockNote); the spoken line that used to follow here was dropped for it
+    // (Ben, 13/11/2026).
     updatePauseBtn();
-    requestWake();
+    requestWake(true);
     enterFullscreen();
     startGps();
     renderRide();
-    saveProgress();
+    saveProgress(true);
     ride.zoom = 16;
     if (map) setTimeout(function () { var c = ride.fix ? [ride.fix.lng, ride.fix.lat] : pointAt(ride.d); lastCentre = null; map.easeTo(viewAt(c[1], c[0], true, routeBearingAt(ride.d))); }, 80);
   }
@@ -901,13 +936,13 @@
     ride.paused = true; ride.off = false; ride.offCount = 0; ride.onCount = 0;
     stopSpeech();
     say(tu('Ride paused. Directions are off until you tap Resume.'), { interrupt: true });
-    releaseWake(); hideSaver(); updatePauseBtn(); renderRide(); saveProgress();
+    releaseWake(); hideSaver(); updatePauseBtn(); renderRide(); saveProgress(true);
   }
   function resumeRide() {
     if (!ride.active || !ride.paused) return;
-    ride.paused = false; ride.off = false; ride.offCount = 0; ride.onCount = 0; ride.backCount = 0; ride.lastTouch = Date.now();
+    ride.paused = false; ride.off = false; ride.offCount = 0; ride.onCount = 0; ride.backCount = 0; ride.lastTouch = Date.now(); ride.anchor = null;
     say(tu('Ride resumed.'), { interrupt: true });
-    requestWake(); updatePauseBtn(); renderRide(); saveProgress();
+    requestWake(true); updatePauseBtn(); renderRide(); saveProgress(true);
     ride.follow = true; updateFollowBtn();
     if (map && ride.fix) { lastCentre = null; followMap(ride.fix.lat, ride.fix.lng, true); }
   }
@@ -940,7 +975,9 @@
     if (ride.locBanner) { ride.locBanner = false; $('banner').hidden = true; }
     updateMe();
     if (ride.paused) { followMap(c.latitude, c.longitude); return; }
+    requestWake();   // the phone may have taken the screen wake lock back: ask again (does nothing while it is held)
     if (acc > 80) return;   // too vague to use
+    noteMoved(c);
     // single track stretches (R.loose, from the build): hand-drawn lines through twisty trails can sit well off the
     // real trail, so allow more room before "off route" and never call switchbacks "riding backwards"
     var trail = ride.locked && (R.loose || []).some(function (s) { return ride.d >= s[0] && ride.d <= s[1]; });
@@ -1040,7 +1077,10 @@
   // The map follows the rider (Ben, 26/10/2026). Moving the map by hand stops it following; it picks up again by itself
   // 15 seconds after the last touch (or straight away with the locate button). To save battery the map is not moved
   // while battery saver has the screen blacked out or the page is hidden, nor for moves of a few metres.
-  var REFOLLOW_MS = 15000, lastCentre = null, FAR_CUE = 2000;
+  // Battery (13/11/2026): the map steps to each new position, one frame per GPS reading. It used to glide there over
+  // 0.8 of a second, which with a reading every second kept the map redrawing about 60 times a second for the whole
+  // ride. Only a change of direction is eased (TURN_MS), so the map still turns smoothly at a corner.
+  var REFOLLOW_MS = 15000, lastCentre = null, FAR_CUE = 2000, TURN_MS = 350;
   function followMap(lat, lng, force) {
     if (!map) return;
     if (!ride.follow && ride.active && ride.mapTouch && Date.now() - ride.mapTouch > REFOLLOW_MS && sheetOpen() === false) { ride.follow = true; updateFollowBtn(); force = true; }
@@ -1048,7 +1088,9 @@
     if (!$('saver').hidden || document.visibilityState !== 'visible') { lastCentre = null; return; }
     if (!force && lastCentre && hav(lat, lng, lastCentre[0], lastCentre[1]) < 4) return;
     lastCentre = [lat, lng];
-    map.easeTo(viewAt(lat, lng, force));
+    var v = viewAt(lat, lng, force);
+    if (!force) v.duration = Math.abs(((v.bearing - map.getBearing()) + 540) % 360 - 180) > 0.5 ? TURN_MS : 0;
+    map.easeTo(v);
   }
   // Map direction (Ben, 4/11/2026: riders expected the map to turn the way they were facing). By default the map turns so
   // the way the rider is going is at the top, like a bike computer; "North at the top" is a choice in Settings and on the
@@ -1183,7 +1225,7 @@
       if (s.kind === 'caution') {
         // a caution with notes (ferry, beach access) opens its card so the notes are on screen, even over another stop
         banner(tc(s.name), 'caution', 12000, s.text ? function () { openStop(s); } : null);
-        if (s.text) openStop(s, true);
+        if (s.text) { openStop(s, true); ride.autoSheet = { at: Date.now() }; }
         sayContent(s.name, tu('Caution.'), { urgent: true });
         if (s.text) sayContent(s.text, null, { stop: true });   // a warning's details are always read, even with stop stories turned off; a direction can cut in
       } else announceStop(s);
@@ -1254,6 +1296,7 @@
     // and some finish points sit on the first few hundred metres
     if (ride.finished || R.distance - ride.d > 40 || ride.d < R.distance * 0.6 || (ride.ridden || 0) < R.distance * 0.75) return;
     ride.finished = true;
+    releaseWake();   // navigation is over: a phone left showing the finish card can lock as usual (13/11/2026, battery)
     say(tu('You have finished the ride. Thanks for riding with us.'), { interrupt: true });
     var f = R.stops.filter(function (s) { return s.kind === 'finish'; })[0];
     openFinish(f);
@@ -1319,14 +1362,18 @@
     updateSaverText();
     updateViewerCue();
   }
-  var doneTimer = 0;
-  function updateDone() {
-    if (!map || !mapReady || !map.getSource('done')) return;
-    var now = Date.now(); if (now - doneTimer < 1500 && ride.d > 0) return; doneTimer = now;
+  // The grey ridden line: redrawn every DONE_EVERY_MS, and not at all while battery saver has the screen black or the
+  // page is hidden (13/11/2026, battery: each change makes the map work out and draw the line again; it was every 1.5 s,
+  // black screen or not). hideSaver brings it up to date when the screen lights.
+  var doneTimer = 0, DONE_EVERY_MS = 4000;
+  function mapUnseen() { return ride.active && (!$('saver').hidden || document.visibilityState !== 'visible'); }
+  function updateDone(force) {
+    if (!map || !mapReady || !map.getSource('done') || mapUnseen()) return;
+    var now = Date.now(); if (!force && now - doneTimer < DONE_EVERY_MS && ride.d > 0) return; doneTimer = now;
     map.getSource('done').setData(routeGeo(0, ride.d));
   }
   function updateMe() {
-    if (!map || !ride.fix) return;
+    if (!map || !ride.fix || mapUnseen()) return;
     if (!meMarker) { var e = el('div', { class: 'me' }); meMarker = new maplibregl.Marker({ element: e, rotationAlignment: 'map' }).setLngLat([ride.fix.lng, ride.fix.lat]).addTo(map); }
     meMarker.setLngLat([ride.fix.lng, ride.fix.lat]);
     var me = meMarker.getElement();
@@ -1355,29 +1402,66 @@
   // ---------- battery saver ----------
   // Battery saver and a stop card that opened by itself (Ben, 27/10/2026): the card closes on its own once the stop
   // has been read and nothing has been touched for the blackout time, so the screen can go black again. A card the
-  // rider opened, or is still reading or listening to, stays open.
+  // rider opened, or is still reading or listening to, stays open. Since 13/11/2026 this covers a caution card with
+  // notes too (Beach access on North Shore, Steep Hill on Mt Tinbeerwah): those were left out, so once one had opened
+  // the screen stayed lit for the rest of the ride.
   function autoCloseStop() {
     var a = ride.autoSheet;
     if (!a || !sheetOpen()) { ride.autoSheet = null; return; }
     if (speaking) return;
     if (Date.now() - Math.max(a.at, spokeAt, ride.lastTouch) >= CFG.screen.blackoutAfterSeconds * 1000) closeSheet();
   }
+  // When the map is lit for a turn (13/11/2026; riders said the screen was black at turns and they had to tap it):
+  // from the Ride Desk wake distance before the turn, right through the turn, until the rider is SAVER_AFTER_M past it
+  // (or SAVER_AFTER_MS after reaching it, if they have stopped there). Before this the map went black again about 5 m
+  // before the turn, the moment the direction after it became the next one, so it was black at the turn itself.
+  // The first spoken warning comes at the early warning distance (160 m), which is further out than the wake distance
+  // Ben has set (100 m): the map is left to light at his distance, as the Ride Desk says, and the black screen shows the
+  // direction and how far it is in the meantime. Setting the wake distance past the early warning makes them coincide.
+  // And when it is not lit: a rider who has stopped (not moved SAVER_STILL_M for SAVER_STILL_MS) without tapping Pause
+  // is having a break, so the screen goes black even beside a turn or off the route. Rolling on lights it again.
+  var SAVER_AFTER_M = 50, SAVER_AFTER_MS = 30000, SAVER_STILL_M = 15, SAVER_STILL_MS = 60000;
+  function litForTurn() {
+    if (!ride.locked) return true;   // still finding the route: the map is what gets them to it
+    var i = nextCueIndex();
+    if (i >= 0 && R.cues[i].d - ride.d < CFG.screen.wakeBeforeTurnMetres) return true;
+    var j = (i < 0 ? R.cues.length : i) - 1;
+    if (j < 0) return false;
+    if (!ride.pastCue || ride.pastCue.i !== j) ride.pastCue = { i: j, t: Date.now() };
+    if (Date.now() - ride.pastCue.t >= SAVER_AFTER_MS) return false;
+    if (ride.d - R.cues[j].d < SAVER_AFTER_M) return true;
+    // or still near the turn itself: at a turn around the way out and the way back run side by side, and one wobbly GPS
+    // reading can put the rider well along the way back while they are still riding up to the turn
+    var p = pointAt(R.cues[j].d);
+    return !!ride.fix && hav(ride.fix.lat, ride.fix.lng, p[1], p[0]) < SAVER_AFTER_M;
+  }
+  function riderStill() { return !!ride.anchor && Date.now() - ride.anchor.t > SAVER_STILL_MS; }
+  function noteMoved(c) {
+    var a = ride.anchor, mv = a ? hav(a.lat, a.lng, c.latitude, c.longitude) : Infinity, sp = c.speed != null && c.speed >= 0 ? c.speed : null;
+    // moving: the phone says so (rolling again lights the screen at once, so a rider setting off from a crossing has the
+    // map for the turn just ahead), or it is well clear of where it was, or a little clear and not reported as standing still
+    if ((sp != null && sp >= 1.5) || mv > 40 || (mv > SAVER_STILL_M && !(sp != null && sp < 0.5))) ride.anchor = { lat: c.latitude, lng: c.longitude, t: Date.now() };
+  }
+  function setSaver(on) { $('saver').hidden = !on; document.body.classList.toggle('saver-on', on); }
   function saverTick() {
     if (!S.saver || !ride.active || ride.paused) { hideSaver(); return; }
     autoCloseStop();
-    var i = nextCueIndex(), dist = i >= 0 ? R.cues[i].d - ride.d : 9999;
-    if (dist < CFG.screen.wakeBeforeTurnMetres || ride.off || sheetOpen() || !$('viewer').hidden || Date.now() - ride.lastTouch < CFG.screen.blackoutAfterSeconds * 1000) hideSaver();
-    else $('saver').hidden = false;
+    var lit = Date.now() - ride.lastTouch < CFG.screen.blackoutAfterSeconds * 1000 || sheetOpen() || !$('viewer').hidden ||
+      (!riderStill() && (ride.off || litForTurn()));
+    if (lit) hideSaver();
+    else if ($('saver').hidden) { setSaver(true); updateSaverText(); }
   }
   function updateSaverText() {
     if ($('saver').hidden) return;
     $('saver-dist').textContent = $('cue-dist').textContent;
     $('saver-text').textContent = $('cue-text').textContent;
   }
+  // The black screen lifts: the map, the blue dot and the ridden line were left alone while it was up (battery), so they
+  // are brought up to date at once.
   function hideSaver() {
     var was = !$('saver').hidden;
-    $('saver').hidden = true;
-    if (was && ride.active && ride.fix) followMap(ride.fix.lat, ride.fix.lng, true);
+    setSaver(false);
+    if (was && ride.active && ride.fix) { updateMe(); updateDone(true); followMap(ride.fix.lat, ride.fix.lng, true); }
   }
   function wakeSaver() { ride.lastTouch = Date.now(); hideSaver(); }
 
@@ -2095,7 +2179,7 @@
       b.appendChild(stepsList(locSteps()));
       var acts = el('div', { class: 'sheet-actions' });
       var rl = el('button', { class: 'btn primary full', type: 'button', text: tu('Reload this page') });
-      rl.addEventListener('click', function () { saveProgress(); location.replace(location.pathname + '#' + R.key); location.reload(); });
+      rl.addEventListener('click', function () { saveProgress(true); location.replace(location.pathname + '#' + R.key); location.reload(); });
       var done = el('button', { class: 'btn outline full', type: 'button', text: tu('Done') });
       done.addEventListener('click', closeSheet);
       acts.appendChild(rl); acts.appendChild(done); b.appendChild(acts);
@@ -2179,10 +2263,32 @@
     ride.keepOpen = true;
   }
   function isNoticeOpen() { return !$('sheet').hidden && !!document.querySelector('#sheet .notice-list'); }
-  // every ride start a rider taps goes through here
+  // ---------- do not lock your screen (Ben, 13/11/2026) ----------
+  // A big red card that comes up every time a rider taps Start riding or Resume ride: locking the phone stops the
+  // navigation. It took the place of the spoken line at the start of the ride. "I understand" starts the ride (that tap
+  // is also what lets an iPhone speak). With battery saver on it adds that the dark screen is normal and is woken with a
+  // tap, not the side button: a rider who takes the black screen for a phone gone to sleep and presses the button locks
+  // the phone. Staff check links and Test drive skip it. Change the wording only with Ben.
+  var LOCK_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><path d="M3 3l18 18"/></svg>';
+  function openLockNote(go) {
+    openSheet(function (b) {
+      var hero = el('div', { class: 'lock-hero' }, LOCK_ICON);
+      hero.appendChild(el('div', { class: 'lock-kicker', text: tu('Read this') }));
+      hero.appendChild(el('h2', { id: 'sheet-title', class: 'lock-title', text: tu('Do not lock your screen') }));
+      b.appendChild(hero);
+      b.appendChild(el('p', { class: 'lock-lead', text: tu('If your phone locks, the app will stop navigating.') }));
+      if (S.saver) b.appendChild(el('p', { class: 'lock-more', text: tu('The screen goes dark between turns to save battery. That is normal. Tap the screen to light it up. Do not press the button on the side of your phone.') }));
+      var acts = el('div', { class: 'sheet-actions' });
+      var ok = el('button', { class: 'btn full lock-ok', type: 'button', text: tu('I understand') });
+      ok.addEventListener('click', function () { closeSheet(); if (go) go(); });
+      acts.appendChild(ok); b.appendChild(acts);
+    }, 'lockcard');
+  }
+  // every ride start a rider taps goes through here: the risk card the first time, then the lock card every time
   function beginRide(resume) {
-    if (CHECK || resume || riskSeen()) { startRide(resume); return; }
-    openRisk(function () { startRide(resume); });
+    if (CHECK) { startRide(resume); return; }
+    function go() { openLockNote(function () { startRide(resume); }); }
+    if (resume || riskSeen()) go(); else openRisk(go);
   }
 
   // ---------- directions to the route (Ben, 20/10/2026) ----------
@@ -2415,7 +2521,7 @@
       S.voice = was;
     });
     $('saver').addEventListener('click', wakeSaver);
-    ['touchstart', 'mousedown'].forEach(function (ev) { document.addEventListener(ev, function () { ride.lastTouch = Date.now(); }, { passive: true }); });
+    ['touchstart', 'mousedown'].forEach(function (ev) { document.addEventListener(ev, function () { ride.lastTouch = Date.now(); requestWake(true); }, { passive: true }); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheetOpen()) closeSheet(); });
     window.addEventListener('hashchange', function () { if (ride.keepOpen) return; var k = keyFromUrl(); if (k) { scrubUrl(); openKey(k); } });
     $('keep-btn').addEventListener('click', openKeep);

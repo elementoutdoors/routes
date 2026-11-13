@@ -161,6 +161,64 @@ database when the screenshots are taken.
   direction, setting `mapUp`) or tap the compass button above the voice button, which also shows where north is.
   Hand rotation stays off. The route page map is always north up.
 
+## Screen at turns, battery and the Do not lock your screen card (13/11/2026)
+
+Riders said that with battery saver on the screen did not come back on near turns and they had to tap it or turn it back
+on, and that the battery still drained fast. What was found, by riding the six scenic rides and the test route in a
+phone-sized browser with simulated GPS (18 km/h, nobody tapping; again at 25 km/h with wobbly GPS), and what changed:
+
+- Black at the turn. The map lit at the Ride Desk wake distance (100 m) and went black again about 5 m before the turn,
+  the moment the direction after it became the next one (`nextCueIndex`). It was black at the turn itself on 233 of 387
+  directions. Now (`litForTurn`, `saverTick`) the map is lit from the wake distance until the rider is 50 m past the
+  turn (`SAVER_AFTER_M`; 30 seconds at most if they stop there, and it also holds while they are within 50 m of the
+  turn itself, for turn arounds). After the change: black at the turn on 0 of 387, with clean and with wobbly GPS.
+- The voice and the map. The first spoken warning comes at the early warning distance (160 m) and the map lights at the
+  wake distance (100 m), both Ben's settings on the Ride Desk, so for about 12 seconds the voice has spoken and the
+  screen is still black (it shows the direction and the distance in white). That is left as he set it. Setting the wake
+  distance past the early warning (170 m) makes them coincide, for about 9 more minutes of lit screen on Full Noosa.
+- A warning card that never closed. A caution stop with notes opens its card by itself (Beach access on North Shore,
+  Steep Hill on Mt Tinbeerwah). It was left out of the 27/10/2026 rule that a card which opened by itself closes once it
+  has been read, so the screen stayed lit for the rest of the ride: 17 km of North Shore, 25 km of Mt Tinbeerwah. It now
+  closes like any other (`autoCloseStop`). A card the rider opened still stays open.
+- Stopped without pausing. A rider stopped beside a turn or off the route kept the screen lit for as long as they
+  stood there. After a minute without moving (`SAVER_STILL_MS`, `noteMoved`) the screen goes black; rolling again lights
+  it at once. A rider who has not reached the route yet keeps the map lit.
+- The black screen is fully black (`.saver`; it was 94% black with the map showing through, so no pixel was ever off)
+  and the map and ride controls under it are not drawn (`body.saver-on`). The ridden line and the blue dot are left
+  alone while it is up (`mapUnseen`) and brought up to date when it lifts (`hideSaver`). In a minute of black screen
+  the map used to be redrawn 127 times and the ridden line 30 times; now neither is touched.
+- Map drawing while lit. The map glided to each new position over 0.8 s, with a GPS reading every second, so it was
+  animating for 48 seconds of every minute (about 3,000 redraws a minute in the test). It now steps to each position
+  and only eases a change of direction (`followMap`, `TURN_MS`): under 3 seconds of animation and about 250 redraws a
+  minute in the same test. Labels switch rather than fade (`fadeDuration: 0`), the map is drawn at no more than twice
+  the screen's base size (`pixelRatio`; 1170 by 2532 became 780 by 1688 on a 3x phone), the ridden line is redrawn
+  every 4 s, not 1.5 s (`DONE_EVERY_MS`), and the progress bar no longer animates.
+- Progress is saved every 5 s or when a direction or stop is given, not on every reading (`saveProgress`), and at once
+  when the page is hidden or closed.
+- Keeping the phone awake (`requestWake`). The browser's Screen Wake Lock was asked for at Start riding and when the page
+  came back, and nowhere else, so a lock the phone took back any other way stayed lost and the phone locked itself. It
+  is now asked for again when it is released, on a full screen change, on every GPS reading (every 10 s after a
+  refusal) and on every tap (some phones only grant it again from a tap). It is let go at the finish, so a phone left on
+  the finish card can lock as usual.
+- Not done: a backup for phones whose browser has no working wake lock (iPhones before iOS 16.4, and a ride opened from
+  a home screen icon before iOS 18.4, where Apple's Safari 18.4 release notes list it as fixed). The usual fix is a
+  hidden looping video (the NoSleep.js library). It is third party code that cannot be tested from here on a real
+  phone, so it was left for Ben to decide.
+- None of this measures real battery use: that needs a ride on a phone. What was measured is how long the screen is lit
+  and how much the map is redrawn. Minutes of lit screen per ride, before and after: Full Noosa 32 and 41, Kids and
+  Family 17 and 23, Surf Beaches 27 and 37, Mt Tinbeerwah One Way 29 and 37 (up: the map now stays on through every
+  turn), Mt Tinbeerwah 95 and 39, North Shore 68 and 32 (down: the stuck card). All six together: 268 and 209 minutes of
+  637.
+
+The Do not lock your screen card (Ben, 13/11/2026): a big red card every time a rider taps Start riding or Continue my
+ride (`beginRide`, `openLockNote`), after the Before you ride card on a first start. "Read this. Do not lock your
+screen. If your phone locks, the app will stop navigating." and, with battery saver on, "The screen goes dark between
+turns to save battery. That is normal. Tap the screen to light it up. Do not press the button on the side of your
+phone." (a rider who takes the black screen for a sleeping phone and presses the button locks it). The red I understand
+button starts the ride. It took the place of the spoken "Keep this screen open while you ride" line at the start of the
+ride, which Ben asked to drop; with that line gone the first direction's early warning is no longer crowded out. Staff
+check links and Test drive skip the card. In all 9 languages. Change the wording only with Ben. Screenshot 06c.
+
 ## Before you start notice (11/11/2026)
 A red card that comes up first when a ride opens in a browser tab, so riders who are not tech savvy don't lose the map. Points: use a normal tab (not private or incognito), save the map to the home screen (closing the tab loses it, closing the browser app is fine), location must be on (with a live "Location is on/off" line where the browser can tell), charge the phone, and on loops only, ride the loop in one direction. The home screen and location steps sit behind "How?" links. Closing line: if they choose not to and lose the map, they find their own way back. Button: "I've read this. I've done it, or chosen not to." A language picker sits in the notice (the top bar language button is under the backdrop while it is open). It is kept per ride per phone (localStorage rg.notice), and also brings up the phone's location question. Skipped from a home screen icon (standalone) and on ?check links. Wording agreed with Ben 11/11/2026; change it only with him. Code: site/app.js openNotice and needNotice; styles at the end of site/app.css. Screenshot 01b in the staff pictures.
 

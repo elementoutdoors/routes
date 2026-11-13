@@ -240,14 +240,22 @@ def app_screens(p):
     ctx.set_geolocation({'latitude': la, 'longitude': ln, 'accuracy': 8})
     page.click('#start-btn'); time.sleep(1)
     # the first Start riding on a phone shows the Before you ride card (20/10/2026); I understand starts the ride
-    if wait_visible(page, 'text=I understand', 4):
+    if wait_visible(page, 'text=I understand', 4) and not page.is_visible('.lock-ok'):
         shot(page, '06b-before-you-ride.jpg', 'setup', 'Before you ride',
              'The first time a ride is started on a phone. I understand starts the ride; it is not shown again for that ride.',
              [(1, '#sheet-title', 'Riding is at their own risk.', 'tl'),
               (2, 'text:Never ride through flood water', 'Never ride through flood water; turn back if it looks unsafe.', 'tl'),
               (3, 'text:Follow the road rules', 'Road rules, helmet, and the phone in a mount.', 'tl'),
-              (4, 'text:I understand', 'I understand: starts the ride.', 'tl')])
+              (4, 'text:I understand', 'I understand: goes on to the Do not lock your screen card.', 'tl')])
         page.click('text=I understand')
+    # every Start riding or Continue my ride then shows the red Do not lock your screen card (13/11/2026)
+    if wait_visible(page, '.lock-ok', 4):
+        shot(page, '06c-do-not-lock.jpg', 'setup', 'Do not lock your screen',
+             'Comes up every time a ride is started or continued. I understand starts the ride.',
+             [(1, '#sheet-title', 'Locking the phone stops the navigation.', 'tl'),
+              (2, '.lock-more', 'With Battery saver on: the dark screen between turns is normal. Tap it, never the side button.', 'tl'),
+              (3, '.lock-ok', 'I understand: starts the ride.', 'tl')])
+        page.click('.lock-ok')
     time.sleep(3)
     close_sheet(page)
     ctx.set_geolocation({'latitude': la + 0.00001, 'longitude': ln, 'accuracy': 8}); time.sleep(1.5)
