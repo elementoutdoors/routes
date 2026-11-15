@@ -286,6 +286,15 @@ joining part way rides on to the finish. Test drive and staff check links always
 - Keeping it right: the 3am build runs "Refresh public toilets", which downloads only when OpenFreeMap publishes a new map version (or the file is over 25 days old), so the toilets follow the map's own updates, and commits the file only when it changes. A failed download, more than 2% failed tiles, or 30% fewer toilets than last time keeps the old file. The build flags a ride that leaves the area; health.json `toilets` shows the map version and date and each route its count; the weekly check flags a file over 60 days old.
 - A wrong, missing or closed toilet is fixed in OpenStreetMap (openstreetmap.org); it flows into the base map and then the Ride Guide by itself.
 
+## GPX download (made obvious 15/11/2026)
+
+- Which rides have one: the "Riders can download a GPX file" switch on each ride's Ride Desk card (`gpx` in config/ride-desk.json). On 15/11/2026 it was on for 24 of the 30 live rides and off for the six scenic rides (Full Noosa, Kids and Family, Surf Beaches, Mt Tinbeerwah, Mt Tinbeerwah One Way, North Shore), as Ben set it on 10/10/2026. health.json lists `gpx` for every route. A ride with it off shows no GPX button anywhere.
+- Where riders find it, on rides that have one: "Download this ride as a GPX file" is a button on the ride page, under Start riding and Directions to the route (`#route-gpx`), and the first thing in Settings as a solid button (`gpxLink` in site/app.js), from the ride page or the menu button while riding. Before 15/11/2026 it was only the last item in Settings: on an 844 px tall phone screen it started about 300 px below the bottom of the screen, so the sheet had to be scrolled to its end, and Settings itself was a small link at the foot of the ride page, also below the first screen. Ben could not find it.
+- The file is not kept on the phone. With no signal the button says "Needs mobile signal" instead of starting a download that fails.
+- Staff check links say in Settings when a ride has no GPX download and where it is switched on.
+- Staff pictures: Kids and Family has no GPX download, so `gpx_screens` in scripts/staff_screens.py opens the first ride in name order that has one (or `SCREENS_GPX_RIDE`) for two pictures, `03b-route-gpx.jpg` and `05b-settings-gpx.jpg`.
+- No new wording: the button uses the existing translated "Download this ride as a GPX file".
+
 ## Ride counts
 
 An indicative count of how often each map is used, shown on the Ride Desk (17/10/2026). The app sends one

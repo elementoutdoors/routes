@@ -467,7 +467,7 @@ footer{margin-top:22px;font-size:13px;color:var(--muted)}
     var bf = el("div", "fld"); bf.appendChild(el("span", "lbl", "Brand")); bf.appendChild(fs); bf.appendChild(el("small", null, "The map shows this brand's logo and colours, and its sheet goes in that brand's half of the booklet.")); body.appendChild(bf);
     field(body, "Type", "Sets the riding speed behind its riding time (speeds are under Riding time estimates below).", c.type, function (v) { c.type = v; refresh(); }, "select", id + "-type", [["", "Choose a type"]].concat(TYPES));
     switchRow(body, "Point of interest stories on by default", "On: riders hear each point of interest as they reach it. Off: points of interest stay on the map but are not announced.", function () { return c.stories; }, function (v) { c.stories = v; }, id + "-stories");
-    switchRow(body, "Riders can download a GPX file", "In the map's Settings; the route line only.", function () { return c.gpx; }, function (v) { c.gpx = v; }, id + "-gpx");
+    switchRow(body, "Riders can download a GPX file", "On: a download button on the ride page under Start riding, and the first button in its Settings. The route line only. Off: no GPX button on this ride.", function () { return c.gpx; }, function (v) { c.gpx = v; }, id + "-gpx");
 
     body.appendChild(el("h3", null, "Ride description"));
     field(body, "Ride description", "The ride's story everywhere: its Ride Guide page, its ride sheet and the EO Crew manual. This is the master now; the description in Ride with GPS is no longer used.", c.description, function (v) { c.description = v; refresh(); }, "long", id + "-description");

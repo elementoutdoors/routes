@@ -230,7 +230,8 @@ def app_screens(p):
     page.click('#route-settings'); time.sleep(1)
     shot(page, '05-settings.jpg', 'settings', 'Settings, top',
          'Settings, from the ride page or the menu button while riding.',
-         [(1, 'text:Metric (km)', 'Kilometres or miles.', 'tl'),
+         [(3, '#sheet-body a.gpx-btn', 'Download this ride as a GPX file, for a Garmin or Wahoo: the first button, on rides with a GPX download.', 'tl'),
+          (1, 'text:Metric (km)', 'Kilometres or miles.', 'tl'),
           (2, '.lang-grid', 'Language. Directions, stops and stories change language too.', 'tl')])
     page.evaluate("() => { const b = document.querySelector('#sheet-body'); b.scrollTop = b.scrollHeight; }"); time.sleep(0.6)
     shot(page, '06-settings-lower.jpg', 'settings', 'Settings, further down',
@@ -240,8 +241,7 @@ def app_screens(p):
           (3, '.toggle-row:nth-child(3)', 'Chime: a short ding at each turn.', 'tl'),
           (4, '.toggle-row:nth-child(4)', 'Stories: hear a short overview at each place.', 'tl'),
           (5, '.toggle-row:nth-child(5)', 'Battery saver: blacks the screen out between turns.', 'tl'),
-          (6, 'text:Satellite', 'Standard or satellite map (satellite needs signal).', 'tl'),
-          (7, 'text:Download this ride as a GPX file', 'GPX file for a Garmin or Wahoo (only on some rides).', 'tl')])
+          (6, 'text:Satellite', 'Standard or satellite map (satellite needs signal).', 'tl')])
     close_sheet(page)
 
     # Riding: start a little way from the start of the route, so the app shows "head to the start"
@@ -432,6 +432,62 @@ def app_screens(p):
     return route
 
 
+# ---------------------------------------------------------------- a ride with a GPX download
+def place_after(f, after):
+    """Move the picture just taken to sit straight after another one, so the manual shows it beside it."""
+    i = next((k for k, t in enumerate(taken) if t['file'] == f), None)
+    j = next((k for k, t in enumerate(taken) if t['file'] == after), None)
+    if i is not None and j is not None and i != j + 1:
+        t = taken.pop(i); taken.insert(next(k for k, x in enumerate(taken) if x['file'] == after) + 1, t)
+
+
+def gpx_screens(p):
+    """The GPX download (15/11/2026: a button on the ride page under Start riding, and the first button in Settings).
+    The pictures above ride Kids and Family, which has no GPX download, so these two open a ride that has one:
+    SCREENS_GPX_RIDE, or the first ride in name order whose data carries a GPX file (the test route only if nothing else)."""
+    links = json.load(open(f'{ROOT}/qr/links.json'))
+    want = os.environ.get('SCREENS_GPX_RIDE')
+    b = p.chromium.launch()
+    ctx = b.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=1.5, is_mobile=True, has_touch=True,
+                        geolocation={'latitude': -26.4078, 'longitude': 153.0434, 'accuracy': 10}, permissions=['geolocation'], locale='en-AU')
+    ctx.add_init_script(QUIET)
+    # staff screenshots never count in the ride counts
+    ctx.route('**/script.google.com/**', lambda r: r.abort())
+    ctx.route('**/script.googleusercontent.com/**', lambda r: r.abort())
+    page = ctx.new_page()
+    page.goto(base)
+    page.wait_for_selector('#v-home', state='visible', timeout=20000); time.sleep(1)
+    pick = None
+    for slug in ([want] if want else sorted(links, key=lambda s: (s == 'bens-test-route', s))):
+        if slug not in links or '#' not in links[slug]:
+            continue
+        k = links[slug].split('#', 1)[1]
+        if page.evaluate("(k) => fetch('r/' + k + '.json').then(r => r.ok ? r.json() : null).then(j => !!(j && j.gpx)).catch(() => false)", k):
+            pick = (slug, k); break
+    if not pick:
+        print('GPX pictures not taken: no ride with a GPX download was found')
+        b.close(); return
+    slug, k = pick
+    # the Before you start notice and the Before you ride card belong to the pictures above: mark them seen for this ride
+    page.evaluate("(s) => { const m = {}; m[s] = 1; localStorage.setItem('rg.notice', JSON.stringify(m)); localStorage.setItem('rg.risk', JSON.stringify(m)); }", slug)
+    page.goto(base + '#' + k)
+    page.wait_for_selector('body.view-route', timeout=20000); time.sleep(5)
+    if not page.is_visible('#route-gpx'):
+        print('GPX pictures not taken: the ride page shows no GPX button on', slug)
+        b.close(); return
+    page.evaluate("() => document.getElementById('route-gpx').scrollIntoView({ block: 'center' })"); time.sleep(0.8)
+    shot(page, '03b-route-gpx.jpg', 'setup', 'Ride page, on a ride with a GPX download',
+         'Rides with a GPX download show it under Start riding. Which rides have one is set on each ride\'s Ride Desk card.',
+         [(1, '#route-gpx', 'Download this ride as a GPX file: the route line for a Garmin, Wahoo or other bike computer.', 'tl')])
+    place_after('03b-route-gpx.jpg', '03-route-lower.jpg')
+    page.click('#route-settings'); time.sleep(1)
+    shot(page, '05b-settings-gpx.jpg', 'settings', 'Settings, on a ride with a GPX download',
+         'On those rides the same download is the first button in Settings.',
+         [(1, '#sheet-body a.gpx-btn', 'Download this ride as a GPX file.', 'tl')])
+    place_after('05b-settings-gpx.jpg', '05-settings.jpg')
+    b.close()
+
+
 # ---------------------------------------------------------------- the Ride Desk, with made-up data
 def desk_docs():
     cfg = json.load(open(f'{ROOT}/config/ride-desk.json'))['rides']
@@ -534,6 +590,10 @@ def desk_screens(p):
 
 with sync_playwright() as p:
     route = app_screens(p)
+    try:
+        gpx_screens(p)
+    except Exception as e:   # the pictures above matter most: keep them even if these two fail
+        print('GPX screenshots failed:', e)
     try:
         desk_screens(p)
     except Exception as e:   # the app pictures matter most: keep them even if the Ride Desk ones fail
