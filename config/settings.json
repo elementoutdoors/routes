@@ -28,7 +28,7 @@
     "keepScreenOn": true,
     "batterySaver": true,
     "readStoriesAloud": true,
-    "wakeBeforeTurnMetres": 100,
+    "wakeBeforeTurnMetres": 250,
     "blackoutAfterSeconds": 20
   },
 
