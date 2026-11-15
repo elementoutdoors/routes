@@ -135,6 +135,14 @@ jobs:
           path: qr/booklet
           key: ride-sheets-v1-${{ github.run_id }}-${{ github.run_attempt }}
 
+      # QR code images for the booking emails (scripts/email_qr.py): one PNG per live ride under dist/q/, named from
+      # the ride's secret link so it can't be guessed. Allowed to fail without stopping the site; the weekly
+      # "Ride map packs" drift check reports any emailed QR that no longer loads.
+      - name: Email QR codes
+        continue-on-error: true
+        run: |
+          pip install -q qrcode==7.4.2 pillow
+          python3 scripts/email_qr.py
       - name: Check the build has every route
         run: |
           test -f dist/index.html
