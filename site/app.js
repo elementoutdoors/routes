@@ -314,7 +314,8 @@
     vol: '<path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>',
     mute: '<path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M22 9l-6 6M16 9l6 6"/>',
     phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
-    star: '<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>'
+    star: '<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',
+    download: '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/>'
   };
   function svg(name, cls) { return '<svg viewBox="0 0 24 24" aria-hidden="true"' + (cls ? ' class="' + cls + '"' : '') + '>' + (IC[name] || IC.info) + '</svg>'; }
   function cueIcon(t) { return IC[t] ? t : (t === 'generic' ? 'generic' : 'straight'); }
@@ -1795,10 +1796,31 @@
       b.appendChild(list);
     });
   }
+  // ---------- GPX download (Ben, 15/11/2026: make it obvious). A button on the ride page under Start riding and the
+  // first thing in Settings, on rides whose Ride Desk card has it switched on. The file is not kept on the phone, so
+  // with no signal the rider is told instead of getting a failed download. ----------
+  function gpxTap(e) {
+    if (navigator.onLine) return;
+    e.preventDefault();
+    notice(tu('Download this ride as a GPX file'), [tu('Needs mobile signal')]);
+  }
+  function gpxLink(cls, label) {
+    var a = el('a', { class: 'btn ' + cls + ' gpx-btn', href: R.gpx, download: R.slug + '.gpx' }, svg('download'));
+    a.appendChild(el('span', { text: label }));
+    a.addEventListener('click', gpxTap);
+    return a;
+  }
   function openSettings() {
     openSheet(function (b) {
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('Settings') }));
       function group(label) { var g = el('div', { class: 'set-group' }); g.appendChild(el('div', { class: 'set-label', text: label })); b.appendChild(g); return g; }
+      // The GPX download comes first, as a solid button (Ben, 15/11/2026: at the very bottom of this sheet nobody
+      // could find it). Only on rides whose Ride Desk card has the GPX download switched on.
+      if (R && R.gpx) {
+        var gg = group(tu('Bike computer'));
+        gg.appendChild(gpxLink('primary full', tu('Download this ride as a GPX file')));
+        gg.appendChild(el('p', { class: 'note', text: tu('For Garmin, Wahoo and other bike computers. The file holds the route line only.') }));
+      }
       function seg(g, opts, val, onPick) {
         var s = el('div', { class: 'seg' });
         opts.forEach(function (o) {
@@ -1841,12 +1863,8 @@
         var demo = el('button', { class: 'btn outline full', type: 'button', text: tu('Test drive: watch the route play through') });
         demo.addEventListener('click', function () { closeSheet(); startSim(); });
         b.appendChild(demo);
-      }
-      if (R && R.gpx) {
-        var gg = group(tu('Bike computer'));
-        var dl = el('a', { class: 'btn outline full', href: R.gpx, download: R.slug + '.gpx', text: tu('Download this ride as a GPX file') });
-        gg.appendChild(dl);
-        gg.appendChild(el('p', { class: 'note', text: tu('For Garmin, Wahoo and other bike computers. The file holds the route line only.') }));
+        // staff check links only: say why a ride shows no GPX button, so nobody goes looking for one that is switched off
+        if (!R.gpx) b.appendChild(el('p', { class: 'note', text: 'Staff: this ride has no GPX download. It is switched on for each ride on its Ride Desk card ("Riders can download a GPX file").' }));
       }
       b.appendChild(el('div', { class: 'ver', text: 'Ride Guide ' + BUILD + (R ? ' · ' + R.version : '') }));
     });
@@ -2005,6 +2023,11 @@
     var resumable = p && p.version === R.version && p.d > 150 && Date.now() - p.ts < 8 * 3600 * 1000;
     $('start-label').textContent = tu(resumable ? 'Continue my ride' : 'Start riding');
     $('start-btn').dataset.resume = resumable ? '1' : '';
+    // GPX download: its own button on the ride page, on rides that have one (see gpxLink)
+    var gx = $('route-gpx');
+    gx.hidden = !R.gpx;
+    if (R.gpx) { gx.setAttribute('href', R.gpx); gx.setAttribute('download', R.slug + '.gpx'); }
+    else { gx.removeAttribute('href'); gx.removeAttribute('download'); }
     // Your routes (Ben, 9/11/2026): always shown on the route page, from the first scan, so riders know every route
     // they open is kept in one list on the phone. The icon carries the count.
     var nRoutes = Math.max(1, Object.keys(routeIndex).length);
@@ -2553,6 +2576,7 @@
     window.addEventListener('hashchange', function () { if (ride.keepOpen) return; var k = keyFromUrl(); if (k) { scrubUrl(); openKey(k); } });
     $('keep-btn').addEventListener('click', openKeep);
     $('getthere-btn').addEventListener('click', openGetThere);
+    $('route-gpx').addEventListener('click', gpxTap);
     $('viewer-back').addEventListener('click', function () { closeViewer(false); });
     window.addEventListener('popstate', function () { closeViewer(true); });
     $('code-form').addEventListener('submit', function (e) { e.preventDefault(); openCode($('code-input').value); });

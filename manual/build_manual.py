@@ -129,7 +129,7 @@ PARTS = [
                 ['Point of interest stories', "On: each place's card pops up and a short overview is read out. Off: places stay on the map and in the Stops list but aren't announced. Directions and safety warnings are always spoken.", 'On for sightseers. Off for riders who just want to ride. Each ride starts with our own choice (off on road and gravel rides and Tewantin MTB Trails).'],
                 ['Battery saver', 'Blacks the screen out between turns (almost no power) and lights it up before each turn, at stops and when off route. Tap the screen to wake it.', "Long rides, older phones, or a phone that wasn't fully charged."],
                 ['Map', 'Standard or satellite. Satellite needs signal.', 'Riders who like to see the ground.'],
-                ['Download this ride as a GPX file', 'The route line for a Garmin, Wahoo or other bike computer. Only on road, gravel, MTB and hinterland rides.', 'Riders with a bike computer.']]),
+                ['Download this ride as a GPX file', 'The route line for a Garmin, Wahoo or other bike computer. The first button in Settings, and also on the ride page under Start riding. Only on road, gravel, MTB and hinterland rides.', 'Riders with a bike computer.']]),
             NOTE('The screen always stays on while riding, so there is no setting for that. The timings behind the voice and warnings are set for everyone on the Ride Desk (managers, [[sec:6ad6c26ca0c8e0f3082e4a5b]]).'),
         ]),
         ('What to tell every customer', [
@@ -164,7 +164,7 @@ PARTS = [
             H('Good to know on every ride'),
             L('The riding time in the Ride Guide is pure riding at an easy pace for that kind of ride. Go by the time to allow on the booking, and bikes back by 4pm.',
               'Stories are off by default on road rides, gravel rides and Tewantin MTB Trails. Riders can turn on Point of interest stories in Settings.',
-              '"Download this ride as a GPX file" (for a Garmin or Wahoo) is in Settings on road, gravel, MTB and hinterland rides, not the scenic e-Bike rides.',
+              '"Download this ride as a GPX file" (for a Garmin or Wahoo) is a button on the ride page under Start riding, and the first button in Settings, on road, gravel, MTB and hinterland rides. It is not on the scenic e-Bike rides.',
               'Recovery during a self guided ride is charged from $75 per hour, one hour minimum, more for remote areas and the North Shore, with no guaranteed time.'),
         ]),
         ('When something goes wrong', [
@@ -192,7 +192,7 @@ PARTS = [
                 ["Stop stories didn't play", 'Stories are off by default on road rides, gravel rides and Tewantin MTB Trails. Turn on Point of interest stories in Settings. On any stop card, Listen reads the short version and "Hear the full story" plays the longer one.'],
                 ["The offer screen doesn't work at Land and Sea Brewery", 'The brewery needs the physical voucher card from us (one per rider, 18 and over). Give it out when they get back. Fliteschool Noosa: they call 0477 418 419 and mention Bike On. Noosa Ocean Adventures: they enter the code NOAEOD10 when they book.'],
                 ["The finish card didn't come up", "It only appears once most of the ride (75%) has been ridden on that phone, so a ride cut short or started on another phone won't show it. On a loop joined part way it comes up back where they joined. Tap End ride. Nothing else is needed."],
-                ['Wants the route on a Garmin or Wahoo', 'On road, gravel, MTB and hinterland rides, Settings has "Download this ride as a GPX file". Not on the scenic e-Bike rides.'],
+                ['Wants the route on a Garmin or Wahoo', 'On road, gravel, MTB and hinterland rides, tap "Download this ride as a GPX file" on the ride page, under Start riding. It is also the first button in Settings. Not on the scenic e-Bike rides.'],
                 ['Wrong language, or wants miles', 'Use the EN and km buttons on the ride page, or Settings. Nine languages.'],
                 ['Something on a ride is wrong (a closed path, a wrong story, an old photo)', 'Tell a manager. They change it on the Ride Desk or in Ride with GPS ([[sec:6ad6c26ca0c8e0f3082e4a5b]]).'],
                 ['Anything else', '"Need help? Call us" on the ride page rings the shop. Recovery during a self guided ride is charged from $75 per hour, one hour minimum, more for remote areas and the North Shore, with no guaranteed time.']]),
