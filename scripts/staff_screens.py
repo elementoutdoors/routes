@@ -230,7 +230,7 @@ def app_screens(p):
     page.click('#route-settings'); time.sleep(1)
     shot(page, '05-settings.jpg', 'settings', 'Settings, top',
          'Settings, from the ride page or the menu button while riding.',
-         [(3, '#sheet-body a.gpx-btn', 'Download this ride as a GPX file, for a Garmin or Wahoo: the first button, on rides with a GPX download.', 'tl'),
+         [(3, '#sheet-body a.gpx-btn', 'Download this ride as a GPX file, for a Garmin or Wahoo: the first button, on every ride.', 'tl'),
           (1, 'text:Metric (km)', 'Kilometres or miles.', 'tl'),
           (2, '.lang-grid', 'Language. Directions, stops and stories change language too.', 'tl')])
     page.evaluate("() => { const b = document.querySelector('#sheet-body'); b.scrollTop = b.scrollHeight; }"); time.sleep(0.6)
@@ -477,7 +477,7 @@ def gpx_screens(p):
         b.close(); return
     page.evaluate("() => document.getElementById('route-gpx').scrollIntoView({ block: 'center' })"); time.sleep(0.8)
     shot(page, '03b-route-gpx.jpg', 'setup', 'Ride page, on a ride with a GPX download',
-         'Rides with a GPX download show it under Start riding. Which rides have one is set on each ride\'s Ride Desk card.',
+         'Every ride shows the GPX download under Start riding.',
          [(1, '#route-gpx', 'Download this ride as a GPX file: the route line for a Garmin, Wahoo or other bike computer.', 'tl')])
     place_after('03b-route-gpx.jpg', '03-route-lower.jpg')
     page.click('#route-settings'); time.sleep(1)
@@ -554,7 +554,7 @@ def desk_screens(p):
              'Where the ride shows and how it looks in the app.',
              [(1, 'text:Live in the Ride Guide', 'Live in the Ride Guide: off takes the ride out of the app.', 'tl'),
               (2, 'text:Show on the hire desk iPad', 'Show on the hire desk iPad and in the booklet: off for private guide rides.', 'tl'),
-              (3, 'text:In the Ride Guide app', 'Name in the app, brand, type, stories on or off, GPX download.', 'tl')])
+              (3, 'text:In the Ride Guide app', 'Name in the app, brand, type, stories on or off.', 'tl')])
         for title, f2, text, marks in [
             ('Ride description', '23-desk-description.jpg', 'The ride description riders read on the ride page and in the booklet.',
              [(1, 'text:Ride description', 'The master copy of the description.', 'tl')]),

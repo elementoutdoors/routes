@@ -61,7 +61,7 @@ export function cleanPublic(c) {
   o.live = c.live === true; o.ipad = c.ipad === true; o.status = c.status === 'new' ? 'new' : 'ready';
   o.brand = c.brand === 'beo' ? 'beo' : c.brand === 'bikeon' ? 'bikeon' : '';
   o.type = TYPES.includes(c.type) ? c.type : '';
-  o.stories = c.stories === true; o.gpx = c.gpx === true;
+  o.stories = c.stories === true; o.gpx = true;   // every ride has the GPX download (Ben, 16/11/2026); the switch is gone from the Ride Desk
   for (const k of ['appName', 'title', 'category', 'sellLine', 'level', 'surface', 'terrain', 'bike', 'bikeNote', 'sheetNote', 'description']) o[k] = str(c[k]);
   const hl = Array.isArray(c.highlights) ? c.highlights.map(str) : [];
   o.highlights = [0, 1, 2, 3].map(i => hl[i] || '');

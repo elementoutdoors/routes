@@ -52,7 +52,7 @@ per ride, plus the partner offers and rider settings. Where everything about a r
 | Route line, cues, which places a ride passes | Ride with GPS | The build reads it |
 | Place stories (spoken story, blog section, pin line) | The Story Library, `library/` | The build reads it |
 | Distance, climbing, riding time | Worked out from the line and the speed for the ride's type | The build |
-| Live in the Ride Guide; on the hire desk iPad and in the booklet; brand, type, stories, GPX; name in the app; description; title, category, sell line, four highlights, level, surface, terrain, recommended bike, sheet note; photo | The ride's Ride Desk card | `config/ride-desk.json` |
+| Live in the Ride Guide; on the hire desk iPad and in the booklet; brand, type, stories; name in the app; description; title, category, sell line, four highlights, level, surface, terrain, recommended bike, sheet note; photo | The ride's Ride Desk card | `config/ride-desk.json` |
 | Who it suits, not for, time to allow, sold as, bikes to hire, start and finish, staff notes | The ride's Ride Desk card | `config/ride-desk-private.enc.json` (sealed) |
 | Map place names and camera angle on the ride sheets | Claude | `ride-sheets/rides.py` |
 
@@ -288,10 +288,9 @@ joining part way rides on to the finish. Test drive and staff check links always
 
 ## GPX download (made obvious 15/11/2026)
 
-- Which rides have one: the "Riders can download a GPX file" switch on each ride's Ride Desk card (`gpx` in config/ride-desk.json). On 15/11/2026 it was on for 24 of the 30 live rides and off for the six scenic rides (Full Noosa, Kids and Family, Surf Beaches, Mt Tinbeerwah, Mt Tinbeerwah One Way, North Shore), as Ben set it on 10/10/2026. health.json lists `gpx` for every route. A ride with it off shows no GPX button anywhere.
-- Where riders find it, on rides that have one: "Download this ride as a GPX file" is a button on the ride page, under Start riding and Directions to the route (`#route-gpx`), and the first thing in Settings as a solid button (`gpxLink` in site/app.js), from the ride page or the menu button while riding. Before 15/11/2026 it was only the last item in Settings: on an 844 px tall phone screen it started about 300 px below the bottom of the screen, so the sheet had to be scrolled to its end, and Settings itself was a small link at the foot of the ride page, also below the first screen. Ben could not find it.
+- Every ride has one (Ben, 16/11/2026). The "Riders can download a GPX file" switch is gone from the Ride Desk; `cleanPublic` in scripts/ride-desk.mjs always sets `gpx` true and scripts/build.mjs writes the file for every ride. (Until 16/11/2026 it was a switch, off for the six scenic rides.)
+- Where riders find it: "Download this ride as a GPX file" is a button on the ride page, under Start riding and Directions to the route (`#route-gpx`), and the first thing in Settings as a solid button (`gpxLink` in site/app.js), from the ride page or the menu button while riding. Before 15/11/2026 it was only the last item in Settings: on an 844 px tall phone screen it started about 300 px below the bottom of the screen, so the sheet had to be scrolled to its end, and Settings itself was a small link at the foot of the ride page, also below the first screen. Ben could not find it.
 - The file is not kept on the phone. With no signal the button says "Needs mobile signal" instead of starting a download that fails.
-- Staff check links say in Settings when a ride has no GPX download and where it is switched on.
 - Staff pictures: Kids and Family has no GPX download, so `gpx_screens` in scripts/staff_screens.py opens the first ride in name order that has one (or `SCREENS_GPX_RIDE`) for two pictures, `03b-route-gpx.jpg` and `05b-settings-gpx.jpg`.
 - No new wording: the button uses the existing translated "Download this ride as a GPX file".
 
@@ -351,7 +350,7 @@ Every story, blog section, pin line, kayak talking point and wildlife card is wr
 | Cue wording, stops, the route line | Ride with GPS. Live by the next morning, or run the workflow by hand. |
 | Add a ride | Draw it in the By Earth and Ocean organisation account on Ride with GPS. It appears on the Ride Desk as New, hidden within a day; fill in its card and switch it on. |
 | Remove a ride | Switch it off on its Ride Desk card. Its link and code stop working. |
-| A ride's description, name in the app, brand, type, stories, GPX, sheet words, photo, staff notes | Its Ride Desk card |
+| A ride's description, name in the app, brand, type, stories, sheet words, photo, staff notes | Its Ride Desk card |
 | Partner offers | The Ride Desk (`config/offers.json` underneath; `validUntil` hides it after that date, `showAt` "finish" keeps it for the end of the ride) |
 | Any story, blog section, pin line, kayak talking point or wildlife card | The Story Library, `library/` (read `library/README.md`). `config/stories.json` and `config/place-record.json` are generated from it. |
 | How a word or name is said aloud | `config/speech.json` |
