@@ -554,8 +554,9 @@ async function main() {
     else { route.stories = settings.screen.readStoriesAloud; if (entry.active !== false) health.problems.push(`${entry.slug}: no point of interest stories setting on the Ride Desk, using ${route.stories ? 'on' : 'off'}`); }
     // Ride type sets the speed behind the riding time (Ben, 17/10/2026). A ride without a known type is reported.
     if (!(route.type && settings.speeds[route.type]) && entry.active !== false) health.problems.push(`${entry.slug}: no ride type on the Ride Desk (scenic, mtb, gravel, road, hinterlandMtb or hinterlandGravel), riding time uses the ${route.activity} speed`);
+    // GPX download on every ride (Ben, 16/11/2026: no switch; it does no harm if someone downloads it).
     route.gpx = null;
-    if (entry.gpx) {
+    {
       const gname = `g/${gpxKey(entry.slug, entry.rev)}.gpx`;
       fs.writeFileSync(path.join(dist, gname), gpxFile(route));
       route.gpx = gname;

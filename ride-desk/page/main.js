@@ -22,7 +22,7 @@
   function editable(c) {
     c = c || {};
     var o = { live: c.live === true, ipad: c.ipad === true, status: c.status === "new" ? "new" : "ready", brand: c.brand === "beo" || c.brand === "bikeon" ? c.brand : "",
-      type: c.type || "", stories: c.stories === true, gpx: c.gpx === true };
+      type: c.type || "", stories: c.stories === true, gpx: true };
     ["appName", "title", "category", "sellLine", "level", "surface", "terrain", "bike", "bikeNote", "sheetNote", "description"].forEach(function (k) { o[k] = typeof c[k] === "string" ? c[k] : ""; });
     var hl = Array.isArray(c.highlights) ? c.highlights : []; o.highlights = [0, 1, 2, 3].map(function (i) { return typeof hl[i] === "string" ? hl[i] : ""; });
     var p = c.photo && typeof c.photo === "object" ? c.photo : {}, src = ["website", "upload", "link", "ride"].indexOf(p.source) >= 0 ? p.source : "website";
@@ -145,7 +145,7 @@
     var bf = el("div", "fld"); bf.appendChild(el("span", "lbl", "Brand")); bf.appendChild(fs); bf.appendChild(el("small", null, "The map shows this brand's logo and colours, and its sheet goes in that brand's half of the booklet.")); body.appendChild(bf);
     field(body, "Type", "Sets the riding speed behind its riding time (speeds are under Riding time estimates below).", c.type, function (v) { c.type = v; refresh(); }, "select", id + "-type", [["", "Choose a type"]].concat(TYPES));
     switchRow(body, "Point of interest stories on by default", "On: riders hear each point of interest as they reach it. Off: points of interest stay on the map but are not announced.", function () { return c.stories; }, function (v) { c.stories = v; }, id + "-stories");
-    switchRow(body, "Riders can download a GPX file", "On: a download button on the ride page under Start riding, and the first button in its Settings. The route line only. Off: no GPX button on this ride.", function () { return c.gpx; }, function (v) { c.gpx = v; }, id + "-gpx");
+    // GPX switch removed 16/11/2026 (Ben): every ride has the download.
 
     body.appendChild(el("h3", null, "Ride description"));
     field(body, "Ride description", "The ride's story everywhere: its Ride Guide page, its ride sheet and the EO Crew manual. This is the master now; the description in Ride with GPS is no longer used.", c.description, function (v) { c.description = v; refresh(); }, "long", id + "-description");

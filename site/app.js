@@ -1815,7 +1815,7 @@
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('Settings') }));
       function group(label) { var g = el('div', { class: 'set-group' }); g.appendChild(el('div', { class: 'set-label', text: label })); b.appendChild(g); return g; }
       // The GPX download comes first, as a solid button (Ben, 15/11/2026: at the very bottom of this sheet nobody
-      // could find it). Only on rides whose Ride Desk card has the GPX download switched on.
+      // could find it). Every ride has it since 16/11/2026 (Ben).
       if (R && R.gpx) {
         var gg = group(tu('Bike computer'));
         gg.appendChild(gpxLink('primary full', tu('Download this ride as a GPX file')));
@@ -1863,8 +1863,6 @@
         var demo = el('button', { class: 'btn outline full', type: 'button', text: tu('Test drive: watch the route play through') });
         demo.addEventListener('click', function () { closeSheet(); startSim(); });
         b.appendChild(demo);
-        // staff check links only: say why a ride shows no GPX button, so nobody goes looking for one that is switched off
-        if (!R.gpx) b.appendChild(el('p', { class: 'note', text: 'Staff: this ride has no GPX download. It is switched on for each ride on its Ride Desk card ("Riders can download a GPX file").' }));
       }
       b.appendChild(el('div', { class: 'ver', text: 'Ride Guide ' + BUILD + (R ? ' · ' + R.version : '') }));
     });
