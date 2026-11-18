@@ -166,7 +166,8 @@ if (fs.existsSync('qr/codes.json') && fs.existsSync('qr/links.json')) {
 // Ride Desk (18/10/2026): the build opened the sealed staff section and published what the Ride Desk reads
 // Version 13 (18/11/2026): trip ideas. health.json "ideas" from the build (config/experiences.json): every card built, tour
 // prices read live from Checkfront, every tour's booking items covered by the rider discount. Here: ideas.json is published,
-// each card's photo or logo loads, each tour page and Book now link answers, and every Book now link still carries the code.
+// each card's photo or logo loads, each tour page and Book now link answers, the page still has its #check booking section
+// and a Promo box for the code (Book now opens the tour page's widget since the second pass, 18/11/2026).
 // The discount itself (Checkfront discount 465, RIDEAPP10) can only be seen signed in; the build reads prices only.
 {
   const ir = h.ideas;
@@ -179,7 +180,13 @@ if (fs.existsSync('qr/codes.json') && fs.existsSync('qr/links.json')) {
       for (const c of ideas.cards || []) {
         for (const u of [c.photo, c.logo].filter(Boolean)) { const st = await status(BASE + u); if (st.code !== 200) issues.push(`trip ideas: ${c.id} image ${u} answers ${st.code}`); }
         if (c.page) { const st = await status(c.page); if (st.code >= 400 || st.code === 0 || st.moved) issues.push(`trip ideas: ${c.id} page ${c.page} answers ${st.code}${st.moved ? ' and moved to ' + st.moved : ''}`); }
-        if (c.type === 'tour' && !(c.book || '').includes('discount=' + ideas.code)) issues.push(`trip ideas: ${c.id} Book now link does not carry ${ideas.code}`);
+        if (c.type === 'tour') {
+          if (!ideas.code) issues.push('trip ideas: ideas.json has no rider code');
+          const st = await status(c.book.split('#')[0]); if (st.code >= 400 || st.code === 0) issues.push(`trip ideas: ${c.id} Book now page answers ${st.code}`);
+          const html = await (await fetch(c.page, { headers: { 'User-Agent': UA } })).text().catch(() => '');
+          if (html && !/id="check"/.test(html)) issues.push(`trip ideas: ${c.id} tour page has no #check booking section any more (Book now lands at the top of the page); fix bookAnchor in config/experiences.json`);
+          if (html && !/promo/i.test(html)) issues.push(`trip ideas: ${c.id} tour page booking widget shows no Promo box; riders cannot use ${ideas.code}`);
+        }
       }
     } catch (e) { issues.push('trip ideas: ideas.json not readable: ' + e.message); }
   }

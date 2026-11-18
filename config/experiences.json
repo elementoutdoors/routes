@@ -2,6 +2,8 @@
   "_about": "Trip ideas: the experiences list riders see at the end of a ride, from Ride ended, and from Trip ideas on the route page and in the Offers list (Ben, 18/11/2026). Order is fixed as Ben set it: kayak tour first, then the multi-day experience, the Biosphere MTB tour, coaching, then partner activities. Shown on both brands' maps. Types: tour (bookable through Checkfront with the rider code), enquiry (no discount), contact (call or email), partner (an offer from config/offers.json, the partner's own deal, never our code). Prices for tours come live from Checkfront's public item API at build; price here is the fallback. Food and drink (Land and Sea) is never in this list: it stays a rider offer on the finish card.",
   "discount": { "code": "RIDEAPP10", "percent": 10, "checkfrontId": 465, "tid": "ride-guide", "items": [1301, 795, 1230, 1302, 886, 1303, 1192, 1304, 804, 892, 1110, 825, 896, 1270, 1305, 911] },
   "checkfront": "https://bikeon.checkfront.com",
+  "bookAnchor": "check",
+  "_bookAnchor": "Book now opens the tour page at its booking section: #check is the phone layout's booking block on the By Earth and Ocean tour pages (#checkform is the desktop one). The widget's Promo box takes the code; the app shows it with a Copy button.",
   "allTours": "https://byearthandocean.com.au/tours/",
   "cards": [
     {
@@ -12,7 +14,7 @@
       "line": "Paddle clear water on the Noosa River and spot stingrays with a local guide. Kids from 4.",
       "photo": "assets/ideas/kayak.jpg",
       "page": "https://byearthandocean.com.au/tours/stingrays-everglades-guided-kayak-tour/",
-      "bookItems": [1301, 795, 1230, 1302, 886, 1303],
+      "bookItems": [1301, 795, 1230, 1302, 886, 1303], "_bookItems": "the items this card sells; the build checks the discount covers them",
       "priceItem": 795, "priceParam": { "riderspublictou": 1 },
       "price": 119, "per": "adult"
     },

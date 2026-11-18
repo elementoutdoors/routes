@@ -352,18 +352,20 @@ The experiences list riders see after a ride, from Ben's mock (https://claude.ai
 - Food and drink (Land and Sea) is never in the list: it stays a rider offer on the finish card, which now carries
   "Inspire my next activity".
 - Ways in: finish card (Inspire my next activity), End ride while riding (a check sheet: End ride, Pause instead, Keep
-  riding; ending early then shows Ride ended with the same button), "Trip ideas" on the route page, and Trip ideas at the
-  bottom of the Offers list (which now always lists, even with one offer).
-- Rider code: Checkfront discount 465, RIDEAPP10, 10% per booking, on the guided tour items listed in the config. Book
-  now links are reserve/?item_id=...&discount=RIDEAPP10&tid=ride-guide, so the code is applied without typing and
-  app bookings show tid ride-guide. Checkfront refuses to be shown inside the app, so Book now opens a new tab; Details
-  open in the in-app viewer. With no signal the buttons are greyed and say so.
+  riding; ending early then shows Ride ended with the same button), "More ideas for your Noosa trip" on the route page
+  (a tinted brand colour button so it stands out) and at the bottom of the Offers list (which now always lists).
+- Rider code: Checkfront discount 465, RIDEAPP10, 10% per booking, on the guided tour items listed in the config. Shown
+  in a code box with a Copy button at the top of the list and on each tour card. Book now opens the tour page on the By
+  Earth and Ocean site at its booking section (#check, the phone layout), inside the app viewer, with utm tags
+  (source ride-guide); the rider pastes the code in the widget's Promo box (Ben, 18/11/2026: the Checkfront page was
+  not a clean look). With no signal the buttons are greyed and say so.
 - Build: buildIdeas() writes dist/ideas.json, reads each tour's per person price live from Checkfront's public item API
   (first priced date 7 to 28 days out; the config price is the fallback and health.json says so), refuses a Book now
   item the discount does not cover, and adds the card words to the translation list. health.json "ideas" reports it.
 - Photos: site/assets/ideas/ (720 x 405, from the By Earth and Ocean and Bike On websites). Saved to the phone with the
   route.
-- Weekly check (scripts/check.mjs v13): ideas.json published, images and pages answer, every Book now carries the code,
+- Weekly check (scripts/check.mjs v13): ideas.json published, images and pages answer, each tour page still has its
+  #check booking section and a Promo box,
   live prices that differ from the config fallback are noted.
 
 ## Changing things
