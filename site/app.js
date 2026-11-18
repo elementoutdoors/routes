@@ -62,6 +62,7 @@
 
   // ---------- translation ----------
   var UI = {};        // { lang: { english: translated } }
+  var IDEAS = null;   // trip ideas (ideas.json): the experiences list, Ben 18/11/2026
   var R = null;       // current route
   function tu(s) { var m = UI[S.lang]; return (m && m[s]) || s; }
   function tc(s) { if (!s) return s; var m = R && R.i18n && R.i18n[S.lang]; return (m && m[s]) || s; }
@@ -285,6 +286,8 @@
 
   // ---------- icons ----------
   var IC = {
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+    spark: '<path d="M12 3l2.2 5.3L20 9l-4.4 3.8L17 18.5 12 15.6 7 18.5l1.4-5.7L4 9l5.8-.7z"/>',
     left: '<path d="M16 20v-8a3 3 0 0 0-3-3H5"/><path d="M9 5L5 9l4 4"/>',
     right: '<path d="M8 20v-8a3 3 0 0 1 3-3h8"/><path d="M15 5l4 4-4 4"/>',
     'slight-left': '<path d="M14 21V11L8 5"/><path d="M8 10V5h5"/>',
@@ -366,6 +369,8 @@
     if (cached) UI = cached;
     var v = lsGet('rg.voice', null); if (v) setVoiceManifest(v);
     fetchJson('voice.json?v=' + BUILD).then(function (m) { setVoiceManifest(m); lsSet('rg.voice', m); pruneVoiceCache(); if (R) precacheVoice(); }).catch(function () {});
+    IDEAS = lsGet('rg.ideas', null);
+    fetchJson('ideas.json?v=' + BUILD).then(function (x) { IDEAS = x; lsSet('rg.ideas', x); }).catch(function () {});
     return fetchJson('ui.json?v=' + BUILD).then(function (u) { UI = u; lsSet('rg.ui', u); }).catch(function () {});
   }
   function storeRoute(key, data) {
@@ -533,6 +538,7 @@
         }
         R.stops.forEach(function (s) { (s.photos || []).forEach(function (u) { urls.push(u); }); });
         R.offers.forEach(function (o) { if (o.logo) urls.push(o.logo); });
+        if (IDEAS) IDEAS.cards.forEach(function (c) { if (c.photo) urls.push(c.photo); if (c.logo) urls.push(c.logo); });
         return fetchAll(urls);
       });
     }).then(function (failed) {
@@ -933,13 +939,15 @@
     if (!x || !(document.fullscreenElement || document.webkitFullscreenElement)) return;
     try { var r = x.call(document); if (r && r.catch) r.catch(function () {}); } catch (e) {}
   }
-  function endRide() {
+  function endRide(opts) {
+    var early = !!(opts && opts.early);
     ride.active = false; ride.paused = false; stopGps(); stopSim(); releaseWake(); hideSaver(); updatePauseBtn(); exitFullscreen();
     stopSpeech();
     if (R.base) useJoin(0);
     lsDel(progressKey());
     ride.d = 0; updateDone();
     openRoute();
+    if (early) setTimeout(openEnded, 350);
   }
   // Pause: the rider is taking a break or leaving the route on purpose. Position still shows on the map,
   // but directions, off route warnings, stops, offers and the finish are all held, and the screen may sleep.
@@ -1723,6 +1731,8 @@
         b.appendChild(el('div', { class: 'kicker', text: tu('Before you go') }));
         fo.forEach(function (o) { b.appendChild(offerStrip(o)); });
       }
+      // the Land and Sea card carries the way into the trip ideas (Ben, 18/11/2026)
+      if (IDEAS && IDEAS.cards && IDEAS.cards.length) b.appendChild(inspireBtn('primary full'));
       var acts = el('div', { class: 'sheet-actions' });
       var end = el('button', { class: 'btn outline full', type: 'button', text: tu('End ride') });
       end.addEventListener('click', function () { closeSheet(); endRide(); });
@@ -1780,7 +1790,7 @@
   }
   function openOffers(list) {
     var offers = Array.isArray(list) ? list : R.offers;
-    if (offers.length === 1) return openOffer(offers[0]);
+    if (Array.isArray(list) && offers.length === 1) return openOffer(offers[0]);   // a map marker with one offer opens it; the Offers list always lists (it also carries Trip ideas)
     openSheet(function (b) {
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('Rider offers') }));
       var list = el('div', { class: 'list' });
@@ -1794,6 +1804,125 @@
         list.appendChild(it);
       });
       b.appendChild(list);
+      if (IDEAS && IDEAS.cards && IDEAS.cards.length) { var ti = el('div', { class: 'sheet-actions' }); ti.appendChild(tripIdeasBtn('outline full')); b.appendChild(ti); }
+    });
+  }
+  function tripIdeasBtn(cls) {
+    var bt = el('button', { class: 'btn ' + cls, type: 'button' }, svg('spark'));
+    bt.appendChild(el('span', { text: tu('Trip ideas') }));
+    bt.addEventListener('click', openIdeas);
+    return bt;
+  }
+  // ---------- trip ideas (Ben, 18/11/2026) ----------
+  // The experiences list: our tours (booked through Checkfront with the rider code, which the link carries), the
+  // multi-day experience (enquiry, no discount), coaching (call or email) and partner activities (their own deals).
+  // Food and drink stays a rider offer on the finish card and is never in this list. It opens from the finish card,
+  // from Ride ended, from Trip ideas on the route page and from the Offers list. Booking needs signal: with none the
+  // buttons are greyed and say so. Checkfront will not show inside the app, so Book now opens a new tab; the ride page
+  // stays where it was in this one.
+  function ideaBtn(href, label, cls, icon, inApp) {
+    var a = el('a', { class: 'btn ' + cls + ' needs-net', href: href, target: '_blank', rel: 'noopener' }, icon ? svg(icon) : '');
+    a.appendChild(el('span', { text: label }));
+    a.addEventListener('click', function (e) {
+      if (!navigator.onLine) { e.preventDefault(); a.classList.add('no-net'); noSignal(); return; }
+      if (inApp) { e.preventDefault(); canReach(href).then(function (ok) { if (ok) openViewer(href); else { a.classList.add('no-net'); noSignal(); } }); }
+    });
+    if (!navigator.onLine) a.classList.add('no-net');
+    return a;
+  }
+  function ideaPrice(c) {
+    var p = el('div', { class: 'idea-price' });
+    p.appendChild(el('span', { class: 'ip-from', text: tu('From') }));
+    p.appendChild(el('span', { class: 'ip-v', text: '$' + Number(c.price).toLocaleString('en-AU') }));
+    if (c.per) p.appendChild(el('span', { class: 'ip-per', text: tu(c.per) }));
+    return p;
+  }
+  function ideaCard(c) {
+    var card = el('div', { class: 'idea' + (c.type === 'partner' ? ' partner' : '') });
+    if (c.type === 'partner') {
+      if (c.logo) { var lw = el('div', { class: 'idea-logo' }); lw.appendChild(el('img', { src: c.logo, alt: c.partner })); card.appendChild(lw); }
+    } else {
+      var ph = el('div', { class: 'idea-photo' });
+      ph.appendChild(el('img', { src: c.photo, alt: '', loading: 'lazy' }));
+      if (c.tag) ph.appendChild(el('span', { class: 'idea-tag', text: tu(c.tag) }));
+      card.appendChild(ph);
+    }
+    var body = el('div', { class: 'idea-body' });
+    body.appendChild(el('h3', { text: c.type === 'partner' ? tu(c.title) : tu(c.title) }));
+    if (c.line) body.appendChild(el('p', { text: tu(c.line) }));
+    var acts = el('div', { class: 'idea-acts' });
+    if (c.type === 'tour') {
+      body.appendChild(ideaPrice(c));
+      body.appendChild(el('p', { class: 'idea-save', text: fmt(tu('Save {n}% when you book from this app'), { n: c.save }) }));
+      if (c.page) acts.appendChild(ideaBtn(c.page, tu('Details'), 'outline', null, true));
+      acts.appendChild(ideaBtn(c.book, tu('Book now'), 'primary', null, false));
+    } else if (c.type === 'enquiry') {
+      body.appendChild(ideaPrice(c));
+      acts.appendChild(ideaBtn(c.page, tu(c.button || 'Find out more'), 'primary one', null, true));
+    } else if (c.type === 'contact') {
+      if (c.phoneHref) { var call = el('a', { class: 'btn primary', href: c.phoneHref }, svg('phone')); call.appendChild(el('span', { text: tu('Call us') })); acts.appendChild(call); }
+      if (c.email) { var em = el('a', { class: 'btn outline', href: 'mailto:' + c.email + '?subject=' + encodeURIComponent(tu('Private mountain bike coaching')) }, svg('mail')); em.appendChild(el('span', { text: tu('Email us') })); acts.appendChild(em); }
+      body.appendChild(el('p', { class: 'idea-contact', text: [c.phone, c.email].filter(Boolean).join('  ·  ') }));
+    } else if (c.type === 'partner') {
+      if (c.phoneHref) { var pc = el('a', { class: 'btn primary', href: c.phoneHref }, svg('phone')); pc.appendChild(el('span', { text: tu('Call') })); acts.appendChild(pc); }
+      if (c.url) acts.appendChild(ideaBtn(c.url, tu('Visit website'), 'outline', null, false));
+    }
+    body.appendChild(acts);
+    card.appendChild(body);
+    return card;
+  }
+  function openIdeas() {
+    if (!IDEAS || !IDEAS.cards || !IDEAS.cards.length) { notice(tu('Trip ideas'), [tu('Needs mobile signal')]); return; }
+    openSheet(function (b) {
+      b.appendChild(el('div', { class: 'kicker', text: tu('Trip ideas') }));
+      b.appendChild(el('h2', { id: 'sheet-title', text: tu('More ideas for your Noosa trip') }));
+      b.appendChild(el('p', { class: 'idea-intro', text: fmt(tu('Save {n}% on our guided tours when you book through the Book now links in this app.'), { n: IDEAS.save }) }));
+      var ours = IDEAS.cards.filter(function (c) { return c.type !== 'partner'; }), partners = IDEAS.cards.filter(function (c) { return c.type === 'partner'; });
+      b.appendChild(el('div', { class: 'kicker idea-k', text: tu('Our experiences') }));
+      ours.forEach(function (c) { b.appendChild(ideaCard(c)); });
+      if (partners.length) {
+        b.appendChild(el('div', { class: 'kicker idea-k', text: tu('More to do in Noosa: partner deals') }));
+        partners.forEach(function (c) { b.appendChild(ideaCard(c)); });
+      }
+      if (IDEAS.allTours) { var all = el('div', { class: 'sheet-actions' }); all.appendChild(ideaBtn(IDEAS.allTours, tu('See all our tours'), 'outline full', null, true)); b.appendChild(all); }
+      b.appendChild(el('p', { class: 'note', text: fmt(tu('Prices in AUD, including GST. The {n}% rider saving is for our guided tours booked through the Book now links in this app (code {code}). It does not apply to the multi-day experience or partner deals.'), { n: IDEAS.save, code: IDEAS.code }) }));
+    }, 'ideas');
+  }
+  function inspireBtn(cls) {
+    var bt = el('button', { class: 'btn ' + (cls || 'primary full') + ' inspire', type: 'button' }, svg('spark'));
+    bt.appendChild(el('span', { text: tu('Inspire my next activity') }));
+    bt.addEventListener('click', openIdeas);
+    return bt;
+  }
+  // End ride while riding (Ben, 18/11/2026, mock 2a): a check first, with Pause as the other way to stop for a while.
+  function confirmEndRide() {
+    if (!ride.active) return endRide();
+    openSheet(function (b) {
+      b.appendChild(el('h2', { id: 'sheet-title', text: tu('End your ride?') }));
+      b.appendChild(el('p', { text: tu('Your route stays saved on this phone.') }));
+      b.appendChild(el('p', { class: 'note', text: tu('Stopping for a coffee or a swim? Pause keeps your place and stops the off route warnings.') }));
+      var acts = el('div', { class: 'sheet-actions' });
+      var end = el('button', { class: 'btn primary full', type: 'button', text: tu('End ride') });
+      end.addEventListener('click', function () { closeSheet(); endRide({ early: true }); });
+      var pause = el('button', { class: 'btn outline full', type: 'button', text: tu('Pause instead') });
+      pause.addEventListener('click', function () { closeSheet(); pauseRide(); });
+      var keep = el('button', { class: 'btn outline full', type: 'button', text: tu('Keep riding') });
+      keep.addEventListener('click', closeSheet);
+      [end, pause, keep].forEach(function (x) { acts.appendChild(x); });
+      b.appendChild(acts);
+    });
+  }
+  // After ending early (mock 2b): no Land and Sea card, straight to the ideas.
+  function openEnded() {
+    openSheet(function (b) {
+      b.appendChild(el('div', { class: 'kicker', text: tu('Ride ended') }));
+      b.appendChild(el('h2', { id: 'sheet-title', text: tu('Thanks for riding with us.') }));
+      b.appendChild(el('p', { text: tu('Your route is still saved on this phone, so you can pick it up again any time.') }));
+      if (IDEAS && IDEAS.cards && IDEAS.cards.length) {
+        b.appendChild(el('div', { class: 'kicker idea-k', text: tu('More ideas for your Noosa trip') }));
+        b.appendChild(el('p', { text: fmt(tu('Kayak with stingrays, ride with a guide, or try something new. Save {n}% on our guided tours when you book from the app.'), { n: IDEAS.save }) }));
+        var acts = el('div', { class: 'sheet-actions' }); acts.appendChild(inspireBtn()); b.appendChild(acts);
+      }
     });
   }
   // ---------- GPX download (Ben, 15/11/2026: make it obvious). A button on the ride page under Start riding and the
@@ -2539,13 +2668,14 @@
   function wire() {
     $('start-btn').addEventListener('click', function () { beginRide(!!this.dataset.resume); });
     $('risk-btn').addEventListener('click', function () { openRisk(null); });
-    $('end-btn').addEventListener('click', endRide);
+    $('end-btn').addEventListener('click', confirmEndRide);
     $('pause-btn').addEventListener('click', function () { if (ride.paused) resumeRide(); else pauseRide(); });
     $('route-stops-btn').addEventListener('click', openStops);
     $('route-cues-btn').addEventListener('click', openCues);
     $('b-cues').addEventListener('click', openCues);
     $('b-stops').addEventListener('click', openStops);
     $('b-offers').addEventListener('click', openOffers);
+    $('ideas-btn').addEventListener('click', openIdeas);
     $('route-settings').addEventListener('click', openSettings);
     $('home-settings').addEventListener('click', openSettings);
     $('btn-ride-settings').addEventListener('click', openSettings);

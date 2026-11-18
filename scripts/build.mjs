@@ -448,6 +448,69 @@ function copyDir(src, dst, build) {
   }
 }
 
+// Trip ideas (Ben, 18/11/2026): the experiences list from config/experiences.json, written to dist/ideas.json.
+// Tour prices come live from Checkfront's public item API (the first date in the next three weeks with a rate); if that
+// fails the card keeps the price in the config and health.json "ideas" says so. Partner cards are built from
+// config/offers.json, so a partner deal has one source. Booking links carry the rider code and the ride-guide tracking ID.
+function ideaDates() {
+  const out = [], d = new Date(Date.now() + 10 * 3600000);
+  for (let i = 7; i < 28; i++) { const x = new Date(d.getTime() + i * 86400000); out.push(x.toISOString().slice(0, 10).replace(/-/g, '')); }
+  return out;
+}
+async function livePrice(cf, item, param) {
+  const qs = Object.entries(param || {}).map(([k, v]) => `&param%5B${encodeURIComponent(k)}%5D=${v}`).join('');
+  for (const day of ideaDates()) {
+    try {
+      const r = await fetch(`${cf}/api/3.0/item/${item}?start_date=${day}&end_date=${day}&rated=1${qs}`, { headers: { 'User-Agent': 'Ride Guide build' } });
+      if (!r.ok) return { error: `HTTP ${r.status}` };
+      const j = await r.json(), it = j.item;
+      if (!it || !it.item_id) return { error: 'item not found (check its visibility and status)' };
+      const p = it.rate && it.rate.summary && it.rate.summary.price && it.rate.summary.price.param;
+      const first = p && Object.values(p)[0];
+      const n = first && Number(String(first).replace(/[^0-9.]/g, ''));
+      if (n) return { price: Math.round(n), day, name: it.name };
+    } catch (e) { return { error: String(e.message || e) }; }
+  }
+  return { error: 'no bookable date with a price in the next three weeks' };
+}
+async function buildIdeas(dist) {
+  const cfg = readJson('config/experiences.json', null);
+  const rep = { cards: [], problems: [], discount: null };
+  if (!cfg) { rep.problems.push('config/experiences.json missing'); return { rep, strings: [] }; }
+  const D = cfg.discount, strings = new Set();
+  rep.discount = { code: D.code, percent: D.percent, checkfrontId: D.checkfrontId, items: D.items };
+  const cards = [];
+  for (const c of cfg.cards) {
+    if (c.type === 'partner') {
+      const o = offersCfg.offers.find(x => x.id === c.offer);
+      if (!o || !o.active || (o.validUntil && new Date(o.validUntil + 'T23:59:59+10:00') < new Date())) { rep.problems.push(`trip ideas: partner offer ${c.offer} not found or not active, card left out`); continue; }
+      cards.push({ id: c.id, type: 'partner', partner: o.partner, logo: o.logo, title: o.headline, line: o.how || o.about || '', phone: o.phone || null,
+        phoneHref: o.phone ? 'tel:' + o.phone.replace(/[^0-9+]/g, '').replace(/^0/, '+61') : null, url: o.url || null });
+      [o.headline, o.how || o.about].forEach(x => x && strings.add(x));
+      rep.cards.push({ id: c.id, type: 'partner', ok: true });
+      continue;
+    }
+    if (!fs.existsSync(path.join(ROOT, 'site', c.photo))) rep.problems.push(`trip ideas: ${c.id} photo ${c.photo} missing`);
+    const card = { id: c.id, type: c.type, title: c.title, tag: c.tag, line: c.line, photo: c.photo, page: c.page || null };
+    [c.title, c.tag, c.line, c.per, c.button].forEach(x => x && strings.add(x));
+    const r = { id: c.id, type: c.type, ok: true };
+    if (c.type === 'tour') {
+      const bad = c.bookItems.filter(i => !D.items.includes(i));
+      if (bad.length) rep.problems.push(`trip ideas: ${c.id} books items ${bad.join(', ')} that the ${D.code} discount does not cover`);
+      card.book = `${cfg.checkfront}/reserve/?item_id=${c.bookItems.join(',')}&discount=${encodeURIComponent(D.code)}&tid=${encodeURIComponent(D.tid)}`;
+      const lp = await livePrice(cfg.checkfront, c.priceItem, c.priceParam);
+      if (lp.price) { card.price = lp.price; r.live = true; r.priceDay = lp.day; if (lp.price !== c.price) r.note = `live price $${lp.price} differs from the config's $${c.price}`; }
+      else { card.price = c.price; r.live = false; r.ok = false; rep.problems.push(`trip ideas: ${c.id} live price not read (${lp.error}); showing $${c.price} from the config`); }
+      card.per = c.per; card.save = D.percent;
+    } else if (c.type === 'enquiry') { card.price = c.price; card.per = c.per; card.button = c.button; }
+    else if (c.type === 'contact') { card.phone = c.phone; card.phoneHref = c.phoneHref; card.email = c.email; }
+    cards.push(card); rep.cards.push(r);
+  }
+  const ideas = { v: 1, code: D.code, save: D.percent, allTours: cfg.allTours, cards };
+  fs.writeFileSync(path.join(dist, 'ideas.json'), JSON.stringify(ideas));
+  return { rep, strings: [...strings] };
+}
+
 async function main() {
   const now = new Date();
   const build = now.toISOString().slice(0, 16).replace(/[-:T]/g, '').slice(2);   // yymmddhhmm
@@ -456,8 +519,10 @@ async function main() {
   copyDir(path.join(ROOT, 'site'), dist, build);
   fs.mkdirSync(path.join(dist, 'r'), { recursive: true });
 
+  // Trip ideas first, so their words go through the same translation as the app's own
+  const ideasBuilt = await buildIdeas(dist);
   // UI translations
-  const ui = uiStrings();
+  const ui = [...new Set([...uiStrings(), ...ideasBuilt.strings])];
   const uiOut = {};
   const missing = Object.fromEntries(LANGS.map(l => [l, new Set()]));
   for (const l of LANGS) {
@@ -467,6 +532,8 @@ async function main() {
   fs.writeFileSync(path.join(dist, 'ui.json'), JSON.stringify(uiOut));
 
   const health = { built: now.toISOString(), build, routes: [], offers: [], problems: [] };
+  health.ideas = ideasBuilt.rep;
+  ideasBuilt.rep.problems.forEach(p => health.problems.push(p));
   health.toilets = { source: toiletsCfg.source || null, mapVersion: toiletsCfg.mapVersion || null, fetched: toiletsCfg.fetched || null, inArea: (toiletsCfg.toilets || []).length, nearMetres: toiletsCfg.nearMetres || 150 };
   if (!(toiletsCfg.toilets || []).length) health.problems.push('toilets: config/toilets.json is missing or empty, so no toilet icons are shown (run node scripts/toilets.mjs)');
   health.counter = { on: !!countUrl() };

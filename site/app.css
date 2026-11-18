@@ -403,3 +403,32 @@ body.view-check #check-panel{display:block;position:fixed;left:0;right:0;bottom:
 .sheet-body p.lock-more{font-size:16px;line-height:1.5;font-weight:600;color:#3B3F45;margin:14px 22px 0;text-align:center}
 .lockcard .sheet-actions{margin:24px 18px 0}
 .btn.lock-ok{background:#C62828;color:#fff;min-height:70px;font-size:23px;border-radius:18px}
+
+/* trip ideas (18/11/2026) */
+.sheet-body.ideas h2{margin-bottom:4px}
+.idea-intro{margin:4px 0 6px;font-size:14px;line-height:1.45}
+.kicker.idea-k{margin-top:18px}
+.idea{background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.10);margin:10px 0 14px}
+.idea.partner{border:1px solid rgba(0,0,0,.10);box-shadow:none}
+.idea-photo{position:relative}
+.idea-photo img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#e8e7e3}
+.idea-tag{position:absolute;top:10px;left:10px;background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:20px}
+.idea-logo{margin:14px 14px 0;height:64px;border-radius:12px;background:#E8E7E3;display:flex;align-items:center;justify-content:center;padding:0 16px}
+.idea-logo img{max-width:100%;max-height:44px;object-fit:contain}
+.idea-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px}
+.idea-body h3{margin:0;font-size:17px;line-height:1.25;font-weight:800}
+.idea-body p{margin:0;font-size:13px;line-height:1.45}
+.idea-price{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.idea-price .ip-from,.idea-price .ip-per{font-size:12px;color:var(--muted)}
+.idea-price .ip-v{font-size:20px;font-weight:800}
+.idea-save{font-weight:700;color:#1F6B3A}
+.idea-contact{color:var(--muted)}
+.idea-acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:4px}
+.idea-acts .btn{min-height:44px;font-size:14px;padding:0 10px;gap:6px}
+.idea-acts .btn svg{width:18px;height:18px}
+.idea-acts .btn.one{grid-column:1/-1}
+.idea-acts .btn.no-net,.sheet-actions .btn.no-net{opacity:.45}
+.btn.inspire svg,.btn.trip-ideas svg{width:20px;height:20px}
+.btn.trip-ideas{margin-top:10px}
+.btn.trip-ideas{min-height:44px;margin-top:8px;font-size:15px;white-space:normal;text-align:center;line-height:1.25}
+.btn.trip-ideas svg,.btn.inspire svg,.idea-acts .btn svg,.sheet-actions .btn svg{flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}

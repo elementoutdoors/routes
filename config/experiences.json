@@ -1,0 +1,55 @@
+{
+  "_about": "Trip ideas: the experiences list riders see at the end of a ride, from Ride ended, and from Trip ideas on the route page and in the Offers list (Ben, 18/11/2026). Order is fixed as Ben set it: kayak tour first, then the multi-day experience, the Biosphere MTB tour, coaching, then partner activities. Shown on both brands' maps. Types: tour (bookable through Checkfront with the rider code), enquiry (no discount), contact (call or email), partner (an offer from config/offers.json, the partner's own deal, never our code). Prices for tours come live from Checkfront's public item API at build; price here is the fallback. Food and drink (Land and Sea) is never in this list: it stays a rider offer on the finish card.",
+  "discount": { "code": "RIDEAPP10", "percent": 10, "checkfrontId": 465, "tid": "ride-guide", "items": [1301, 795, 1230, 1302, 886, 1303, 1192, 1304, 804, 892, 1110, 825, 896, 1270, 1305, 911] },
+  "checkfront": "https://bikeon.checkfront.com",
+  "allTours": "https://byearthandocean.com.au/tours/",
+  "cards": [
+    {
+      "id": "kayak-guided",
+      "type": "tour",
+      "title": "Stingrays & Everglades Kayak Tour",
+      "tag": "Guided kayak, 3 hours",
+      "line": "Paddle clear water on the Noosa River and spot stingrays with a local guide. Kids from 4.",
+      "photo": "assets/ideas/kayak.jpg",
+      "page": "https://byearthandocean.com.au/tours/stingrays-everglades-guided-kayak-tour/",
+      "bookItems": [1301, 795, 1230, 1302, 886, 1303],
+      "priceItem": 795, "priceParam": { "riderspublictou": 1 },
+      "price": 119, "per": "adult"
+    },
+    {
+      "id": "multi-day",
+      "type": "enquiry",
+      "title": "Australia's Most Unique Multi-Day Mountain Bike Experience",
+      "tag": "Fully guided, usually 3 days",
+      "line": "Hinterland trails, boutique stays and local food, all planned around your group.",
+      "photo": "assets/ideas/multi-day.jpg",
+      "page": "https://byearthandocean.com.au/tours/fully-guided-all-inclusive-3-day-noosa-hinterland-bike-experience/",
+      "price": 3000, "per": "per person",
+      "button": "Start planning your trip"
+    },
+    {
+      "id": "biosphere-emtb",
+      "type": "tour",
+      "title": "Noosa Biosphere Trails e-Mountain Bike Tour",
+      "tag": "Guided e-MTB, 9am to 2pm",
+      "line": "A bigger day out on the Noosa Biosphere Trails through rainforest, hinterland trails and lookouts.",
+      "photo": "assets/ideas/biosphere.jpg",
+      "page": "https://byearthandocean.com.au/tours/noosa-biosphere-trails-e-mountain-bike-tour/",
+      "bookItems": [911],
+      "priceItem": 911, "priceParam": { "guests": 2 },
+      "price": 349, "per": "per person, min 2"
+    },
+    {
+      "id": "coaching",
+      "type": "contact",
+      "title": "Private mountain bike coaching",
+      "tag": "Bike On coaching",
+      "line": "Build your skills and confidence with one of our certified coaches, at your level.",
+      "photo": "assets/ideas/coaching.jpg",
+      "phone": "07 5474 3322", "phoneHref": "tel:+61754743322",
+      "email": "ride@bikeon.com.au"
+    },
+    { "id": "fliteschool", "type": "partner", "offer": "fliteschool-noosa" },
+    { "id": "noosa-ocean-adventures", "type": "partner", "offer": "noosa-ocean-adventures" }
+  ]
+}

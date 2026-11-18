@@ -164,6 +164,26 @@ if (fs.existsSync('qr/codes.json') && fs.existsSync('qr/links.json')) {
   }
 }
 // Ride Desk (18/10/2026): the build opened the sealed staff section and published what the Ride Desk reads
+// Version 13 (18/11/2026): trip ideas. health.json "ideas" from the build (config/experiences.json): every card built, tour
+// prices read live from Checkfront, every tour's booking items covered by the rider discount. Here: ideas.json is published,
+// each card's photo or logo loads, each tour page and Book now link answers, and every Book now link still carries the code.
+// The discount itself (Checkfront discount 465, RIDEAPP10) can only be seen signed in; the build reads prices only.
+{
+  const ir = h.ideas;
+  if (!ir) issues.push('trip ideas: health.json has no "ideas" report (the build is not reading config/experiences.json)');
+  else {
+    (ir.cards || []).filter(c => c.note).forEach(c => notes.push(`trip ideas: ${c.id} ${c.note}; update the fallback price in config/experiences.json`));
+    try {
+      const ideas = await (await fetch(BASE + 'ideas.json', { cache: 'no-store' })).json();
+      if (!ideas.cards || !ideas.cards.length) issues.push('trip ideas: ideas.json has no cards');
+      for (const c of ideas.cards || []) {
+        for (const u of [c.photo, c.logo].filter(Boolean)) { const st = await status(BASE + u); if (st.code !== 200) issues.push(`trip ideas: ${c.id} image ${u} answers ${st.code}`); }
+        if (c.page) { const st = await status(c.page); if (st.code >= 400 || st.code === 0 || st.moved) issues.push(`trip ideas: ${c.id} page ${c.page} answers ${st.code}${st.moved ? ' and moved to ' + st.moved : ''}`); }
+        if (c.type === 'tour' && !(c.book || '').includes('discount=' + ideas.code)) issues.push(`trip ideas: ${c.id} Book now link does not carry ${ideas.code}`);
+      }
+    } catch (e) { issues.push('trip ideas: ideas.json not readable: ' + e.message); }
+  }
+}
 if (!h.desk) issues.push('ride desk: health.json has no Ride Desk report (the build is not reading config/ride-desk.json)');
 else {
   if (h.desk.staffOk === false) issues.push('ride desk: the build could not open the staff section (config/ride-desk-private.enc.json): ' + (h.desk.problems || []).join('; '));
