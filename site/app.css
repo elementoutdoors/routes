@@ -422,7 +422,8 @@ body.view-check #check-panel{display:block;position:fixed;left:0;right:0;bottom:
 .idea-price .ip-from,.idea-price .ip-per{font-size:12px;color:var(--muted)}
 .idea-price .ip-v{font-size:20px;font-weight:800}
 .idea-save{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;color:#1F6B3A;font-size:13px}
-.idea-save .btn.small{min-height:36px;font-size:13px;padding:0 12px}
+.idea-save .btn.small{min-height:36px;font-size:13px;padding:0 12px;flex:none}
+.idea-save-how{font-size:12px;font-weight:500;color:var(--muted);margin-top:1px}
 .idea-contact{color:var(--muted)}
 .idea-acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:4px}
 .idea-acts .btn{min-height:44px;font-size:14px;padding:0 10px;gap:6px}

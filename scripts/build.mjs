@@ -496,15 +496,24 @@ async function buildIdeas(dist) {
     const r = { id: c.id, type: c.type, ok: true };
     if (c.type === 'tour') {
       const bad = c.bookItems.filter(i => !D.items.includes(i));
-      if (bad.length) rep.problems.push(`trip ideas: ${c.id} books items ${bad.join(', ')} that the ${D.code} discount does not cover`);
+      if (bad.length) rep.problems.push(`trip ideas: ${c.id} sells items ${bad.join(', ')} that the ${D.code} discount does not cover, so its card shows no offer`);
       // Book now opens the tour page at its booking widget (Ben, 18/11/2026: the Checkfront page was not a clean look).
       // The widget has a Promo box but cannot take the code from a link, so the app shows the code with a Copy button.
-      card.book = c.page + (c.page.includes('?') ? '&' : '?') + 'utm_source=ride-guide&utm_medium=app&utm_campaign=trip-ideas' + (cfg.bookAnchor ? '#' + cfg.bookAnchor : '');
+      // The first anchor in bookAnchors that the page actually has wins: "book" (the CSS ID on the phone calendar block,
+      // lands on "1. Choose a date") once it is set in Elementor, else "check" (top of the booking section).
+      let anchor = '';
+      try {
+        const html = await (await fetch(c.page, { headers: { 'User-Agent': 'Mozilla/5.0 Ride Guide build' } })).text();
+        anchor = (cfg.bookAnchors || []).find(a => html.includes(`id="${a}"`)) || '';
+      } catch (e) {}
+      if (!anchor) rep.problems.push(`trip ideas: ${c.id} tour page has none of the booking anchors ${(cfg.bookAnchors || []).join(', ')}; Book now opens the top of the page`);
+      r.anchor = anchor;
+      card.book = c.page + (c.page.includes('?') ? '&' : '?') + 'utm_source=ride-guide&utm_medium=app&utm_campaign=trip-ideas' + (anchor ? '#' + anchor : '');
       card.frame = await frameable(c.page);
       const lp = await livePrice(cfg.checkfront, c.priceItem, c.priceParam);
       if (lp.price) { card.price = lp.price; r.live = true; r.priceDay = lp.day; if (lp.price !== c.price) r.note = `live price $${lp.price} differs from the config's $${c.price}`; }
       else { card.price = c.price; r.live = false; r.ok = false; rep.problems.push(`trip ideas: ${c.id} live price not read (${lp.error}); showing $${c.price} from the config`); }
-      card.per = c.per; card.save = D.percent;
+      card.per = c.per; card.save = bad.length ? 0 : D.percent;   // the offer line only shows when the code covers the whole card
     } else if (c.type === 'enquiry') { card.price = c.price; card.per = c.per; card.button = c.button; }
     else if (c.type === 'contact') { card.phone = c.phone; card.phoneHref = c.phoneHref; card.email = c.email; }
     cards.push(card); rep.cards.push(r);

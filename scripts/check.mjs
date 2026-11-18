@@ -184,7 +184,8 @@ if (fs.existsSync('qr/codes.json') && fs.existsSync('qr/links.json')) {
           if (!ideas.code) issues.push('trip ideas: ideas.json has no rider code');
           const st = await status(c.book.split('#')[0]); if (st.code >= 400 || st.code === 0) issues.push(`trip ideas: ${c.id} Book now page answers ${st.code}`);
           const html = await (await fetch(c.page, { headers: { 'User-Agent': UA } })).text().catch(() => '');
-          if (html && !/id="check"/.test(html)) issues.push(`trip ideas: ${c.id} tour page has no #check booking section any more (Book now lands at the top of the page); fix bookAnchor in config/experiences.json`);
+          if (html && !/id="(book|check)"/.test(html)) issues.push(`trip ideas: ${c.id} tour page has no #book or #check booking anchor any more (Book now lands at the top of the page); see bookAnchors in config/experiences.json`);
+          else if (html && !/id="book"/.test(html)) notes.push(`trip ideas: ${c.id} tour page has no #book CSS ID on its phone calendar, so Book now lands at the top of the booking section, not the calendar (see bookAnchors in config/experiences.json)`);
           if (html && !/promo/i.test(html)) issues.push(`trip ideas: ${c.id} tour page booking widget shows no Promo box; riders cannot use ${ideas.code}`);
         }
       }

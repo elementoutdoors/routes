@@ -1848,18 +1848,6 @@
     });
     return bt;
   }
-  // the rider code, shown with a Copy button: the tour pages' booking widget has a Promo box for it (Ben, 18/11/2026)
-  function codeBox() {
-    var box = el('div', { class: 'code-box' });
-    var m = el('div', { class: 'cb-main' });
-    m.appendChild(el('div', { class: 'cb-k', text: fmt(tu('Your rider code: {n}% off our guided tours'), { n: IDEAS.save }) }));
-    m.appendChild(el('div', { class: 'cb-code', text: IDEAS.code }));
-    box.appendChild(m);
-    box.appendChild(copyBtn(IDEAS.code));
-    var w = el('div', { class: 'code-wrap' }); w.appendChild(box);
-    w.appendChild(el('p', { class: 'cb-how', text: tu('Copy it, tap Book now, then paste it in the Promo box when you book.') }));
-    return w;
-  }
   function ideaPrice(c) {
     var p = el('div', { class: 'idea-price' });
     p.appendChild(el('span', { class: 'ip-from', text: tu('From') }));
@@ -1883,10 +1871,14 @@
     var acts = el('div', { class: 'idea-acts' });
     if (c.type === 'tour') {
       body.appendChild(ideaPrice(c));
-      var sv = el('div', { class: 'idea-save' });
-      sv.appendChild(el('span', { text: fmt(tu('{n}% off with code {code}'), { n: c.save, code: IDEAS.code }) }));
-      sv.appendChild(copyBtn(IDEAS.code, 'outline small'));
-      body.appendChild(sv);
+      if (c.save) {   // the card's own offer (Ben, 18/11/2026: the discount is listed on each card, nothing else explains it)
+        var sv = el('div', { class: 'idea-save' });
+        var st = el('div'); st.appendChild(el('div', { text: fmt(tu('{n}% off with code {code}'), { n: c.save, code: IDEAS.code }) }));
+        st.appendChild(el('div', { class: 'idea-save-how', text: tu('Paste it in the Promo box when you book.') }));
+        sv.appendChild(st);
+        sv.appendChild(copyBtn(IDEAS.code, 'outline small'));
+        body.appendChild(sv);
+      }
       if (c.page) acts.appendChild(ideaBtn(c.page, tu('Details'), 'outline', null, c.frame));
       acts.appendChild(ideaBtn(c.book, tu('Book now'), 'primary', null, c.frame));
     } else if (c.type === 'enquiry') {
@@ -1909,7 +1901,6 @@
     openSheet(function (b) {
       b.appendChild(el('div', { class: 'kicker', text: tu('Trip ideas') }));
       b.appendChild(el('h2', { id: 'sheet-title', text: tu('More ideas for your Noosa trip') }));
-      b.appendChild(codeBox());
       var ours = IDEAS.cards.filter(function (c) { return c.type !== 'partner'; }), partners = IDEAS.cards.filter(function (c) { return c.type === 'partner'; });
       b.appendChild(el('div', { class: 'kicker idea-k', text: tu('Our experiences') }));
       ours.forEach(function (c) { b.appendChild(ideaCard(c)); });
@@ -1918,7 +1909,7 @@
         partners.forEach(function (c) { b.appendChild(ideaCard(c)); });
       }
       if (IDEAS.allTours) { var all = el('div', { class: 'sheet-actions' }); all.appendChild(ideaBtn(IDEAS.allTours, tu('See all our tours'), 'outline full', null, true)); b.appendChild(all); }
-      b.appendChild(el('p', { class: 'note', text: fmt(tu('Prices in AUD, including GST. Code {code} gives {n}% off our guided tours. It does not apply to the multi-day experience or partner deals.'), { n: IDEAS.save, code: IDEAS.code }) }));
+      b.appendChild(el('p', { class: 'note', text: tu('Prices in AUD, including GST.') }));
     }, 'ideas');
   }
   function inspireBtn(cls) {
@@ -1953,7 +1944,7 @@
       b.appendChild(el('p', { text: tu('Your route is still saved on this phone, so you can pick it up again any time.') }));
       if (IDEAS && IDEAS.cards && IDEAS.cards.length) {
         b.appendChild(el('div', { class: 'kicker idea-k', text: tu('More ideas for your Noosa trip') }));
-        b.appendChild(el('p', { text: fmt(tu('Kayak with stingrays, ride with a guide, or try something new. Code {code} gives {n}% off our guided tours.'), { n: IDEAS.save, code: IDEAS.code }) }));
+        b.appendChild(el('p', { text: tu('Kayak with stingrays, ride with a guide, or try something new.') }));
         var acts = el('div', { class: 'sheet-actions' }); acts.appendChild(inspireBtn()); b.appendChild(acts);
       }
     });
