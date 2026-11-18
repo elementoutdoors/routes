@@ -355,8 +355,10 @@ The experiences list riders see after a ride, from Ben's mock (https://claude.ai
   riding; ending early then shows Ride ended with the same button), "More ideas for your Noosa trip" on the route page
   (a tinted brand colour button so it stands out) and at the bottom of the Offers list (which now always lists).
 - Rider code: Checkfront discount 465, RIDEAPP10, 10% per booking, on the guided tour items listed in the config. Shown
-  in a code box with a Copy button at the top of the list and on each tour card. Book now opens the tour page on the By
-  Earth and Ocean site at its booking section (#check, the phone layout), inside the app viewer, with utm tags
+  only on the cards it covers, with a Copy button (Ben, 18/11/2026: keep it simple, the offer is listed on each card;
+  a card whose items the code does not cover shows no offer). Book now opens the tour page on the By
+  Earth and Ocean site at the first anchor in bookAnchors the page has (#book on the phone calendar once set in
+  Elementor, else #check, the top of the booking section), inside the app viewer, with utm tags
   (source ride-guide); the rider pastes the code in the widget's Promo box (Ben, 18/11/2026: the Checkfront page was
   not a clean look). With no signal the buttons are greyed and say so.
 - Build: buildIdeas() writes dist/ideas.json, reads each tour's per person price live from Checkfront's public item API
