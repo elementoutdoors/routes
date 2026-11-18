@@ -421,7 +421,8 @@ body.view-check #check-panel{display:block;position:fixed;left:0;right:0;bottom:
 .idea-price{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
 .idea-price .ip-from,.idea-price .ip-per{font-size:12px;color:var(--muted)}
 .idea-price .ip-v{font-size:20px;font-weight:800}
-.idea-save{font-weight:700;color:#1F6B3A}
+.idea-save{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;color:#1F6B3A;font-size:13px}
+.idea-save .btn.small{min-height:36px;font-size:13px;padding:0 12px}
 .idea-contact{color:var(--muted)}
 .idea-acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:4px}
 .idea-acts .btn{min-height:44px;font-size:14px;padding:0 10px;gap:6px}
@@ -432,3 +433,13 @@ body.view-check #check-panel{display:block;position:fixed;left:0;right:0;bottom:
 .btn.trip-ideas{margin-top:10px}
 .btn.trip-ideas{min-height:44px;margin-top:8px;font-size:15px;white-space:normal;text-align:center;line-height:1.25}
 .btn.trip-ideas svg,.btn.inspire svg,.idea-acts .btn svg,.sheet-actions .btn svg{flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* rider code box and the stand-out Trip ideas button (18/11/2026, second pass) */
+.code-wrap{margin:6px 0 4px}
+.code-box{display:flex;align-items:center;gap:12px;border:2px dashed var(--primary);border-radius:14px;padding:10px 10px 10px 14px;background:color-mix(in srgb,var(--primary) 8%,#fff)}
+.code-box .cb-main{flex:1;min-width:0}
+.code-box .cb-k{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.code-box .cb-code{font-size:22px;font-weight:800;letter-spacing:2px;color:var(--primary)}
+.code-box .copy-code{flex:none;min-width:84px}
+.cb-how{margin:6px 2px 0;font-size:12px;color:var(--muted);line-height:1.4}
+.btn.trip-ideas{background:color-mix(in srgb,var(--primary) 14%,#fff);border:2px solid var(--primary);color:var(--primary)}

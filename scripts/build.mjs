@@ -491,13 +491,16 @@ async function buildIdeas(dist) {
       continue;
     }
     if (!fs.existsSync(path.join(ROOT, 'site', c.photo))) rep.problems.push(`trip ideas: ${c.id} photo ${c.photo} missing`);
-    const card = { id: c.id, type: c.type, title: c.title, tag: c.tag, line: c.line, photo: c.photo, page: c.page || null };
+    const card = { id: c.id, type: c.type, title: c.title, tag: c.tag, line: c.line, photo: c.photo, page: c.page || null, frame: c.page ? await frameable(c.page) : false };
     [c.title, c.tag, c.line, c.per, c.button].forEach(x => x && strings.add(x));
     const r = { id: c.id, type: c.type, ok: true };
     if (c.type === 'tour') {
       const bad = c.bookItems.filter(i => !D.items.includes(i));
       if (bad.length) rep.problems.push(`trip ideas: ${c.id} books items ${bad.join(', ')} that the ${D.code} discount does not cover`);
-      card.book = `${cfg.checkfront}/reserve/?item_id=${c.bookItems.join(',')}&discount=${encodeURIComponent(D.code)}&tid=${encodeURIComponent(D.tid)}`;
+      // Book now opens the tour page at its booking widget (Ben, 18/11/2026: the Checkfront page was not a clean look).
+      // The widget has a Promo box but cannot take the code from a link, so the app shows the code with a Copy button.
+      card.book = c.page + (c.page.includes('?') ? '&' : '?') + 'utm_source=ride-guide&utm_medium=app&utm_campaign=trip-ideas' + (cfg.bookAnchor ? '#' + cfg.bookAnchor : '');
+      card.frame = await frameable(c.page);
       const lp = await livePrice(cfg.checkfront, c.priceItem, c.priceParam);
       if (lp.price) { card.price = lp.price; r.live = true; r.priceDay = lp.day; if (lp.price !== c.price) r.note = `live price $${lp.price} differs from the config's $${c.price}`; }
       else { card.price = c.price; r.live = false; r.ok = false; rep.problems.push(`trip ideas: ${c.id} live price not read (${lp.error}); showing $${c.price} from the config`); }
