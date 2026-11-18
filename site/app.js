@@ -1558,10 +1558,10 @@
   }
   // ---------- no signal (Ben, 16/10/2026): pages that need signal are greyed out, and nothing a rider taps ever
   // takes them out of the ride ----------
-  function canReach(url) {
+  function canReach(url, ms) {
     if (!navigator.onLine) return Promise.resolve(false);
     return new Promise(function (resolve) {
-      var done = false, t = setTimeout(function () { if (!done) { done = true; resolve(false); } }, 4000);
+      var done = false, t = setTimeout(function () { if (!done) { done = true; resolve(false); } }, ms || 4000);
       try {
         fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }).then(function () { if (!done) { done = true; clearTimeout(t); resolve(true); } })
           .catch(function () { if (!done) { done = true; clearTimeout(t); resolve(false); } });
@@ -1825,7 +1825,15 @@
     a.appendChild(el('span', { text: label }));
     a.addEventListener('click', function (e) {
       if (!navigator.onLine) { e.preventDefault(); a.classList.add('no-net'); noSignal(); return; }
-      if (inApp) { e.preventDefault(); canReach(href).then(function (ok) { if (ok) openViewer(href); else { a.classList.add('no-net'); noSignal(); } }); }
+      // Open straight away (Ben, 19/11/2026: the buttons needed several taps). The old way checked the page could be
+      // reached first, with a 4 second limit and nothing on screen; the tour pages can take longer than that on a first
+      // visit, so the first taps did nothing. Now the viewer opens at once with "Loading the page", and only if the page
+      // still cannot be reached after 15 seconds does it say there is no signal (with its Back button).
+      if (inApp) {
+        e.preventDefault();
+        openViewer(href);
+        canReach(href, 15000).then(function (ok) { if (!ok && !$('viewer').hidden && $('viewer-frame').src === href) viewerOffline(true); });
+      }
     });
     if (!navigator.onLine) a.classList.add('no-net');
     return a;
