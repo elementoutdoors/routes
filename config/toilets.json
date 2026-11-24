@@ -1,8 +1,8 @@
 {
  "note": "Written by scripts/toilets.mjs from the base map tiles. Do not edit by hand; change area or nearMetres and rerun with --force.",
  "source": "Base map (OpenFreeMap, OpenStreetMap contributors), poi layer class toilets",
- "mapVersion": "https://tiles.openfreemap.org/planet/20261115_080022_pt/{z}/{x}/{y}.pbf",
- "fetched": "2026-11-17",
+ "mapVersion": "https://tiles.openfreemap.org/planet/20261122_124456_pt/{z}/{x}/{y}.pbf",
+ "fetched": "2026-11-24",
  "tiles": 2184,
  "area": {
   "south": -26.85,
