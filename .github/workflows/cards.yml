@@ -28,7 +28,7 @@ concurrency:
 
 jobs:
   cards:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04   # pinned: Playwright cannot install its browser on the newer image
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
