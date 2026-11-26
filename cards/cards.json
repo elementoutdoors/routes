@@ -251,7 +251,15 @@
       "logo_alt": "Element Outdoors",
       "photo": "photo-eo-gravel.jpg",
       "photo_focus": "50% 55%",
+      "website": "https://www.elementoutdoors.com.au/",
+      "website_label": "elementoutdoors.com.au",
       "websites": [
+        {
+          "label": "Element Outdoors",
+          "value": "elementoutdoors.com.au",
+          "url": "https://www.elementoutdoors.com.au/",
+          "sub": "Custom group adventures in Noosa"
+        },
         {
           "label": "Bike On",
           "value": "bikeon.com.au",

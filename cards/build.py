@@ -185,7 +185,8 @@ def page(v, asset_names, wl=None):
     rows = ([('phone', 'Mobile', p['mobile'], 'tel:' + p['mobile_e164'], '')] if p.get('mobile_e164') else []) + [
         ('shop', 'Shop', s['shop_phone'], 'tel:' + s['shop_phone_e164'], s['hours']),
         ('mail', 'Email', v['email'], 'mailto:' + v['email'], ''),
-    ] + ([] if b.get('our_brands') else [('web', w['label'], w['value'], w['url'], w.get('sub', '')) for w in b['websites']]) + [
+    ] + [('web', w['label'], w['value'], w['url'], w.get('sub', '')) for w in b['websites']
+         if not b.get('our_brands') or w['url'] == b.get('website')] + [   # Element Outdoors cards: only the group site here, the brands have tiles
         ('pin', 'Visit the shop', f"{a['street']}, {a['locality']} {a['region']} {a['postcode']}", s['maps_url'], ''),
     ]
     row_html = []
