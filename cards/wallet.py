@@ -115,6 +115,18 @@ def cover(img, w, h, focus='50% 50%', size='cover'):
     return im.crop((x, y, x + w, y + h))
 
 
+def fit_in(img, max_w, max_h):
+    """Scale an image to fit the box, up as well as down (thumbnail never enlarges, so a small logo file stayed small)."""
+    from PIL import Image
+    k = min(max_w / img.width, max_h / img.height)
+    return img.resize((max(1, round(img.width * k)), max(1, round(img.height * k))), Image.LANCZOS)
+
+
+def logo_file(b):
+    """The sharpest copy of a brand's logo (logo_hi when there is one, for the large Google Wallet images)."""
+    return SRC / 'assets' / (b.get('logo_hi') or b['logo'])
+
+
 def fit_logo(path, max_w, max_h, bg=None, pad=0, square=None):
     from PIL import Image
     logo = Image.open(path).convert('RGBA')
@@ -138,7 +150,7 @@ def photo(v):
 FONTS = ROOT / 'ride-sheets' / 'assets'
 
 
-def logo_chip(name, cw, ch, scale, radius=6):
+def logo_chip(name, cw, ch, scale, radius=6, pad=4):
     """A logo centred on a white rounded chip, so dark or coloured artwork reads on any brand colour."""
     from PIL import Image, ImageDraw
     c = Image.new('RGBA', (int(cw), int(ch)), (0, 0, 0, 0))
@@ -146,8 +158,8 @@ def logo_chip(name, cw, ch, scale, radius=6):
     ImageDraw.Draw(m).rounded_rectangle((0, 0, c.width - 1, c.height - 1), radius=radius * scale, fill=255)
     c.paste(Image.new('RGBA', c.size, (255, 255, 255, 255)), (0, 0), m)
     lg = Image.open(SRC / 'assets' / name).convert('RGBA')
-    pad = 4 * scale
-    lg.thumbnail((int(c.width - 2 * pad), int(c.height - 2 * pad)), Image.LANCZOS)
+    pad = pad * scale
+    lg = fit_in(lg, c.width - 2 * pad, c.height - 2 * pad)
     c.alpha_composite(lg, ((c.width - lg.width) // 2, (c.height - lg.height) // 2))
     return c
 
@@ -194,7 +206,13 @@ def name_strip(v, scale):
     block = (nH[3] - nH[1]) + gap + (tH[3] - tH[1])
     row = b.get('our_brands') or []
     top = (h - block) / 2 if not row else 20 * scale   # with a logo row the name sits higher
-    if row:   # Element Outdoors: a white chip per brand logo under the name
+    if row and not v['name']:   # Google Wallet image (no name on it): the brand logos large, two by two, filling the panel
+        cw, chh, cg = 84 * scale, 52 * scale, 6 * scale
+        gx, gy = 16 * scale, (h - 2 * chh - cg) / 2
+        for i, t in enumerate(row):
+            im.alpha_composite(logo_chip(t['logo'], cw, chh, scale, radius=8, pad=5),
+                               (int(gx + (i % 2) * (cw + cg)), int(gy + (i // 2) * (chh + cg))))
+    elif row:   # Element Outdoors: a white chip per brand logo under the name
         cw, chh, cg = 42 * scale, 30 * scale, 5 * scale
         for i, t in enumerate(row):
             im.alpha_composite(logo_chip(t['logo'], cw, chh, scale), (int(left + i * (cw + cg)), int(h - chh - 15 * scale)))
@@ -211,8 +229,7 @@ def name_strip(v, scale):
 def brand_icon(v, size):
     from PIL import Image
     canvas = Image.new('RGBA', (size, size), (255, 255, 255, 255))
-    logo = Image.open(SRC / 'assets' / v['brand_data']['logo']).convert('RGBA')
-    logo.thumbnail((int(size * 0.86), int(size * 0.86)), Image.LANCZOS)
+    logo = fit_in(Image.open(logo_file(v['brand_data'])).convert('RGBA'), int(size * 0.86), int(size * 0.86))
     canvas.alpha_composite(logo, ((size - logo.width) // 2, (size - logo.height) // 2))
     return canvas.convert('RGB')
 
@@ -379,12 +396,16 @@ def g_images(v):
     """Images Google Wallet shows, published next to the card (Google fetches them when the pass is saved)."""
     b = v['brand_data']
     col = colours(v)
-    logo_path = SRC / 'assets' / b['logo']
     n = g_image_names(v)
     from PIL import Image
-    wide = fit_logo(logo_path, 1280, 400, pad=24)
+    # Google shows the wide logo top left at a fixed height on the card colour: so the logo fills the height, sits at the
+    # left, and is on a white chip so blue or dark artwork still reads on a blue or dark card.
+    lg = Image.open(logo_file(b)).convert('RGBA')
+    pad = 40
+    lg = fit_in(lg, 1280 - 2 * pad, 400 - 2 * pad)
+    chip = logo_chip(logo_file(b).name, lg.width + 2 * pad, 400, 1, radius=56, pad=pad)
     wide_canvas = Image.new('RGBA', (1280, 400), (0, 0, 0, 0))
-    wide_canvas.alpha_composite(wide, ((1280 - wide.width) // 2, (400 - wide.height) // 2))
+    wide_canvas.alpha_composite(chip, (0, 0))
     return {
         f"assets/{n['logo']}": _png(brand_icon(v, 660)),
         f"assets/{n['wide']}": _png(wide_canvas),

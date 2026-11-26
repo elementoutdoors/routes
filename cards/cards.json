@@ -248,6 +248,7 @@
     "eo": {
       "name": "Element Outdoors",
       "logo": "logo-eo.png",
+      "logo_hi": "logo-eo-1024.png",
       "logo_alt": "Element Outdoors",
       "photo": "photo-eo-gravel.jpg",
       "photo_focus": "50% 55%",
