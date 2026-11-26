@@ -388,8 +388,12 @@ def loc(text):
     return {'defaultValue': {'language': 'en-AU', 'value': text}}
 
 
+G_IMAGES_V = '2'   # Google keeps an image by its address, so bump this whenever the Google images are redrawn
+
+
 def g_image_names(v):
-    return {'logo': f"wallet-logo-{v['brand']}.png", 'wide': f"wallet-wide-{v['brand']}.png", 'hero': 'wallet-hero.jpg'}
+    x = f'-v{G_IMAGES_V}'
+    return {'logo': f"wallet-logo-{v['brand']}{x}.png", 'wide': f"wallet-wide-{v['brand']}{x}.png", 'hero': f'wallet-hero{x}.jpg'}
 
 
 def g_images(v):
