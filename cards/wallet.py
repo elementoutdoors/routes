@@ -388,7 +388,7 @@ def loc(text):
     return {'defaultValue': {'language': 'en-AU', 'value': text}}
 
 
-G_IMAGES_V = '2'   # Google keeps an image by its address, so bump this whenever the Google images are redrawn
+G_IMAGES_V = '3'   # Google keeps an image by its address, so bump this whenever the Google images are redrawn
 
 
 def g_image_names(v):
@@ -402,14 +402,14 @@ def g_images(v):
     col = colours(v)
     n = g_image_names(v)
     from PIL import Image
-    # Google shows the wide logo top left at a fixed height on the card colour: so the logo fills the height, sits at the
-    # left, and is on a white chip so blue or dark artwork still reads on a blue or dark card.
+    # Google shows the wide logo at a fixed height on the card colour: so the logo fills the height, sits in the middle
+    # of the canvas, and is on a white chip so blue or dark artwork still reads on a blue or dark card.
     lg = Image.open(logo_file(b)).convert('RGBA')
     pad = 40
     lg = fit_in(lg, 1280 - 2 * pad, 400 - 2 * pad)
     chip = logo_chip(logo_file(b).name, lg.width + 2 * pad, 400, 1, radius=56, pad=pad)
     wide_canvas = Image.new('RGBA', (1280, 400), (0, 0, 0, 0))
-    wide_canvas.alpha_composite(chip, (0, 0))
+    wide_canvas.alpha_composite(chip, ((1280 - chip.width) // 2, 0))   # centred: Wallet centres the wide logo when a pass is opened
     return {
         f"assets/{n['logo']}": _png(brand_icon(v, 660)),
         f"assets/{n['wide']}": _png(wide_canvas),
