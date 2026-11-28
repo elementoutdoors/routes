@@ -3,7 +3,7 @@
  "kind": "stop",
  "title": "Noosa's private airport",
  "status": "live",
- "updated": "2026-11-11",
+ "updated": "2026-11-28",
  "tours": {
   "stingrays-everglades": 2
  },
@@ -14,8 +14,6 @@
    "Development is restricted because the area is part of a UNESCO Biosphere Reserve; any expansion must fit its environmental commitments."
   ],
   "engage": [
-   "Ask: \"Any guesses what that is across the water?\"",
-   "Ask: \"If you could fly into Noosa in anything, what would it be?\"",
    "Do: watch and listen for a plane or a helicopter coming in."
   ],
   "detail": "",
@@ -34,7 +32,7 @@
    },
    {
     "type": "text",
-    "text": "**Private Aviation Focus**: Noosa Private Airport primarily serves private flights, catering to luxury travelers and corporate clients, thereby positioning itself as a premium alternative to commercial airports. With personalized services and high-quality facilities, it attracts those seeking a tailored travel experience."
+    "text": "**Private Aviation Focus**: Noosa Private Airport primarily serves private flights, catering to luxury travelers and corporate clients, thereby positioning itself as a premium alternative to commercial airports. A grass runway suits only smaller craft and is well kept by Bob and his team."
    },
    {
     "type": "heading",
@@ -47,10 +45,6 @@
    {
     "type": "text",
     "text": "**Other Projects**: Bob is also recognized for his involvement in regional aviation initiatives, such as expansions and upgrades at Sunshine Coast Airport, reinforcing his commitment to developing private aviation in Queensland."
-   },
-   {
-    "type": "text",
-    "text": "**Airport Infrastructure**: Significant investments have been made to improve facilities, including state-of-the-art hangars and terminals designed specifically for business jets and helicopters. This focus on infrastructure ensures the airport can accommodate evolving demands in private aviation while providing modern amenities for travelers."
    },
    {
     "type": "heading",
